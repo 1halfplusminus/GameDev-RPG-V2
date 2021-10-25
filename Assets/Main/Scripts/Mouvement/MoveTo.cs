@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace RPG.Mouvement
 {
+
     [GenerateAuthoringComponent]
     public struct MoveTo : IComponentData
     {

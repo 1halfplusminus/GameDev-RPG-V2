@@ -1,10 +1,9 @@
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Mathematics;
-using UnityEngine;
+
 using ExtensionMethods;
-using UnityEngine.InputSystem;
+using Unity.Physics;
 
 namespace RPG.Core
 {
@@ -12,14 +11,41 @@ namespace RPG.Core
     {
         public float3 WorldPosition;
     }
+    [UpdateInGroup(typeof(CoreSystemGroup))]
+    [UpdateAfter(typeof(RaycastSystem))]
     public class ClickOnTerrainSystem : SystemBase
     {
         const float MAX_DISTANCE = 10000000f;
         EntityQuery queryClicks;
         EntityQuery queryTerrains;
+        EndSimulationEntityCommandBufferSystem commandBufferSystem;
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            commandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        }
         protected override void OnUpdate()
         {
-            queryClicks = GetEntityQuery(new ComponentType[] {
+            var commandBuffer = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            var navigables = GetComponentDataFromEntity<Navigable>(true);
+            Entities
+            .WithReadOnly(navigables)
+            .ForEach((Entity e, int entityInQueryIndex, in DynamicBuffer<HittedByRaycast> rayHits) =>
+            {
+
+
+                foreach (var rayHit in rayHits)
+                {
+                    if (navigables.HasComponent(rayHit.Hitted))
+                    {
+                        UnityEngine.Debug.Log("Here");
+                        commandBuffer.AddComponent(entityInQueryIndex, e, new WorldClick() { WorldPosition = rayHit.Hit.Position });
+                        return;
+                    }
+                }
+            }).ScheduleParallel();
+            commandBufferSystem.AddJobHandleForProducer(this.Dependency);
+            /* queryClicks = GetEntityQuery(new ComponentType[] {
             ComponentType.ReadOnly<MouseClick>()
         });
             queryTerrains = GetEntityQuery(new ComponentType[] {
@@ -30,7 +56,7 @@ namespace RPG.Core
             var terrainEntities = queryTerrains.ToEntityArray(Allocator.Temp);
             foreach (var click in clicks)
             {
-                if (!click.Ray.Displacement.Equals(float3.zero))
+                if (click.CapturedThisFrame == true)
                 {
                     for (int i = 0; i < terrains.Length; i++)
                     {
@@ -55,7 +81,7 @@ namespace RPG.Core
 
             }
             clicks.Dispose();
-            terrainEntities.Dispose();
+            terrainEntities.Dispose(); */
         }
     }
 

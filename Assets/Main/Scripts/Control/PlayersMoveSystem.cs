@@ -5,9 +5,11 @@ using Unity.Entities;
 using Unity.Collections;
 using RPG.Core;
 using RPG.Mouvement;
+using RPG.Combat;
 
 namespace RPG.Control
 {
+    [UpdateAfter(typeof(CombatSystemGroup))]
     public class PlayersMoveSystem : SystemBase
     {
         EndSimulationEntityCommandBufferSystem endSimulationEntityCommandBufferSystem;
@@ -22,17 +24,23 @@ namespace RPG.Control
         {
 
             worldClickQueries = GetEntityQuery(new ComponentType[] {
-            ComponentType.ReadOnly<WorldClick>()
-        });
+                ComponentType.ReadOnly<WorldClick>()
+            });
             NativeArray<WorldClick> worldClicks = worldClickQueries.ToComponentDataArray<WorldClick>(Allocator.TempJob);
             var commandBuffer = endSimulationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-            Entities.WithAll<PlayerControlled>().ForEach((Entity player, int entityInQueryIndex) =>
+            Entities
+            .WithAll<PlayerControlled>()
+            .ForEach((Entity player, int entityInQueryIndex, in Fighter fighter) =>
             {
-                for (int i = 0; i < worldClicks.Length; i++)
+                if (fighter.Target == Entity.Null)
                 {
-                    commandBuffer.AddComponent(entityInQueryIndex, player, new MoveTo() { Position = worldClicks[i].WorldPosition });
+                    for (int i = 0; i < worldClicks.Length; i++)
+                    {
+                        commandBuffer.AddComponent(entityInQueryIndex, player, new MoveTo { Position = worldClicks[i].WorldPosition });
+                    }
                 }
-            }).WithDisposeOnCompletion(worldClicks).Schedule();
+
+            }).WithDisposeOnCompletion(worldClicks).ScheduleParallel();
 
 
             endSimulationEntityCommandBufferSystem.AddJobHandleForProducer(this.Dependency);

@@ -10,6 +10,11 @@ using Unity.Mathematics;
 
 namespace RPG.Mouvement
 {
+    public class MouvementSystemGroup : ComponentSystemGroup
+    {
+
+    }
+    [UpdateInGroup(typeof(MouvementSystemGroup))]
     public class MoveToNavMeshAgentSystem : SystemBase
     {
         EndSimulationEntityCommandBufferSystem endSimulationEntityCommandBufferSystem;
@@ -32,11 +37,10 @@ namespace RPG.Mouvement
             {
                 if (agent.isOnNavMesh)
                 {
+
                     agent.SetDestination(moveTo.Position);
                     position.Value = agent.transform.position;
                     rotation.Value = agent.transform.rotation;
-                    /*                     Debug.Log("Moving toward: " + agent.destination); */
-                    moveTo.StoppingDistance = agent.stoppingDistance;
                     mouvement.Velocity = new Velocity { Linear = agent.transform.InverseTransformDirection(agent.velocity), Angular = agent.angularSpeed };
                 }
             }).Run();

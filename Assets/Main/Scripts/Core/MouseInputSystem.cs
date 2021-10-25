@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using Unity.Entities;
 using Unity.Jobs;
@@ -7,7 +6,6 @@ using Unity.Mathematics;
 using UnityEngine.InputSystem;
 using Unity.Physics;
 using static ExtensionMethods.EcsConversionExtension;
-using UnityEngine.InputSystem.Utilities;
 
 
 namespace RPG.Core
@@ -19,7 +17,10 @@ namespace RPG.Core
         public Unity.Physics.Ray Ray;
 
         public bool CapturedThisFrame;
+
+        public int Frame;
     }
+    [UpdateInGroup(typeof(CoreSystemGroup))]
 
     public class MouseInputSystem : SystemBase
     {
@@ -30,7 +31,7 @@ namespace RPG.Core
 
         protected override void OnCreate()
         {
-            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            entityCommandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
             input = new GameInput();
             input.Enable();
         }
@@ -56,15 +57,33 @@ namespace RPG.Core
                 var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
                 Entities.ForEach((Entity e, int entityInQueryIndex, in MouseClick m) =>
                 {
-                    commandBuffer.SetComponent(entityInQueryIndex, e, CapturedClick);
-                }).Schedule();
+                    if (CapturedClick.Ray.Displacement.Equals(float3.zero) == false)
+                    {
+                        commandBuffer.SetComponent(entityInQueryIndex, e, CapturedClick);
+                    }
+                }).ScheduleParallel();
                 entityCommandBufferSystem.AddJobHandleForProducer(this.Dependency);
             }
 
-
         }
     }
+    [UpdateInGroup(typeof(LateSimulationSystemGroup))]
+    public class EndSimulationMouseClickSystem : SystemBase
+    {
+        protected override void OnUpdate()
+        {
+            // Mark old click as not captured this frame
 
+            Entities.ForEach((ref MouseClick click) =>
+            {
+                if (click.Frame >= 1)
+                {
+                    click.CapturedThisFrame = false;
+                }
+                click.Frame += 1;
+            }).ScheduleParallel();
+        }
+    }
 
     public class DebugPlayerMouseInputSystem : SystemBase
     {
