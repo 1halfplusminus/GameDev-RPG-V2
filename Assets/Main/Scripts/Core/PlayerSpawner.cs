@@ -1,6 +1,11 @@
 
 using UnityEngine;
-public class PlayerSpawner : MonoBehaviour
+
+namespace RPG.Core
 {
-    public GameObject Prefab;
+    public class PlayerSpawner : MonoBehaviour
+    {
+        public GameObject Prefab;
+    }
+
 }

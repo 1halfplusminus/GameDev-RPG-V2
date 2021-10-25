@@ -1,7 +1,10 @@
 using Unity.Entities;
 
-[GenerateAuthoringComponent]
-public struct FollowedByCamera : IComponentData
+namespace RPG.Core
 {
+    [GenerateAuthoringComponent]
+    public struct FollowedByCamera : IComponentData
+    {
 
+    }
 }

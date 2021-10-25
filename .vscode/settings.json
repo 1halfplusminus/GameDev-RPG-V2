@@ -1,4 +1,5 @@
 {
+    "editor.formatOnSave": true,
     "omnisharp.useGlobalMono":"always" ,
     "files.exclude":
     {
