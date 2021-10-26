@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Unity.Entities;
-using Unity.Collections;
 using RPG.Core;
 using RPG.Mouvement;
 using RPG.Combat;
@@ -12,13 +8,13 @@ namespace RPG.Control
     [UpdateAfter(typeof(CombatSystemGroup))]
     public class PlayersMoveSystem : SystemBase
     {
-        EndSimulationEntityCommandBufferSystem endSimulationEntityCommandBufferSystem;
+        EndSimulationEntityCommandBufferSystem commandBufferSystem;
         EntityQuery worldClickQueries;
 
         protected override void OnCreate()
         {
             base.OnCreate();
-            endSimulationEntityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            commandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
         {
@@ -26,24 +22,29 @@ namespace RPG.Control
             worldClickQueries = GetEntityQuery(new ComponentType[] {
                 ComponentType.ReadOnly<WorldClick>()
             });
-            NativeArray<WorldClick> worldClicks = worldClickQueries.ToComponentDataArray<WorldClick>(Allocator.TempJob);
-            var commandBuffer = endSimulationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            var commandBuffer = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             Entities
             .WithAll<PlayerControlled>()
-            .ForEach((Entity player, int entityInQueryIndex, in Fighter fighter) =>
+            .ForEach((Entity player, int entityInQueryIndex, ref Fighter fighter, in MouseClick mouseClick, in WorldClick worldClick) =>
             {
-                if (fighter.Target == Entity.Null)
+                if (mouseClick.CapturedThisFrame)
                 {
-                    for (int i = 0; i < worldClicks.Length; i++)
+                    if (fighter.Target == Entity.Null)
                     {
-                        commandBuffer.AddComponent(entityInQueryIndex, player, new MoveTo { Position = worldClicks[i].WorldPosition });
+                        fighter.MoveTowardTarget = false;
+                        commandBuffer.AddComponent(entityInQueryIndex, player, new MoveTo(worldClick.WorldPosition));
+                    }
+                    else
+                    {
+                        fighter.MoveTowardTarget = true;
                     }
                 }
 
-            }).WithDisposeOnCompletion(worldClicks).ScheduleParallel();
+
+            }).ScheduleParallel();
 
 
-            endSimulationEntityCommandBufferSystem.AddJobHandleForProducer(this.Dependency);
+            commandBufferSystem.AddJobHandleForProducer(this.Dependency);
         }
     }
 }

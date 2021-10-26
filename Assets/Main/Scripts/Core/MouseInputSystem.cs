@@ -17,7 +17,7 @@ namespace RPG.Core
         public Unity.Physics.Ray Ray;
 
         public bool CapturedThisFrame;
-
+        public bool MovedThisFrame;
         public int Frame;
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
@@ -42,32 +42,31 @@ namespace RPG.Core
         protected MouseClick ReadClick()
         {
 
-
+            var controller = input.Gameplay.Click.activeControl;
+            var capturedThisFrame = controller != null && controller.IsPressed();
             float2 value = Pointer.current.position.ReadValue();
             var ray = FromEngineRay(Camera.main.ScreenPointToRay(new float3(value, 0f)));
-            capturedClick = new MouseClick { ScreenCordinate = ray.Origin, Ray = ray, CapturedThisFrame = true };
+            capturedClick = new MouseClick { ScreenCordinate = ray.Origin, Ray = ray, CapturedThisFrame = capturedThisFrame };
             return capturedClick;
         }
         protected override void OnUpdate()
         {
-            var controller = input.Gameplay.Click.activeControl;
-            if (controller != null && controller.IsPressed())
+            var CapturedClick = ReadClick();
+            var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            Entities.ForEach((Entity e, int entityInQueryIndex, in MouseClick m) =>
             {
-                var CapturedClick = ReadClick();
-                var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-                Entities.ForEach((Entity e, int entityInQueryIndex, in MouseClick m) =>
+                if (!CapturedClick.CapturedThisFrame)
                 {
-                    if (CapturedClick.Ray.Displacement.Equals(float3.zero) == false)
-                    {
-                        commandBuffer.SetComponent(entityInQueryIndex, e, CapturedClick);
-                    }
-                }).ScheduleParallel();
-                entityCommandBufferSystem.AddJobHandleForProducer(this.Dependency);
-            }
+                    CapturedClick.Frame = m.Frame;
+                }
+                commandBuffer.SetComponent(entityInQueryIndex, e, CapturedClick);
+            }).ScheduleParallel();
+            entityCommandBufferSystem.AddJobHandleForProducer(this.Dependency);
 
         }
     }
-    [UpdateInGroup(typeof(LateSimulationSystemGroup))]
+    [UpdateInGroup(typeof(CoreSystemGroup))]
+    [UpdateBefore(typeof(MouseInputSystem))]
     public class EndSimulationMouseClickSystem : SystemBase
     {
         protected override void OnUpdate()
@@ -92,7 +91,6 @@ namespace RPG.Core
             var camera = Camera.main;
             Entities
             .WithoutBurst()
-            .WithStructuralChanges()
             .ForEach((ref MouseClick c) =>
             {
                 Debug.DrawRay(c.Ray.Origin, c.Ray.Displacement * 100f, Color.red, 1f);

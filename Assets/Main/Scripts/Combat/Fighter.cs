@@ -8,5 +8,7 @@ namespace RPG.Combat
     public struct Fighter : IComponentData
     {
         public Entity Target;
+        public bool MoveTowardTarget;
     }
+
 }

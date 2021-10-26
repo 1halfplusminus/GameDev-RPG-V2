@@ -18,11 +18,11 @@ namespace RPG.Core
         const float MAX_DISTANCE = 10000000f;
         EntityQuery queryClicks;
         EntityQuery queryTerrains;
-        EndSimulationEntityCommandBufferSystem commandBufferSystem;
+        EntityCommandBufferSystem commandBufferSystem;
         protected override void OnCreate()
         {
             base.OnCreate();
-            commandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            commandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
         {
@@ -32,56 +32,39 @@ namespace RPG.Core
             .WithReadOnly(navigables)
             .ForEach((Entity e, int entityInQueryIndex, in DynamicBuffer<HittedByRaycast> rayHits) =>
             {
-
-
                 foreach (var rayHit in rayHits)
                 {
                     if (navigables.HasComponent(rayHit.Hitted))
                     {
-                        UnityEngine.Debug.Log("Here");
                         commandBuffer.AddComponent(entityInQueryIndex, e, new WorldClick() { WorldPosition = rayHit.Hit.Position });
                         return;
                     }
                 }
             }).ScheduleParallel();
             commandBufferSystem.AddJobHandleForProducer(this.Dependency);
-            /* queryClicks = GetEntityQuery(new ComponentType[] {
-            ComponentType.ReadOnly<MouseClick>()
-        });
-            queryTerrains = GetEntityQuery(new ComponentType[] {
-            ComponentType.ReadOnly<TerrainCollider>()
-        });
-            var clicks = queryClicks.ToComponentDataArray<MouseClick>(Allocator.Temp);
-            var terrains = queryTerrains.ToComponentArray<TerrainCollider>();
-            var terrainEntities = queryTerrains.ToEntityArray(Allocator.Temp);
-            foreach (var click in clicks)
+        }
+    }
+
+    [UpdateAfter(typeof(ClickOnTerrainSystem))]
+    [UpdateInGroup(typeof(CoreSystemGroup))]
+    public class EndSimulationWorldClickSystem : SystemBase
+    {
+        EntityCommandBufferSystem commandBufferSystem;
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            commandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        }
+        protected override void OnUpdate()
+        {
+            var commandBuffer = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            // Destroy worldClick at end of simulation
+            Entities.ForEach((Entity e, int entityInQueryIndex, ref MouseClick click) =>
             {
-                if (click.CapturedThisFrame == true)
-                {
-                    for (int i = 0; i < terrains.Length; i++)
-                    {
-                        RaycastHit hit;
-                        terrains[i].Raycast(click.Ray.ToEngineRay(), out hit, MAX_DISTANCE);
-                        if (hit.collider)
-                        {
-                            var worldClick = new WorldClick { WorldPosition = hit.point };
-                            if (EntityManager.HasComponent<WorldClick>(terrainEntities[i]))
-                            {
-                                EntityManager.SetComponentData(terrainEntities[i], worldClick);
-                            }
-                            else
-                            {
-                                EntityManager.AddComponentData(terrainEntities[i], worldClick);
-                            }
+                commandBuffer.RemoveComponent<WorldClick>(entityInQueryIndex, e);
+            }).ScheduleParallel();
 
-                            Debug.Log("Clicked on " + hit.collider.name);
-                        }
-                    }
-                }
-
-            }
-            clicks.Dispose();
-            terrainEntities.Dispose(); */
+            commandBufferSystem.AddJobHandleForProducer(this.Dependency);
         }
     }
 

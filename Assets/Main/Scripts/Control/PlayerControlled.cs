@@ -2,6 +2,7 @@ using RPG.Core;
 using Unity.Entities;
 using RPG.Mouvement;
 using RPG.Combat;
+using Unity.Transforms;
 
 namespace RPG.Control
 {
@@ -13,6 +14,9 @@ namespace RPG.Control
     }
     [GenerateAuthoringComponent]
     public struct PlayerControlled : IComponentData { }
+
+
+
 
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     [UpdateAfter(typeof(ConvertToEntitySystem))]
@@ -31,12 +35,13 @@ namespace RPG.Control
             Entities
             .WithChangeFilter<PlayerControlled>()
             .WithAll<PlayerControlled>()
-            .ForEach((Entity e) =>
+            .ForEach((Entity e, in LocalToWorld localToWorld) =>
             {
                 commandBuffer.AddComponent<MouseClick>(e);
                 commandBuffer.AddComponent<Fighter>(e);
                 commandBuffer.AddBuffer<HittedByRaycast>(e);
                 commandBuffer.AddComponent(e, new Raycast { Distance = 100000f });
+                commandBuffer.AddComponent<MoveTo>(e, new MoveTo(localToWorld.Position));
             }).Schedule();
             commandBufferSystem.AddJobHandleForProducer(this.Dependency);
         }
@@ -55,12 +60,26 @@ namespace RPG.Control
             .WithChangeFilter<MouseClick>()
             .ForEach((ref Raycast cast, in MouseClick mouseClick) =>
             {
-                if (mouseClick.CapturedThisFrame)
-                {
-                    cast.Completed = false;
-                    cast.Ray = mouseClick.Ray;
-                }
+                cast.Completed = false;
+                cast.Ray = mouseClick.Ray;
+            }).ScheduleParallel();
+        }
+    }
 
+    [UpdateInGroup(typeof(ControlSystemGroup))]
+    public class NoInteractionSystem : SystemBase
+    {
+        protected override void OnUpdate()
+        {
+            Entities
+            .WithNone<WorldClick>()
+            .WithAny<PlayerControlled>()
+            .ForEach((Fighter f) =>
+            {
+                if (f.Target == Entity.Null)
+                {
+                    UnityEngine.Debug.Log("No interaction");
+                }
             }).ScheduleParallel();
         }
     }

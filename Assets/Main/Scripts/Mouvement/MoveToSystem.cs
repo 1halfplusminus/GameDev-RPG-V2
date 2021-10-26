@@ -15,6 +15,22 @@ namespace RPG.Mouvement
 
     }
     [UpdateInGroup(typeof(MouvementSystemGroup))]
+    public class StopAtDistanceSystem : SystemBase
+    {
+        protected override void OnUpdate()
+        {
+            Entities.WithChangeFilter<MoveTo, LocalToWorld>().ForEach((ref MoveTo moveTo, in LocalToWorld localToWorld) =>
+             {
+                 moveTo.Distance = math.distance(moveTo.Position, localToWorld.Position);
+                 if (moveTo.Distance <= moveTo.StoppingDistance)
+                 {
+                     moveTo.Position = localToWorld.Position;
+                 }
+             }).ScheduleParallel();
+        }
+    }
+    [UpdateInGroup(typeof(MouvementSystemGroup))]
+    [UpdateAfter(typeof(StopAtDistanceSystem))]
     public class MoveToNavMeshAgentSystem : SystemBase
     {
         EndSimulationEntityCommandBufferSystem endSimulationEntityCommandBufferSystem;
