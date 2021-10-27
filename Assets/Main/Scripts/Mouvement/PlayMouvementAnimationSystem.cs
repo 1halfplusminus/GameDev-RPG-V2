@@ -9,9 +9,18 @@ namespace RPG.Mouvement
     {
         protected override void OnUpdate()
         {
-            Entities.WithChangeFilter<Mouvement>().ForEach((ref BlendTree1DData player, in Mouvement mouvement) =>
+            Entities.WithChangeFilter<Mouvement>().ForEach((ref CharacterAnimation characterAnimation, in Mouvement mouvement) =>
             {
-                player.paramX = math.abs(mouvement.Velocity.Linear.z);
+                if (mouvement.Velocity.Linear.Equals(float3.zero))
+                {
+                    characterAnimation.Move = math.abs(math.normalizesafe(mouvement.Velocity.Linear).z);
+                }
+                else
+                {
+                    characterAnimation.Move = 1f;
+                }
+
+                /*   player.paramX = math.abs(mouvement.Velocity.Linear.z); */
             }).ScheduleParallel();
         }
     }

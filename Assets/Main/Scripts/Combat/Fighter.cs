@@ -9,6 +9,8 @@ namespace RPG.Combat
     {
         public Entity Target;
         public bool MoveTowardTarget;
+
+        public float WeaponRange;
     }
 
 }

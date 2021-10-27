@@ -42,6 +42,7 @@ namespace RPG.Core
             var handle = Entities
             .WithReadOnly(physicsWorld)
             .WithReadOnly(collisionWorld)
+            .WithChangeFilter<Raycast>()
             .ForEach((ref Raycast raycast, ref DynamicBuffer<HittedByRaycast> rayHits) =>
             {
                 if (!raycast.Completed)

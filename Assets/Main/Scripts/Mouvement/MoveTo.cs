@@ -3,17 +3,23 @@ using Unity.Mathematics;
 using UnityEngine;
 
 
+using RPG.Core;
 namespace RPG.Mouvement
 {
 
     [GenerateAuthoringComponent]
     public struct MoveTo : IComponentData
     {
+
+        public bool Canceled;
+        public bool Stopped;
+
         public float3 Position;
 
         public float StoppingDistance;
 
         public float Distance;
+
         public MoveTo(float3 position) : this(position, 1f)
         {
 
@@ -23,6 +29,8 @@ namespace RPG.Mouvement
             Position = position;
             StoppingDistance = stoppingDistance;
             Distance = math.INFINITY;
+            Canceled = false;
+            Stopped = false;
         }
 
     }

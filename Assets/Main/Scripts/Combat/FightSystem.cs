@@ -1,6 +1,5 @@
 using Unity.Entities;
 using RPG.Core;
-using UnityEngine;
 using Unity.Transforms;
 using RPG.Mouvement;
 
@@ -29,7 +28,7 @@ namespace RPG.Combat
                         var targetPosition = positionInWorlds[fighter.Target].Position;
                         moveTo.Position = positionInWorlds[fighter.Target].Position;
                         // Range of the weapon
-                        moveTo.StoppingDistance = 2f;
+                        moveTo.StoppingDistance = fighter.WeaponRange;
                     }
                 }
                 if (fighter.MoveTowardTarget == true && moveTo.Distance <= moveTo.StoppingDistance)
@@ -83,7 +82,8 @@ namespace RPG.Combat
             {
                 if (fighter.Target != Entity.Null)
                 {
-                    Debug.Log("Entity  e:" + e.Index + " target : " + fighter.Target.Index);
+                    /*    var debug = "Entity  e:" + e.Index + " target : " + fighter.Target.Index;
+                       Debug.Log(debug); */
                 }
             }).ScheduleParallel();
         }

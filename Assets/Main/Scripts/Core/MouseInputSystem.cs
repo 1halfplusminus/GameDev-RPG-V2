@@ -59,7 +59,10 @@ namespace RPG.Core
                 {
                     CapturedClick.Frame = m.Frame;
                 }
-                commandBuffer.SetComponent(entityInQueryIndex, e, CapturedClick);
+                if (CapturedClick.CapturedThisFrame || !m.ScreenCordinate.Equals(CapturedClick.ScreenCordinate))
+                {
+                    commandBuffer.SetComponent(entityInQueryIndex, e, CapturedClick);
+                }
             }).ScheduleParallel();
             entityCommandBufferSystem.AddJobHandleForProducer(this.Dependency);
 
@@ -79,7 +82,11 @@ namespace RPG.Core
                 {
                     click.CapturedThisFrame = false;
                 }
-                click.Frame += 1;
+                if (click.CapturedThisFrame)
+                {
+                    click.Frame += 1;
+                }
+
             }).ScheduleParallel();
         }
     }

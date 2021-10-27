@@ -38,10 +38,11 @@ namespace RPG.Control
             .ForEach((Entity e, in LocalToWorld localToWorld) =>
             {
                 commandBuffer.AddComponent<MouseClick>(e);
-                commandBuffer.AddComponent<Fighter>(e);
+                commandBuffer.AddComponent<Fighter>(e, new Fighter { WeaponRange = 3.0f });
                 commandBuffer.AddBuffer<HittedByRaycast>(e);
                 commandBuffer.AddComponent(e, new Raycast { Distance = 100000f });
                 commandBuffer.AddComponent<MoveTo>(e, new MoveTo(localToWorld.Position));
+                commandBuffer.AddComponent<LookAt>(e);
             }).Schedule();
             commandBufferSystem.AddJobHandleForProducer(this.Dependency);
         }
