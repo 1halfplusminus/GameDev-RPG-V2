@@ -2640,12 +2640,12 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.56
   m_Speed: 5.5
-  m_Acceleration: 12
+  m_Acceleration: 100
   avoidancePriority: 50
-  m_AngularSpeed: 1200
+  m_AngularSpeed: 100
   m_StoppingDistance: 2
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 0
+  m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: -0.05
@@ -2797,6 +2797,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Move: 0
   Attack: 0
+  Run: 0
 --- !u!114 &3425040764700658211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2813,13 +2814,18 @@ MonoBehaviour:
   Context: {fileID: 0}
   ExposedObjects:
   - TargetGUID:
-      NodeIDPart1: 12086496305793394841
-      NodeIDPart2: 4966033239062640063
+      NodeIDPart1: 8626782583780727009
+      NodeIDPart2: 6949434313108835486
       PortUniqueName: Root Motion Source
     Value: {fileID: 0}
   - TargetGUID:
-      NodeIDPart1: 8626782583780727009
-      NodeIDPart2: 6949434313108835486
+      NodeIDPart1: 13552468186560445787
+      NodeIDPart2: 154162454165634976
+      PortUniqueName: Root Motion Source
+    Value: {fileID: 0}
+  - TargetGUID:
+      NodeIDPart1: 5800910611712568091
+      NodeIDPart2: 3378012924837237901
       PortUniqueName: Root Motion Source
     Value: {fileID: 0}
   PhaseIdentification: Unity.Animation.ProcessLateAnimationGraphLoaderSystem+Tag,

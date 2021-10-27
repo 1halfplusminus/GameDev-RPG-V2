@@ -42,6 +42,10 @@ namespace RPG.Control
 
                 if (mouseClick.CapturedThisFrame)
                 {
+                    if (fighter.TargetFoundThisFrame == 0)
+                    {
+                        fighter.Target = Entity.Null;
+                    }
                     if (fighter.Target == Entity.Null)
                     {
 
@@ -57,10 +61,12 @@ namespace RPG.Control
             // Look at fighter target if exists
             Entities
             .WithAll<PlayerControlled>()
-            .ForEach((ref LookAt lookAt, in Fighter fighter) =>
+            .ForEach((ref LookAt lookAt, in Fighter fighter, in MouseClick mouseClick) =>
             {
-
-                lookAt.Entity = fighter.Target;
+                if (mouseClick.CapturedThisFrame)
+                {
+                    lookAt.Entity = fighter.Target;
+                }
 
             }).ScheduleParallel();
         }

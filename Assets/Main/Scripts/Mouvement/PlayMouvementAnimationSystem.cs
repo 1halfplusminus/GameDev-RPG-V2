@@ -1,7 +1,7 @@
 
 using Unity.Entities;
 using Unity.Mathematics;
-using RPG.Animation;
+
 
 namespace RPG.Mouvement
 {
@@ -11,13 +11,15 @@ namespace RPG.Mouvement
         {
             Entities.WithChangeFilter<Mouvement>().ForEach((ref CharacterAnimation characterAnimation, in Mouvement mouvement) =>
             {
-                if (mouvement.Velocity.Linear.Equals(float3.zero))
+                if (mouvement.Speed > 0.0f)
                 {
-                    characterAnimation.Move = math.abs(math.normalizesafe(mouvement.Velocity.Linear).z);
-                }
-                else
-                {
-                    characterAnimation.Move = 1f;
+                    characterAnimation.Run = 0.0f;
+                    var zLinear = mouvement.Velocity.Linear.z / mouvement.Speed;
+                    characterAnimation.Move = zLinear;
+                    if (math.abs(mouvement.Velocity.Linear).z >= 2.5f)
+                    {
+                        characterAnimation.Run = zLinear * 2;
+                    }
                 }
 
                 /*   player.paramX = math.abs(mouvement.Velocity.Linear.z); */

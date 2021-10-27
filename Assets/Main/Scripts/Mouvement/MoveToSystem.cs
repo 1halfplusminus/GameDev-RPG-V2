@@ -4,9 +4,9 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Physics;
 using Unity.Transforms;
-using UnityEngine;
 using UnityEngine.AI;
 using Unity.Mathematics;
+using RPG.Core;
 
 namespace RPG.Mouvement
 {
@@ -64,20 +64,31 @@ namespace RPG.Mouvement
         }
         protected override void OnUpdate()
         {
-
+            // TODO : Refractor
+            var lookAts = GetComponentDataFromEntity<LookAt>(true);
             Entities
+            .WithReadOnly(lookAts)
             .WithChangeFilter<MoveTo>()
             .WithStoreEntityQueryInField(ref navMeshAgentQueries)
             .WithoutBurst()
             .WithAll<Mouvement>()
-            .ForEach((NavMeshAgent agent, ref Translation position, ref Mouvement mouvement, ref MoveTo moveTo, ref Rotation rotation) =>
+            .ForEach((Entity e, NavMeshAgent agent, ref Translation position, ref Mouvement mouvement, ref MoveTo moveTo, ref Rotation rotation) =>
             {
                 if (!moveTo.Stopped && agent.isOnNavMesh)
                 {
                     agent.SetDestination(moveTo.Position);
                     position.Value = agent.transform.position;
-                    rotation.Value = agent.transform.rotation;
-                    mouvement.Velocity = new Velocity { Linear = agent.transform.InverseTransformDirection(agent.velocity), Angular = agent.angularSpeed };
+                    mouvement.Velocity = new Velocity
+                    {
+                        Linear = agent.transform.InverseTransformDirection(agent.velocity),
+                        Angular = agent.angularSpeed
+
+                    };
+                    mouvement.Speed = agent.speed;
+                    if (!lookAts.HasComponent(e) || lookAts[e].Entity == Entity.Null)
+                    {
+                        rotation.Value = agent.transform.rotation;
+                    }
                 }
             }).Run();
         }

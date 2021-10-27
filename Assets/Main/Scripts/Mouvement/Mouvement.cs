@@ -9,5 +9,7 @@ namespace RPG.Mouvement
     {
         public Velocity Velocity;
         public float Weight;
+
+        public float Speed;
     }
 }
