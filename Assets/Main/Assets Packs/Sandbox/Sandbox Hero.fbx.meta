@@ -33,6 +33,21 @@ ModelImporter:
   - first:
       74: 6503710843971187167
     second: Armature|Run (1)
+  - first:
+      74: 1551711484631672425
+    second: Armature|Cooky
+  - first:
+      74: -5578746458225771231
+    second: Armature|Hit
+  - first:
+      74: 1737141519477749227
+    second: Armature|Hit 2
+  - first:
+      74: 7897352736164665151
+    second: Armature|Run 2
+  - first:
+      74: 5435989217927348517
+    second: Armature|Sword Swing
   externalObjects: {}
   materials:
     materialImportMode: 2
