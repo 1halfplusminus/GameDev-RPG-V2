@@ -5,7 +5,7 @@ using RPG.Combat;
 
 namespace RPG.Control
 {
-    [UpdateAfter(typeof(CombatSystemGroup))]
+    [UpdateInGroup(typeof(ControlSystemGroup))]
     public class PlayersMoveSystem : SystemBase
     {
         EntityCommandBufferSystem commandBufferSystem;

@@ -26,12 +26,12 @@ namespace RPG.Animation
         public BlobAssetReference<BlendTree1D> BlendTreeAsset;
         public float paramX;
     }
-
+    [DisableAutoCreation]
     public class BlendTree1DGraphSystem : AnimationSystemBase<
-    BlendTree1DSetup,
-    BlendTree1DData,
-    ProcessDefaultAnimationGraph
-    >
+     BlendTree1DSetup,
+     BlendTree1DData,
+     ProcessDefaultAnimationGraph
+     >
     {
         protected override BlendTree1DData CreateGraph(Entity e, ref Rig rig, ProcessDefaultAnimationGraph graphSystem, ref BlendTree1DSetup setup)
         {

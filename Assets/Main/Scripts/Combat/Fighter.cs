@@ -3,7 +3,30 @@ using Unity.Entities;
 
 namespace RPG.Combat
 {
-    [WriteGroup(typeof(MoveTo))]
+
+    public struct Hit : IComponentData
+    {
+        public Entity Hitter;
+        public Entity Hitted;
+    }
+    public struct HitEvent : IBufferElementData
+    {
+        public float Time;
+        public bool Fired;
+    }
+
+    public struct Attack : IComponentData
+    {
+        public float Cooldown;
+
+        public float TimeElapsedSinceAttack;
+
+        public bool InCooldown;
+
+
+    }
+
+
 
     public struct Fighter : IComponentData
     {
@@ -16,6 +39,16 @@ namespace RPG.Combat
         public bool TargetInRange;
 
         public int TargetFoundThisFrame;
+
+        public bool Attacking;
+
+        public float AttackCooldown;
+
+        public float AttackDuration;
+
+        public Attack currentAttack;
+
+
 
     }
 

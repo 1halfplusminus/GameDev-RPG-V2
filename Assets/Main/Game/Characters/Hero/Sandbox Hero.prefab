@@ -2396,11 +2396,12 @@ GameObject:
   - component: {fileID: 5695745319709861329}
   - component: {fileID: 5695745319709861328}
   - component: {fileID: 107437449}
-  - component: {fileID: 8194305772276681050}
   - component: {fileID: 2292149375596196397}
-  - component: {fileID: -7168030280115161059}
   - component: {fileID: 3425040764700658211}
   - component: {fileID: 2557060257615369602}
+  - component: {fileID: -2885626413348678831}
+  - component: {fileID: 6341906578980584260}
+  - component: {fileID: 391773681381979515}
   m_Layer: 0
   m_Name: Sandbox Hero
   m_TagString: Untagged
@@ -2483,18 +2484,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
---- !u!114 &8194305772276681050
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5695745319709861324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b0d47fff67057eebb01887e80bc99ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2292149375596196397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2507,21 +2496,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 554ca822ecbc16844a7a99f7ec21d384, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-7168030280115161059
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5695745319709861324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df0df971e93d141be9ef51ffe6f8abd5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Move: 0
-  Attack: 0
-  Run: 0
 --- !u!114 &3425040764700658211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2557,13 +2531,18 @@ MonoBehaviour:
       NodeIDPart2: 7435511238502023859
       PortUniqueName: Root Motion Source
     Value: {fileID: 0}
+  - TargetGUID:
+      NodeIDPart1: 10308652216306720667
+      NodeIDPart2: 6192595653868355496
+      PortUniqueName: Root Motion Source
+    Value: {fileID: 0}
   PhaseIdentification: Unity.Animation.ProcessLateAnimationGraphLoaderSystem+Tag,
     Unity.Animation.DefaultGraphPipeline, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   ShowBindings: 1
   Inputs:
   - Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
-    Value: {fileID: -7168030280115161059}
+    Value: {fileID: 391773681381979515}
 --- !u!114 &2557060257615369602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2669,6 +2648,52 @@ MonoBehaviour:
   ScaleChannels: []
   FloatChannels: []
   IntChannels: []
+--- !u!114 &-2885626413348678831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5695745319709861324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af594260ba85fab36a94d2e9494cb359, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RaycastDistance: 10000
+--- !u!114 &6341906578980584260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5695745319709861324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a97fcf35d59fd3a6aa77dac23a31032, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WeaponRange: 3
+  AttackCooldown: 1
+  AttackDuration: 1.08
+  HitEvents:
+  - 0.2
+--- !u!114 &391773681381979515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5695745319709861324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df0df971e93d141be9ef51ffe6f8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Move: 0
+  Attack: 0
+  AttackCooldown: 0
+  Run: 0
 --- !u!1 &5714082711036446844
 GameObject:
   m_ObjectHideFlags: 0

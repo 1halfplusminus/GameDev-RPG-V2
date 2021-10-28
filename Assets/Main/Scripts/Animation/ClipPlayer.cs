@@ -2,7 +2,7 @@ using Unity.Animation;
 using Unity.DataFlowGraph;
 using Unity.Entities;
 using UnityEngine;
-
+using RPG.Core;
 namespace RPG.Animation
 {
 
@@ -49,6 +49,7 @@ namespace RPG.Animation
 
     }
 
+    [DisableAutoCreation]
     [UpdateBefore(typeof(DefaultAnimationSystemGroup))]
     public class PlayClipSystemBase : AnimationSystemBase<PlayClip, PlayClipStateComponent, ProcessDefaultAnimationGraph>
     {

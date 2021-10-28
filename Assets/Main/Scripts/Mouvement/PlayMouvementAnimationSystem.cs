@@ -1,10 +1,11 @@
 
 using Unity.Entities;
 using Unity.Mathematics;
-
+using Unity.Animation;
 
 namespace RPG.Mouvement
 {
+    [UpdateInGroup(typeof(MouvementSystemGroup))]
     public class PlayMouvementAnimationSystem : SystemBase
     {
         protected override void OnUpdate()
@@ -21,7 +22,6 @@ namespace RPG.Mouvement
                         characterAnimation.Run = zLinear * 2;
                     }
                 }
-
                 /*   player.paramX = math.abs(mouvement.Velocity.Linear.z); */
             }).ScheduleParallel();
         }

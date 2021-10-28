@@ -7,6 +7,7 @@ namespace RPG.Animation
 #if UNITY_EDITOR
     using UnityEditor.Animations;
     using Unity.Animation.Hybrid;
+    using RPG.Core;
 
     class BlendTree1DPlayer : MonoBehaviour
     {
@@ -15,6 +16,7 @@ namespace RPG.Animation
 
     }
     [UpdateAfter(typeof(RigConversion))]
+
     public class BlendTree1DPlayerConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()

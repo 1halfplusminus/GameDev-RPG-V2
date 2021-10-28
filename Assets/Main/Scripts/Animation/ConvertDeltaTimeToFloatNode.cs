@@ -1,27 +1,11 @@
+using RPG.Core;
 using Unity.Animation;
 using Unity.Burst;
 using Unity.DataFlowGraph;
-using Unity.Entities;
+
 
 namespace RPG.Animation
 {
-    public struct DeltaTime : IComponentData
-    {
-        public float Value;
-    }
-
-    [UpdateBefore(typeof(DefaultAnimationSystemGroup))]
-    public class UpdateAnimationDeltaTime : SystemBase
-    {
-        protected override void OnUpdate()
-        {
-            var worldDetaTime = World.Time.DeltaTime;
-            Entities.ForEach((Entity Entity, ref DeltaTime dt) =>
-            {
-                dt.Value = worldDetaTime;
-            }).ScheduleParallel();
-        }
-    }
 
     public class ConvertDeltaTimeToFloatNode :
     ConvertToBase

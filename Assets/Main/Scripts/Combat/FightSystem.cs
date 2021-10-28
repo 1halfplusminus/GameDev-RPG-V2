@@ -2,6 +2,9 @@ using Unity.Entities;
 using RPG.Core;
 using Unity.Transforms;
 using RPG.Mouvement;
+using Unity.Mathematics;
+using Unity.Jobs;
+using Unity.Animation;
 
 namespace RPG.Combat
 {
@@ -83,6 +86,70 @@ namespace RPG.Combat
             }).ScheduleParallel();
         }
     }
+    [UpdateInGroup(typeof(CombatSystemGroup))]
+    public class HitSystem : SystemBase
+    {
+        EntityCommandBufferSystem beginSimulationEntityCommandBufferSystem;
+
+        EntityCommandBufferSystem endSimulationEntityCommandBufferSystem;
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            beginSimulationEntityCommandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
+            endSimulationEntityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        }
+        protected override void OnUpdate()
+        {
+            FireEvent();
+            CleanUp();
+        }
+        public void CleanUp()
+        {
+
+            var commandBuffer = endSimulationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            // Pass hit event as not fired
+            Entities.ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
+            {
+                for (int i = 0; i < hitEvents.Length; i++)
+                {
+                    var hitEvent = hitEvents[i];
+                    hitEvent.Fired = false;
+                    hitEvents[i] = hitEvent;
+                }
+            }).ScheduleParallel();
+            // Clean up hit event 
+            Entities.WithAll<Hit>().ForEach((Entity e, int entityInQueryIndex) =>
+            {
+                commandBuffer.DestroyEntity(entityInQueryIndex, e);
+            }).ScheduleParallel();
+            endSimulationEntityCommandBufferSystem.AddJobHandleForProducer(this.Dependency);
+        }
+        public void FireEvent()
+        {
+            var commandBuffer = beginSimulationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            // Create hit event
+            Entities.ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
+            {
+                if (fighter.currentAttack.TimeElapsedSinceAttack >= 0)
+                {
+                    for (int i = 0; i < hitEvents.Length; i++)
+                    {
+                        var hitEvent = hitEvents[i];
+                        if (hitEvent.Fired == false && fighter.currentAttack.TimeElapsedSinceAttack >= hitEvent.Time)
+                        {
+                            hitEvent.Fired = true;
+                            hitEvents[i] = hitEvent;
+                            var eventEntity = commandBuffer.CreateEntity(entityInQueryIndex);
+                            commandBuffer.AddComponent(entityInQueryIndex, eventEntity, new Hit { Hitted = fighter.Target, Hitter = e });
+                        }
+                    }
+                }
+            }).ScheduleParallel();
+
+            beginSimulationEntityCommandBufferSystem.AddJobHandleForProducer(this.Dependency);
+        }
+    }
     [UpdateAfter(typeof(CombatTargettingSystem))]
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class FightSystem : SystemBase
@@ -97,6 +164,52 @@ namespace RPG.Combat
                        Debug.Log(debug); */
                 }
             }).ScheduleParallel();
+
+            ThrottleAttack();
+        }
+
+
+        private void ThrottleAttack()
+        {
+            Entities.ForEach((ref Fighter fighter, in DeltaTime deltaTime) =>
+            {
+                // It attack if time elapsed since last attack >= duration of the attack
+                if (fighter.currentAttack.TimeElapsedSinceAttack > fighter.AttackDuration)
+                {
+                    fighter.currentAttack.Cooldown = fighter.AttackCooldown;
+                    fighter.Attacking = false;
+                    fighter.currentAttack.TimeElapsedSinceAttack = 0.0f;
+
+                }
+                // It  increase the time elapsed since attack
+                if (fighter.Attacking)
+                {
+                    fighter.currentAttack.TimeElapsedSinceAttack += deltaTime.Value;
+                }
+                // It cancel attack if fighter move || no target in range
+                if (fighter.MoveTowardTarget || !fighter.TargetInRange)
+                {
+                    fighter.Attacking = false;
+                }
+
+                // It attack if target in range & the attack cooldown is at 0
+                if (fighter.TargetInRange && !fighter.Attacking && fighter.currentAttack.Cooldown <= 0)
+                {
+                    fighter.Attacking = true;
+                    fighter.currentAttack.TimeElapsedSinceAttack = 0.0f;
+                }
+                // deacrease attack cooldwon if fighter not attack & have a target
+                if (fighter.currentAttack.Cooldown >= 0)
+                {
+                    fighter.currentAttack.InCooldown = true;
+                    fighter.currentAttack.Cooldown -= deltaTime.Value;
+                }
+                else
+                {
+                    fighter.currentAttack.InCooldown = false;
+                }
+
+            }).ScheduleParallel();
         }
     }
 
@@ -108,13 +221,24 @@ namespace RPG.Combat
         {
             Entities.WithAll<Fighter>().ForEach((ref CharacterAnimation characterAnimation, in Fighter fighter) =>
             {
-                if (fighter.TargetInRange)
+                if (fighter.currentAttack.InCooldown && characterAnimation.AttackCooldown <= 1)
+                {
+                    characterAnimation.AttackCooldown += 0.05f;
+
+                }
+
+                if (fighter.Attacking && fighter.TargetInRange)
                 {
                     characterAnimation.Attack = 1.0f;
                 }
-                else
+
+                if (!fighter.Attacking && !fighter.currentAttack.InCooldown)
                 {
                     characterAnimation.Attack = 0.0f;
+                }
+                if (!fighter.currentAttack.InCooldown)
+                {
+                    characterAnimation.AttackCooldown = 0.0f;
                 }
             }).ScheduleParallel();
         }

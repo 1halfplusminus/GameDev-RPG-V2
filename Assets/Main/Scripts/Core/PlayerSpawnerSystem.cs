@@ -8,7 +8,7 @@ namespace RPG.Core
     {
         public Entity Prefab;
     }
-
+    [UpdateInGroup(typeof(CoreSystemGroup))]
     public class SpawnSystem : SystemBase
     {
         EndSimulationEntityCommandBufferSystem endSimulationEntityCommandBufferSystem;
