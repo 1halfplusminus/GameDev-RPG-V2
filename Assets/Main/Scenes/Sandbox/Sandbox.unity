@@ -1120,14 +1120,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -7168030280115161059, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
-      propertyPath: Move
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3425040764700658211, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
-      propertyPath: Context
-      value: 
-      objectReference: {fileID: 1445063446}
     - target: {fileID: 4918083197768974198, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -1176,23 +1168,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sandbox Hero
       objectReference: {fileID: 0}
-    - target: {fileID: 5695745319709861324, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
---- !u!114 &1445063446 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7519504053941248130, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
-  m_PrefabInstance: {fileID: 1445063445}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9aea18a9fecfd504ba1a9c0f8ebcb60a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1554412206 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3326130495783064943, guid: debe30e6757b8844c952def647f16845, type: 3}

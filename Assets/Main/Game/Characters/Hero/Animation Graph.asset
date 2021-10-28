@@ -45,7 +45,7 @@ MonoBehaviour:
         PortID:
           ID: 0
           Index: 65535
-        Asset: {fileID: 5435989217927348517, guid: ce6fc83c01dfbf044913edd77a54c825, type: 3}
+        Asset: {fileID: 7400000, guid: 3f97c25c54b04f25d848c02dc082375f, type: 2}
       ExposedObjects:
       - NodeID:
           Value: 27
@@ -1280,7 +1280,7 @@ MonoBehaviour:
           m_Value0: 2939800822763986780
           m_Value1: 7435511238502023859
         m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: -567, y: 196}
+        m_Position: {x: -530.00006, y: 223.99998}
         m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
         m_HasUserColor: 0
         m_Title: Animation Clip
@@ -1717,7 +1717,7 @@ MonoBehaviour:
     00000023:
       type: {class: AnimationClipReferenceConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
       data:
-        m_Value: {fileID: 5435989217927348517, guid: ce6fc83c01dfbf044913edd77a54c825, type: 3}
+        m_Value: {fileID: 7400000, guid: 3f97c25c54b04f25d848c02dc082375f, type: 2}
     00000024:
       type: {class: MotionIDConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
       data:
