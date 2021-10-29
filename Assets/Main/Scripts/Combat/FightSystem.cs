@@ -2,9 +2,7 @@ using Unity.Entities;
 using RPG.Core;
 using Unity.Transforms;
 using RPG.Mouvement;
-using Unity.Mathematics;
 using Unity.Jobs;
-using Unity.Animation;
 
 namespace RPG.Combat
 {
@@ -70,15 +68,19 @@ namespace RPG.Combat
             var hittables = GetComponentDataFromEntity<Hittable>(true);
             Entities
             .WithReadOnly(hittables)
-            .ForEach((ref Fighter fighter, in DynamicBuffer<HittedByRaycast> rayHits) =>
+            .ForEach((Entity e, ref Fighter fighter, in DynamicBuffer<HittedByRaycast> rayHits) =>
             {
                 fighter.TargetFoundThisFrame = 0;
                 foreach (var rayHit in rayHits)
                 {
                     if (hittables.HasComponent(rayHit.Hitted))
                     {
-                        fighter.Target = rayHit.Hitted;
-                        fighter.TargetFoundThisFrame += 1;
+                        if (rayHit.Hitted != e)
+                        {
+                            fighter.Target = rayHit.Hitted;
+                            fighter.TargetFoundThisFrame += 1;
+                        }
+                   
                     }
 
                 }
