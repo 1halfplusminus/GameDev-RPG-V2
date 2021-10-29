@@ -52,7 +52,7 @@ namespace RPG.Mouvement
         }
     }
     [UpdateInGroup(typeof(MouvementSystemGroup))]
-    [UpdateAfter(typeof(MouvementSystemGroup))]
+    [UpdateAfter(typeof(MoveTo))]
     public class MoveToNavMeshAgentSystem : SystemBase
     {
 

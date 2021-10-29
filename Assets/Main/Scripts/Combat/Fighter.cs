@@ -8,6 +8,8 @@ namespace RPG.Combat
     {
         public Entity Hitter;
         public Entity Hitted;
+
+        public float Damage;
     }
     public struct HitEvent : IBufferElementData
     {
@@ -48,8 +50,7 @@ namespace RPG.Combat
 
         public Attack currentAttack;
 
-
-
+        public float WeaponDamage;
     }
 
 }

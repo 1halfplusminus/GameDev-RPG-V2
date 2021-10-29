@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -1041620972555775595}
   - component: {fileID: 4303584095773912754}
   - component: {fileID: 7188499636866807361}
+  - component: {fileID: 6970916467740130543}
   m_Layer: 0
   m_Name: Enemy Placholder
   m_TagString: Untagged
@@ -96,6 +97,19 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &6970916467740130543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6394583991496055413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 114f51e9af3ac2dfaaf745980c822de3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Value: 100
 --- !u!1 &9216629865647794109
 GameObject:
   m_ObjectHideFlags: 0

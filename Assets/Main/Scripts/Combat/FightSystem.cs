@@ -109,13 +109,16 @@ namespace RPG.Combat
 
             var commandBuffer = endSimulationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             // Pass hit event as not fired
-            Entities.ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
+            Entities.WithChangeFilter<Fighter>().ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
             {
-                for (int i = 0; i < hitEvents.Length; i++)
+                if (fighter.currentAttack.InCooldown)
                 {
-                    var hitEvent = hitEvents[i];
-                    hitEvent.Fired = false;
-                    hitEvents[i] = hitEvent;
+                    for (int i = 0; i < hitEvents.Length; i++)
+                    {
+                        var hitEvent = hitEvents[i];
+                        hitEvent.Fired = false;
+                        hitEvents[i] = hitEvent;
+                    }
                 }
             }).ScheduleParallel();
             // Clean up hit event 
@@ -174,7 +177,7 @@ namespace RPG.Combat
             Entities.ForEach((ref Fighter fighter, in DeltaTime deltaTime) =>
             {
                 // It attack if time elapsed since last attack >= duration of the attack
-                if (fighter.currentAttack.TimeElapsedSinceAttack > fighter.AttackDuration)
+                if (fighter.currentAttack.TimeElapsedSinceAttack >= fighter.AttackDuration)
                 {
                     fighter.currentAttack.Cooldown = fighter.AttackCooldown;
                     fighter.Attacking = false;
@@ -193,7 +196,7 @@ namespace RPG.Combat
                 }
 
                 // It attack if target in range & the attack cooldown is at 0
-                if (fighter.TargetInRange && !fighter.Attacking && fighter.currentAttack.Cooldown <= 0)
+                if (fighter.TargetInRange && !fighter.Attacking && fighter.currentAttack.Cooldown <= 0 && !fighter.MoveTowardTarget)
                 {
                     fighter.Attacking = true;
                     fighter.currentAttack.TimeElapsedSinceAttack = 0.0f;
@@ -223,7 +226,7 @@ namespace RPG.Combat
             {
                 if (fighter.currentAttack.InCooldown && characterAnimation.AttackCooldown <= 1)
                 {
-                    characterAnimation.AttackCooldown += 0.05f;
+                    characterAnimation.AttackCooldown += 0.1f;
 
                 }
 
