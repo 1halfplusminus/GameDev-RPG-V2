@@ -3,7 +3,7 @@ using RPG.Core;
 using Unity.Transforms;
 using RPG.Mouvement;
 using Unity.Jobs;
-using Unity.Collections;
+using Unity.Mathematics;
 
 namespace RPG.Combat
 {
@@ -238,22 +238,25 @@ namespace RPG.Combat
             {
                 if (fighter.currentAttack.InCooldown && characterAnimation.AttackCooldown <= 1)
                 {
-                    characterAnimation.AttackCooldown += 0.1f;
-
+                    characterAnimation.AttackCooldown += 0.02f;
+                    characterAnimation.AttackCooldown = math.min(characterAnimation.AttackCooldown, 1f);
                 }
 
                 if (fighter.Attacking && fighter.TargetInRange)
                 {
-                    characterAnimation.Attack = 1.0f;
+                    characterAnimation.Attack += 0.02f;
+                    characterAnimation.Attack = math.min(characterAnimation.Attack, 1f);
+                }
+
+                if (!fighter.currentAttack.InCooldown)
+                {
+                    characterAnimation.AttackCooldown -= 0.03f;
+                    characterAnimation.AttackCooldown = math.max(characterAnimation.AttackCooldown, 0f);
                 }
 
                 if (!fighter.Attacking && !fighter.currentAttack.InCooldown)
                 {
                     characterAnimation.Attack = 0.0f;
-                }
-                if (!fighter.currentAttack.InCooldown)
-                {
-                    characterAnimation.AttackCooldown = 0.0f;
                 }
             }).ScheduleParallel();
         }

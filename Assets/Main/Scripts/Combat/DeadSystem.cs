@@ -5,6 +5,7 @@ using Unity.Mathematics;
 
 namespace RPG.Combat
 {
+
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class KillCharacterSystem : SystemBase
     {
@@ -17,6 +18,7 @@ namespace RPG.Combat
         protected override void OnUpdate()
         {
             var commandBuffer = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+
             Entities
             .WithNone<IsDeadTag>()
             .ForEach((Entity e, int entityInQueryIndex, in Health health) =>
@@ -26,7 +28,6 @@ namespace RPG.Combat
                     commandBuffer.AddComponent<IsDeadTag>(entityInQueryIndex, e);
                 }
             }).ScheduleParallel();
-            commandBufferSystem.AddJobHandleForProducer(this.Dependency);
 
             Entities.WithAll<IsDeadTag, Hittable>()
             .ForEach((Entity e, int entityInQueryIndex) =>
@@ -35,6 +36,8 @@ namespace RPG.Combat
                 commandBuffer.RemoveComponent<Hittable>(entityInQueryIndex, e);
             })
             .ScheduleParallel();
+
+            commandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
@@ -46,8 +49,8 @@ namespace RPG.Combat
             .WithAny<IsDeadTag>()
             .ForEach((ref CharacterAnimation animation) =>
             {
-                Debug.Log("Is Dead");
-                animation.Dead += 0.08f;
+
+                animation.Dead += 0.02f;
                 animation.Dead = math.min(animation.Dead, 1f);
             }).ScheduleParallel();
         }

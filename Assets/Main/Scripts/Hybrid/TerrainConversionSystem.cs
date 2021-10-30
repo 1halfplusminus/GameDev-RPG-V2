@@ -45,7 +45,6 @@ public class TerrainConversionSystem : GameObjectConversionSystem
             var colliders = Unity.Physics.TerrainCollider.Create(heights, size, scale,
                 Unity.Physics.TerrainCollider.CollisionMethod.VertexSamples,
                 CollisionFilter.Default);
-            Debug.Log("Here");
             DstEntityManager.AddComponent<Navigable>(entity);
             DstEntityManager.AddComponentData(entity, new PhysicsCollider()
             {

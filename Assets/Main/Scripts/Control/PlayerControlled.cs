@@ -22,7 +22,7 @@ namespace RPG.Control
     {
         protected override void OnUpdate()
         {
-            Entities.ForEach((PlayerControlledAuthoring playerControlled, AnimationGraph animationGraph) =>
+            Entities.ForEach((PlayerControlledAuthoring playerControlled) =>
             {
                 var entity = GetPrimaryEntity(playerControlled);
                 DstEntityManager.AddComponent<PlayerControlled>(entity);
@@ -86,6 +86,7 @@ namespace RPG.Control
             }).ScheduleParallel();
         }
     }
+    [DisableAutoCreation]
 
     [UpdateInGroup(typeof(ControlSystemGroup))]
     public class NoInteractionSystem : SystemBase
@@ -99,7 +100,7 @@ namespace RPG.Control
             {
                 if (f.Target == Entity.Null)
                 {
-                    UnityEngine.Debug.Log("No interaction");
+
                 }
             }).ScheduleParallel();
         }

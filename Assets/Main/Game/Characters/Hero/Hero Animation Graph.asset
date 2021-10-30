@@ -2593,7 +2593,7 @@ MonoBehaviour:
     00000034:
       type: {class: AnimationClipReferenceConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
       data:
-        m_Value: {fileID: 7400000, guid: 92cd7fd4b000f00a8916b05d6ddc24f8, type: 2}
+        m_Value: {fileID: 7400000, guid: 93edc0e4f52deefea99b24b61037069e, type: 2}
     00000035:
       type: {class: MotionIDConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
       data:
