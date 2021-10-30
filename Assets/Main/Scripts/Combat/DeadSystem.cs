@@ -47,7 +47,7 @@ namespace RPG.Combat
             .ForEach((ref CharacterAnimation animation) =>
             {
                 Debug.Log("Is Dead");
-                animation.Dead += 0.01f;
+                animation.Dead += 0.08f;
                 animation.Dead = math.min(animation.Dead, 1f);
             }).ScheduleParallel();
         }
