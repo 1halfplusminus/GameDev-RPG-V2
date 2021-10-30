@@ -57,6 +57,12 @@ ModelImporter:
   - first:
       74: 1021639208820258769
     second: Short.|IDLE
+  - first:
+      74: -6039235621738319110
+    second: Armature|Armature.002|mixamo.com|Layer0
+  - first:
+      74: -982115091633673366
+    second: Armature|Death
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -72,50 +78,7 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
-    animationImportWarnings: "\nClip 'Armature|Cooky' has import animation warnings
-      that might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'CSpine' has translation animation that
-      will be discarded.\n\t'CSpine' is inbetween humanoid transforms and has rotation
-      animation that will be discarded.\n\t'IKCore' has translation animation that
-      will be discarded.\n\t'Spine.002' has translation animation that will be discarded.\n\nClip
-      'Armature|Hit' has import animation warnings that might lower retargeting quality:\nNote:
-      Activate translation DOF on avatar to improve retargeting quality.\n\t'CSpine'
-      has translation animation that will be discarded.\n\t'CSpine' is inbetween
-      humanoid transforms and has rotation animation that will be discarded.\n\t'Spine'
-      has translation animation that will be discarded.\n\t'Spine' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\t'IKCore' has
-      translation animation that will be discarded.\n\t'Spine.002' has translation
-      animation that will be discarded.\n\nClip 'Armature|Hit 2' has import animation
-      warnings that might lower retargeting quality:\nNote: Activate translation
-      DOF on avatar to improve retargeting quality.\n\t'CSpine' has translation animation
-      that will be discarded.\n\t'CSpine' is inbetween humanoid transforms and has
-      rotation animation that will be discarded.\n\t'Spine' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\t'IKCore' has
-      translation animation that will be discarded.\n\t'Spine.002' has translation
-      animation that will be discarded.\n\nClip 'Armature|IDLE' has import animation
-      warnings that might lower retargeting quality:\nNote: Activate translation
-      DOF on avatar to improve retargeting quality.\n\t'CSpine' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\nClip 'Armature|Left
-      Turn 90' has import animation warnings that might lower retargeting quality:\nNote:
-      Activate translation DOF on avatar to improve retargeting quality.\n\t'CSpine'
-      has translation animation that will be discarded.\n\t'CSpine' is inbetween
-      humanoid transforms and has rotation animation that will be discarded.\n\t'IKCore'
-      has translation animation that will be discarded.\n\t'Spine.002' has translation
-      animation that will be discarded.\n\nClip 'Armature|Run 2' has import animation
-      warnings that might lower retargeting quality:\nNote: Activate translation
-      DOF on avatar to improve retargeting quality.\n\t'CSpine' has translation animation
-      that will be discarded.\n\t'CSpine' is inbetween humanoid transforms and has
-      rotation animation that will be discarded.\n\t'Spine' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\t'Spine.002'
-      has translation animation that will be discarded.\n\nClip 'Armature|Sword Swing'
-      has import animation warnings that might lower retargeting quality:\nNote:
-      Activate translation DOF on avatar to improve retargeting quality.\n\t'CSpine'
-      has translation animation that will be discarded.\n\t'CSpine' is inbetween
-      humanoid transforms and has rotation animation that will be discarded.\n\t'Spine'
-      has translation animation that will be discarded.\n\t'Spine' is inbetween humanoid
-      transforms and has rotation animation that will be discarded.\n\t'IKCore' has
-      translation animation that will be discarded.\n\t'Spine.002' has translation
-      animation that will be discarded.\n"
+    animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0

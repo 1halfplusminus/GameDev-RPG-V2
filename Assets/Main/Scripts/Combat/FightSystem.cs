@@ -3,6 +3,7 @@ using RPG.Core;
 using Unity.Transforms;
 using RPG.Mouvement;
 using Unity.Jobs;
+using Unity.Collections;
 
 namespace RPG.Combat
 {
@@ -80,7 +81,7 @@ namespace RPG.Combat
                             fighter.Target = rayHit.Hitted;
                             fighter.TargetFoundThisFrame += 1;
                         }
-                   
+
                     }
 
                 }
@@ -89,6 +90,7 @@ namespace RPG.Combat
         }
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
+    [UpdateAfter(typeof(FightSystem))]
     public class HitSystem : SystemBase
     {
         EntityCommandBufferSystem beginSimulationEntityCommandBufferSystem;
@@ -111,7 +113,7 @@ namespace RPG.Combat
 
             var commandBuffer = endSimulationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             // Pass hit event as not fired
-            Entities.WithChangeFilter<Fighter>().ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
+            Entities.ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
             {
                 if (fighter.currentAttack.InCooldown)
                 {
@@ -159,62 +161,70 @@ namespace RPG.Combat
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class FightSystem : SystemBase
     {
+        EntityQuery targetQuery;
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            targetQuery = GetEntityQuery(ComponentType.ReadOnly<Hittable>());
+        }
         protected override void OnUpdate()
         {
-            Entities.WithAll<Fighter>().ForEach((Entity e, in Fighter fighter) =>
-            {
-                if (fighter.Target != Entity.Null)
-                {
-                    /*    var debug = "Entity  e:" + e.Index + " target : " + fighter.Target.Index;
-                       Debug.Log(debug); */
-                }
-            }).ScheduleParallel();
 
+            UnTargetNoHittableTarget();
             ThrottleAttack();
         }
 
-
+        private void UnTargetNoHittableTarget()
+        {
+            Entities.ForEach((ref Fighter f) =>
+            {
+                if (!HasComponent<Hittable>(f.Target))
+                {
+                    f.Target = Entity.Null;
+                }
+            }).ScheduleParallel();
+        }
         private void ThrottleAttack()
         {
             Entities.ForEach((ref Fighter fighter, in DeltaTime deltaTime) =>
-            {
-                // It attack if time elapsed since last attack >= duration of the attack
-                if (fighter.currentAttack.TimeElapsedSinceAttack >= fighter.AttackDuration)
-                {
-                    fighter.currentAttack.Cooldown = fighter.AttackCooldown;
-                    fighter.Attacking = false;
-                    fighter.currentAttack.TimeElapsedSinceAttack = 0.0f;
+                 {
+                     // It attack if time elapsed since last attack >= duration of the attack
+                     if (fighter.currentAttack.TimeElapsedSinceAttack >= fighter.AttackDuration)
+                     {
+                         fighter.currentAttack.Cooldown = fighter.AttackCooldown;
+                         fighter.Attacking = false;
+                         fighter.currentAttack.TimeElapsedSinceAttack = 0.0f;
 
-                }
-                // It  increase the time elapsed since attack
-                if (fighter.Attacking)
-                {
-                    fighter.currentAttack.TimeElapsedSinceAttack += deltaTime.Value;
-                }
-                // It cancel attack if fighter move || no target in range
-                if (fighter.MoveTowardTarget || !fighter.TargetInRange)
-                {
-                    fighter.Attacking = false;
-                }
+                     }
+                     // It  increase the time elapsed since attack
+                     if (fighter.Attacking)
+                     {
+                         fighter.currentAttack.TimeElapsedSinceAttack += deltaTime.Value;
+                     }
+                     // It cancel attack if fighter move || no target in range
+                     if (fighter.MoveTowardTarget || !fighter.TargetInRange)
+                     {
+                         fighter.Attacking = false;
+                     }
 
-                // It attack if target in range & the attack cooldown is at 0
-                if (fighter.TargetInRange && !fighter.Attacking && fighter.currentAttack.Cooldown <= 0 && !fighter.MoveTowardTarget)
-                {
-                    fighter.Attacking = true;
-                    fighter.currentAttack.TimeElapsedSinceAttack = 0.0f;
-                }
-                // deacrease attack cooldwon if fighter not attack & have a target
-                if (fighter.currentAttack.Cooldown >= 0)
-                {
-                    fighter.currentAttack.InCooldown = true;
-                    fighter.currentAttack.Cooldown -= deltaTime.Value;
-                }
-                else
-                {
-                    fighter.currentAttack.InCooldown = false;
-                }
+                     // It attack if target in range & the attack cooldown is at 0
+                     if (fighter.TargetInRange && !fighter.Attacking && fighter.currentAttack.Cooldown <= 0 && !fighter.MoveTowardTarget)
+                     {
+                         fighter.Attacking = true;
+                         fighter.currentAttack.TimeElapsedSinceAttack = 0.0f;
+                     }
+                     // deacrease attack cooldwon if fighter not attack & have a target
+                     if (fighter.currentAttack.Cooldown >= 0)
+                     {
+                         fighter.currentAttack.InCooldown = true;
+                         fighter.currentAttack.Cooldown -= deltaTime.Value;
+                     }
+                     else
+                     {
+                         fighter.currentAttack.InCooldown = false;
+                     }
 
-            }).ScheduleParallel();
+                 }).ScheduleParallel();
         }
     }
 

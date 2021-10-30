@@ -15,13 +15,13 @@ namespace RPG.Combat
                 var hitEvents = DstEntityManager.AddBuffer<HitEvent>(entity);
                 foreach (var hit in fighter.HitEvents)
                 {
-                    Debug.Log("add hit event");
                     hitEvents.Add(new HitEvent { Time = hit });
                 }
                 DstEntityManager.AddComponent<HittedByRaycast>(entity);
-                DstEntityManager.AddComponentData<Fighter>(entity, new Fighter { WeaponRange = fighter.WeaponRange, AttackCooldown = fighter.AttackCooldown, AttackDuration = fighter.AttackDuration });
+                DstEntityManager.AddComponentData(entity, new Fighter { WeaponRange = fighter.WeaponRange, AttackCooldown = fighter.AttackCooldown, AttackDuration = fighter.AttackDuration });
                 DstEntityManager.AddComponent<LookAt>(entity);
                 DstEntityManager.AddComponent<DeltaTime>(entity);
+                /*                 DstEntityManager.AddComponentData(entity, new CharacterState { State = CharacterStateMask.Dead | CharacterStateMask.Moving }); */
             });
         }
     }

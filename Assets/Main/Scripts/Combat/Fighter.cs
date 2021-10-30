@@ -1,4 +1,3 @@
-using RPG.Mouvement;
 using Unity.Entities;
 
 namespace RPG.Combat

@@ -15,7 +15,7 @@ MonoBehaviour:
   m_GraphModel:
     id: 0
   m_CompiledGraph:
-    DisplayName: Animation_Graph
+    DisplayName: Hero_Animation_Graph
     Definition:
       Assets:
       - TypeHash: 1999326547798121539
@@ -53,9 +53,16 @@ MonoBehaviour:
           ID: 0
           Index: 65535
         Asset: {fileID: 7400000, guid: 92cd7fd4b000f00a8916b05d6ddc24f8, type: 2}
+      - TypeHash: 1999326547798121539
+        NodeID:
+          Value: 30
+        PortID:
+          ID: 0
+          Index: 65535
+        Asset: {fileID: 7400000, guid: 420885869796a7ece9d0044b7f41940b, type: 2}
       ExposedObjects:
       - NodeID:
-          Value: 33
+          Value: 39
         PortID:
           ID: 0
           Index: 65535
@@ -65,7 +72,7 @@ MonoBehaviour:
           PortUniqueName: Root Motion Source
         TypeHash: 10514899759661910645
       - NodeID:
-          Value: 34
+          Value: 40
         PortID:
           ID: 0
           Index: 65535
@@ -75,7 +82,7 @@ MonoBehaviour:
           PortUniqueName: Root Motion Source
         TypeHash: 10514899759661910645
       - NodeID:
-          Value: 35
+          Value: 41
         PortID:
           ID: 0
           Index: 65535
@@ -85,7 +92,7 @@ MonoBehaviour:
           PortUniqueName: Root Motion Source
         TypeHash: 10514899759661910645
       - NodeID:
-          Value: 36
+          Value: 42
         PortID:
           ID: 0
           Index: 65535
@@ -95,7 +102,7 @@ MonoBehaviour:
           PortUniqueName: Root Motion Source
         TypeHash: 10514899759661910645
       - NodeID:
-          Value: 37
+          Value: 43
         PortID:
           ID: 0
           Index: 65535
@@ -104,10 +111,20 @@ MonoBehaviour:
           NodeIDPart2: 6192595653868355496
           PortUniqueName: Root Motion Source
         TypeHash: 10514899759661910645
+      - NodeID:
+          Value: 44
+        PortID:
+          ID: 0
+          Index: 65535
+        TargetGUID:
+          NodeIDPart1: 8994788693247900726
+          NodeIDPart2: 247430675634141333
+          PortUniqueName: Root Motion Source
+        TypeHash: 10514899759661910645
       InputTargets:
-      - TypeHash: 768676606604481240
+      - TypeHash: 3895280431596656302
         NodeID:
-          Value: 29
+          Value: 34
         PortID:
           ID: 0
           Index: 65535
@@ -197,55 +214,55 @@ MonoBehaviour:
         - TypeHash: -1712956359
           NodeID:
             Value: 27
-        - TypeHash: -215831955
+        - TypeHash: -2132846671
           NodeID:
             Value: 28
-        - TypeHash: 1786821323
+        - TypeHash: -1680013032
           NodeID:
             Value: 29
-        - TypeHash: -215831955
+        - TypeHash: 1982658690
           NodeID:
             Value: 30
-        - TypeHash: -215831955
+        - TypeHash: 221559073
           NodeID:
             Value: 31
-        - TypeHash: -215831955
+        - TypeHash: -1712956359
           NodeID:
             Value: 32
-        - TypeHash: 1713535982
+        - TypeHash: -215831955
           NodeID:
             Value: 33
-        - TypeHash: 1713535982
+        - TypeHash: 1786821323
           NodeID:
             Value: 34
-        - TypeHash: 1713535982
+        - TypeHash: -215831955
           NodeID:
             Value: 35
-        - TypeHash: 1713535982
+        - TypeHash: -215831955
           NodeID:
             Value: 36
-        - TypeHash: 1713535982
+        - TypeHash: -215831955
           NodeID:
             Value: 37
-        - TypeHash: 1960725004
+        - TypeHash: -215831955
           NodeID:
             Value: 38
-        - TypeHash: -1703550566
+        - TypeHash: 1713535982
           NodeID:
             Value: 39
-        - TypeHash: 1960725004
+        - TypeHash: 1713535982
           NodeID:
             Value: 40
-        - TypeHash: -1703550566
+        - TypeHash: 1713535982
           NodeID:
             Value: 41
-        - TypeHash: 1960725004
+        - TypeHash: 1713535982
           NodeID:
             Value: 42
-        - TypeHash: 1960725004
+        - TypeHash: 1713535982
           NodeID:
             Value: 43
-        - TypeHash: 1960725004
+        - TypeHash: 1713535982
           NodeID:
             Value: 44
         - TypeHash: 1960725004
@@ -266,24 +283,57 @@ MonoBehaviour:
         - TypeHash: 1960725004
           NodeID:
             Value: 50
-        - TypeHash: -1703550566
+        - TypeHash: 1960725004
           NodeID:
             Value: 51
-        - TypeHash: 138271441
+        - TypeHash: 1960725004
           NodeID:
             Value: 52
-        - TypeHash: 138271441
+        - TypeHash: -1703550566
           NodeID:
             Value: 53
-        - TypeHash: 138271441
+        - TypeHash: 1960725004
           NodeID:
             Value: 54
-        - TypeHash: 138271441
+        - TypeHash: -1703550566
           NodeID:
             Value: 55
+        - TypeHash: 1960725004
+          NodeID:
+            Value: 56
+        - TypeHash: 1960725004
+          NodeID:
+            Value: 57
+        - TypeHash: -1703550566
+          NodeID:
+            Value: 58
+        - TypeHash: 1960725004
+          NodeID:
+            Value: 59
+        - TypeHash: 1960725004
+          NodeID:
+            Value: 60
+        - TypeHash: -1703550566
+          NodeID:
+            Value: 61
+        - TypeHash: 138271441
+          NodeID:
+            Value: 62
+        - TypeHash: 138271441
+          NodeID:
+            Value: 63
+        - TypeHash: 138271441
+          NodeID:
+            Value: 64
+        - TypeHash: 138271441
+          NodeID:
+            Value: 65
+        - TypeHash: 138271441
+          NodeID:
+            Value: 66
         Connections:
         - SourceNodeID:
-            Value: 33
+            Value: 39
           SourcePortID:
             ID: 0
             Index: 65535
@@ -293,7 +343,7 @@ MonoBehaviour:
             ID: 0
             Index: 65535
         - SourceNodeID:
-            Value: 34
+            Value: 40
           SourcePortID:
             ID: 0
             Index: 65535
@@ -303,7 +353,7 @@ MonoBehaviour:
             ID: 0
             Index: 65535
         - SourceNodeID:
-            Value: 35
+            Value: 41
           SourcePortID:
             ID: 0
             Index: 65535
@@ -313,7 +363,7 @@ MonoBehaviour:
             ID: 0
             Index: 65535
         - SourceNodeID:
-            Value: 36
+            Value: 42
           SourcePortID:
             ID: 0
             Index: 65535
@@ -323,12 +373,22 @@ MonoBehaviour:
             ID: 0
             Index: 65535
         - SourceNodeID:
-            Value: 37
+            Value: 43
           SourcePortID:
             ID: 0
             Index: 65535
           DestinationNodeID:
             Value: 26
+          DestinationPortID:
+            ID: 0
+            Index: 65535
+        - SourceNodeID:
+            Value: 44
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 31
           DestinationPortID:
             ID: 0
             Index: 65535
@@ -343,7 +403,7 @@ MonoBehaviour:
             ID: 1
             Index: 65535
         - SourceNodeID:
-            Value: 38
+            Value: 45
           SourcePortID:
             ID: 0
             Index: 65535
@@ -353,7 +413,7 @@ MonoBehaviour:
             ID: 3
             Index: 65535
         - SourceNodeID:
-            Value: 39
+            Value: 46
           SourcePortID:
             ID: 0
             Index: 65535
@@ -373,7 +433,7 @@ MonoBehaviour:
             ID: 1
             Index: 65535
         - SourceNodeID:
-            Value: 40
+            Value: 47
           SourcePortID:
             ID: 0
             Index: 65535
@@ -383,7 +443,7 @@ MonoBehaviour:
             ID: 3
             Index: 65535
         - SourceNodeID:
-            Value: 41
+            Value: 48
           SourcePortID:
             ID: 0
             Index: 65535
@@ -393,7 +453,7 @@ MonoBehaviour:
             ID: 4
             Index: 65535
         - SourceNodeID:
-            Value: 42
+            Value: 49
           SourcePortID:
             ID: 0
             Index: 65535
@@ -403,7 +463,7 @@ MonoBehaviour:
             ID: 3
             Index: 65535
         - SourceNodeID:
-            Value: 43
+            Value: 50
           SourcePortID:
             ID: 0
             Index: 65535
@@ -413,7 +473,7 @@ MonoBehaviour:
             ID: 3
             Index: 65535
         - SourceNodeID:
-            Value: 44
+            Value: 51
           SourcePortID:
             ID: 0
             Index: 65535
@@ -433,7 +493,7 @@ MonoBehaviour:
             ID: 1
             Index: 65535
         - SourceNodeID:
-            Value: 45
+            Value: 52
           SourcePortID:
             ID: 0
             Index: 65535
@@ -443,7 +503,7 @@ MonoBehaviour:
             ID: 3
             Index: 65535
         - SourceNodeID:
-            Value: 46
+            Value: 53
           SourcePortID:
             ID: 0
             Index: 65535
@@ -463,7 +523,7 @@ MonoBehaviour:
             ID: 1
             Index: 65535
         - SourceNodeID:
-            Value: 47
+            Value: 54
           SourcePortID:
             ID: 0
             Index: 65535
@@ -473,7 +533,7 @@ MonoBehaviour:
             ID: 3
             Index: 65535
         - SourceNodeID:
-            Value: 48
+            Value: 55
           SourcePortID:
             ID: 0
             Index: 65535
@@ -483,7 +543,7 @@ MonoBehaviour:
             ID: 4
             Index: 65535
         - SourceNodeID:
-            Value: 49
+            Value: 56
           SourcePortID:
             ID: 0
             Index: 65535
@@ -503,7 +563,7 @@ MonoBehaviour:
             ID: 1
             Index: 65535
         - SourceNodeID:
-            Value: 50
+            Value: 57
           SourcePortID:
             ID: 0
             Index: 65535
@@ -513,7 +573,7 @@ MonoBehaviour:
             ID: 3
             Index: 65535
         - SourceNodeID:
-            Value: 51
+            Value: 58
           SourcePortID:
             ID: 0
             Index: 65535
@@ -523,42 +583,92 @@ MonoBehaviour:
             ID: 4
             Index: 65535
         - SourceNodeID:
-            Value: 52
+            Value: 59
           SourcePortID:
             ID: 0
             Index: 65535
           DestinationNodeID:
             Value: 28
           DestinationPortID:
-            ID: 1
+            ID: 3
             Index: 65535
         - SourceNodeID:
-            Value: 53
-          SourcePortID:
-            ID: 0
-            Index: 65535
-          DestinationNodeID:
             Value: 30
-          DestinationPortID:
-            ID: 1
-            Index: 65535
-        - SourceNodeID:
-            Value: 54
           SourcePortID:
             ID: 0
             Index: 65535
           DestinationNodeID:
-            Value: 31
+            Value: 29
           DestinationPortID:
             ID: 1
             Index: 65535
         - SourceNodeID:
-            Value: 55
+            Value: 60
           SourcePortID:
             ID: 0
             Index: 65535
           DestinationNodeID:
-            Value: 32
+            Value: 29
+          DestinationPortID:
+            ID: 3
+            Index: 65535
+        - SourceNodeID:
+            Value: 61
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 29
+          DestinationPortID:
+            ID: 4
+            Index: 65535
+        - SourceNodeID:
+            Value: 62
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 33
+          DestinationPortID:
+            ID: 1
+            Index: 65535
+        - SourceNodeID:
+            Value: 63
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 35
+          DestinationPortID:
+            ID: 1
+            Index: 65535
+        - SourceNodeID:
+            Value: 64
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 36
+          DestinationPortID:
+            ID: 1
+            Index: 65535
+        - SourceNodeID:
+            Value: 65
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 37
+          DestinationPortID:
+            ID: 1
+            Index: 65535
+        - SourceNodeID:
+            Value: 66
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 38
           DestinationPortID:
             ID: 1
             Index: 65535
@@ -603,16 +713,6 @@ MonoBehaviour:
             ID: 2
             Index: 65535
         - SourceNodeID:
-            Value: 13
-          SourcePortID:
-            ID: 0
-            Index: 65535
-          DestinationNodeID:
-            Value: 3
-          DestinationPortID:
-            ID: 1
-            Index: 65535
-        - SourceNodeID:
             Value: 12
           SourcePortID:
             ID: 0
@@ -649,6 +749,36 @@ MonoBehaviour:
             Index: 65535
           DestinationNodeID:
             Value: 23
+          DestinationPortID:
+            ID: 2
+            Index: 65535
+        - SourceNodeID:
+            Value: 13
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 28
+          DestinationPortID:
+            ID: 1
+            Index: 65535
+        - SourceNodeID:
+            Value: 28
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 3
+          DestinationPortID:
+            ID: 1
+            Index: 65535
+        - SourceNodeID:
+            Value: 29
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 28
           DestinationPortID:
             ID: 2
             Index: 65535
@@ -753,42 +883,72 @@ MonoBehaviour:
             ID: 2
             Index: 65535
         - SourceNodeID:
-            Value: 29
-          SourcePortID:
-            ID: 0
-            Index: 65535
-          DestinationNodeID:
-            Value: 28
-          DestinationPortID:
-            ID: 0
-            Index: 65535
-        - SourceNodeID:
-            Value: 29
-          SourcePortID:
-            ID: 0
-            Index: 65535
-          DestinationNodeID:
-            Value: 30
-          DestinationPortID:
-            ID: 0
-            Index: 65535
-        - SourceNodeID:
-            Value: 29
-          SourcePortID:
-            ID: 0
-            Index: 65535
-          DestinationNodeID:
             Value: 31
-          DestinationPortID:
-            ID: 0
-            Index: 65535
-        - SourceNodeID:
-            Value: 29
           SourcePortID:
             ID: 0
             Index: 65535
           DestinationNodeID:
+            Value: 29
+          DestinationPortID:
+            ID: 5
+            Index: 65535
+        - SourceNodeID:
             Value: 32
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 29
+          DestinationPortID:
+            ID: 2
+            Index: 65535
+        - SourceNodeID:
+            Value: 34
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 33
+          DestinationPortID:
+            ID: 0
+            Index: 65535
+        - SourceNodeID:
+            Value: 34
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 35
+          DestinationPortID:
+            ID: 0
+            Index: 65535
+        - SourceNodeID:
+            Value: 34
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 36
+          DestinationPortID:
+            ID: 0
+            Index: 65535
+        - SourceNodeID:
+            Value: 34
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 37
+          DestinationPortID:
+            ID: 0
+            Index: 65535
+        - SourceNodeID:
+            Value: 34
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 38
           DestinationPortID:
             ID: 0
             Index: 65535
@@ -893,7 +1053,27 @@ MonoBehaviour:
             ID: 0
             Index: 65535
         - SourceNodeID:
+            Value: 0
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
             Value: 28
+          DestinationPortID:
+            ID: 0
+            Index: 65535
+        - SourceNodeID:
+            Value: 0
+          SourcePortID:
+            ID: 0
+            Index: 65535
+          DestinationNodeID:
+            Value: 29
+          DestinationPortID:
+            ID: 0
+            Index: 65535
+        - SourceNodeID:
+            Value: 33
           SourcePortID:
             ID: 0
             Index: 65535
@@ -903,7 +1083,7 @@ MonoBehaviour:
             ID: 3
             Index: 65535
         - SourceNodeID:
-            Value: 30
+            Value: 35
           SourcePortID:
             ID: 0
             Index: 65535
@@ -913,7 +1093,7 @@ MonoBehaviour:
             ID: 3
             Index: 65535
         - SourceNodeID:
-            Value: 31
+            Value: 36
           SourcePortID:
             ID: 0
             Index: 65535
@@ -923,7 +1103,7 @@ MonoBehaviour:
             ID: 3
             Index: 65535
         - SourceNodeID:
-            Value: 32
+            Value: 37
           SourcePortID:
             ID: 0
             Index: 65535
@@ -932,84 +1112,17 @@ MonoBehaviour:
           DestinationPortID:
             ID: 3
             Index: 65535
-        Values:
-        - Node:
+        - SourceNodeID:
             Value: 38
-          Port:
+          SourcePortID:
             ID: 0
             Index: 65535
-          Type: 8
-          Value:
-            x: 1065353216
-            y: 0
-            z: 0
-            w: 0
-        - Node:
-            Value: 39
-          Port:
-            ID: 0
+          DestinationNodeID:
+            Value: 28
+          DestinationPortID:
+            ID: 3
             Index: 65535
-          Type: 1
-          Value:
-            x: 1
-            y: 0
-            z: 0
-            w: 0
-        - Node:
-            Value: 40
-          Port:
-            ID: 0
-            Index: 65535
-          Type: 8
-          Value:
-            x: 1065353216
-            y: 0
-            z: 0
-            w: 0
-        - Node:
-            Value: 41
-          Port:
-            ID: 0
-            Index: 65535
-          Type: 1
-          Value:
-            x: 1
-            y: 0
-            z: 0
-            w: 0
-        - Node:
-            Value: 42
-          Port:
-            ID: 0
-            Index: 65535
-          Type: 8
-          Value:
-            x: 0
-            y: 0
-            z: 0
-            w: 0
-        - Node:
-            Value: 43
-          Port:
-            ID: 0
-            Index: 65535
-          Type: 8
-          Value:
-            x: 0
-            y: 0
-            z: 0
-            w: 0
-        - Node:
-            Value: 44
-          Port:
-            ID: 0
-            Index: 65535
-          Type: 8
-          Value:
-            x: 1065353216
-            y: 0
-            z: 0
-            w: 0
+        Values:
         - Node:
             Value: 45
           Port:
@@ -1061,7 +1174,7 @@ MonoBehaviour:
             Index: 65535
           Type: 8
           Value:
-            x: 1065353216
+            x: 0
             y: 0
             z: 0
             w: 0
@@ -1072,12 +1185,34 @@ MonoBehaviour:
             Index: 65535
           Type: 8
           Value:
-            x: 1065353216
+            x: 0
             y: 0
             z: 0
             w: 0
         - Node:
             Value: 51
+          Port:
+            ID: 0
+            Index: 65535
+          Type: 8
+          Value:
+            x: 1065353216
+            y: 0
+            z: 0
+            w: 0
+        - Node:
+            Value: 52
+          Port:
+            ID: 0
+            Index: 65535
+          Type: 8
+          Value:
+            x: 1065353216
+            y: 0
+            z: 0
+            w: 0
+        - Node:
+            Value: 53
           Port:
             ID: 0
             Index: 65535
@@ -1088,7 +1223,95 @@ MonoBehaviour:
             z: 0
             w: 0
         - Node:
-            Value: 52
+            Value: 54
+          Port:
+            ID: 0
+            Index: 65535
+          Type: 8
+          Value:
+            x: 1065353216
+            y: 0
+            z: 0
+            w: 0
+        - Node:
+            Value: 55
+          Port:
+            ID: 0
+            Index: 65535
+          Type: 1
+          Value:
+            x: 1
+            y: 0
+            z: 0
+            w: 0
+        - Node:
+            Value: 56
+          Port:
+            ID: 0
+            Index: 65535
+          Type: 8
+          Value:
+            x: 1065353216
+            y: 0
+            z: 0
+            w: 0
+        - Node:
+            Value: 57
+          Port:
+            ID: 0
+            Index: 65535
+          Type: 8
+          Value:
+            x: 1065353216
+            y: 0
+            z: 0
+            w: 0
+        - Node:
+            Value: 58
+          Port:
+            ID: 0
+            Index: 65535
+          Type: 1
+          Value:
+            x: 1
+            y: 0
+            z: 0
+            w: 0
+        - Node:
+            Value: 59
+          Port:
+            ID: 0
+            Index: 65535
+          Type: 8
+          Value:
+            x: 0
+            y: 0
+            z: 0
+            w: 0
+        - Node:
+            Value: 60
+          Port:
+            ID: 0
+            Index: 65535
+          Type: 8
+          Value:
+            x: 1065353216
+            y: 0
+            z: 0
+            w: 0
+        - Node:
+            Value: 61
+          Port:
+            ID: 0
+            Index: 65535
+          Type: 1
+          Value:
+            x: 0
+            y: 0
+            z: 0
+            w: 0
+        - Node:
+            Value: 62
           Port:
             ID: 0
             Index: 65535
@@ -1099,7 +1322,7 @@ MonoBehaviour:
             z: 0
             w: 0
         - Node:
-            Value: 53
+            Value: 63
           Port:
             ID: 0
             Index: 65535
@@ -1110,7 +1333,7 @@ MonoBehaviour:
             z: 0
             w: 0
         - Node:
-            Value: 54
+            Value: 64
           Port:
             ID: 0
             Index: 65535
@@ -1121,13 +1344,24 @@ MonoBehaviour:
             z: 0
             w: 0
         - Node:
-            Value: 55
+            Value: 65
           Port:
             ID: 0
             Index: 65535
           Type: 2
           Value:
             x: 8
+            y: 0
+            z: 0
+            w: 0
+        - Node:
+            Value: 66
+          Port:
+            ID: 0
+            Index: 65535
+          Type: 2
+          Value:
+            x: 16
             y: 0
             z: 0
             w: 0
@@ -1230,12 +1464,12 @@ MonoBehaviour:
         - id: 12
         - id: 13
         - id: 14
-        m_EdgeModels: []
-        m_BadgeModels: []
-        m_GraphEdgeModels:
         - id: 15
         - id: 16
         - id: 17
+        m_EdgeModels: []
+        m_BadgeModels: []
+        m_GraphEdgeModels:
         - id: 18
         - id: 19
         - id: 20
@@ -1246,21 +1480,28 @@ MonoBehaviour:
         - id: 25
         - id: 26
         - id: 27
+        - id: 28
+        - id: 29
+        - id: 30
+        - id: 31
+        - id: 32
+        - id: 33
         m_PolymorphicEdgeModels: []
         m_StickyNoteModels: []
         m_GraphStickyNoteModels: []
         m_PlacematModels: []
         m_GraphPlacematModels: []
         m_GraphVariableModels:
-        - id: 28
-        - id: 29
-        - id: 30
-        - id: 31
+        - id: 34
+        - id: 35
+        - id: 36
+        - id: 37
+        - id: 38
         m_GraphPortalModels: []
         m_StencilTypeName: Unity.Animation.Editor.AnimationGraphStencil, Unity.Animation.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
         m_SerializedStencil:
-          id: 32
+          id: 39
         m_Name: Hero Animation Graph
         InputComponentBindings:
         - Name: CharacterAnimation
@@ -1276,7 +1517,7 @@ MonoBehaviour:
           m_Value0: 330949522947150123
           m_Value1: 8124958483666305958
         m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: 179.00009, y: -68.99997}
+        m_Position: {x: 1312.0002, y: 336.00006}
         m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
         m_HasUserColor: 0
         m_Title: Output
@@ -1296,158 +1537,7 @@ MonoBehaviour:
           m_Value0: 8626782583780727009
           m_Value1: 6949434313108835486
         m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: -1096, y: -95}
-        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
-        m_HasUserColor: 0
-        m_Title: Animation Clip
-        m_InputConstantKeys:
-        - Clip
-        - Root Motion Source
-        m_InputConstants:
-        - id: 33
-        - id: 34
-        m_State: 0
-        m_SerializedCapabilities:
-        - .Deletable
-        - .Droppable
-        - .Copiable
-        - .Selectable
-        - .Movable
-        - .Collapsible
-        m_PortGroupSizes: 
-        OverrideLoop: 0
-        Loop: 1
-    00000003:
-      type: {class: AnimationClipNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
-      data:
-        m_Guid:
-          m_Value0: 13552468186560445787
-          m_Value1: 154162454165634976
-        m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: -1395.0001, y: 22}
-        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
-        m_HasUserColor: 0
-        m_Title: Animation Clip
-        m_InputConstantKeys:
-        - Clip
-        - Root Motion Source
-        m_InputConstants:
-        - id: 35
-        - id: 36
-        m_State: 0
-        m_SerializedCapabilities:
-        - .Deletable
-        - .Droppable
-        - .Copiable
-        - .Selectable
-        - .Movable
-        - .Collapsible
-        m_PortGroupSizes: 
-        OverrideLoop: 0
-        Loop: 1
-    00000004:
-      type: {class: InputComponentFieldVariableModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
-      data:
-        m_Guid:
-          m_Value0: 14716869566229205544
-          m_Value1: 7162955268350350742
-        m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: -893, y: 497}
-        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
-        m_HasUserColor: 0
-        m_Title: Move
-        m_InputConstantKeys: []
-        m_InputConstants: []
-        m_State: 0
-        m_SerializedCapabilities:
-        - .Deletable
-        - .Droppable
-        - .Copiable
-        - .Selectable
-        - .Movable
-        - .Collapsible
-        m_DeclarationModel:
-          id: 28
-    00000005:
-      type: {class: MixerNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
-      data:
-        m_Guid:
-          m_Value0: 11021568915954181716
-          m_Value1: 3241210600201001639
-        m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: -660, y: -55}
-        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
-        m_HasUserColor: 0
-        m_Title: Mixer
-        m_InputConstantKeys:
-        - Weight
-        m_InputConstants:
-        - id: 37
-        m_State: 0
-        m_SerializedCapabilities:
-        - .Deletable
-        - .Droppable
-        - .Copiable
-        - .Selectable
-        - .Movable
-        - .Collapsible
-        m_PortGroupSizes: 
-    00000006:
-      type: {class: MixerNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
-      data:
-        m_Guid:
-          m_Value0: 1468107590233883215
-          m_Value1: 2670729056350656162
-        m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: -96, y: -43}
-        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
-        m_HasUserColor: 0
-        m_Title: Mixer
-        m_InputConstantKeys:
-        - Weight
-        m_InputConstants:
-        - id: 38
-        m_State: 0
-        m_SerializedCapabilities:
-        - .Deletable
-        - .Droppable
-        - .Copiable
-        - .Selectable
-        - .Movable
-        - .Collapsible
-        m_PortGroupSizes: 
-    00000007:
-      type: {class: MixerNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
-      data:
-        m_Guid:
-          m_Value0: 9403930429138206982
-          m_Value1: 10366060419725050765
-        m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: -979.00006, y: 226.99998}
-        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
-        m_HasUserColor: 0
-        m_Title: Mixer
-        m_InputConstantKeys:
-        - Weight
-        m_InputConstants:
-        - id: 39
-        m_State: 0
-        m_SerializedCapabilities:
-        - .Deletable
-        - .Droppable
-        - .Copiable
-        - .Selectable
-        - .Movable
-        - .Collapsible
-        m_PortGroupSizes: 
-    00000008:
-      type: {class: AnimationClipNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
-      data:
-        m_Guid:
-          m_Value0: 5800910611712568091
-          m_Value1: 3378012924837237901
-        m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: -1383.0001, y: 229.00003}
+        m_Position: {x: -480, y: -146.00003}
         m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
         m_HasUserColor: 0
         m_Title: Animation Clip
@@ -1468,37 +1558,14 @@ MonoBehaviour:
         m_PortGroupSizes: 
         OverrideLoop: 0
         Loop: 1
-    00000009:
-      type: {class: InputComponentFieldVariableModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
-      data:
-        m_Guid:
-          m_Value0: 6101996959146059688
-          m_Value1: 11808701521897821363
-        m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: -1333.8726, y: 479.7261}
-        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
-        m_HasUserColor: 0
-        m_Title: Run
-        m_InputConstantKeys: []
-        m_InputConstants: []
-        m_State: 0
-        m_SerializedCapabilities:
-        - .Deletable
-        - .Droppable
-        - .Copiable
-        - .Selectable
-        - .Movable
-        - .Collapsible
-        m_DeclarationModel:
-          id: 30
-    0000000A:
+    00000003:
       type: {class: AnimationClipNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
       data:
         m_Guid:
-          m_Value0: 2939800822763986780
-          m_Value1: 7435511238502023859
+          m_Value0: 13552468186560445787
+          m_Value1: 154162454165634976
         m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: -554.9995, y: 242.99962}
+        m_Position: {x: -1005, y: -140}
         m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
         m_HasUserColor: 0
         m_Title: Animation Clip
@@ -1519,14 +1586,37 @@ MonoBehaviour:
         m_PortGroupSizes: 
         OverrideLoop: 0
         Loop: 1
-    0000000B:
+    00000004:
+      type: {class: InputComponentFieldVariableModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
+      data:
+        m_Guid:
+          m_Value0: 14716869566229205544
+          m_Value1: 7162955268350350742
+        m_GraphAssetModel: {fileID: 11400000}
+        m_Position: {x: -100, y: 116.999985}
+        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
+        m_HasUserColor: 0
+        m_Title: Move
+        m_InputConstantKeys: []
+        m_InputConstants: []
+        m_State: 0
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Droppable
+        - .Copiable
+        - .Selectable
+        - .Movable
+        - .Collapsible
+        m_DeclarationModel:
+          id: 34
+    00000005:
       type: {class: MixerNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
       data:
         m_Guid:
-          m_Value0: 17596454972753443105
-          m_Value1: 16797438654331324086
+          m_Value0: 11021568915954181716
+          m_Value1: 3241210600201001639
         m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: -140.00003, y: 293}
+        m_Position: {x: 85.00003, y: -107.00003}
         m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
         m_HasUserColor: 0
         m_Title: Mixer
@@ -1543,14 +1633,62 @@ MonoBehaviour:
         - .Movable
         - .Collapsible
         m_PortGroupSizes: 
-    0000000C:
+    00000006:
+      type: {class: MixerNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
+      data:
+        m_Guid:
+          m_Value0: 1468107590233883215
+          m_Value1: 2670729056350656162
+        m_GraphAssetModel: {fileID: 11400000}
+        m_Position: {x: 366.00003, y: 37.99997}
+        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
+        m_HasUserColor: 0
+        m_Title: Mixer
+        m_InputConstantKeys:
+        - Weight
+        m_InputConstants:
+        - id: 45
+        m_State: 0
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Droppable
+        - .Copiable
+        - .Selectable
+        - .Movable
+        - .Collapsible
+        m_PortGroupSizes: 
+    00000007:
+      type: {class: MixerNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
+      data:
+        m_Guid:
+          m_Value0: 9403930429138206982
+          m_Value1: 10366060419725050765
+        m_GraphAssetModel: {fileID: 11400000}
+        m_Position: {x: -672, y: 331.99997}
+        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
+        m_HasUserColor: 0
+        m_Title: Mixer
+        m_InputConstantKeys:
+        - Weight
+        m_InputConstants:
+        - id: 46
+        m_State: 0
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Droppable
+        - .Copiable
+        - .Selectable
+        - .Movable
+        - .Collapsible
+        m_PortGroupSizes: 
+    00000008:
       type: {class: AnimationClipNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
       data:
         m_Guid:
-          m_Value0: 10308652216306720667
-          m_Value1: 6192595653868355496
+          m_Value0: 5800910611712568091
+          m_Value1: 3378012924837237901
         m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: -588.9998, y: 404.99988}
+        m_Position: {x: -1152, y: 200}
         m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
         m_HasUserColor: 0
         m_Title: Animation Clip
@@ -1558,8 +1696,111 @@ MonoBehaviour:
         - Clip
         - Root Motion Source
         m_InputConstants:
-        - id: 45
-        - id: 46
+        - id: 47
+        - id: 48
+        m_State: 0
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Droppable
+        - .Copiable
+        - .Selectable
+        - .Movable
+        - .Collapsible
+        m_PortGroupSizes: 
+        OverrideLoop: 0
+        Loop: 1
+    00000009:
+      type: {class: InputComponentFieldVariableModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
+      data:
+        m_Guid:
+          m_Value0: 6101996959146059688
+          m_Value1: 11808701521897821363
+        m_GraphAssetModel: {fileID: 11400000}
+        m_Position: {x: -967.99994, y: 527}
+        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
+        m_HasUserColor: 0
+        m_Title: Run
+        m_InputConstantKeys: []
+        m_InputConstants: []
+        m_State: 0
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Droppable
+        - .Copiable
+        - .Selectable
+        - .Movable
+        - .Collapsible
+        m_DeclarationModel:
+          id: 36
+    0000000A:
+      type: {class: AnimationClipNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
+      data:
+        m_Guid:
+          m_Value0: 2939800822763986780
+          m_Value1: 7435511238502023859
+        m_GraphAssetModel: {fileID: 11400000}
+        m_Position: {x: -403, y: 408.99994}
+        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
+        m_HasUserColor: 0
+        m_Title: Animation Clip
+        m_InputConstantKeys:
+        - Clip
+        - Root Motion Source
+        m_InputConstants:
+        - id: 49
+        - id: 50
+        m_State: 0
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Droppable
+        - .Copiable
+        - .Selectable
+        - .Movable
+        - .Collapsible
+        m_PortGroupSizes: 
+        OverrideLoop: 0
+        Loop: 1
+    0000000B:
+      type: {class: MixerNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
+      data:
+        m_Guid:
+          m_Value0: 17596454972753443105
+          m_Value1: 16797438654331324086
+        m_GraphAssetModel: {fileID: 11400000}
+        m_Position: {x: 112.000015, y: 326.99997}
+        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
+        m_HasUserColor: 0
+        m_Title: Mixer
+        m_InputConstantKeys:
+        - Weight
+        m_InputConstants:
+        - id: 51
+        m_State: 0
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Droppable
+        - .Copiable
+        - .Selectable
+        - .Movable
+        - .Collapsible
+        m_PortGroupSizes: 
+    0000000C:
+      type: {class: AnimationClipNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
+      data:
+        m_Guid:
+          m_Value0: 10308652216306720667
+          m_Value1: 6192595653868355496
+        m_GraphAssetModel: {fileID: 11400000}
+        m_Position: {x: -385, y: 576}
+        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
+        m_HasUserColor: 0
+        m_Title: Animation Clip
+        m_InputConstantKeys:
+        - Clip
+        - Root Motion Source
+        m_InputConstants:
+        - id: 52
+        - id: 53
         m_State: 0
         m_SerializedCapabilities:
         - .Deletable
@@ -1578,7 +1819,7 @@ MonoBehaviour:
           m_Value0: 8656712588827801589
           m_Value1: 3341982929458670777
         m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: -548, y: 178}
+        m_Position: {x: -18.99997, y: 180.99998}
         m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
         m_HasUserColor: 0
         m_Title: CharacterAnimation.Attack
@@ -1593,7 +1834,7 @@ MonoBehaviour:
         - .Movable
         - .Collapsible
         m_DeclarationModel:
-          id: 29
+          id: 35
     0000000E:
       type: {class: InputComponentFieldVariableModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
       data:
@@ -1601,7 +1842,7 @@ MonoBehaviour:
           m_Value0: 5158652587872768626
           m_Value1: 2737414679010605220
         m_GraphAssetModel: {fileID: 11400000}
-        m_Position: {x: -580.99994, y: 631}
+        m_Position: {x: -22.999939, y: 696}
         m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
         m_HasUserColor: 0
         m_Title: AttackCooldown
@@ -1616,8 +1857,83 @@ MonoBehaviour:
         - .Movable
         - .Collapsible
         m_DeclarationModel:
-          id: 31
+          id: 37
     0000000F:
+      type: {class: MixerNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
+      data:
+        m_Guid:
+          m_Value0: 12932342493081491443
+          m_Value1: 4631598491029212349
+        m_GraphAssetModel: {fileID: 11400000}
+        m_Position: {x: 1018.00024, y: 408.99994}
+        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
+        m_HasUserColor: 0
+        m_Title: Mixer
+        m_InputConstantKeys:
+        - Weight
+        m_InputConstants:
+        - id: 54
+        m_State: 0
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Droppable
+        - .Copiable
+        - .Selectable
+        - .Movable
+        - .Collapsible
+        m_PortGroupSizes: 
+    00000010:
+      type: {class: InputComponentFieldVariableModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
+      data:
+        m_Guid:
+          m_Value0: 12877795997337299890
+          m_Value1: 8044328537161920641
+        m_GraphAssetModel: {fileID: 11400000}
+        m_Position: {x: 396, y: 738}
+        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
+        m_HasUserColor: 0
+        m_Title: Dead
+        m_InputConstantKeys: []
+        m_InputConstants: []
+        m_State: 0
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Droppable
+        - .Copiable
+        - .Selectable
+        - .Movable
+        - .Collapsible
+        m_DeclarationModel:
+          id: 38
+    00000011:
+      type: {class: AnimationClipNodeModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
+      data:
+        m_Guid:
+          m_Value0: 8994788693247900726
+          m_Value1: 247430675634141333
+        m_GraphAssetModel: {fileID: 11400000}
+        m_Position: {x: 352, y: 463}
+        m_Color: {r: 0.776, g: 0.443, b: 0, a: 0.5}
+        m_HasUserColor: 0
+        m_Title: Animation Clip
+        m_InputConstantKeys:
+        - Clip
+        - Root Motion Source
+        m_InputConstants:
+        - id: 55
+        - id: 56
+        m_State: 0
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Droppable
+        - .Copiable
+        - .Selectable
+        - .Movable
+        - .Collapsible
+        m_PortGroupSizes: 
+        OverrideLoop: 1
+        Loop: 0
+    00000012:
       type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
         m_GraphAssetModel: {fileID: 11400000}
@@ -1644,7 +1960,7 @@ MonoBehaviour:
         - .Copiable
         - .Selectable
         - .Movable
-    00000010:
+    00000013:
       type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
         m_GraphAssetModel: {fileID: 11400000}
@@ -1671,7 +1987,7 @@ MonoBehaviour:
         - .Copiable
         - .Selectable
         - .Movable
-    00000011:
+    00000014:
       type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
         m_GraphAssetModel: {fileID: 11400000}
@@ -1698,7 +2014,7 @@ MonoBehaviour:
         - .Copiable
         - .Selectable
         - .Movable
-    00000012:
+    00000015:
       type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
         m_GraphAssetModel: {fileID: 11400000}
@@ -1725,7 +2041,7 @@ MonoBehaviour:
         - .Copiable
         - .Selectable
         - .Movable
-    00000013:
+    00000016:
       type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
         m_GraphAssetModel: {fileID: 11400000}
@@ -1752,34 +2068,7 @@ MonoBehaviour:
         - .Copiable
         - .Selectable
         - .Movable
-    00000014:
-      type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
-      data:
-        m_GraphAssetModel: {fileID: 11400000}
-        m_FromPortReference:
-          NodeModelGuid:
-            m_Value0: 1468107590233883215
-            m_Value1: 2670729056350656162
-          GraphAssetModel: {fileID: 11400000}
-          UniqueId: Pose
-        m_ToPortReference:
-          NodeModelGuid:
-            m_Value0: 330949522947150123
-            m_Value1: 8124958483666305958
-          GraphAssetModel: {fileID: 11400000}
-          UniqueId: Result
-        m_EdgeControlPoints: []
-        m_EditMode: 0
-        m_EdgeLabel: 
-        m_Guid:
-          m_Value0: 13248580479810395565
-          m_Value1: 2652790452652870795
-        m_SerializedCapabilities:
-        - .Deletable
-        - .Copiable
-        - .Selectable
-        - .Movable
-    00000015:
+    00000017:
       type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
         m_GraphAssetModel: {fileID: 11400000}
@@ -1806,7 +2095,7 @@ MonoBehaviour:
         - .Copiable
         - .Selectable
         - .Movable
-    00000016:
+    00000018:
       type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
         m_GraphAssetModel: {fileID: 11400000}
@@ -1833,7 +2122,7 @@ MonoBehaviour:
         - .Copiable
         - .Selectable
         - .Movable
-    00000017:
+    00000019:
       type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
         m_GraphAssetModel: {fileID: 11400000}
@@ -1860,7 +2149,7 @@ MonoBehaviour:
         - .Copiable
         - .Selectable
         - .Movable
-    00000018:
+    0000001A:
       type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
         m_GraphAssetModel: {fileID: 11400000}
@@ -1887,7 +2176,7 @@ MonoBehaviour:
         - .Copiable
         - .Selectable
         - .Movable
-    00000019:
+    0000001B:
       type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
         m_GraphAssetModel: {fileID: 11400000}
@@ -1914,7 +2203,7 @@ MonoBehaviour:
         - .Copiable
         - .Selectable
         - .Movable
-    0000001A:
+    0000001C:
       type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
         m_GraphAssetModel: {fileID: 11400000}
@@ -1941,7 +2230,7 @@ MonoBehaviour:
         - .Copiable
         - .Selectable
         - .Movable
-    0000001B:
+    0000001D:
       type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
         m_GraphAssetModel: {fileID: 11400000}
@@ -1968,7 +2257,115 @@ MonoBehaviour:
         - .Copiable
         - .Selectable
         - .Movable
-    0000001C:
+    0000001E:
+      type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
+      data:
+        m_GraphAssetModel: {fileID: 11400000}
+        m_FromPortReference:
+          NodeModelGuid:
+            m_Value0: 1468107590233883215
+            m_Value1: 2670729056350656162
+          GraphAssetModel: {fileID: 11400000}
+          UniqueId: Pose
+        m_ToPortReference:
+          NodeModelGuid:
+            m_Value0: 12932342493081491443
+            m_Value1: 4631598491029212349
+          GraphAssetModel: {fileID: 11400000}
+          UniqueId: Input 1
+        m_EdgeControlPoints: []
+        m_EditMode: 0
+        m_EdgeLabel: 
+        m_Guid:
+          m_Value0: 15537025388366891517
+          m_Value1: 3648553124054108591
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Copiable
+        - .Selectable
+        - .Movable
+    0000001F:
+      type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
+      data:
+        m_GraphAssetModel: {fileID: 11400000}
+        m_FromPortReference:
+          NodeModelGuid:
+            m_Value0: 12877795997337299890
+            m_Value1: 8044328537161920641
+          GraphAssetModel: {fileID: 11400000}
+          UniqueId: 
+        m_ToPortReference:
+          NodeModelGuid:
+            m_Value0: 12932342493081491443
+            m_Value1: 4631598491029212349
+          GraphAssetModel: {fileID: 11400000}
+          UniqueId: Weight
+        m_EdgeControlPoints: []
+        m_EditMode: 0
+        m_EdgeLabel: 
+        m_Guid:
+          m_Value0: 8797280181973977098
+          m_Value1: 13149675745073753022
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Copiable
+        - .Selectable
+        - .Movable
+    00000020:
+      type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
+      data:
+        m_GraphAssetModel: {fileID: 11400000}
+        m_FromPortReference:
+          NodeModelGuid:
+            m_Value0: 12932342493081491443
+            m_Value1: 4631598491029212349
+          GraphAssetModel: {fileID: 11400000}
+          UniqueId: Pose
+        m_ToPortReference:
+          NodeModelGuid:
+            m_Value0: 330949522947150123
+            m_Value1: 8124958483666305958
+          GraphAssetModel: {fileID: 11400000}
+          UniqueId: Result
+        m_EdgeControlPoints: []
+        m_EditMode: 0
+        m_EdgeLabel: 
+        m_Guid:
+          m_Value0: 16902893717962891857
+          m_Value1: 3710543936697963908
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Copiable
+        - .Selectable
+        - .Movable
+    00000021:
+      type: {class: EdgeModel, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
+      data:
+        m_GraphAssetModel: {fileID: 11400000}
+        m_FromPortReference:
+          NodeModelGuid:
+            m_Value0: 8994788693247900726
+            m_Value1: 247430675634141333
+          GraphAssetModel: {fileID: 11400000}
+          UniqueId: Pose
+        m_ToPortReference:
+          NodeModelGuid:
+            m_Value0: 12932342493081491443
+            m_Value1: 4631598491029212349
+          GraphAssetModel: {fileID: 11400000}
+          UniqueId: Input 2
+        m_EdgeControlPoints: []
+        m_EditMode: 0
+        m_EdgeLabel: 
+        m_Guid:
+          m_Value0: 928319465698692789
+          m_Value1: 1128115689459723922
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Copiable
+        - .Selectable
+        - .Movable
+    00000022:
       type: {class: InputComponentFieldVariableDeclarationModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
       data:
         m_AssetModel: {fileID: 11400000}
@@ -1989,11 +2386,11 @@ MonoBehaviour:
         m_IsExposed: 1
         m_Tooltip: 
         m_InitializationValue:
-          id: 47
+          id: 57
         m_Modifiers: 1
         variableFlags: 0
         m_MetadataModel:
-          id: 32
+          id: 39
         Identifier:
           Type:
             Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0,
@@ -2003,7 +2400,7 @@ MonoBehaviour:
           m_FieldDeclaringType:
             Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0,
               Culture=neutral, PublicKeyToken=null
-    0000001D:
+    00000023:
       type: {class: InputComponentFieldVariableDeclarationModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
       data:
         m_AssetModel: {fileID: 11400000}
@@ -2024,11 +2421,11 @@ MonoBehaviour:
         m_IsExposed: 1
         m_Tooltip: 
         m_InitializationValue:
-          id: 48
+          id: 58
         m_Modifiers: 1
         variableFlags: 0
         m_MetadataModel:
-          id: 32
+          id: 39
         Identifier:
           Type:
             Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0,
@@ -2038,7 +2435,7 @@ MonoBehaviour:
           m_FieldDeclaringType:
             Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0,
               Culture=neutral, PublicKeyToken=null
-    0000001E:
+    00000024:
       type: {class: InputComponentFieldVariableDeclarationModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
       data:
         m_AssetModel: {fileID: 11400000}
@@ -2059,11 +2456,11 @@ MonoBehaviour:
         m_IsExposed: 1
         m_Tooltip: 
         m_InitializationValue:
-          id: 49
+          id: 59
         m_Modifiers: 1
         variableFlags: 0
         m_MetadataModel:
-          id: 32
+          id: 39
         Identifier:
           Type:
             Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0,
@@ -2073,7 +2470,7 @@ MonoBehaviour:
           m_FieldDeclaringType:
             Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0,
               Culture=neutral, PublicKeyToken=null
-    0000001F:
+    00000025:
       type: {class: InputComponentFieldVariableDeclarationModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
       data:
         m_AssetModel: {fileID: 11400000}
@@ -2094,11 +2491,11 @@ MonoBehaviour:
         m_IsExposed: 1
         m_Tooltip: 
         m_InitializationValue:
-          id: 50
+          id: 60
         m_Modifiers: 1
         variableFlags: 0
         m_MetadataModel:
-          id: 32
+          id: 39
         Identifier:
           Type:
             Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0,
@@ -2108,40 +2505,47 @@ MonoBehaviour:
           m_FieldDeclaringType:
             Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0,
               Culture=neutral, PublicKeyToken=null
-    00000020:
-      type: {class: , ns: , asm: }
-    00000021:
-      type: {class: AnimationClipReferenceConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
-      data:
-        m_Value: {fileID: 7400000, guid: 90250ab376c82354f9093ea609f555d7, type: 2}
-    00000022:
-      type: {class: MotionIDConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
-      data:
-        m_Value: {fileID: 0}
-    00000023:
-      type: {class: AnimationClipReferenceConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
-      data:
-        m_Value: {fileID: 7400000, guid: 27d598172131cb94089bbac2123f46b8, type: 2}
-    00000024:
-      type: {class: MotionIDConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
-      data:
-        m_Value: {fileID: 0}
-    00000025:
-      type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
-      data:
-        m_Value: 0
     00000026:
-      type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
+      type: {class: InputComponentFieldVariableDeclarationModel, ns: Unity.Animation.Model, asm: Unity.Animation.Editor}
       data:
-        m_Value: 0
+        m_AssetModel: {fileID: 11400000}
+        m_Id: 
+        m_Guid:
+          m_Value0: 3099998701649844924
+          m_Value1: 2160322649429195677
+        m_SerializedCapabilities:
+        - .Deletable
+        - .Droppable
+        - .Copiable
+        - .Selectable
+        m_Name: Dead
+        m_DataType:
+          Identification: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        m_VariableType: 0
+        m_IsExposed: 1
+        m_Tooltip: 
+        m_InitializationValue:
+          id: 61
+        m_Modifiers: 1
+        variableFlags: 0
+        m_MetadataModel:
+          id: 39
+        Identifier:
+          Type:
+            Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0,
+              Culture=neutral, PublicKeyToken=null
+        FieldHandle:
+          m_FieldName: Dead
+          m_FieldDeclaringType:
+            Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0,
+              Culture=neutral, PublicKeyToken=null
     00000027:
-      type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
-      data:
-        m_Value: 1
+      type: {class: , ns: , asm: }
     00000028:
       type: {class: AnimationClipReferenceConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
       data:
-        m_Value: {fileID: 7400000, guid: a216f208cbe7cbe45a6bfdc9fc2321fe, type: 2}
+        m_Value: {fileID: 7400000, guid: 90250ab376c82354f9093ea609f555d7, type: 2}
     00000029:
       type: {class: MotionIDConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
       data:
@@ -2149,7 +2553,7 @@ MonoBehaviour:
     0000002A:
       type: {class: AnimationClipReferenceConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
       data:
-        m_Value: {fileID: 7400000, guid: 3f97c25c54b04f25d848c02dc082375f, type: 2}
+        m_Value: {fileID: 7400000, guid: 27d598172131cb94089bbac2123f46b8, type: 2}
     0000002B:
       type: {class: MotionIDConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
       data:
@@ -2157,28 +2561,72 @@ MonoBehaviour:
     0000002C:
       type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
-        m_Value: 1
+        m_Value: 0
     0000002D:
+      type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
+      data:
+        m_Value: 0
+    0000002E:
+      type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
+      data:
+        m_Value: 1
+    0000002F:
       type: {class: AnimationClipReferenceConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
       data:
-        m_Value: {fileID: 7400000, guid: 92cd7fd4b000f00a8916b05d6ddc24f8, type: 2}
-    0000002E:
+        m_Value: {fileID: 7400000, guid: a216f208cbe7cbe45a6bfdc9fc2321fe, type: 2}
+    00000030:
       type: {class: MotionIDConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
       data:
         m_Value: {fileID: 0}
-    0000002F:
-      type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
-      data:
-        m_Value: 0
-    00000030:
-      type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
-      data:
-        m_Value: 0
     00000031:
+      type: {class: AnimationClipReferenceConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
+      data:
+        m_Value: {fileID: 7400000, guid: 3f97c25c54b04f25d848c02dc082375f, type: 2}
+    00000032:
+      type: {class: MotionIDConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
+      data:
+        m_Value: {fileID: 0}
+    00000033:
+      type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
+      data:
+        m_Value: 1
+    00000034:
+      type: {class: AnimationClipReferenceConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
+      data:
+        m_Value: {fileID: 7400000, guid: 92cd7fd4b000f00a8916b05d6ddc24f8, type: 2}
+    00000035:
+      type: {class: MotionIDConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
+      data:
+        m_Value: {fileID: 0}
+    00000036:
       type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
         m_Value: 0
-    00000032:
+    00000037:
+      type: {class: AnimationClipReferenceConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
+      data:
+        m_Value: {fileID: 7400000, guid: 420885869796a7ece9d0044b7f41940b, type: 2}
+    00000038:
+      type: {class: MotionIDConstant, ns: Unity.Animation.Editor, asm: Unity.Animation.Editor}
+      data:
+        m_Value: {fileID: 0}
+    00000039:
+      type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
+      data:
+        m_Value: 0
+    0000003A:
+      type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
+      data:
+        m_Value: 0
+    0000003B:
+      type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
+      data:
+        m_Value: 0
+    0000003C:
+      type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
+      data:
+        m_Value: 0
+    0000003D:
       type: {class: FloatConstant, ns: UnityEditor.GraphToolsFoundation.Overdrive.BasicModel, asm: Unity.GraphTools.Foundation.Overdrive.Editor}
       data:
         m_Value: 0

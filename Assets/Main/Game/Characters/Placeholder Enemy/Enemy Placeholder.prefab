@@ -3789,7 +3789,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9783206fb6aeeea46b3b394e3a7bb659, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Graph: {fileID: 11400000, guid: bed7a04aed2abf6638cd8b1303ea9d85, type: 2}
+  Graph: {fileID: 11400000, guid: 34266e4b6182a77f6b28b23aae6d7700, type: 2}
   Context: {fileID: 6748935984287833189}
   ExposedObjects:
   - TargetGUID:
@@ -3815,6 +3815,11 @@ MonoBehaviour:
   - TargetGUID:
       NodeIDPart1: 10308652216306720667
       NodeIDPart2: 6192595653868355496
+      PortUniqueName: Root Motion Source
+    Value: {fileID: 0}
+  - TargetGUID:
+      NodeIDPart1: 8994788693247900726
+      NodeIDPart2: 247430675634141333
       PortUniqueName: Root Motion Source
     Value: {fileID: 0}
   PhaseIdentification: Unity.Animation.ProcessLateAnimationGraphLoaderSystem+Tag,
