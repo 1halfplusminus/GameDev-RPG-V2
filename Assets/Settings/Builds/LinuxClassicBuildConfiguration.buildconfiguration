@@ -26,8 +26,8 @@
         },
         {
             "$type": "Unity.Build.Classic.ClassicCodeStrippingOptions, Unity.Build.Classic",
-            "StripEngineCode": false,
-            "ManagedStrippingLevel": 1
+            "StripEngineCode": true,
+            "ManagedStrippingLevel": 0
         }
     ]
 }

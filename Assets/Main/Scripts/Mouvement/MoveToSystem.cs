@@ -98,25 +98,7 @@ namespace RPG.Mouvement
                     agent.Warp(position.Value);
                 }
             }).Run();
-            /* var agents = navMeshAgentQueries.ToComponentArray<NavMeshAgent>();
-            Entities
-            .WithDisposeOnCompletion(agents)
-           .WithoutBurst()
-           .ForEach((NavMeshSurface surface) =>
-           {
-               if (surface.navMeshData == null)
-               {
-                   Debug.Log("here");
-                   surface.BuildNavMesh();
-                   NavMeshSurface.activeSurfaces.Add(surface);
-                   surface.AddData();
-                   NavMesh.AddNavMeshData(surface.navMeshData, surface.transform.position, surface.transform.rotation);
-               }
-               foreach (var agent in agents)
-               {
-                   agent.transform.parent = surface.transform.parent;
-               }
-           }).Run(); */
+
         }
     }
 

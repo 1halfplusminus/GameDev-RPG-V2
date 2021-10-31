@@ -39,6 +39,10 @@ namespace RPG.Combat
                         {
                             fighter.TargetInRange = true;
                         }
+                        else
+                        {
+                            fighter.TargetInRange = false;
+                        }
                     }
 
                 }
@@ -157,8 +161,10 @@ namespace RPG.Combat
             beginSimulationEntityCommandBufferSystem.AddJobHandleForProducer(this.Dependency);
         }
     }
+    [UpdateAfter(typeof(MoveTowardTargetSystem))]
     [UpdateAfter(typeof(CombatTargettingSystem))]
     [UpdateInGroup(typeof(CombatSystemGroup))]
+
     public class FightSystem : SystemBase
     {
         EntityQuery targetQuery;
