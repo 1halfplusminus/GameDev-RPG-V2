@@ -63,6 +63,12 @@ ModelImporter:
   - first:
       74: -982115091633673366
     second: Armature|Death
+  - first:
+      74: -6842666708266138392
+    second: Armature|Armature.001|mixamo.com|Layer0
+  - first:
+      74: 6511377222624030959
+    second: Armature|Running 3
   externalObjects: {}
   materials:
     materialImportMode: 2

@@ -1,5 +1,4 @@
-using Unity.Burst;
-using Unity.Collections;
+
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Physics;
@@ -7,6 +6,8 @@ using Unity.Transforms;
 using UnityEngine.AI;
 using Unity.Mathematics;
 using RPG.Core;
+using Unity.AI.Navigation;
+using UnityEngine;
 
 namespace RPG.Mouvement
 {
@@ -52,7 +53,7 @@ namespace RPG.Mouvement
         }
     }
     [UpdateInGroup(typeof(MouvementSystemGroup))]
-    [UpdateAfter(typeof(MoveTo))]
+    [UpdateAfter(typeof(MoveToSystem))]
     public class MoveToNavMeshAgentSystem : SystemBase
     {
 
@@ -60,10 +61,10 @@ namespace RPG.Mouvement
         protected override void OnCreate()
         {
             base.OnCreate();
-
         }
         protected override void OnUpdate()
         {
+
             // TODO : Refractor
             var lookAts = GetComponentDataFromEntity<LookAt>(true);
             Entities
@@ -74,7 +75,8 @@ namespace RPG.Mouvement
             .WithAll<Mouvement>()
             .ForEach((Entity e, NavMeshAgent agent, ref Translation position, ref Mouvement mouvement, ref MoveTo moveTo, ref Rotation rotation) =>
             {
-                if (!moveTo.Stopped && agent.isOnNavMesh)
+
+                if (agent.isOnNavMesh && !moveTo.Stopped)
                 {
                     agent.SetDestination(moveTo.Position);
                     position.Value = agent.transform.position;
@@ -89,8 +91,32 @@ namespace RPG.Mouvement
                     {
                         rotation.Value = agent.transform.rotation;
                     }
+
+                }
+                else
+                {
+                    agent.Warp(position.Value);
                 }
             }).Run();
+            /* var agents = navMeshAgentQueries.ToComponentArray<NavMeshAgent>();
+            Entities
+            .WithDisposeOnCompletion(agents)
+           .WithoutBurst()
+           .ForEach((NavMeshSurface surface) =>
+           {
+               if (surface.navMeshData == null)
+               {
+                   Debug.Log("here");
+                   surface.BuildNavMesh();
+                   NavMeshSurface.activeSurfaces.Add(surface);
+                   surface.AddData();
+                   NavMesh.AddNavMeshData(surface.navMeshData, surface.transform.position, surface.transform.rotation);
+               }
+               foreach (var agent in agents)
+               {
+                   agent.transform.parent = surface.transform.parent;
+               }
+           }).Run(); */
         }
     }
 

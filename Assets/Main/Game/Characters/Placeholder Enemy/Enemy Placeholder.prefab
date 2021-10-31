@@ -3003,7 +3003,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1613697079563282179, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.044
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1613697079563282179, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3039,15 +3039,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2102847174563085732, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: m_Height
-      value: 1
+      value: 2.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102847174563085732, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_Radius
+      value: 0.49
       objectReference: {fileID: 0}
     - target: {fileID: 2102847174563085732, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: m_Center.y
-      value: 0
+      value: 1.03
       objectReference: {fileID: 0}
     - target: {fileID: 2102847174563085733, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: m_Height
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102847174563085733, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_BaseOffset
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2102847174563085753, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: m_Name
@@ -3789,37 +3797,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9783206fb6aeeea46b3b394e3a7bb659, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Graph: {fileID: 11400000, guid: 34266e4b6182a77f6b28b23aae6d7700, type: 2}
+  Graph: {fileID: 11400000, guid: 26eeeb1c25ba4def1a1b7b9ff7bb1426, type: 2}
   Context: {fileID: 6748935984287833189}
   ExposedObjects:
   - TargetGUID:
-      NodeIDPart1: 8626782583780727009
-      NodeIDPart2: 6949434313108835486
+      NodeIDPart1: 13931374818038408328
+      NodeIDPart2: 2310700803569680292
       PortUniqueName: Root Motion Source
     Value: {fileID: 0}
   - TargetGUID:
-      NodeIDPart1: 13552468186560445787
-      NodeIDPart2: 154162454165634976
+      NodeIDPart1: 4018467193561646304
+      NodeIDPart2: 14951283673617596041
       PortUniqueName: Root Motion Source
     Value: {fileID: 0}
   - TargetGUID:
-      NodeIDPart1: 5800910611712568091
-      NodeIDPart2: 3378012924837237901
+      NodeIDPart1: 18115735151069895238
+      NodeIDPart2: 15526875910347871901
       PortUniqueName: Root Motion Source
     Value: {fileID: 0}
   - TargetGUID:
-      NodeIDPart1: 2939800822763986780
-      NodeIDPart2: 7435511238502023859
+      NodeIDPart1: 3447534743256736968
+      NodeIDPart2: 4178878571087090307
       PortUniqueName: Root Motion Source
     Value: {fileID: 0}
   - TargetGUID:
-      NodeIDPart1: 10308652216306720667
-      NodeIDPart2: 6192595653868355496
+      NodeIDPart1: 11167231774948714793
+      NodeIDPart2: 13295190274187959990
       PortUniqueName: Root Motion Source
     Value: {fileID: 0}
   - TargetGUID:
-      NodeIDPart1: 8994788693247900726
-      NodeIDPart2: 247430675634141333
+      NodeIDPart1: 10462060231787932940
+      NodeIDPart2: 18035509962948914618
       PortUniqueName: Root Motion Source
     Value: {fileID: 0}
   PhaseIdentification: Unity.Animation.ProcessLateAnimationGraphLoaderSystem+Tag,

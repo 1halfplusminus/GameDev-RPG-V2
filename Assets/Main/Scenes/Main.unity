@@ -122,7 +122,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: 7c725a1fb3e7c6a4e8822920fd5b772d, type: 2}
+  m_NavMeshData: {fileID: 0}
 --- !u!1 &264920833
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,7 +364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 1
---- !u!1 &1746783070
+--- !u!1 &1417685627
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -372,8 +372,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1746783072}
-  - component: {fileID: 1746783071}
+  - component: {fileID: 1417685629}
+  - component: {fileID: 1417685628}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -381,20 +381,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1746783071
+--- !u!114 &1417685628
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1746783070}
+  m_GameObject: {fileID: 1417685627}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45a335734b1572644a6a5d09d87adc65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _SceneAsset: {fileID: 102900000, guid: 635119d50f4cccf468a3cf9e93413ae3, type: 3}
-  _HierarchyColor: {r: 0.21568629, g: 0.21568629, b: 0.21568629, a: 1}
+  _HierarchyColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   AutoLoadScene: 1
   _SceneGUID:
     Value:
@@ -402,13 +402,13 @@ MonoBehaviour:
       y: 1338819824
       z: 3925621382
       w: 1050874937
---- !u!4 &1746783072
+--- !u!4 &1417685629
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1746783070}
+  m_GameObject: {fileID: 1417685627}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}

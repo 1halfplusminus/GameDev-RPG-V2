@@ -52,7 +52,7 @@ namespace RPG.Control
             .WithAll<PlayerControlled>()
             .ForEach((Entity e, in LocalToWorld localToWorld) =>
             {
-                commandBuffer.AddComponent<MoveTo>(e, new MoveTo(localToWorld.Position));
+                commandBuffer.AddComponent<MoveTo>(e, new MoveTo(localToWorld.Position) { Stopped = true });
                 /* if (fighters.HasComponent(e))
                 {
                     commandBuffer.AddComponent<Fighter>(e, new Fighter { WeaponRange = 3.0f, AttackCooldown = 5.0f });
@@ -96,7 +96,7 @@ namespace RPG.Control
             Entities
             .WithNone<WorldClick>()
             .WithAny<PlayerControlled>()
-            .ForEach((Fighter f) =>
+            .ForEach((in Fighter f) =>
             {
                 if (f.Target == Entity.Null)
                 {
