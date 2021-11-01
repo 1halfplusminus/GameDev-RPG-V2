@@ -11,7 +11,7 @@ namespace RPG.Control
     {
         public float ChaseDistance;
 
-
+        public float SuspiciousTime;
         // Called by unity
         public void OnDrawGizmosSelected()
         {
@@ -35,6 +35,10 @@ namespace RPG.Control
                 // Fighter should add this
                 DstEntityManager.AddComponent<DeltaTime>(entity);
                 DstEntityManager.AddComponentData<ChasePlayer>(entity, new ChasePlayer { ChaseDistance = chasePlayer.ChaseDistance });
+                if (chasePlayer.SuspiciousTime >= 0)
+                {
+                    DstEntityManager.AddComponentData<Suspicious>(entity, new Suspicious { Time = chasePlayer.SuspiciousTime });
+                }
             });
         }
     }
