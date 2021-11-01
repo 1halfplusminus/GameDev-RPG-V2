@@ -3755,6 +3755,10 @@ PrefabInstance:
       propertyPath: HitEvents.Array.data[0]
       value: 0.8
       objectReference: {fileID: 0}
+    - target: {fileID: 2457918184574956938, guid: a65070a4229aa0b1c88b1d7c0b3e5d47, type: 3}
+      propertyPath: Value
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5685026998314816241, guid: a65070a4229aa0b1c88b1d7c0b3e5d47, type: 3}
       propertyPath: ConversionMode
       value: 0

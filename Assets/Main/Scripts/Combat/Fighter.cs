@@ -1,5 +1,5 @@
 using Unity.Entities;
-
+using Unity.Mathematics;
 namespace RPG.Combat
 {
 
@@ -25,6 +25,11 @@ namespace RPG.Combat
         public bool InCooldown;
 
 
+        public static Attack Create()
+        {
+
+            return new Attack() { Cooldown = math.EPSILON, TimeElapsedSinceAttack = math.INFINITY, InCooldown = false };
+        }
     }
 
 

@@ -17,7 +17,7 @@ namespace RPG.Mouvement
                 if (mouvement.Speed > 0.0f)
                 {
                     characterAnimation.Run = 0.0f;
-                    var zLinear = mouvement.Velocity.Linear.z / mouvement.Speed;
+                    var zLinear = math.abs(mouvement.Velocity.Linear.z) / mouvement.Speed;
                     characterAnimation.Move = math.min(zLinear, 1.0f);
                     if (math.abs(mouvement.Velocity.Linear).z >= 2.5f)
                     {

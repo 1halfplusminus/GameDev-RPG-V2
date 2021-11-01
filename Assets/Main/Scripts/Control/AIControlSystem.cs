@@ -5,10 +5,34 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
-
+using RPG.Core;
 namespace RPG.Control
 {
-    public class ChaseSystem : SystemBase
+    public class GuardBehaviorSystem : SystemBase
+    {
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+        }
+        protected override void OnUpdate()
+        {
+            Entities.WithAll<Spawned, GuardOriginalLocationTag>().ForEach((ref GuardLocation guardLocation, in Translation translation) =>
+            {
+                guardLocation.Value = translation.Value;
+            }).ScheduleParallel();
+
+            Entities.WithNone<Spawned>().ForEach((ref MoveTo moveTo, ref Fighter fighter, ref LookAt lookAt, in GuardLocation guardLocation) =>
+            {
+                if (fighter.Target == Entity.Null)
+                {
+                    moveTo.Position = guardLocation.Value;
+                    moveTo.Stopped = false;
+                    lookAt.Entity = Entity.Null;
+                }
+            }).ScheduleParallel();
+        }
+    }
+    public class ChaseBehaviourSystem : SystemBase
     {
         EntityQuery playerControlledQuery;
         protected override void OnCreate()

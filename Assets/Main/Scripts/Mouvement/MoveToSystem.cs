@@ -53,6 +53,14 @@ namespace RPG.Mouvement
                     mouvement.Velocity = new Velocity { Linear = float3.zero, Angular = float3.zero };
                 }
             }).ScheduleParallel();
+
+            // Initialize move to when spawned
+            Entities
+            .WithAll<Spawned>()
+            .ForEach((ref Translation position, ref MoveTo moveTo) =>
+            {
+                moveTo.Position = position.Value;
+            }).ScheduleParallel();
         }
     }
     [UpdateInGroup(typeof(MouvementSystemGroup))]
@@ -70,6 +78,7 @@ namespace RPG.Mouvement
 
             // TODO : Refractor
             var lookAts = GetComponentDataFromEntity<LookAt>(true);
+
             Entities
             .WithReadOnly(lookAts)
             .WithChangeFilter<MoveTo>()
@@ -97,12 +106,16 @@ namespace RPG.Mouvement
                     }
 
                 }
-                else
-                {
-                    agent.Warp(position.Value);
-                }
-            }).Run();
 
+            }).Run();
+            // Initialize navigation agent when spawned
+            Entities.WithoutBurst()
+            .WithAll<Spawned>()
+            .ForEach((NavMeshAgent agent, ref Translation position) =>
+            {
+                agent.Warp(position.Value);
+                Debug.Log("Warping agent ");
+            }).Run();
         }
     }
 

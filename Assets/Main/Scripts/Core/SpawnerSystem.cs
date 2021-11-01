@@ -12,6 +12,11 @@ namespace RPG.Core
     {
         public Entity Prefab;
     }
+
+    public struct Spawned : IComponentData
+    {
+
+    }
     [UpdateInGroup(typeof(CoreSystemGroup))]
     public class SpawnSystem : SystemBase
     {
@@ -30,6 +35,7 @@ namespace RPG.Core
                    var instance = commandBufferP.Instantiate(entityInQueryIndex, toSpawn.Prefab);
                    commandBufferP.AddComponent<Translation>(entityInQueryIndex, instance, new Translation { Value = localToWorld.Position });
                    commandBufferP.AddComponent<Rotation>(entityInQueryIndex, instance, new Rotation { Value = localToWorld.Rotation });
+                   commandBufferP.AddComponent<Spawned>(entityInQueryIndex, instance);
                    commandBufferP.RemoveComponent<Spawn>(entityInQueryIndex, e);
                }
             ).ScheduleParallel();
@@ -39,9 +45,16 @@ namespace RPG.Core
                     var instance = em.Instantiate(toSpawn.Prefab);
                     commandBuffer.AddComponent<Translation>(instance, new Translation { Value = localToWorld.Position });
                     commandBuffer.AddComponent<Rotation>(instance, new Rotation { Value = localToWorld.Rotation });
+                    commandBuffer.AddComponent<Spawned>(instance);
                     commandBuffer.RemoveComponent<Spawn>(e);
                 }
             ).Run();
+
+            Entities.WithAny<Spawned>().ForEach((int entityInQueryIndex, Entity e) =>
+                {
+                    commandBufferP.RemoveComponent<Spawned>(entityInQueryIndex, e);
+                }
+            ).ScheduleParallel();
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }

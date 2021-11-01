@@ -1,5 +1,6 @@
 
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace RPG.Control
@@ -11,5 +12,10 @@ namespace RPG.Control
         public float ChaseDistance;
     }
 
+    public struct GuardOriginalLocationTag : IComponentData { }
+    public struct GuardLocation : IComponentData
+    {
+        public float3 Value;
+    }
 
 }

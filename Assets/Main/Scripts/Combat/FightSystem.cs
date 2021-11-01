@@ -12,16 +12,24 @@ namespace RPG.Combat
     {
 
     }
-
+    [UpdateAfter(typeof(CombatTargettingSystem))]
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class MoveTowardTargetSystem : SystemBase
     {
+        EntityCommandBufferSystem entityCommandBufferSystem;
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        }
+
         protected override void OnUpdate()
         {
+            var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             var positionInWorlds = GetComponentDataFromEntity<LocalToWorld>(true);
             Entities
             .WithReadOnly(positionInWorlds)
-            .ForEach((ref MoveTo moveTo, ref Fighter fighter, in LocalToWorld localToWorld) =>
+            .ForEach((int entityInQueryIndex, Entity e, ref MoveTo moveTo, ref Fighter fighter, in LocalToWorld localToWorld) =>
             {
                 if (fighter.Target == Entity.Null)
                 {
@@ -38,6 +46,7 @@ namespace RPG.Combat
                         if (moveTo.Distance <= fighter.WeaponRange)
                         {
                             fighter.TargetInRange = true;
+                            commandBuffer.AddComponent(entityInQueryIndex, e, new LookAt { Entity = fighter.Target });
                         }
                         else
                         {
@@ -52,9 +61,9 @@ namespace RPG.Combat
                     fighter.MoveTowardTarget = false;
                 }
 
-
-
             }).ScheduleParallel();
+
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
@@ -70,6 +79,7 @@ namespace RPG.Combat
         protected override void OnUpdate()
         {
 
+            UnTargetNoHittableTarget();
             var hittables = GetComponentDataFromEntity<Hittable>(true);
             Entities
             .WithReadOnly(hittables)
@@ -90,6 +100,19 @@ namespace RPG.Combat
 
                 }
 
+            }).ScheduleParallel();
+        }
+        private void UnTargetNoHittableTarget()
+        {
+            Entities
+            .WithNone<IsDeadTag>()
+            .ForEach((ref Fighter f) =>
+            {
+                if (!HasComponent<Hittable>(f.Target))
+                {
+                    f.Target = Entity.Null;
+                    f.Attacking = false;
+                }
             }).ScheduleParallel();
         }
     }
@@ -175,25 +198,17 @@ namespace RPG.Combat
         }
         protected override void OnUpdate()
         {
-
-            UnTargetNoHittableTarget();
             ThrottleAttack();
         }
 
-        private void UnTargetNoHittableTarget()
-        {
-            Entities.ForEach((ref Fighter f) =>
-            {
-                if (!HasComponent<Hittable>(f.Target))
-                {
-                    f.Target = Entity.Null;
-                }
-            }).ScheduleParallel();
-        }
+
         private void ThrottleAttack()
         {
-            Entities.ForEach((ref Fighter fighter, in DeltaTime deltaTime) =>
+            Entities
+            .WithNone<IsDeadTag>()
+            .ForEach((ref Fighter fighter, in DeltaTime deltaTime) =>
                  {
+
                      // It attack if time elapsed since last attack >= duration of the attack
                      if (fighter.currentAttack.TimeElapsedSinceAttack >= fighter.AttackDuration)
                      {
@@ -234,7 +249,7 @@ namespace RPG.Combat
         }
     }
 
-    [UpdateAfter(typeof(CombatTargettingSystem))]
+    [UpdateAfter(typeof(FightSystem))]
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class FightAnimationSystem : SystemBase
     {

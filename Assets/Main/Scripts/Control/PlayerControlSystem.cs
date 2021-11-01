@@ -71,5 +71,44 @@ namespace RPG.Control
             }).ScheduleParallel();
         }
     }
+
+    [UpdateInGroup(typeof(ControlSystemGroup))]
+    public class RaycastOnMouseClick : SystemBase
+    {
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+        }
+        protected override void OnUpdate()
+        {
+            Entities
+            .WithAll<PlayerControlled>()
+            .WithChangeFilter<MouseClick>()
+            .ForEach((ref Raycast cast, in MouseClick mouseClick) =>
+            {
+                cast.Completed = false;
+                cast.Ray = mouseClick.Ray;
+            }).ScheduleParallel();
+        }
+    }
+    [DisableAutoCreation]
+
+    [UpdateInGroup(typeof(ControlSystemGroup))]
+    public class NoInteractionSystem : SystemBase
+    {
+        protected override void OnUpdate()
+        {
+            Entities
+            .WithNone<WorldClick>()
+            .WithAny<PlayerControlled>()
+            .ForEach((in Fighter f) =>
+            {
+                if (f.Target == Entity.Null)
+                {
+
+                }
+            }).ScheduleParallel();
+        }
+    }
 }
 

@@ -31,6 +31,7 @@ namespace RPG.Control
             });
         }
     }
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     [UpdateAfter(typeof(ConvertToEntitySystem))]
     public class PlayerControlledInitialisationSystem : SystemBase
@@ -52,7 +53,7 @@ namespace RPG.Control
             .WithAll<PlayerControlled>()
             .ForEach((Entity e, in LocalToWorld localToWorld) =>
             {
-                commandBuffer.AddComponent<MoveTo>(e, new MoveTo(localToWorld.Position) { Stopped = true });
+                /*        commandBuffer.AddComponent<MoveTo>(e, new MoveTo(localToWorld.Position) { Stopped = true }); */
                 /* if (fighters.HasComponent(e))
                 {
                     commandBuffer.AddComponent<Fighter>(e, new Fighter { WeaponRange = 3.0f, AttackCooldown = 5.0f });
@@ -65,44 +66,6 @@ namespace RPG.Control
                 commandBuffer.AddComponent<CharacterAnimation>(e); */
             }).Schedule();
             commandBufferSystem.AddJobHandleForProducer(this.Dependency);
-        }
-    }
-    [UpdateInGroup(typeof(ControlSystemGroup))]
-    public class RaycastOnMouseClick : SystemBase
-    {
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-        }
-        protected override void OnUpdate()
-        {
-            Entities
-            .WithAll<PlayerControlled>()
-            .WithChangeFilter<MouseClick>()
-            .ForEach((ref Raycast cast, in MouseClick mouseClick) =>
-            {
-                cast.Completed = false;
-                cast.Ray = mouseClick.Ray;
-            }).ScheduleParallel();
-        }
-    }
-    [DisableAutoCreation]
-
-    [UpdateInGroup(typeof(ControlSystemGroup))]
-    public class NoInteractionSystem : SystemBase
-    {
-        protected override void OnUpdate()
-        {
-            Entities
-            .WithNone<WorldClick>()
-            .WithAny<PlayerControlled>()
-            .ForEach((in Fighter f) =>
-            {
-                if (f.Target == Entity.Null)
-                {
-
-                }
-            }).ScheduleParallel();
         }
     }
 }

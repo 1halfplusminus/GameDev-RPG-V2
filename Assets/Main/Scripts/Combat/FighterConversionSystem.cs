@@ -18,7 +18,7 @@ namespace RPG.Combat
                     hitEvents.Add(new HitEvent { Time = hit });
                 }
                 DstEntityManager.AddComponent<HittedByRaycast>(entity);
-                DstEntityManager.AddComponentData(entity, new Fighter { WeaponRange = fighter.WeaponRange, AttackCooldown = fighter.AttackCooldown, AttackDuration = fighter.AttackDuration });
+                DstEntityManager.AddComponentData(entity, new Fighter { WeaponRange = fighter.WeaponRange, AttackCooldown = fighter.AttackCooldown, AttackDuration = fighter.AttackDuration, currentAttack = Attack.Create() });
                 DstEntityManager.AddComponent<LookAt>(entity);
                 DstEntityManager.AddComponent<DeltaTime>(entity);
                 /*                 DstEntityManager.AddComponentData(entity, new CharacterState { State = CharacterStateMask.Dead | CharacterStateMask.Moving }); */

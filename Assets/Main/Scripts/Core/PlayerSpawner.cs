@@ -25,6 +25,14 @@ namespace RPG.Core
 
         }
 
+        void OnDrawGizmosSelected()
+        {
+            foreach (var item in Prefab.GetComponentsInChildren<IDrawGizmo>())
+            {
+                item.OnDrawGizmosSelected(transform);
+            }
+        }
+
     }
 
 }

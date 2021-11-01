@@ -7,9 +7,21 @@ using UnityEngine;
 
 namespace RPG.Control
 {
-    public class ChasePlayerAuthoring : MonoBehaviour
+    public class ChasePlayerAuthoring : MonoBehaviour, IDrawGizmo
     {
         public float ChaseDistance;
+
+
+        // Called by unity
+        public void OnDrawGizmosSelected()
+        {
+            OnDrawGizmosSelected(transform);
+        }
+        public void OnDrawGizmosSelected(Transform transform)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, ChaseDistance);
+        }
     }
 
     public class ConvertChasePlayerSystem : GameObjectConversionSystem
@@ -19,7 +31,6 @@ namespace RPG.Control
             Entities.ForEach((ChasePlayerAuthoring chasePlayer) =>
             {
                 var entity = GetPrimaryEntity(chasePlayer);
-                DstEntityManager.AddComponentData<MoveTo>(entity, new MoveTo(chasePlayer.transform.position) { Stopped = true });
                 DstEntityManager.AddComponent<AIControlled>(entity);
                 // Fighter should add this
                 DstEntityManager.AddComponent<DeltaTime>(entity);

@@ -12,6 +12,7 @@ namespace RPG.Core
         {
             var localToWorlds = GetComponentDataFromEntity<LocalToWorld>(true);
             Entities
+            .WithNone<IsDeadTag>()
             .WithReadOnly(localToWorlds)
             .WithChangeFilter<LookAt, LocalToWorld>()
             .ForEach((ref Rotation rotation, in LookAt lookAt, in LocalToWorld localToWorld) =>
