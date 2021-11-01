@@ -3050,6 +3050,10 @@ PrefabInstance:
       value: 1.03
       objectReference: {fileID: 0}
     - target: {fileID: 2102847174563085733, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_Speed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2102847174563085733, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: m_Height
       value: 1
       objectReference: {fileID: 0}

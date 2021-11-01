@@ -23,7 +23,8 @@ namespace RPG.Mouvement
         protected override void OnUpdate()
         {
             // Calcule distance 
-            Entities.WithChangeFilter<MoveTo, LocalToWorld>().ForEach((ref MoveTo moveTo, in LocalToWorld localToWorld) =>
+            Entities
+            .WithNone<IsDeadTag>().WithChangeFilter<MoveTo, LocalToWorld>().ForEach((ref MoveTo moveTo, in LocalToWorld localToWorld) =>
             {
                 moveTo.Distance = math.distance(moveTo.Position, localToWorld.Position);
 
@@ -31,6 +32,7 @@ namespace RPG.Mouvement
 
             // Stop if arrived a destination
             Entities
+            .WithNone<IsDeadTag>()
             .WithChangeFilter<MoveTo>().ForEach((Entity e, ref MoveTo moveTo, in LocalToWorld localToWorld) =>
             {
                 if (moveTo.Distance <= moveTo.StoppingDistance)
@@ -42,6 +44,7 @@ namespace RPG.Mouvement
 
             // Put velocity at zero if stopped
             Entities
+            .WithNone<IsDeadTag>()
             .WithChangeFilter<MoveTo>()
             .ForEach((Entity e, ref Mouvement mouvement, in MoveTo moveTo) =>
             {
@@ -73,6 +76,7 @@ namespace RPG.Mouvement
             .WithStoreEntityQueryInField(ref navMeshAgentQueries)
             .WithoutBurst()
             .WithAll<Mouvement>()
+            .WithNone<IsDeadTag>()
             .ForEach((Entity e, NavMeshAgent agent, ref Translation position, ref Mouvement mouvement, ref MoveTo moveTo, ref Rotation rotation) =>
             {
 
