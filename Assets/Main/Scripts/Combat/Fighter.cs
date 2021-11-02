@@ -2,7 +2,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 namespace RPG.Combat
 {
-
+    public struct IsFighting : IComponentData { }
     public struct Hit : IComponentData
     {
         public Entity Hitter;

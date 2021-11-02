@@ -58,33 +58,6 @@ namespace RPG.Core
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
-    [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
-    public class SpawnDeclarePrefabsConversionSystem : GameObjectConversionSystem
-    {
-        protected override void OnUpdate()
-        {
-            Entities.ForEach((PlayerSpawner spawner) =>
-            {
-                DeclareReferencedPrefab(spawner.Prefab);
 
-            });
-        }
-    }
-    public class SpawnConversionSystem : GameObjectConversionSystem
-    {
-        protected override void OnUpdate()
-        {
-            Entities.ForEach((PlayerSpawner spawner) =>
-            {
-                var prefabEntity = GetPrimaryEntity(spawner.Prefab);
-                var entity = GetPrimaryEntity(spawner);
-                DstEntityManager.AddComponentData(entity, new Spawn { Prefab = prefabEntity });
-                DstEntityManager.AddComponentData(entity, new LocalToWorld { Value = spawner.transform.localToWorldMatrix });
-                if (spawner.HasHybridComponent)
-                {
-                    DstEntityManager.AddComponent<HasHybridComponent>(entity);
-                }
-            });
-        }
-    }
+
 }

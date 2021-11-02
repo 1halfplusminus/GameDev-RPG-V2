@@ -1,0 +1,7 @@
+# Treat all cs files in this folder as generated code
+[**/Packages/**.cs]
+generated_code = true
+[**/obj/**.cs]
+dotnet_diagnostic.CS8019.severity = none
+generated_code = true
+dotnet_analyzer_diagnostic.severity = none

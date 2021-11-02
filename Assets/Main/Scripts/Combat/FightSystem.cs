@@ -20,7 +20,7 @@ namespace RPG.Combat
         protected override void OnCreate()
         {
             base.OnCreate();
-            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            entityCommandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
         }
 
         protected override void OnUpdate()
@@ -28,39 +28,38 @@ namespace RPG.Combat
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             var positionInWorlds = GetComponentDataFromEntity<LocalToWorld>(true);
             Entities
+            .WithAny<IsFighting>()
             .WithReadOnly(positionInWorlds)
             .ForEach((int entityInQueryIndex, Entity e, ref MoveTo moveTo, ref Fighter fighter, in LocalToWorld localToWorld) =>
             {
-                if (fighter.Target == Entity.Null)
+                if (positionInWorlds.HasComponent(fighter.Target))
                 {
-                    fighter.TargetInRange = false;
-                }
-                if (fighter.Target != Entity.Null)
-                {
-                    if (positionInWorlds.HasComponent(fighter.Target) && fighter.MoveTowardTarget == true)
+                    var targetPosition = positionInWorlds[fighter.Target].Position;
+                    if (fighter.MoveTowardTarget)
                     {
-                        var targetPosition = positionInWorlds[fighter.Target].Position;
-                        moveTo.Position = positionInWorlds[fighter.Target].Position;
-                        // Range of the weapon
-                        moveTo.StoppingDistance = fighter.WeaponRange;
-                        if (moveTo.Distance <= fighter.WeaponRange)
-                        {
-                            fighter.TargetInRange = true;
-                            commandBuffer.AddComponent(entityInQueryIndex, e, new LookAt { Entity = fighter.Target });
-                        }
-                        else
-                        {
-                            fighter.TargetInRange = false;
-                        }
-                    }
+                        moveTo.Stopped = false;
+                        moveTo.Position = targetPosition;
 
+                    }
+                    // Range of the weapon
+                    if (math.distance(localToWorld.Position, targetPosition) <= fighter.WeaponRange + moveTo.StoppingDistance)
+                    {
+                        fighter.TargetInRange = true;
+                        fighter.MoveTowardTarget = false;
+                        commandBuffer.AddComponent(entityInQueryIndex, e, new LookAt { Entity = fighter.Target });
+                    }
+                    else
+                    {
+                        fighter.TargetInRange = false;
+                        fighter.MoveTowardTarget = true;
+                    }
                 }
-                // Check if fighter arrive at target
+                /* // Check if fighter arrive at target
                 if (fighter.MoveTowardTarget == true && moveTo.Distance <= moveTo.StoppingDistance)
                 {
-                    fighter.MoveTowardTarget = false;
-                }
 
+                }
+ */
             }).ScheduleParallel();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
@@ -190,15 +189,31 @@ namespace RPG.Combat
 
     public class FightSystem : SystemBase
     {
-        EntityQuery targetQuery;
+        EntityCommandBufferSystem beginPresentationEntityCommandBufferSystem;
+
         protected override void OnCreate()
         {
             base.OnCreate();
-            targetQuery = GetEntityQuery(ComponentType.ReadOnly<Hittable>());
+            beginPresentationEntityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
         {
+            var commandBuffer = beginPresentationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            Entities.ForEach((int entityInQueryIndex, Entity e, ref Fighter fighter) =>
+            {
+                if (fighter.Target != Entity.Null)
+                {
+                    commandBuffer.AddComponent<IsFighting>(entityInQueryIndex, e);
+                }
+                else
+                {
+                    fighter.TargetInRange = false;
+                    commandBuffer.RemoveComponent<IsFighting>(entityInQueryIndex, e);
+                }
+            }).ScheduleParallel();
+            beginPresentationEntityCommandBufferSystem.AddJobHandleForProducer(Dependency);
             ThrottleAttack();
+
         }
 
 

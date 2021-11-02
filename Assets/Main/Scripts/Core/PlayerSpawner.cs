@@ -1,5 +1,8 @@
 
 using UnityEngine;
+using Unity.Entities;
+using System.Collections.Generic;
+using Unity.Transforms;
 
 namespace RPG.Core
 {
@@ -9,6 +12,10 @@ namespace RPG.Core
         public GameObject Prefab;
 
         public bool HasHybridComponent;
+
+
+        List<IComponentData> components = new List<IComponentData>();
+
         void OnDrawGizmos()
         {
 
@@ -34,5 +41,33 @@ namespace RPG.Core
         }
 
     }
+    public class SpawnConversionSystem : GameObjectConversionSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach((PlayerSpawner spawner) =>
+            {
+                var prefabEntity = GetPrimaryEntity(spawner.Prefab);
+                var entity = GetPrimaryEntity(spawner);
+                DstEntityManager.AddComponentData(entity, new Spawn { Prefab = prefabEntity });
+                DstEntityManager.AddComponentData(entity, new LocalToWorld { Value = spawner.transform.localToWorldMatrix });
+                if (spawner.HasHybridComponent)
+                {
+                    DstEntityManager.AddComponent<HasHybridComponent>(entity);
+                }
+            });
+        }
+    }
+    [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
+    public class SpawnDeclarePrefabsConversionSystem : GameObjectConversionSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach((PlayerSpawner spawner) =>
+            {
+                DeclareReferencedPrefab(spawner.Prefab);
 
+            });
+        }
+    }
 }

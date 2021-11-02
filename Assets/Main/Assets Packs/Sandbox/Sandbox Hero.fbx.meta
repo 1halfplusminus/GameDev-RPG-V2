@@ -69,6 +69,9 @@ ModelImporter:
   - first:
       74: 6511377222624030959
     second: Armature|Running 3
+  - first:
+      74: 564918066853224573
+    second: Armature|Nervously Looking Around
   externalObjects: {}
   materials:
     materialImportMode: 2

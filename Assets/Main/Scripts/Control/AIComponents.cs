@@ -10,6 +10,7 @@ namespace RPG.Control
     public struct ChasePlayer : IComponentData
     {
         public float ChaseDistance;
+        public Entity Target;
     }
 
     public struct GuardOriginalLocationTag : IComponentData { }
@@ -19,13 +20,114 @@ namespace RPG.Control
 
         public float SuspiciousTime;
     }
+
+    public struct ChaseTargetLose : IComponentData
+    {
+        public Entity Target;
+
+    }
+    public struct StartChaseTarget : IComponentData
+    {
+        public Entity Target;
+
+        public float3 Position;
+    }
+
+
+    public struct IsChasingTarget : IComponentData { }
+
+    public struct IsPatroling : IComponentData { }
     public struct IsSuspicious : IComponentData { }
 
+    public struct PatrolWaypoint : IBufferElementData
+    {
+        public float3 Position;
+    }
+    public struct PatrollingPath : IComponentData
+    {
+        public Entity Entity;
+    }
+
+    public struct Patrolling : IComponentData
+    {
+
+        public int WayPointCount;
+
+        public float StopingDistance;
+
+        public int _currentWayPointIndex;
+
+        public bool _started;
+
+        public bool _stopped;
+
+        public float _distanceToWaypoint;
+
+        public int CurrentWayPoint { get => _currentWayPointIndex; }
+
+        public bool Started { get => _started; }
+
+
+        public Patrolling(int waypointCount = 0)
+        {
+
+            WayPointCount = waypointCount;
+            StopingDistance = 10.0f;
+            _distanceToWaypoint = math.INFINITY;
+            _currentWayPointIndex = 0;
+            _started = false;
+            _stopped = false;
+        }
+        public void Start(int waypointCount)
+        {
+
+            WayPointCount = waypointCount;
+            _distanceToWaypoint = math.INFINITY;
+            _started = true;
+        }
+        public void Stop()
+        {
+            _started = false;
+            _stopped = true;
+        }
+        public void Reset()
+        {
+            _started = false;
+            _stopped = false;
+            _currentWayPointIndex = 0;
+            _distanceToWaypoint = math.INFINITY;
+        }
+        public void Update(float3 currentPosition, float3 currentWaypoint)
+        {
+            if (!_started) { return; }
+            _distanceToWaypoint = math.abs(math.distance(currentWaypoint, currentPosition));
+            if (_distanceToWaypoint <= StopingDistance)
+            {
+                _distanceToWaypoint = math.INFINITY;
+                Next();
+            }
+
+        }
+        public void Next()
+        {
+            if (!_started) { return; }
+            if (_currentWayPointIndex + 1 == WayPointCount)
+            {
+                _currentWayPointIndex = 0;
+            }
+            else
+            {
+                _currentWayPointIndex++;
+            }
+        }
+
+
+    }
     public struct Suspicious : IComponentData
     {
 
         public float Time;
-        float currentTime;
+        public float _currentTime;
 
         bool startedThisFrame;
         bool started;
@@ -38,7 +140,7 @@ namespace RPG.Control
         public Suspicious(float time)
         {
             Time = time;
-            currentTime = math.EPSILON;
+            _currentTime = math.INFINITY;
             startedThisFrame = false;
             started = false;
             finish = false;
@@ -46,7 +148,7 @@ namespace RPG.Control
 
         public void Reset()
         {
-            currentTime = math.EPSILON;
+            _currentTime = math.INFINITY;
             startedThisFrame = false;
             started = false;
             finish = false;
@@ -57,16 +159,17 @@ namespace RPG.Control
         }
         public void Start()
         {
-            currentTime = Time;
+            _currentTime = Time;
             startedThisFrame = true;
             started = true;
             finish = false;
         }
         public void Update(float deltaTime)
         {
-            currentTime -= deltaTime;
+            if (!started) { return; }
+            _currentTime -= deltaTime;
             startedThisFrame = false;
-            if (currentTime <= 0)
+            if (_currentTime <= 0)
             {
                 finish = true;
             }

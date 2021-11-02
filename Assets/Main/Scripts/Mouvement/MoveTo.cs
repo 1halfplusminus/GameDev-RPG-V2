@@ -20,6 +20,7 @@ namespace RPG.Mouvement
 
         public float Distance;
 
+        public bool IsAtStoppingDistance { get => Distance <= StoppingDistance; }
         public MoveTo(float3 position) : this(position, 1f)
         {
 
@@ -33,6 +34,10 @@ namespace RPG.Mouvement
             Stopped = false;
         }
 
+        public bool IsAtPosition(float3 position)
+        {
+            return IsAtStoppingDistance;
+        }
     }
 }
 

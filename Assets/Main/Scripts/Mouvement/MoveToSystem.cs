@@ -24,16 +24,15 @@ namespace RPG.Mouvement
         {
             // Calcule distance 
             Entities
-            .WithNone<IsDeadTag>().WithChangeFilter<MoveTo, LocalToWorld>().ForEach((ref MoveTo moveTo, in LocalToWorld localToWorld) =>
+            .WithNone<IsDeadTag>()
+            .ForEach((ref MoveTo moveTo, in LocalToWorld localToWorld) =>
             {
                 moveTo.Distance = math.distance(moveTo.Position, localToWorld.Position);
-
             }).ScheduleParallel();
-
             // Stop if arrived a destination
             Entities
             .WithNone<IsDeadTag>()
-            .WithChangeFilter<MoveTo>().ForEach((Entity e, ref MoveTo moveTo, in LocalToWorld localToWorld) =>
+            .ForEach((Entity e, ref MoveTo moveTo, in LocalToWorld localToWorld) =>
             {
                 if (moveTo.Distance <= moveTo.StoppingDistance)
                 {
@@ -45,7 +44,6 @@ namespace RPG.Mouvement
             // Put velocity at zero if stopped
             Entities
             .WithNone<IsDeadTag>()
-            .WithChangeFilter<MoveTo>()
             .ForEach((Entity e, ref Mouvement mouvement, in MoveTo moveTo) =>
             {
                 if (moveTo.Stopped)
@@ -61,6 +59,9 @@ namespace RPG.Mouvement
             {
                 moveTo.Position = position.Value;
             }).ScheduleParallel();
+
+
+
         }
     }
     [UpdateInGroup(typeof(MouvementSystemGroup))]
