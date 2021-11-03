@@ -81,3 +81,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: {fileID: 56188146900120984, guid: 0fa2b1d5b740ab6e1ae1cb4930b0cd73, type: 3}
   PatrolSpeed: 0.6
+  DwellingTime: 10

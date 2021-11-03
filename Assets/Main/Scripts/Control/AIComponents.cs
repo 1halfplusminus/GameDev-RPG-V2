@@ -54,6 +54,7 @@ namespace RPG.Control
         public int WayPointCount;
 
         public float PatrolSpeed;
+        public float DwellingTime;
         public float StopingDistance;
 
         public int _currentWayPointIndex;
@@ -76,6 +77,7 @@ namespace RPG.Control
             PatrolSpeed = patrolSpeed;
             WayPointCount = 0;
             StopingDistance = 10.0f;
+            DwellingTime = math.EPSILON;
             _distanceToWaypoint = math.INFINITY;
             _currentWayPointIndex = 0;
             _started = false;
@@ -190,10 +192,13 @@ namespace RPG.Control
         {
             _finish = true;
         }
-
         public void Start()
         {
-            _currentTime = Time;
+            Start(Time);
+        }
+        public void Start(float time)
+        {
+            _currentTime = time;
             _startedThisFrame = true;
             _started = true;
             _finish = false;

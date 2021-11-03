@@ -33,12 +33,11 @@ namespace RPG.Control
 
                 if (patrolling.Started)
                 {
-                    Debug.Log("Is Patrolling");
                     Patrol(ref patrolling, ref moveTo, localToWorld, waypoints);
                     if (patrolling.IsDwelling)
                     {
                         moveTo.Stopped = true;
-                        suspicious.Start();
+                        suspicious.Start(patrolling.DwellingTime);
                         Debug.Log("arrivedAtWaypoint move to STOPPED");
                     }
                 }

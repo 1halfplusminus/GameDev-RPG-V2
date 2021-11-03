@@ -10,6 +10,8 @@ namespace RPG.Control
 
         public float PatrolSpeed;
 
+        public float DwellingTime;
+
     }
 
 
@@ -40,7 +42,7 @@ namespace RPG.Control
                 }
                 var pathEntity = GetPrimaryEntity(patrolingPathAuthoring.Path);
                 DstEntityManager.AddComponentData(entity, new PatrollingPath { Entity = pathEntity });
-                DstEntityManager.AddComponentData(entity, new Patrolling(patrolingPathAuthoring.PatrolSpeed));
+                DstEntityManager.AddComponentData(entity, new Patrolling(patrolingPathAuthoring.PatrolSpeed) { DwellingTime = patrolingPathAuthoring.DwellingTime });
             });
         }
     }
