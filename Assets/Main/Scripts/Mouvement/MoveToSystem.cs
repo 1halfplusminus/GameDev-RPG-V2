@@ -92,7 +92,7 @@ namespace RPG.Mouvement
 
                 if (agent.isOnNavMesh && !moveTo.Stopped)
                 {
-
+                    agent.speed = moveTo.CalculeSpeed(in mouvement);
                     agent.SetDestination(moveTo.Position);
                     position.Value = agent.transform.position;
                     mouvement.Velocity = new Velocity
@@ -101,12 +101,10 @@ namespace RPG.Mouvement
                         Angular = agent.angularSpeed
 
                     };
-                    mouvement.Speed = agent.speed;
                     if (!lookAts.HasComponent(e) || lookAts[e].Entity == Entity.Null)
                     {
                         rotation.Value = agent.transform.rotation;
                     }
-
                 }
 
             }).Run();

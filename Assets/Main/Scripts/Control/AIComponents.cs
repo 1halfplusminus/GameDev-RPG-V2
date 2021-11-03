@@ -53,6 +53,7 @@ namespace RPG.Control
 
         public int WayPointCount;
 
+        public float PatrolSpeed;
         public float StopingDistance;
 
         public int _currentWayPointIndex;
@@ -68,10 +69,10 @@ namespace RPG.Control
         public bool Started { get => _started; }
 
 
-        public Patrolling(int waypointCount = 0)
+        public Patrolling(float patrolSpeed)
         {
-
-            WayPointCount = waypointCount;
+            PatrolSpeed = patrolSpeed;
+            WayPointCount = 0;
             StopingDistance = 10.0f;
             _distanceToWaypoint = math.INFINITY;
             _currentWayPointIndex = 0;

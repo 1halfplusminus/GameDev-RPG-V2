@@ -7,6 +7,9 @@ namespace RPG.Control
     public class PatrolBehaviourAuthoring : MonoBehaviour
     {
         public GameObject Path;
+
+        public float PatrolSpeed;
+
     }
 
 
@@ -37,7 +40,7 @@ namespace RPG.Control
                 }
                 var pathEntity = GetPrimaryEntity(patrolingPathAuthoring.Path);
                 DstEntityManager.AddComponentData(entity, new PatrollingPath { Entity = pathEntity });
-                DstEntityManager.AddComponentData(entity, new Patrolling(0));
+                DstEntityManager.AddComponentData(entity, new Patrolling(patrolingPathAuthoring.PatrolSpeed));
             });
         }
     }

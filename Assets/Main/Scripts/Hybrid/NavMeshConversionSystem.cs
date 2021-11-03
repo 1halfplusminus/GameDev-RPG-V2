@@ -36,7 +36,7 @@ public class NavMeshAgentConversionSystem : GameObjectConversionSystem
         {
             var entity = GetPrimaryEntity(agent);
             AddHybridComponent(agent);
-            DstEntityManager.AddComponent<Mouvement>(entity);
+            DstEntityManager.AddComponentData(entity, new Mouvement { Speed = agent.speed });
             DstEntityManager.AddComponentData(entity, new MoveTo(agent.transform.position) { StoppingDistance = agent.stoppingDistance });
         });
     }

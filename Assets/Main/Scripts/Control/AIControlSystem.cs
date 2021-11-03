@@ -50,6 +50,7 @@ namespace RPG.Control
         private static void MoveToWaypoint(in Patrolling patrolling, ref MoveTo moveTo, in DynamicBuffer<PatrolWaypoint> waypoints)
         {
             moveTo.Stopped = false;
+            moveTo.SpeedPercent = patrolling.PatrolSpeed;
             moveTo.Position = GetPosition(patrolling, waypoints);
         }
 
@@ -177,18 +178,25 @@ namespace RPG.Control
                chasePlayer.Target = startChaseTarget.Target;
            }).ScheduleParallel();
 
-
-            Entities.WithAll<StartChaseTarget>().ForEach((ref MoveTo moveTo, in StartChaseTarget startChaseTarget) =>
-            {
-                moveTo.Position = startChaseTarget.Position;
-                moveTo.Stopped = false;
-            }).ScheduleParallel();
             Entities.ForEach((ref Fighter fighter, in StartChaseTarget startChaseTarget) =>
             {
                 fighter.Target = startChaseTarget.Target;
-                fighter.MoveTowardTarget = true;
             }).ScheduleParallel();
 
+            Entities.WithAll<IsChasingTarget>().ForEach((ref MoveTo moveTo, in StartChaseTarget startChaseTarget) =>
+            {
+                moveTo.SpeedPercent = 1f;
+                moveTo.Position = startChaseTarget.Position;
+                moveTo.Stopped = false;
+            }).ScheduleParallel();
+
+            Entities.WithAll<IsChasingTarget>().ForEach((ref Fighter fighter) =>
+            {
+                if (!fighter.TargetInRange)
+                {
+                    fighter.MoveTowardTarget = true;
+                }
+            }).ScheduleParallel();
 
             Entities.WithAll<StartChaseTarget>().ForEach((int entityInQueryIndex, Entity entity) =>
             {
@@ -245,9 +253,15 @@ namespace RPG.Control
             Entities
             .WithAny<IsSuspicious>().ForEach((ref GuardAnimation animation) =>
             {
-                animation.NervouslyLookingAround += 0.01f;
+                animation.NervouslyLookingAround += 0.1f;
                 animation.NervouslyLookingAround = math.min(animation.NervouslyLookingAround, 1.0f);
             }).ScheduleParallel();
+
+            Entities
+           .WithNone<IsSuspicious>().WithChangeFilter<GuardAnimation>().ForEach((ref GuardAnimation animation) =>
+           {
+               animation.NervouslyLookingAround = math.max(animation.NervouslyLookingAround - 0.1f, 0.0f);
+           }).ScheduleParallel();
         }
     }
 }

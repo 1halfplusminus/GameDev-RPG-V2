@@ -12,4 +12,6 @@ namespace RPG.Mouvement
 
         public float Speed;
     }
+
+    
 }

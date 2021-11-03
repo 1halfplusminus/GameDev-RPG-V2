@@ -11,6 +11,7 @@ namespace RPG.Mouvement
     public struct MoveTo : IComponentData
     {
 
+        public float SpeedPercent;
         public bool Canceled;
 
         public bool Stopped;
@@ -23,14 +24,13 @@ namespace RPG.Mouvement
 
         public bool IsAtStoppingDistance { get => Distance <= StoppingDistance; }
 
-        public float SpeedPercent;
 
-        public float MaxSpeed;
-        public MoveTo(float3 position) : this(position, 1f, 0.0f)
+
+        public MoveTo(float3 position) : this(position, 1f)
         {
 
         }
-        public MoveTo(float3 position, float stoppingDistance, float maxSpeed)
+        public MoveTo(float3 position, float stoppingDistance)
         {
             Position = position;
             StoppingDistance = stoppingDistance;
@@ -38,9 +38,12 @@ namespace RPG.Mouvement
             Canceled = false;
             Stopped = false;
             SpeedPercent = 1f;
-            MaxSpeed = maxSpeed;
         }
 
+        public float CalculeSpeed(in Mouvement mouvement)
+        {
+            return SpeedPercent * mouvement.Speed;
+        }
         public bool IsAtPosition(float3 position)
         {
             return IsAtStoppingDistance;

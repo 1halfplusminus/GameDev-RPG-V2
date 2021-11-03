@@ -51,7 +51,6 @@ namespace RPG.Combat
                     else
                     {
                         fighter.TargetInRange = false;
-                        fighter.MoveTowardTarget = true;
                     }
                 }
 
