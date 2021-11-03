@@ -13,4 +13,6 @@ public struct CharacterAnimation : IComponentData
     public float Run;
 
     public float Dead;
+
+
 }
