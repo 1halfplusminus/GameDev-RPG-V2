@@ -267,13 +267,14 @@ namespace RPG.Combat
             {
                 if (fighter.currentAttack.InCooldown && characterAnimation.AttackCooldown <= 1)
                 {
-                    characterAnimation.AttackCooldown += 0.02f;
+                    characterAnimation.AttackCooldown += 0.1f;
                     characterAnimation.AttackCooldown = math.min(characterAnimation.AttackCooldown, 1f);
                 }
 
                 if (fighter.Attacking && fighter.TargetInRange)
                 {
-                    characterAnimation.Attack += 0.02f;
+                    characterAnimation.Move = 0.0f;
+                    characterAnimation.Attack += 0.04f;
                     characterAnimation.Attack = math.min(characterAnimation.Attack, 1f);
                 }
 
@@ -283,7 +284,7 @@ namespace RPG.Combat
                     characterAnimation.AttackCooldown = math.max(characterAnimation.AttackCooldown, 0f);
                 }
 
-                if (!fighter.Attacking && !fighter.currentAttack.InCooldown)
+                if (!fighter.Attacking && !fighter.currentAttack.InCooldown || fighter.MoveTowardTarget)
                 {
                     characterAnimation.Attack = 0.0f;
                 }
