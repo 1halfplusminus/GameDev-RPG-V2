@@ -64,11 +64,13 @@ namespace RPG.Control
 
         public float _distanceToWaypoint;
 
+        public bool _isDwelling;
+
         public int CurrentWayPoint { get => _currentWayPointIndex; }
 
-        public bool Started { get => _started; }
+        public bool Started { get => _started && !_stopped; }
 
-
+        public bool IsDwelling { get => _isDwelling; }
         public Patrolling(float patrolSpeed)
         {
             PatrolSpeed = patrolSpeed;
@@ -78,6 +80,7 @@ namespace RPG.Control
             _currentWayPointIndex = 0;
             _started = false;
             _stopped = false;
+            _isDwelling = false;
         }
         public void Start(int waypointCount)
         {
@@ -85,30 +88,59 @@ namespace RPG.Control
             WayPointCount = waypointCount;
             _distanceToWaypoint = math.INFINITY;
             _started = true;
+            _isDwelling = false;
         }
         public void Stop()
         {
-            _started = false;
+
             _stopped = true;
+        }
+
+        public void UnStop()
+        {
+            _stopped = false;
+        }
+        public void Toggle()
+        {
+            _stopped = !_stopped;
+
         }
         public void Reset()
         {
             _started = false;
             _stopped = false;
+            _isDwelling = false;
             _currentWayPointIndex = 0;
             _distanceToWaypoint = math.INFINITY;
         }
+        public void Update(float3 currentPosition, float3 currentWaypoint, out bool wasDwelling)
+        {
+            wasDwelling = _isDwelling;
+            Update(currentPosition, currentWaypoint);
+
+        }
         public void Update(float3 currentPosition, float3 currentWaypoint)
         {
-            if (!_started) { return; }
-            _distanceToWaypoint = math.abs(math.distance(currentWaypoint, currentPosition));
+            if (!Started) { return; }
+            _distanceToWaypoint = DistanceToWaypoint(currentPosition, currentWaypoint);
+            if (_isDwelling)
+            {
+                _isDwelling = false;
+                return;
+            }
             if (_distanceToWaypoint <= StopingDistance)
             {
+                _isDwelling = true;
                 _distanceToWaypoint = math.INFINITY;
                 Next();
             }
-
         }
+
+        private static float DistanceToWaypoint(float3 currentPosition, float3 currentWaypoint)
+        {
+            return math.abs(math.distance(currentWaypoint, currentPosition));
+        }
+
         public void Next()
         {
             if (!_started) { return; }
@@ -130,49 +162,50 @@ namespace RPG.Control
         public float Time;
         public float _currentTime;
 
-        bool startedThisFrame;
-        bool started;
-        bool finish;
-        public bool StartedThisFrame { get { return startedThisFrame; } }
+        public bool _startedThisFrame;
+        public bool _started;
+        public bool _finish;
+        public bool StartedThisFrame { get { return _startedThisFrame; } }
 
-        public bool IsStarted { get { return started; } }
+        public bool IsStarted { get { return _started; } }
 
-        public bool IsFinish { get { return finish; } }
+        public bool IsFinish { get { return _finish; } }
         public Suspicious(float time)
         {
             Time = time;
             _currentTime = math.INFINITY;
-            startedThisFrame = false;
-            started = false;
-            finish = false;
+            _startedThisFrame = false;
+            _started = false;
+            _finish = false;
         }
 
         public void Reset()
         {
             _currentTime = math.INFINITY;
-            startedThisFrame = false;
-            started = false;
-            finish = false;
+            _startedThisFrame = false;
+            _started = false;
+            _finish = false;
         }
         public void Finish()
         {
-            finish = true;
+            _finish = true;
         }
+
         public void Start()
         {
             _currentTime = Time;
-            startedThisFrame = true;
-            started = true;
-            finish = false;
+            _startedThisFrame = true;
+            _started = true;
+            _finish = false;
         }
         public void Update(float deltaTime)
         {
-            if (!started) { return; }
+            if (!_started) { return; }
             _currentTime -= deltaTime;
-            startedThisFrame = false;
+            _startedThisFrame = false;
             if (_currentTime <= 0)
             {
-                finish = true;
+                _finish = true;
             }
         }
     }

@@ -19,22 +19,28 @@ namespace RPG.Control
         protected override void OnUpdate()
         {
             var waypointsByPath = GetBufferFromEntity<PatrolWaypoint>(true);
-            Entities.WithReadOnly(waypointsByPath).WithAll<Spawned>().ForEach((ref Patrolling patrolling, ref MoveTo moveTo, in PatrollingPath path) =>
+            Entities.WithReadOnly(waypointsByPath).WithAll<Spawned>().ForEach((ref Patrolling patrolling, in PatrollingPath path) =>
             {
                 var waypoints = waypointsByPath[path.Entity];
                 patrolling.Start(waypoints.Length);
             }).ScheduleParallel();
 
             Entities.WithReadOnly(waypointsByPath)
-            .WithNone<Spawned, IsSuspicious, IsChasingTarget>()
-            .WithNone<IsFighting>()
-            .ForEach((ref Patrolling patrolling, ref MoveTo moveTo, in PatrollingPath path, in LocalToWorld localToWorld) =>
+            .WithNone<IsSuspicious, IsChasingTarget, IsFighting>()
+            .ForEach((ref Patrolling patrolling, ref MoveTo moveTo, ref Suspicious suspicious, in PatrollingPath path, in LocalToWorld localToWorld) =>
             {
                 var waypoints = waypointsByPath[path.Entity];
 
                 if (patrolling.Started)
                 {
+                    Debug.Log("Is Patrolling");
                     Patrol(ref patrolling, ref moveTo, localToWorld, waypoints);
+                    if (patrolling.IsDwelling)
+                    {
+                        moveTo.Stopped = true;
+                        suspicious.Start();
+                        Debug.Log("arrivedAtWaypoint move to STOPPED");
+                    }
                 }
 
             }).ScheduleParallel();
@@ -43,8 +49,11 @@ namespace RPG.Control
         private static void Patrol(ref Patrolling patrolling, ref MoveTo moveTo, in LocalToWorld localToWorld, in DynamicBuffer<PatrolWaypoint> waypoints)
         {
             var currentWaypont = GetPosition(patrolling, waypoints);
-            patrolling.Update(localToWorld.Position, currentWaypont);
-            MoveToWaypoint(patrolling, ref moveTo, waypoints);
+            patrolling.Update(localToWorld.Position, currentWaypont, out bool wasDwelling);
+            if (!wasDwelling)
+            {
+                MoveToWaypoint(patrolling, ref moveTo, waypoints);
+            }
         }
 
         private static void MoveToWaypoint(in Patrolling patrolling, ref MoveTo moveTo, in DynamicBuffer<PatrolWaypoint> waypoints)
@@ -84,12 +93,20 @@ namespace RPG.Control
                 suspicious.Finish();
                 commandBuffer.RemoveComponent<IsSuspicious>(entityInQueryIndex, e);
             }).ScheduleParallel();
-
+            Entities.WithNone<IsSuspicious>().ForEach((int entityInQueryIndex, Entity e, in Suspicious suspicious) =>
+            {
+                if (suspicious.StartedThisFrame)
+                {
+                    Debug.Log("suspicious started this frame");
+                    commandBuffer.AddComponent<IsSuspicious>(entityInQueryIndex, e);
+                }
+            }).ScheduleParallel();
             Entities.WithAny<IsSuspicious>().ForEach((int entityInQueryIndex, Entity e, ref Suspicious suspicious, in DeltaTime time) =>
             {
                 suspicious.Update(time.Value);
                 if (suspicious.IsFinish)
                 {
+                    Debug.Log("Suspicious is finish");
                     suspicious.Reset();
                     commandBuffer.RemoveComponent<IsSuspicious>(entityInQueryIndex, e);
                 }
