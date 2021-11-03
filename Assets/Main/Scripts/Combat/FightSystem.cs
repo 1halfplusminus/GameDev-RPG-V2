@@ -54,12 +54,7 @@ namespace RPG.Combat
                         fighter.MoveTowardTarget = true;
                     }
                 }
-                /* // Check if fighter arrive at target
-                if (fighter.MoveTowardTarget == true && moveTo.Distance <= moveTo.StoppingDistance)
-                {
 
-                }
- */
             }).ScheduleParallel();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
@@ -68,13 +63,12 @@ namespace RPG.Combat
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class CombatTargettingSystem : SystemBase
     {
-        EntityCommandBufferSystem commandBufferSystem;
+
         protected override void OnCreate()
         {
             base.OnCreate();
-            commandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
-        }
 
+        }
         protected override void OnUpdate()
         {
 

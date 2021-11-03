@@ -3838,6 +3838,11 @@ MonoBehaviour:
       NodeIDPart2: 18035509962948914618
       PortUniqueName: Root Motion Source
     Value: {fileID: 0}
+  - TargetGUID:
+      NodeIDPart1: 13621692158484936590
+      NodeIDPart2: 9461642750133055161
+      PortUniqueName: Root Motion Source
+    Value: {fileID: 0}
   PhaseIdentification: Unity.Animation.ProcessLateAnimationGraphLoaderSystem+Tag,
     Unity.Animation.DefaultGraphPipeline, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   ShowBindings: 1
@@ -3845,6 +3850,9 @@ MonoBehaviour:
   - Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     Value: {fileID: 6371539101496094734}
+  - Identification: RPG.Animation.GuardAnimation, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+    Value: {fileID: 6488695818498842805}
 --- !u!114 &-2899455245883258136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3857,8 +3865,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e0c13657ac13b5d99d07b312a468319, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ChaseDistance: 9
-  SuspiciousTime: 8
+  ChaseDistance: 5.5
+  SuspiciousTime: 9
 --- !u!114 &2121927805176826258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3873,6 +3881,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GuardOriginalLocation: 1
   GuardLocation: {x: 0, y: 0, z: 0}
+--- !u!114 &6488695818498842805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1299507469631316153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7b0f05c0675c51b18e6caa87a695052, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NervouslyLookingAround: 0
 --- !u!114 &6748935984287833189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3963,8 +3984,12 @@ MonoBehaviour:
   m_ExcludeBones: []
   m_InvalidBones: []
   m_SkeletonRootBone: {fileID: 559745140727538194}
-  TranslationChannels: []
-  RotationChannels: []
+  TranslationChannels:
+  - Id: MainH
+    DefaultValue: {x: 0, y: 0, z: 0}
+  RotationChannels:
+  - Id: MainH
+    DefaultValue: {x: 0, y: 0, z: 0, w: 0}
   ScaleChannels: []
   FloatChannels: []
   IntChannels: []

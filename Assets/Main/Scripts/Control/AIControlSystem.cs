@@ -7,6 +7,8 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using RPG.Core;
 using RPG.Combat;
+using RPG.Animation;
+using UnityEngine;
 
 namespace RPG.Control
 {
@@ -232,6 +234,20 @@ namespace RPG.Control
 
             beginSimulationEntityCommandBufferSystem.AddJobHandleForProducer(Dependency);
 
+        }
+    }
+
+
+    public class AIAnimationSystem : SystemBase
+    {
+        protected override void OnUpdate()
+        {
+            Entities
+            .WithAny<IsSuspicious>().ForEach((ref GuardAnimation animation) =>
+            {
+                animation.NervouslyLookingAround += 0.01f;
+                animation.NervouslyLookingAround = math.min(animation.NervouslyLookingAround, 1.0f);
+            }).ScheduleParallel();
         }
     }
 }

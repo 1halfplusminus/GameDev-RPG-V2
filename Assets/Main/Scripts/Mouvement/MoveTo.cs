@@ -12,6 +12,7 @@ namespace RPG.Mouvement
     {
 
         public bool Canceled;
+
         public bool Stopped;
 
         public float3 Position;
@@ -21,17 +22,23 @@ namespace RPG.Mouvement
         public float Distance;
 
         public bool IsAtStoppingDistance { get => Distance <= StoppingDistance; }
-        public MoveTo(float3 position) : this(position, 1f)
+
+        public float SpeedPercent;
+
+        public float MaxSpeed;
+        public MoveTo(float3 position) : this(position, 1f, 0.0f)
         {
 
         }
-        public MoveTo(float3 position, float stoppingDistance)
+        public MoveTo(float3 position, float stoppingDistance, float maxSpeed)
         {
             Position = position;
             StoppingDistance = stoppingDistance;
             Distance = math.INFINITY;
             Canceled = false;
             Stopped = false;
+            SpeedPercent = 1f;
+            MaxSpeed = maxSpeed;
         }
 
         public bool IsAtPosition(float3 position)

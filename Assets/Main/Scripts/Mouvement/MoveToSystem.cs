@@ -92,6 +92,7 @@ namespace RPG.Mouvement
 
                 if (agent.isOnNavMesh && !moveTo.Stopped)
                 {
+
                     agent.SetDestination(moveTo.Position);
                     position.Value = agent.transform.position;
                     mouvement.Velocity = new Velocity
@@ -115,7 +116,7 @@ namespace RPG.Mouvement
             .ForEach((NavMeshAgent agent, ref Translation position) =>
             {
                 agent.Warp(position.Value);
-                Debug.Log("Warping agent ");
+
             }).Run();
         }
     }

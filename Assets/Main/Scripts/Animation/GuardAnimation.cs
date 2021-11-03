@@ -2,8 +2,9 @@ using Unity.Entities;
 
 namespace RPG.Animation
 {
-    public struct GuardAnimation
+    [GenerateAuthoringComponent]
+    public struct GuardAnimation : IComponentData
     {
-        float NervouslyLookingAround;
+        public float NervouslyLookingAround;
     }
 }

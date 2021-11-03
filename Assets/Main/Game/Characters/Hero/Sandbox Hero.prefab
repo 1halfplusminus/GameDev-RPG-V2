@@ -4719,7 +4719,9 @@ MonoBehaviour:
   - {fileID: 5920683542834229045}
   m_InvalidBones: []
   m_SkeletonRootBone: {fileID: 5627198881048034081}
-  TranslationChannels: []
+  TranslationChannels:
+  - Id: MainH
+    DefaultValue: {x: 0, y: 0, z: 0}
   RotationChannels: []
   ScaleChannels: []
   FloatChannels: []
