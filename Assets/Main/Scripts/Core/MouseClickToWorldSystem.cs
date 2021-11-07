@@ -1,9 +1,9 @@
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-
 using ExtensionMethods;
 using Unity.Physics;
+using RPG.Mouvement;
 
 namespace RPG.Core
 {

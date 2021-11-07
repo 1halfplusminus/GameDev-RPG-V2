@@ -14,6 +14,8 @@ namespace RPG.Combat
         public float AttackDuration;
 
         public List<float> HitEvents;
+
+        public float WeaponDamage;
     }
 
 }

@@ -52,7 +52,7 @@ namespace RPG.Combat
 
         public float AttackDuration;
 
-        public Attack currentAttack;
+        public Attack CurrentAttack;
 
         public float WeaponDamage;
     }

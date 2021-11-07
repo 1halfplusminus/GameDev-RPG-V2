@@ -26,12 +26,12 @@ namespace RPG.Core
     public class RaycastSystem : SystemBase
     {
         BuildPhysicsWorld buildPhysicsWorld;
-        EntityCommandBufferSystem entityCommandBufferSystem;
+
         protected override void OnCreate()
         {
             base.OnCreate();
             buildPhysicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
-            entityCommandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
+
         }
         protected override void OnUpdate()
         {
