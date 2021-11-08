@@ -24,7 +24,14 @@ namespace RPG.Control
                 var waypoints = waypointsByPath[path.Entity];
                 patrolling.Start(waypoints.Length);
             }).ScheduleParallel();
-
+            Entities.WithReadOnly(waypointsByPath)
+            .WithChangeFilter<AutoStartPatroling>()
+            .WithAll<AutoStartPatroling>().ForEach((ref Patrolling patrolling, in PatrollingPath path) =>
+            {
+                Debug.Log("Auto Start Patrolling");
+                var waypoints = waypointsByPath[path.Entity];
+                patrolling.Start(waypoints.Length);
+            }).ScheduleParallel();
             Entities.WithReadOnly(waypointsByPath)
             .WithNone<IsSuspicious, IsChasingTarget, IsFighting>()
             .ForEach((ref Patrolling patrolling, ref MoveTo moveTo, ref Suspicious suspicious, in PatrollingPath path, in LocalToWorld localToWorld) =>

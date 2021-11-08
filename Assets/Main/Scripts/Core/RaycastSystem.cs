@@ -9,7 +9,7 @@ namespace RPG.Core
 {
     public struct Raycast : IComponentData
     {
-        public Unity.Physics.Ray Ray;
+        public Ray Ray;
         public float Distance;
 
         public bool Completed;
@@ -47,7 +47,7 @@ namespace RPG.Core
             {
                 if (!raycast.Completed)
                 {
-                    RaycastInput input = new RaycastInput { Start = raycast.Ray.Origin, End = raycast.Ray.Displacement * raycast.Distance, Filter = CollisionFilter.Default };
+                    RaycastInput input = new RaycastInput() { Start = raycast.Ray.Origin, End = raycast.Ray.Displacement * raycast.Distance, Filter = CollisionFilter.Default };
                     var hits = new NativeList<RaycastHit>(Allocator.Temp);
                     collisionWorld.CastRay(input, ref hits);
                     for (int i = 0; i < hits.Length; i++)

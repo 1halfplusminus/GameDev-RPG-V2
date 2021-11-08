@@ -16,9 +16,4 @@ namespace RPG.Core
     {
         public Entity Entity;
     }
-
-    public struct ActiveCamera : IComponentData
-    {
-
-    }
 }

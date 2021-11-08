@@ -34,10 +34,10 @@ namespace RPG.Control
                 DstEntityManager.AddComponent<AIControlled>(entity);
                 // Fighter should add this
                 DstEntityManager.AddComponent<DeltaTime>(entity);
-                DstEntityManager.AddComponentData<ChasePlayer>(entity, new ChasePlayer { ChaseDistance = chasePlayer.ChaseDistance });
+                DstEntityManager.AddComponentData(entity, new ChasePlayer { ChaseDistance = chasePlayer.ChaseDistance });
                 if (chasePlayer.SuspiciousTime >= 0)
                 {
-                    DstEntityManager.AddComponentData<Suspicious>(entity, new Suspicious { Time = chasePlayer.SuspiciousTime });
+                    DstEntityManager.AddComponentData(entity, new Suspicious { Time = chasePlayer.SuspiciousTime });
                 }
             });
         }

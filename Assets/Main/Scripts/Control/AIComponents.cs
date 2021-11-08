@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace RPG.Control
 {
+
     public struct AIControlled : IComponentData { }
 
     public struct ChasePlayer : IComponentData

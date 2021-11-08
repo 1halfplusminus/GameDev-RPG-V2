@@ -9,6 +9,16 @@ using RPG.Core;
 
 namespace RPG.Hybrid
 {
+    public struct FollowedBy : IComponentData
+    {
+        public Entity Entity;
+    }
+
+    public struct LookAtBy : IComponentData
+    {
+        public Entity Entity;
+    }
+
     public struct CinemachineBrainTag : IComponentData
     {
     }
@@ -34,6 +44,7 @@ namespace RPG.Hybrid
                     if (followedEntity != Entity.Null)
                     {
                         Debug.Log("Follow " + followedEntity.Index);
+                        DstEntityManager.AddComponentData(followedEntity, new FollowedBy() { Entity = virtualCameraEntity });
                         DstEntityManager.AddComponentData(virtualCameraEntity, new Follow() { Entity = followedEntity });
                     }
                     AddHybridComponent(virtualCamera.m_Follow);
@@ -44,12 +55,13 @@ namespace RPG.Hybrid
                     if (lookAtEntity != Entity.Null)
                     {
                         Debug.Log("Look At " + lookAtEntity.Index);
+                        DstEntityManager.AddComponentData(lookAtEntity, new LookAtBy() { Entity = virtualCameraEntity });
                         DstEntityManager.AddComponentData(virtualCameraEntity, new LookAt() { Entity = lookAtEntity });
                         AddHybridComponent(virtualCamera.m_LookAt);
                     }
 
                 }
-                DstEntityManager.AddComponentData(virtualCameraEntity, new ActiveCamera());
+
             });
         }
     }
@@ -61,7 +73,7 @@ namespace RPG.Hybrid
         {
             Entities
             .WithoutBurst()
-            .WithChangeFilter<Follow>()
+
             .ForEach((CinemachineVirtualCamera camera, in Follow target) =>
             {
                 var transform = GetTransform(target.Entity, EntityManager);
@@ -72,7 +84,7 @@ namespace RPG.Hybrid
             }).Run();
             Entities
            .WithoutBurst()
-           .WithChangeFilter<LookAt>()
+
            .ForEach((CinemachineVirtualCamera camera, in LookAt target) =>
            {
                var transform = GetTransform(target.Entity, EntityManager);
@@ -81,15 +93,15 @@ namespace RPG.Hybrid
                    camera.m_LookAt = transform;
                }
            }).Run();
-            /* Entities
-            .WithoutBurst()
-            .ForEach((CinemachineBrain brain)=>{
-               brain.ManualUpdate();
-            }).Run(); */
+
         }
 
         private static Transform GetTransform(Entity entity, EntityManager em)
         {
+            if (em.HasComponent<HasSpawn>(entity))
+            {
+                return GetTransform(em.GetComponentData<HasSpawn>(entity).Entity, em);
+            }
             if (em.HasComponent<NavMeshAgent>(entity))
             {
                 return em.GetComponentObject<NavMeshAgent>(entity).transform;

@@ -17,6 +17,10 @@ namespace RPG.Core
     {
 
     }
+    public struct HasSpawn : IComponentData
+    {
+        public Entity Entity;
+    }
     [UpdateInGroup(typeof(CoreSystemGroup))]
     public class SpawnSystem : SystemBase
     {
@@ -33,9 +37,11 @@ namespace RPG.Core
             Entities.WithNone<HasHybridComponent>().ForEach((int entityInQueryIndex, Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
                {
                    var instance = commandBufferP.Instantiate(entityInQueryIndex, toSpawn.Prefab);
-                   commandBufferP.AddComponent<Translation>(entityInQueryIndex, instance, new Translation { Value = localToWorld.Position });
-                   commandBufferP.AddComponent<Rotation>(entityInQueryIndex, instance, new Rotation { Value = localToWorld.Rotation });
+                   commandBufferP.AddComponent(entityInQueryIndex, instance, new Translation { Value = localToWorld.Position });
+                   commandBufferP.AddComponent(entityInQueryIndex, instance, new Rotation { Value = localToWorld.Rotation });
                    commandBufferP.AddComponent<Spawned>(entityInQueryIndex, instance);
+
+                   commandBufferP.AddComponent(entityInQueryIndex, e, new HasSpawn { Entity = instance });
                    commandBufferP.RemoveComponent<Spawn>(entityInQueryIndex, e);
                }
             ).ScheduleParallel();
