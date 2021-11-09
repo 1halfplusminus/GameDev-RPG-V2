@@ -6,17 +6,14 @@ using Unity.Transforms;
 
 namespace RPG.Core
 {
-    [ExecuteInEditMode]
+
     public class PlayerSpawner : MonoBehaviour
     {
         public GameObject Prefab;
 
         public bool HasHybridComponent;
 
-
-        List<IComponentData> components = new List<IComponentData>();
-
-        void OnDrawGizmos()
+        public void OnDrawGizmos()
         {
 
             foreach (var item in Prefab.GetComponentsInChildren<SkinnedMeshRenderer>())
@@ -32,7 +29,7 @@ namespace RPG.Core
 
         }
 
-        void OnDrawGizmosSelected()
+        public void OnDrawGizmosSelected()
         {
             foreach (var item in Prefab.GetComponentsInChildren<IDrawGizmo>())
             {

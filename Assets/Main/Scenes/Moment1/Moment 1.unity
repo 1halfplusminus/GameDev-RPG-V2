@@ -472,7 +472,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4820600563300567825, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_Name
-      value: Enemy Placeholer Spawn
+      value: Enemy Guard Spawn 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
@@ -2083,7 +2083,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3918,7 +3918,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4080,20 +4080,18 @@ Transform:
   - {fileID: 1099496356}
   - {fileID: 1683579531}
   - {fileID: 837204304}
-  - {fileID: 1711993539}
+  - {fileID: 937396385}
   - {fileID: 1508907735}
   - {fileID: 1976951259}
   - {fileID: 699227030}
   - {fileID: 46026994}
   - {fileID: 901136531}
-  - {fileID: 638930023}
   - {fileID: 1866634864}
   - {fileID: 546016674}
   - {fileID: 292001950}
   - {fileID: 1131638092}
   - {fileID: 1241623565}
   - {fileID: 1777727125}
-  - {fileID: 937396385}
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4331,68 +4329,6 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 6174453374964196374, guid: 9889c606a18374949b9fc899ee3e5728, type: 3}
   m_PrefabInstance: {fileID: 1834098388}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &638930022
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 592729814}
-    m_Modifications:
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_RootOrder
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -64.6357
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.57500005
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 38.255524
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.6448559
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.7643042
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4820600563300567825, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_Name
-      value: Enemy Placeholer Spawn
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
---- !u!4 &638930023 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-  m_PrefabInstance: {fileID: 638930022}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &646722034
 PrefabInstance:
@@ -4757,7 +4693,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4820600563300567825, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_Name
-      value: Enemy Placeholer Spawn
+      value: Enemy Guard Spawn 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
@@ -5764,7 +5700,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4820600563300567825, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_Name
-      value: Enemy Placeholer Spawn
+      value: Enemy Guard Spawn 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
@@ -6260,7 +6196,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4820600563300567825, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_Name
-      value: Enemy Placeholer Spawn
+      value: Enemy Guard Spawn 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
@@ -6670,7 +6606,7 @@ Transform:
   - {fileID: 5370233716032125903}
   - {fileID: 4575483316249812267}
   m_Father: {fileID: 592729814}
-  m_RootOrder: 16
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &944473370
 PrefabInstance:
@@ -7764,7 +7700,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4820600563300567825, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_Name
-      value: Enemy Placeholer Spawn
+      value: Enemy Guard Spawn
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
@@ -8073,7 +8009,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_RootOrder
-      value: 13
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8582,7 +8518,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_RootOrder
-      value: 14
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8642,6 +8578,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 766746323322385000, guid: 0c35c0f3b74cded40944f5c97e925433, type: 3}
+      propertyPath: HasHybridComponent
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 766746323322385001, guid: 0c35c0f3b74cded40944f5c97e925433, type: 3}
       propertyPath: m_Name
       value: Hero Spawner
@@ -10083,7 +10023,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4820600563300567825, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_Name
-      value: Enemy Placeholer Spawn
+      value: Enemy Guard Spawn 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
@@ -11603,7 +11543,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4820600563300567825, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_Name
-      value: Enemy Placeholer Spawn
+      value: Enemy Guard Spawn 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
@@ -11690,68 +11630,6 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 6174453374964196374, guid: 9889c606a18374949b9fc899ee3e5728, type: 3}
   m_PrefabInstance: {fileID: 213040566}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &1711993538
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 592729814}
-    m_Modifications:
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 5.08
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.16600001
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 20.27
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.10350524
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.9946289
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4820600563300567825, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-      propertyPath: m_Name
-      value: Enemy Placeholer Spawn
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
---- !u!4 &1711993539 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
-  m_PrefabInstance: {fileID: 1711993538}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1713903859 stripped
 Transform:
@@ -12062,7 +11940,7 @@ PrefabInstance:
       objectReference: {fileID: 496405686299495829, guid: 9a71dbafa694a90eaa5eeaa98b28f7bf, type: 3}
     - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_RootOrder
-      value: 15
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12551,7 +12429,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 1621216282196238011, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_LocalPosition.x
@@ -12595,7 +12473,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4820600563300567825, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_Name
-      value: Enemy Placeholer Spawn
+      value: Enemy Guard Spawn 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
@@ -13432,7 +13310,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4820600563300567825, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}
       propertyPath: m_Name
-      value: Enemy Placeholer Spawn
+      value: Enemy Guard Spawn 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4b41b2ce339f67e9a1c9d905a868b56, type: 3}

@@ -6,7 +6,6 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 using RPG.Core;
-using RPG.Combat;
 using RPG.Animation;
 using UnityEngine;
 

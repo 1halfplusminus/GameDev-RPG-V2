@@ -9,6 +9,7 @@ namespace RPG.Hybrid
     {
         public FixedString4096 Name;
     }
+    [DisableAutoCreation]
     public class GameObjectNameConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()

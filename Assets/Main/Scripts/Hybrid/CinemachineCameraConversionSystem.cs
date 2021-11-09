@@ -9,6 +9,9 @@ using RPG.Core;
 
 namespace RPG.Hybrid
 {
+    public struct IsFollowingTarget : IComponentData { }
+
+    public struct IsLookingAtTarget : IComponentData { }
     public struct FollowedBy : IComponentData
     {
         public Entity Entity;
@@ -36,7 +39,7 @@ namespace RPG.Hybrid
             Entities.ForEach((CinemachineVirtualCamera virtualCamera) =>
             {
 
-                var virtualCameraEntity = DstEntityManager.CreateEntity();
+                var virtualCameraEntity = GetPrimaryEntity(virtualCamera);
                 DstEntityManager.AddComponentObject(virtualCameraEntity, virtualCamera);
                 if (virtualCamera.m_Follow != null)
                 {
@@ -44,7 +47,6 @@ namespace RPG.Hybrid
                     if (followedEntity != Entity.Null)
                     {
                         Debug.Log("Follow " + followedEntity.Index);
-                        DstEntityManager.AddComponentData(followedEntity, new FollowedBy() { Entity = virtualCameraEntity });
                         DstEntityManager.AddComponentData(virtualCameraEntity, new Follow() { Entity = followedEntity });
                     }
                     AddHybridComponent(virtualCamera.m_Follow);
@@ -55,7 +57,6 @@ namespace RPG.Hybrid
                     if (lookAtEntity != Entity.Null)
                     {
                         Debug.Log("Look At " + lookAtEntity.Index);
-                        DstEntityManager.AddComponentData(lookAtEntity, new LookAtBy() { Entity = virtualCameraEntity });
                         DstEntityManager.AddComponentData(virtualCameraEntity, new LookAt() { Entity = lookAtEntity });
                         AddHybridComponent(virtualCamera.m_LookAt);
                     }
@@ -65,35 +66,86 @@ namespace RPG.Hybrid
             });
         }
     }
-
-    public class CinemachineVirtualCameraHybriSystem : SystemBase
+    [UpdateBefore(typeof(CinemachineVirtualCameraHybridSystem))]
+    public class CinemachineVirtualCameraSpawnerFollow : SystemBase
     {
 
         protected override void OnUpdate()
         {
             Entities
-            .WithoutBurst()
+            .WithNone<IsFollowingTarget>()
+            .WithAll<CinemachineVirtualCamera>()
+            .ForEach((ref Follow follow) =>
+            {
+                var hasSpawnComponents = GetComponentDataFromEntity<HasSpawn>(true);
+                if (hasSpawnComponents.HasComponent(follow.Entity))
+                {
 
-            .ForEach((CinemachineVirtualCamera camera, in Follow target) =>
+                    follow.Entity = hasSpawnComponents[follow.Entity].Entity;
+                }
+            }).ScheduleParallel();
+            Entities
+            .WithAll<CinemachineVirtualCamera>()
+            .WithNone<IsLookingAtTarget>()
+            .ForEach((ref LookAt follow) =>
+            {
+                var hasSpawnComponents = GetComponentDataFromEntity<HasSpawn>(true);
+                if (hasSpawnComponents.HasComponent(follow.Entity))
+                {
+
+                    follow.Entity = hasSpawnComponents[follow.Entity].Entity;
+                }
+            }).ScheduleParallel();
+
+        }
+    }
+    [UpdateAfter(typeof(CoreSystemGroup))]
+    public class CinemachineVirtualCameraHybridSystem : SystemBase
+    {
+        EntityCommandBufferSystem entityCommandBufferSystem;
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            entityCommandBufferSystem = World.GetOrCreateSystem<BeginPresentationEntityCommandBufferSystem>();
+        }
+        protected override void OnUpdate()
+        {
+            var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
+            Entities
+            .WithoutBurst()
+            .WithChangeFilter<Follow>()
+            .ForEach((Entity e, CinemachineVirtualCamera camera, in Follow target) =>
             {
                 var transform = GetTransform(target.Entity, EntityManager);
                 if (transform != null)
                 {
                     camera.m_Follow = transform;
+                    commandBuffer.AddComponent<IsFollowingTarget>(e);
+                }
+                else
+                {
+                    commandBuffer.RemoveComponent<IsFollowingTarget>(e);
                 }
             }).Run();
             Entities
            .WithoutBurst()
-
-           .ForEach((CinemachineVirtualCamera camera, in LookAt target) =>
+           .WithChangeFilter<LookAt>()
+           .ForEach((Entity e, CinemachineVirtualCamera camera, in LookAt target) =>
            {
                var transform = GetTransform(target.Entity, EntityManager);
                if (transform != null)
                {
                    camera.m_LookAt = transform;
+                   commandBuffer.AddComponent<IsLookingAtTarget>(e);
                }
+               else
+               {
+                   commandBuffer.RemoveComponent<IsLookingAtTarget>(e);
+               }
+
            }).Run();
 
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 
         private static Transform GetTransform(Entity entity, EntityManager em)

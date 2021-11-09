@@ -21,6 +21,8 @@ namespace RPG.Core
     {
         public Entity Entity;
     }
+
+
     [UpdateInGroup(typeof(CoreSystemGroup))]
     public class SpawnSystem : SystemBase
     {
@@ -49,8 +51,8 @@ namespace RPG.Core
             Entities.WithAny<HasHybridComponent>().WithStructuralChanges().ForEach((Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
                 {
                     var instance = em.Instantiate(toSpawn.Prefab);
-                    commandBuffer.AddComponent<Translation>(instance, new Translation { Value = localToWorld.Position });
-                    commandBuffer.AddComponent<Rotation>(instance, new Rotation { Value = localToWorld.Rotation });
+                    commandBuffer.AddComponent(instance, new Translation { Value = localToWorld.Position });
+                    commandBuffer.AddComponent(instance, new Rotation { Value = localToWorld.Rotation });
                     commandBuffer.AddComponent<Spawned>(instance);
                     commandBuffer.RemoveComponent<Spawn>(e);
                 }

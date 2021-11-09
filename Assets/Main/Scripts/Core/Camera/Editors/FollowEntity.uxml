@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <ui:DropdownField label="Dropdown" index="-1" name="DropdownField" binding-path="EntityIndex" />
-    <uie:PropertyField name="PropertyField" binding-path="EntityIndex" />
+    <uie:PropertyField binding-path="Scene" name="scene" />
+    <ui:DropdownField label="Entity to Follow" index="-1" name="DropdownField" binding-path="EntityIndex" />
+    <uie:PropertyField name="PropertyField" binding-path="EntityIndex" label="Scene" />
 </ui:UXML>
