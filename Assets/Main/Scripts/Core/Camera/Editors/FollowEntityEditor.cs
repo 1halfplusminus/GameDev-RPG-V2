@@ -48,19 +48,5 @@ public class FollowEntityEditor : Editor
 
     }
 
-    /*   private static void LoadScene(FollowEntityAuthoring followEntityAuthoring, TemplateContainer root)
-      {
-          if (followEntityAuthoring.Scene)
-          {
-              var dropdownField = root.Q<DropdownField>();
-              dropdownField.choices = new List<string>();
-              foreach (var spawner in followEntityAuthoring.Scene.EditingScene.)
-              {
-                  dropdownField.choices.Add(spawner.name);
-              }
-          }
-      } */
-
-
 }
 #endif

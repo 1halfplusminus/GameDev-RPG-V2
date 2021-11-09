@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 8436863}
   - component: {fileID: 8436866}
   - component: {fileID: 8436865}
+  - component: {fileID: 8436864}
   m_Layer: 0
   m_Name: CM Reveal 2
   m_TagString: Untagged
@@ -156,6 +157,18 @@ Transform:
   m_Father: {fileID: 1334815803}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50.1, y: -89.38, z: 0}
+--- !u!114 &8436864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8436862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9f59b8ab41b1365491b939d56bcc56c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8436865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,7 +211,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.4482478, y: 1}
+    m_SensorSize: {x: 1.4498777, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0
@@ -831,6 +844,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1687472912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687472909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2a98105d45ec59149d2be6ddc374ec3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1923320969
 GameObject:
   m_ObjectHideFlags: 0
@@ -1045,31 +1070,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7664935655166743006, guid: 425a48436b1c37b109d4defa0e47c8e5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -56.377556
+      value: 1.4191343
       objectReference: {fileID: 0}
     - target: {fileID: 7664935655166743006, guid: 425a48436b1c37b109d4defa0e47c8e5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.745
+      value: 7.17
       objectReference: {fileID: 0}
     - target: {fileID: 7664935655166743006, guid: 425a48436b1c37b109d4defa0e47c8e5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 35.405704
+      value: 8.62
       objectReference: {fileID: 0}
     - target: {fileID: 7664935655166743006, guid: 425a48436b1c37b109d4defa0e47c8e5, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7667076
+      value: -0.076729774
       objectReference: {fileID: 0}
     - target: {fileID: 7664935655166743006, guid: 425a48436b1c37b109d4defa0e47c8e5, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.2743477
+      value: -0.027455887
       objectReference: {fileID: 0}
     - target: {fileID: 7664935655166743006, guid: 425a48436b1c37b109d4defa0e47c8e5, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.54649204
+      value: 0.9384064
       objectReference: {fileID: 0}
     - target: {fileID: 7664935655166743006, guid: 425a48436b1c37b109d4defa0e47c8e5, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.19554894
+      value: -0.33578598
       objectReference: {fileID: 0}
     - target: {fileID: 7664935655166743006, guid: 425a48436b1c37b109d4defa0e47c8e5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1093,7 +1118,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7664935655166743007, guid: 425a48436b1c37b109d4defa0e47c8e5, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 1.4490627
+      value: 1.4498777
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7664935655166743005, guid: 425a48436b1c37b109d4defa0e47c8e5, type: 3}
