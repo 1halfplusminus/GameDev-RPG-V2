@@ -31,41 +31,5 @@ namespace RPG.Control
             });
         }
     }
-    [DisableAutoCreation]
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
-    [UpdateAfter(typeof(ConvertToEntitySystem))]
-    public class PlayerControlledInitialisationSystem : SystemBase
-    {
-        EntityCommandBufferSystem commandBufferSystem;
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            commandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-        }
 
-        protected override void OnUpdate()
-        {
-            var commandBuffer = commandBufferSystem.CreateCommandBuffer();
-            var fighters = GetComponentDataFromEntity<Fighter>(true);
-            Entities
-            /*         .WithReadOnly(fighters) */
-            .WithChangeFilter<PlayerControlled>()
-            .WithAll<PlayerControlled>()
-            .ForEach((Entity e, in LocalToWorld localToWorld) =>
-            {
-                /*        commandBuffer.AddComponent<MoveTo>(e, new MoveTo(localToWorld.Position) { Stopped = true }); */
-                /* if (fighters.HasComponent(e))
-                {
-                    commandBuffer.AddComponent<Fighter>(e, new Fighter { WeaponRange = 3.0f, AttackCooldown = 5.0f });
-                }
-                commandBuffer.AddComponent(e, new Raycast { Distance = 100000f });
-                commandBuffer.AddComponent<MouseClick>(e);
-                commandBuffer.AddBuffer<HittedByRaycast>(e);
-                commandBuffer.AddComponent<LookAt>(e);
-                commandBuffer.AddComponent<DeltaTime>(e);
-                commandBuffer.AddComponent<CharacterAnimation>(e); */
-            }).Schedule();
-            commandBufferSystem.AddJobHandleForProducer(this.Dependency);
-        }
-    }
 }

@@ -9,7 +9,6 @@ namespace RPG.Control
     public class PlayersMoveSystem : SystemBase
     {
         EntityCommandBufferSystem commandBufferSystem;
-        EntityQuery worldClickQueries;
 
         protected override void OnCreate()
         {
@@ -18,10 +17,6 @@ namespace RPG.Control
         }
         protected override void OnUpdate()
         {
-
-            worldClickQueries = GetEntityQuery(new ComponentType[] {
-                ComponentType.ReadOnly<WorldClick>()
-            });
             var commandBuffer = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             Entities
             .WithAll<PlayerControlled>()

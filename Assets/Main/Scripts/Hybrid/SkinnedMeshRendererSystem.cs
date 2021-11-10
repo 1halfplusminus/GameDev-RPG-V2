@@ -1,6 +1,6 @@
 using Unity.Entities;
 using UnityEngine;
-
+[DisableAutoCreation]
 public class SkinnedMeshRendererConversionSystem : GameObjectConversionSystem
 {
     protected override void OnUpdate()
@@ -10,11 +10,11 @@ public class SkinnedMeshRendererConversionSystem : GameObjectConversionSystem
 
             var entity = GetPrimaryEntity(anim);
             AddHybridComponent(anim);
-            foreach (var item in anim.GetComponentsInChildren<Transform>())
+            /* foreach (var item in anim.GetComponentsInChildren<Transform>())
             {
                 DeclareDependency(item, anim);
                 AddHybridComponent(item);
-            }
+            } */
         });
     }
 }

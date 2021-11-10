@@ -1,7 +1,10 @@
 using Unity.Entities;
-
-[GenerateAuthoringComponent]
-public struct CMCamera1 : IComponentData
+namespace RPG.Gameplay
 {
+    [GenerateAuthoringComponent]
+    public struct CMCamera1 : IComponentData
+    {
+
+    }
 
 }

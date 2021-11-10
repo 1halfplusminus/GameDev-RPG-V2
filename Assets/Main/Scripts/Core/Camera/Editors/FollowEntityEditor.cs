@@ -4,10 +4,9 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using Unity.Entities;
 using Unity.Collections;
-using RPG.Hybrid;
 using RPG.Core;
 
-
+/* 
 [CustomEditor(typeof(FollowEntityAuthoring))]
 public class FollowEntityEditor : Editor
 {
@@ -17,7 +16,7 @@ public class FollowEntityEditor : Editor
         var followEntityAuthoring = target as FollowEntityAuthoring;
         var world = World.DefaultGameObjectInjectionWorld;
         var em = world.EntityManager;
-        var queries = em.CreateEntityQuery(typeof(Spawn), typeof(TagFilter));
+        var queries = em.CreateEntityQuery(typeof(Spawn));
         if (asset && queries.CalculateEntityCount() > 0)
         {
             var queryResults = queries.ToEntityArray(Allocator.Temp);
@@ -34,8 +33,7 @@ public class FollowEntityEditor : Editor
             {
                 var entity = queryResults[i];
                 userData.Add(entity);
-                var debugName = em.GetComponentData<DebugName>(entity);
-                dropdownField.choices.Add(debugName.Name.ToString());
+
             }
             queryResults.Dispose();
             dropdownField.RegisterValueChangedCallback((changeEvent) =>
@@ -48,5 +46,5 @@ public class FollowEntityEditor : Editor
 
     }
 
-}
+} */
 #endif

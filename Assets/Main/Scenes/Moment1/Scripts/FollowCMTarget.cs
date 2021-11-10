@@ -3,39 +3,68 @@ using RPG.Core;
 using Unity.Entities;
 
 
-
-[UpdateBefore(typeof(CoreSystemGroup))]
-public class CMCameraSystem : SystemBase
+namespace RPG.Gameplay
 {
-    EntityCommandBufferSystem entityCommandBufferSystem;
-    protected override void OnCreate()
+    [UpdateBefore(typeof(CoreSystemGroup))]
+    public class CMCameraSystem : SystemBase
     {
-        base.OnCreate();
-        entityCommandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
-    }
-    protected override void OnUpdate()
-    {
-        var commandBufferP = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-        if (HasSingleton<CMTarget1>())
+        EntityCommandBufferSystem entityCommandBufferSystem;
+        protected override void OnCreate()
         {
-            var target1 = GetSingletonEntity<CMTarget1>();
-            Entities.WithAll<CMCamera1>().ForEach((int entityInQueryIndex, Entity e) =>
-            {
-                commandBufferP.AddComponent(entityInQueryIndex, e, new Follow { Entity = target1 });
-                commandBufferP.AddComponent(entityInQueryIndex, e, new LookAt { Entity = target1 });
-            }).ScheduleParallel();
+            base.OnCreate();
+            entityCommandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
         }
-        if (HasSingleton<CMTarget2>())
+        protected override void OnUpdate()
         {
-            var target2 = GetSingletonEntity<CMTarget2>();
-            Entities.WithAll<CMCamera2>().ForEach((int entityInQueryIndex, Entity e) =>
+            var hasAnyTarget = false;
+            var commandBufferP = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            if (GetTarget<CMTarget1>(out var cmTarget1))
             {
-                commandBufferP.AddComponent(entityInQueryIndex, e, new Follow { Entity = target2 });
-                commandBufferP.AddComponent(entityInQueryIndex, e, new LookAt { Entity = target2 });
-            }).ScheduleParallel();
+                Entities.WithAll<CMCamera1>().ForEach((int entityInQueryIndex, Entity e) =>
+                {
+                    AddFollowComponent(commandBufferP, entityInQueryIndex, e, cmTarget1);
+                }).ScheduleParallel();
+                hasAnyTarget = true;
+            }
+            if (GetTarget<CMTarget2>(out var cmTarget2))
+            {
+                Entities.WithAll<CMCamera2>().ForEach((int entityInQueryIndex, Entity e) =>
+                {
+                    AddFollowComponent(commandBufferP, entityInQueryIndex, e, cmTarget2);
+                }).ScheduleParallel();
+                hasAnyTarget = true;
+            }
+            if (GetTarget<CMTarget3>(out var cmTarget3))
+            {
+                Entities.WithAll<CMCamera3>().ForEach((int entityInQueryIndex, Entity e) =>
+                {
+                    commandBufferP.AddComponent(entityInQueryIndex, e, new LookAt { Entity = cmTarget3 });
+                }).ScheduleParallel();
+                hasAnyTarget = true;
+            }
+            if (hasAnyTarget)
+            {
+                entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+            }
 
         }
-        entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
 
+        private bool GetTarget<T>(out Entity target)
+        {
+            target = Entity.Null;
+            var hasTarget = HasSingleton<T>();
+            if (hasTarget)
+            {
+                target = GetSingletonEntity<T>();
+                return true;
+            }
+            return hasTarget;
+        }
+
+        private static void AddFollowComponent(EntityCommandBuffer.ParallelWriter commandBufferP, int entityInQueryIndex, Entity e, Entity target)
+        {
+            commandBufferP.AddComponent(entityInQueryIndex, e, new Follow { Entity = target });
+            commandBufferP.AddComponent(entityInQueryIndex, e, new LookAt { Entity = target });
+        }
     }
 }
