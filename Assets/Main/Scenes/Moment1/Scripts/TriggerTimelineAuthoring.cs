@@ -70,6 +70,7 @@ namespace RPG.Gameplay
             var commandBufferP = commandBuffer.AsParallelWriter();
             Entities
             .WithReadOnly(playerControlleds)
+            .WithAll<PlayableDirector>()
             .WithNone<Played, Playing>()
             .ForEach((int entityInQueryIndex, Entity e, in DynamicBuffer<StatefulTriggerEvent> statefulCollisionEvents) =>
             {
