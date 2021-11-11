@@ -4260,7 +4260,7 @@ Transform:
   - {fileID: 1777727125}
   - {fileID: 937396385}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &595631166
 GameObject:
@@ -8902,17 +8902,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 766746323322385000, guid: 0c35c0f3b74cded40944f5c97e925433, type: 3}
-      propertyPath: HasHybridComponent
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 766746323322385001, guid: 0c35c0f3b74cded40944f5c97e925433, type: 3}
       propertyPath: m_Name
       value: Hero Spawner
       objectReference: {fileID: 0}
     - target: {fileID: 766746323322385003, guid: 0c35c0f3b74cded40944f5c97e925433, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 766746323322385003, guid: 0c35c0f3b74cded40944f5c97e925433, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10102,7 +10098,7 @@ Transform:
   - {fileID: 528204758}
   - {fileID: 975684311}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1376662115
 GameObject:
@@ -10134,7 +10130,7 @@ Transform:
   - {fileID: 2089428589}
   - {fileID: 595631167}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1383026278 stripped
 Transform:
@@ -16634,7 +16630,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4265155576735976154, guid: 4fe13cbec9a22ece98207aad78da9df2, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4265155576735976154, guid: 4fe13cbec9a22ece98207aad78da9df2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -16683,7 +16679,7 @@ PrefabInstance:
     - target: {fileID: 8709605369647191038, guid: 4fe13cbec9a22ece98207aad78da9df2, type: 3}
       propertyPath: m_NavMeshData
       value: 
-      objectReference: {fileID: 23800000, guid: 38dda6d28a7b790e1862afb6459ffd7c, type: 2}
+      objectReference: {fileID: 23800000, guid: 8ca81fbded01645adb166c5f8c6165c5, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4fe13cbec9a22ece98207aad78da9df2, type: 3}
 --- !u!23 &4306057209057050822

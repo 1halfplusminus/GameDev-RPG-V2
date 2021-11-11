@@ -4,6 +4,8 @@ using Unity.Jobs;
 using RPG.Core;
 using UnityEngine.Playables;
 using RPG.Control;
+using Cinemachine;
+using UnityEngine;
 
 namespace RPG.Gameplay
 {
@@ -27,10 +29,27 @@ namespace RPG.Gameplay
     {
         protected override void OnUpdate()
         {
+
             Entities.ForEach((PlayableDirector playableDirector) =>
             {
+                Entity brainEntity = DstEntityManager.CreateEntityQuery(typeof(CinemachineBrain)).GetSingletonEntity();
+                var brain = DstEntityManager.GetComponentObject<CinemachineBrain>(brainEntity);
                 var entity = GetPrimaryEntity(playableDirector);
                 DstEntityManager.AddComponentObject(entity, playableDirector);
+                if (brain != null)
+                {
+                    Debug.Log("Brain found");
+                    var outputs = playableDirector.playableAsset.outputs;
+                    foreach (var output in outputs)
+                    {
+                        if (output.sourceObject is CinemachineTrack cinemachineTrack)
+                        {
+                            Debug.Log("Set Generic Binding");
+                            playableDirector.SetGenericBinding(output.sourceObject, brain);
+                        }
+                    }
+                }
+
             });
         }
     }
