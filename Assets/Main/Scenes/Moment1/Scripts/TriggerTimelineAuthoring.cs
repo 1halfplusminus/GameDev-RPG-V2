@@ -97,7 +97,6 @@ namespace RPG.Gameplay
     {
         protected override void OnUpdate()
         {
-            Debug.Log("InitialiseHybridPayableDirectory");
             if (!HasSingleton<CinemachineBrainTag>()) { return; }
             var cinemachineBrainEntity = GetSingletonEntity<CinemachineBrainTag>();
             var cinemachineBrain = EntityManager.GetComponentObject<CinemachineBrain>(cinemachineBrainEntity);

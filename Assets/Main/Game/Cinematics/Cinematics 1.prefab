@@ -295,7 +295,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1984308096435063230, guid: 164535e8b9842c31ab50ad6a0552c26f, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 1.4482478
+      value: 1.4498777
       objectReference: {fileID: 0}
     - target: {fileID: 1984308096435063231, guid: 164535e8b9842c31ab50ad6a0552c26f, type: 3}
       propertyPath: m_RootOrder
@@ -341,8 +341,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1984308096435063168, guid: 164535e8b9842c31ab50ad6a0552c26f, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 164535e8b9842c31ab50ad6a0552c26f, type: 3}
 --- !u!95 &2414254007644368531 stripped
 Animator:
@@ -440,10 +439,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7664935655166743007, guid: 425a48436b1c37b109d4defa0e47c8e5, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 1.4482478
+      value: 1.4498777
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1700293898656065185, guid: 425a48436b1c37b109d4defa0e47c8e5, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 425a48436b1c37b109d4defa0e47c8e5, type: 3}
 --- !u!114 &2414254008440560244 stripped
 MonoBehaviour:
@@ -559,17 +557,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2414254007540386314}
     m_Modifications:
-    - target: {fileID: 5334318976584629052, guid: 68bc952e2f89c672f93d056e46c6f84f, type: 3}
-      propertyPath: ConversionMode
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5334318976584629055, guid: 68bc952e2f89c672f93d056e46c6f84f, type: 3}
       propertyPath: m_Priority
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5334318976584629055, guid: 68bc952e2f89c672f93d056e46c6f84f, type: 3}
       propertyPath: m_Lens.m_SensorSize.x
-      value: 1.4482478
+      value: 1.4498777
       objectReference: {fileID: 0}
     - target: {fileID: 5334318976584629186, guid: 68bc952e2f89c672f93d056e46c6f84f, type: 3}
       propertyPath: m_RootOrder
@@ -619,8 +613,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: CM Reveal 2
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 5334318976584629052, guid: 68bc952e2f89c672f93d056e46c6f84f, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68bc952e2f89c672f93d056e46c6f84f, type: 3}
 --- !u!114 &2414254008698739379 stripped
 MonoBehaviour:

@@ -55,7 +55,7 @@ namespace RPG.Core
                 }
                 if (spawner.GameObjectSpawn)
                 {
-                    DstEntityManager.AddComponent<GameObjectSpawn>(entity);
+                    DstEntityManager.AddComponent<GameObjectSpawner>(entity);
                     DstEntityManager.AddComponentObject(entity, spawner.Prefab);
                 }
             });

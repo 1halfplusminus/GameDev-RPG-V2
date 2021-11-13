@@ -5,10 +5,7 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.AI;
 using RPG.Core;
-using System.Collections.Generic;
 using RPG.Hybrid;
-using static Unity.Transforms.LocalToWorld;
-using UnityEngine.SceneManagement;
 
 namespace RPG.Hybrid
 {
@@ -118,7 +115,6 @@ namespace RPG.Hybrid
                     conversionsSystem.AddHybridComponent(c);
                     conversionsSystem.AddHybridComponent(c.GetComponent<Transform>());
                 }
-
                 conversionsSystem.DstEntityManager.AddComponentData(pipelineEntity, new RebuildHierachy { LocalToWorld = pipeline.transform.parent.localToWorldMatrix });
 
             }
@@ -243,7 +239,9 @@ public class RebuildGameObjectHierachySystem : SystemBase
 
         var em = EntityManager;
         var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
-        Entities.ForEach((Entity e, Transform t, in Parent parent, in RebuildHierachy rebuildHierachy) =>
+        Entities
+        .WithChangeFilter<RebuildHierachy>()
+        .ForEach((Entity e, Transform t, in Parent parent, in RebuildHierachy rebuildHierachy) =>
         {
             if (em.HasComponent<Transform>(parent.Value))
             {
@@ -251,10 +249,10 @@ public class RebuildGameObjectHierachySystem : SystemBase
                 var parentTransform = em.GetComponentObject<Transform>(parent.Value);
                 t.parent = parentTransform;
                 t.transform.position = rebuildHierachy.LocalToWorld.c3.xyz;
-                /*          CinemachineVirtualCamera.CreatePipelineOverride(parentTransform.GetComponent<CinemachineVirtualCamera>(), CinemachineVirtualCamera.PipelineName, t.GetComponents<CinemachineComponentBase>());
-          */
+                commandBuffer.RemoveComponent<RebuildHierachy>(e);
+                commandBuffer.RemoveComponent<EditorRenderData>(e);
             }
         }).WithoutBurst().Run();
-
+        entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
     }
 }

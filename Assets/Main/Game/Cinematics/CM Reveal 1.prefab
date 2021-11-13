@@ -105,7 +105,6 @@ GameObject:
   - component: {fileID: 7664935655166743006}
   - component: {fileID: 7664935655166743007}
   - component: {fileID: 7664935655166743005}
-  - component: {fileID: 1700293898656065185}
   - component: {fileID: 7917974902655943906}
   m_Layer: 0
   m_Name: CM Reveal 1
@@ -179,19 +178,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2a98105d45ec59149d2be6ddc374ec3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1700293898656065185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7664935655166743001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ConversionMode: 0
 --- !u!114 &7917974902655943906
 MonoBehaviour:
   m_ObjectHideFlags: 0
