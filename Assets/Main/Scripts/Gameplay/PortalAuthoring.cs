@@ -114,12 +114,13 @@ namespace RPG.Gameplay
             var em = EntityManager;
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
             Entities
-            .ForEach((Entity e, in CollidWithPlayer collidWithPlayer, in Portal portal, in SceneTag currentScene) =>
+            .ForEach((Entity e, in CollidWithPlayer collidWithPlayer, in Portal portal, in SceneSection currentScene) =>
             {
 
-                Debug.Log("Change scene");
+                Debug.Log("Unload Scene" + currentScene.SceneGUID);
                 var sceneEntity = _sceneSystem.LoadSceneAsync(portal.SceneGUID);
-                _sceneSystem.UnloadScene(currentScene.SceneEntity);
+                _sceneSystem.UnloadScene(_sceneSystem.GetSceneEntity(currentScene.SceneGUID));
+                /*              _sceneSystem.UnloadScene(currentScene.SceneEntity); */
                 /*     var sceneQuery = em.CreateEntityQuery(new EntityQueryDesc()
                     {
                         All = new[] { ComponentType.ReadOnly(typeof(SceneTag)) },
