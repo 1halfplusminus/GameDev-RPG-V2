@@ -33,6 +33,7 @@ namespace RPG.Hybrid
     public struct CinemachineBrainTag : IComponentData
     {
     }
+
     public class CinemachineCameraConversionSystem : GameObjectConversionSystem
     {
         // TODO: Clean up put all follow target in a same parent game object
@@ -47,34 +48,40 @@ namespace RPG.Hybrid
 
             Entities.ForEach((CinemachineVirtualCamera virtualCamera) =>
             {
-
-                var virtualCameraEntity = GetPrimaryEntity(virtualCamera);
-                AddHybridComponent(virtualCamera);
-                AddHybridComponent(virtualCamera.GetComponent<Transform>());
-
-                LoadCinemachineComponents(virtualCamera);
-                if (virtualCamera.m_Follow != null)
+                var virtualCameraEntity = TryGetPrimaryEntity(virtualCamera);
+                if (virtualCameraEntity != Entity.Null)
                 {
-                    var followedEntity = TryGetPrimaryEntity(virtualCamera.m_Follow.gameObject);
-                    if (followedEntity != Entity.Null)
+                    AddHybridComponent(virtualCamera);
+                    AddHybridComponent(virtualCamera.GetComponent<Transform>());
+                    DeclareLinkedEntityGroup(virtualCamera.gameObject);
+                    LoadCinemachineComponents(virtualCamera);
+                    if (virtualCamera.m_Follow != null)
                     {
-                        Debug.Log("Follow " + followedEntity.Index);
-                        DstEntityManager.AddComponentData(virtualCameraEntity, new Follow() { Entity = followedEntity });
+                        var followedEntity = TryGetPrimaryEntity(virtualCamera.m_Follow.gameObject);
+                        if (followedEntity != Entity.Null)
+                        {
+                            Debug.Log("Follow " + followedEntity.Index);
+                            DstEntityManager.AddComponentData(virtualCameraEntity, new Follow() { Entity = followedEntity });
+                        }
+                        AddHybridComponent(virtualCamera.m_Follow);
                     }
-                    AddHybridComponent(virtualCamera.m_Follow);
-                }
-                if (virtualCamera.m_LookAt != null)
-                {
-                    var lookAtEntity = TryGetPrimaryEntity(virtualCamera.m_LookAt.gameObject);
-                    if (lookAtEntity != Entity.Null)
+                    if (virtualCamera.m_LookAt != null)
                     {
-                        Debug.Log("Look At " + lookAtEntity.Index);
-                        DstEntityManager.AddComponentData(virtualCameraEntity, new LookAt() { Entity = lookAtEntity });
-                        AddHybridComponent(virtualCamera.m_LookAt);
-                    }
+                        var lookAtEntity = TryGetPrimaryEntity(virtualCamera.m_LookAt.gameObject);
+                        if (lookAtEntity != Entity.Null)
+                        {
+                            Debug.Log("Look At " + lookAtEntity.Index);
+                            DstEntityManager.AddComponentData(virtualCameraEntity, new LookAt() { Entity = lookAtEntity });
+                            AddHybridComponent(virtualCamera.m_LookAt);
+                        }
 
+                    }
                 }
 
+            });
+            Entities.ForEach((CinemachinePipeline pipeline) =>
+            {
+                ConvertPipeline(this, pipeline);
             });
         }
 
@@ -86,22 +93,36 @@ namespace RPG.Hybrid
                 var pipeline = child.GetComponent<CinemachinePipeline>();
                 if (pipeline != null)
                 {
-                    var componentEntity = GetPrimaryEntity(pipeline);
-                    AddHybridComponent(pipeline);
-                    AddHybridComponent(pipeline.GetComponent<Transform>());
-                    CinemachineComponentBase[] components = child.GetComponents<CinemachineComponentBase>();
-                    DstEntityManager.AddComponentData(componentEntity, new RebuildHierachy { LocalToWorld = virtualCamera.transform.localToWorldMatrix });
-                    foreach (CinemachineComponentBase c in components)
-                    {
+                    DeclareDependency(virtualCamera.gameObject, pipeline.gameObject);
+                    /*      var pipelineEntity = ConvertPipeline(this, pipeline); */
 
-                        AddHybridComponent(c);
-                        AddHybridComponent(c.GetComponent<Transform>());
-                    }
-                    DeclareLinkedEntityGroup(child.gameObject);
                 }
             }
-            DeclareLinkedEntityGroup(virtualCamera.gameObject);
 
+
+        }
+
+        public static Entity ConvertPipeline(CinemachineCameraConversionSystem conversionsSystem, CinemachinePipeline pipeline)
+        {
+            var pipelineEntity = conversionsSystem.TryGetPrimaryEntity(pipeline);
+            if (pipelineEntity != Entity.Null)
+            {
+                conversionsSystem.DeclareLinkedEntityGroup(pipeline.gameObject);
+                conversionsSystem.AddHybridComponent(pipeline);
+                conversionsSystem.AddHybridComponent(pipeline.GetComponent<Transform>());
+                CinemachineComponentBase[] components = pipeline.GetComponents<CinemachineComponentBase>();
+
+                foreach (CinemachineComponentBase c in components)
+                {
+
+                    conversionsSystem.AddHybridComponent(c);
+                    conversionsSystem.AddHybridComponent(c.GetComponent<Transform>());
+                }
+
+                conversionsSystem.DstEntityManager.AddComponentData(pipelineEntity, new RebuildHierachy { LocalToWorld = pipeline.transform.parent.localToWorldMatrix });
+
+            }
+            return pipelineEntity;
         }
     }
     [UpdateBefore(typeof(CinemachineVirtualCameraHybridSystem))]

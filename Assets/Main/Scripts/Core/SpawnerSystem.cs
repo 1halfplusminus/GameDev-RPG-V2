@@ -53,26 +53,28 @@ namespace RPG.Core
                 }
             ).ScheduleParallel();
             var em = EntityManager;
-            Entities.WithNone<GameObjectSpawn>().WithAny<HasHybridComponent>().WithStructuralChanges().ForEach((Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
-                {
-                    var instance = em.Instantiate(toSpawn.Prefab);
-                    commandBuffer.AddComponent(instance, new Translation { Value = localToWorld.Position });
-                    commandBuffer.AddComponent(instance, new Rotation { Value = localToWorld.Rotation });
-                    commandBuffer.AddComponent<Spawned>(instance);
-                    commandBuffer.RemoveComponent<Spawn>(e);
-                }
+            Entities.WithNone<GameObjectSpawn>()
+            .WithAny<HasHybridComponent>()
+            .WithStructuralChanges()
+            .ForEach((Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
+           {
+               var instance = em.Instantiate(toSpawn.Prefab);
+               commandBuffer.AddComponent(instance, new Translation { Value = localToWorld.Position });
+               commandBuffer.AddComponent(instance, new Rotation { Value = localToWorld.Rotation });
+               commandBuffer.AddComponent<Spawned>(instance);
+               commandBuffer.RemoveComponent<Spawn>(e);
+           }
             ).Run();
             Entities.
             WithAny<GameObjectSpawn>()
             .WithStructuralChanges()
             .WithoutBurst()
-            .ForEach((Entity e, in Spawn toSpawn, in LocalToWorld localToWorld, in SceneTag sceneTag) =>
+            .ForEach((Entity e, GameObject gameObject, in Spawn toSpawn, in LocalToWorld localToWorld, in SceneTag sceneTag) =>
             {/* 
                     var instance = em.Instantiate(toSpawn.Prefab); */
                 /*  GameObject.Instantiate(toSpawn); */
 
-                var gameObject = em.GetComponentObject<GameObject>(e);
-                var instance = GameObject.Instantiate(gameObject);
+                Object.Instantiate(gameObject);
                 commandBuffer.RemoveComponent<Spawn>(e);
                 /*   GameObjectEntity.AddToEntityManager(em, instance);
                   foreach (Transform child in instance.Transform)
