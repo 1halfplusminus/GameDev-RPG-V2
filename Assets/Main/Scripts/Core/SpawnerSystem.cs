@@ -56,7 +56,7 @@ namespace RPG.Core
             Entities.WithNone<GameObjectSpawn>().WithAny<HasHybridComponent>().WithStructuralChanges().ForEach((Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
                 {
                     var instance = em.Instantiate(toSpawn.Prefab);
-                    coémmandBuffer.AddComponent(instance, new Translation { Value = localToWorld.Position });
+                    commandBuffer.AddComponent(instance, new Translation { Value = localToWorld.Position });
                     commandBuffer.AddComponent(instance, new Rotation { Value = localToWorld.Rotation });
                     commandBuffer.AddComponent<Spawned>(instance);
                     commandBuffer.RemoveComponent<Spawn>(e);
@@ -73,6 +73,7 @@ namespace RPG.Core
 
                 var gameObject = em.GetComponentObject<GameObject>(e);
                 var instance = GameObject.Instantiate(gameObject);
+                commandBuffer.RemoveComponent<Spawn>(e);
                 /*   GameObjectEntity.AddToEntityManager(em, instance);
                   foreach (Transform child in instance.Transform)
                       AddRecurse(manager, child, toBeDetached, toBeInjected); */

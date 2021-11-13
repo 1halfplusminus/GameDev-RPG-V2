@@ -13,6 +13,7 @@ namespace RPG.Core
 
         public bool HasHybridComponent;
 
+        public bool GameObjectSpawn;
         public void OnDrawGizmos()
         {
 
@@ -51,6 +52,11 @@ namespace RPG.Core
                 if (spawner.HasHybridComponent)
                 {
                     DstEntityManager.AddComponent<HasHybridComponent>(entity);
+                }
+                if (spawner.GameObjectSpawn)
+                {
+                    DstEntityManager.AddComponent<GameObjectSpawn>(entity);
+                    DstEntityManager.AddComponentObject(entity, spawner.Prefab);
                 }
             });
         }

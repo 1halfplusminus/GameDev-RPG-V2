@@ -7,19 +7,24 @@ namespace RPG.Core
     [UpdateInGroup(typeof(CoreSystemGroup))]
     public class CameraFollowSystem : SystemBase
     {
+
         protected override void OnUpdate()
         {
-            Entities
-            .WithoutBurst()
-            .WithStructuralChanges()
-            .WithAll<FollowedByCamera>()
-            .ForEach((Entity target) =>
+            if (HasSingleton<ThirdPersonCamera>())
             {
-                var position = EntityManager.GetComponentData<LocalToWorld>(target);
-                var thirdPersonCamera = GetSingletonEntity<ThirdPersonCamera>();
-                EntityManager.AddComponentData(thirdPersonCamera, new Follow { Entity = target });
-                EntityManager.AddComponentData(thirdPersonCamera, new LookAt { Entity = target });
-            }).Run();
+                Entities
+                .WithoutBurst()
+                .WithStructuralChanges()
+                .WithAll<FollowedByCamera>()
+                .ForEach((Entity target) =>
+                {
+                    var position = EntityManager.GetComponentData<LocalToWorld>(target);
+                    var thirdPersonCamera = GetSingletonEntity<ThirdPersonCamera>();
+                    EntityManager.AddComponentData(thirdPersonCamera, new Follow { Entity = target });
+                    EntityManager.AddComponentData(thirdPersonCamera, new LookAt { Entity = target });
+                }).Run();
+
+            }
 
         }
     }

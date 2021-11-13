@@ -5,10 +5,18 @@ using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.AI;
 using RPG.Core;
-
+using System.Collections.Generic;
+using RPG.Hybrid;
+using static Unity.Transforms.LocalToWorld;
+using UnityEngine.SceneManagement;
 
 namespace RPG.Hybrid
 {
+    public struct RebuildHierachy : IComponentData
+    {
+        public float4x4 LocalToWorld;
+    }
+
     public struct IsFollowingTarget : IComponentData { }
 
     public struct IsLookingAtTarget : IComponentData { }
@@ -36,11 +44,15 @@ namespace RPG.Hybrid
                 DstEntityManager.AddComponentObject(brainEntity, brain);
                 DstEntityManager.AddComponentData(brainEntity, new CinemachineBrainTag() { });
             });
+
             Entities.ForEach((CinemachineVirtualCamera virtualCamera) =>
             {
 
                 var virtualCameraEntity = GetPrimaryEntity(virtualCamera);
-                DstEntityManager.AddComponentObject(virtualCameraEntity, virtualCamera);
+                AddHybridComponent(virtualCamera);
+                AddHybridComponent(virtualCamera.GetComponent<Transform>());
+
+                LoadCinemachineComponents(virtualCamera);
                 if (virtualCamera.m_Follow != null)
                 {
                     var followedEntity = TryGetPrimaryEntity(virtualCamera.m_Follow.gameObject);
@@ -64,6 +76,32 @@ namespace RPG.Hybrid
                 }
 
             });
+        }
+
+        private void LoadCinemachineComponents(CinemachineVirtualCamera virtualCamera)
+        {
+
+            foreach (Transform child in virtualCamera.transform)
+            {
+                var pipeline = child.GetComponent<CinemachinePipeline>();
+                if (pipeline != null)
+                {
+                    var componentEntity = GetPrimaryEntity(pipeline);
+                    AddHybridComponent(pipeline);
+                    AddHybridComponent(pipeline.GetComponent<Transform>());
+                    CinemachineComponentBase[] components = child.GetComponents<CinemachineComponentBase>();
+                    DstEntityManager.AddComponentData(componentEntity, new RebuildHierachy { LocalToWorld = virtualCamera.transform.localToWorldMatrix });
+                    foreach (CinemachineComponentBase c in components)
+                    {
+
+                        AddHybridComponent(c);
+                        AddHybridComponent(c.GetComponent<Transform>());
+                    }
+                    DeclareLinkedEntityGroup(child.gameObject);
+                }
+            }
+            DeclareLinkedEntityGroup(virtualCamera.gameObject);
+
         }
     }
     [UpdateBefore(typeof(CinemachineVirtualCameraHybridSystem))]
@@ -165,5 +203,37 @@ namespace RPG.Hybrid
 
             return null;
         }
+    }
+}
+
+[UpdateBefore(typeof(CinemachineVirtualCameraHybridSystem))]
+public class RebuildGameObjectHierachySystem : SystemBase
+{
+    EntityCommandBufferSystem entityCommandBufferSystem;
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+        entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+    }
+
+    protected override void OnUpdate()
+    {
+
+
+        var em = EntityManager;
+        var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
+        Entities.ForEach((Entity e, Transform t, in Parent parent, in RebuildHierachy rebuildHierachy) =>
+        {
+            if (em.HasComponent<Transform>(parent.Value))
+            {
+
+                var parentTransform = em.GetComponentObject<Transform>(parent.Value);
+                t.parent = parentTransform;
+                t.transform.position = rebuildHierachy.LocalToWorld.c3.xyz;
+                /*          CinemachineVirtualCamera.CreatePipelineOverride(parentTransform.GetComponent<CinemachineVirtualCamera>(), CinemachineVirtualCamera.PipelineName, t.GetComponents<CinemachineComponentBase>());
+          */
+            }
+        }).WithoutBurst().Run();
+
     }
 }

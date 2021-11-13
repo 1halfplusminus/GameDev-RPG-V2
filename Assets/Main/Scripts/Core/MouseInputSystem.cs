@@ -45,8 +45,11 @@ namespace RPG.Core
             var controller = input.Gameplay.Click.activeControl;
             var capturedThisFrame = controller != null && controller.IsPressed();
             float2 value = Pointer.current.position.ReadValue();
-            var ray = FromEngineRay(Camera.main.ScreenPointToRay(new float3(value, 0f)));
-            capturedClick = new MouseClick { ScreenCordinate = ray.Origin, Ray = ray, CapturedThisFrame = capturedThisFrame };
+            if (Camera.main)
+            {
+                var ray = FromEngineRay(Camera.main.ScreenPointToRay(new float3(value, 0f)));
+                capturedClick = new MouseClick { ScreenCordinate = ray.Origin, Ray = ray, CapturedThisFrame = capturedThisFrame };
+            }
             return capturedClick;
         }
         protected override void OnUpdate()
