@@ -4,6 +4,10 @@ using Unity.Transforms;
 
 namespace RPG.Core
 {
+    public struct GameObjectSpawn : IComponentData
+    {
+
+    }
     public struct HasHybridComponent : IComponentData
     {
 
@@ -36,28 +40,49 @@ namespace RPG.Core
         {
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
             var commandBufferP = commandBuffer.AsParallelWriter();
-            Entities.WithNone<HasHybridComponent>().ForEach((int entityInQueryIndex, Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
-               {
-                   var instance = commandBufferP.Instantiate(entityInQueryIndex, toSpawn.Prefab);
-                   commandBufferP.AddComponent(entityInQueryIndex, instance, new Translation { Value = localToWorld.Position });
-                   commandBufferP.AddComponent(entityInQueryIndex, instance, new Rotation { Value = localToWorld.Rotation });
-                   commandBufferP.AddComponent<Spawned>(entityInQueryIndex, instance);
+            Entities.WithNone<HasHybridComponent, GameObjectSpawn>().ForEach((int entityInQueryIndex, Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
+                {
 
-                   commandBufferP.AddComponent(entityInQueryIndex, e, new HasSpawn { Entity = instance });
-                   commandBufferP.RemoveComponent<Spawn>(entityInQueryIndex, e);
-               }
+                    var instance = commandBufferP.Instantiate(entityInQueryIndex, toSpawn.Prefab);
+                    commandBufferP.AddComponent(entityInQueryIndex, instance, new Translation { Value = localToWorld.Position });
+                    commandBufferP.AddComponent(entityInQueryIndex, instance, new Rotation { Value = localToWorld.Rotation });
+                    commandBufferP.AddComponent<Spawned>(entityInQueryIndex, instance);
+
+                    commandBufferP.AddComponent(entityInQueryIndex, e, new HasSpawn { Entity = instance });
+                    commandBufferP.RemoveComponent<Spawn>(entityInQueryIndex, e);
+                }
             ).ScheduleParallel();
             var em = EntityManager;
-            Entities.WithAny<HasHybridComponent>().WithStructuralChanges().ForEach((Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
+            Entities.WithNone<GameObjectSpawn>().WithAny<HasHybridComponent>().WithStructuralChanges().ForEach((Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
                 {
                     var instance = em.Instantiate(toSpawn.Prefab);
-                    commandBuffer.AddComponent(instance, new Translation { Value = localToWorld.Position });
+                    coémmandBuffer.AddComponent(instance, new Translation { Value = localToWorld.Position });
                     commandBuffer.AddComponent(instance, new Rotation { Value = localToWorld.Rotation });
                     commandBuffer.AddComponent<Spawned>(instance);
                     commandBuffer.RemoveComponent<Spawn>(e);
                 }
             ).Run();
+            Entities.
+            WithAny<GameObjectSpawn>()
+            .WithStructuralChanges()
+            .WithoutBurst()
+            .ForEach((Entity e, in Spawn toSpawn, in LocalToWorld localToWorld, in SceneTag sceneTag) =>
+            {/* 
+                    var instance = em.Instantiate(toSpawn.Prefab); */
+                /*  GameObject.Instantiate(toSpawn); */
 
+                var gameObject = em.GetComponentObject<GameObject>(e);
+                var instance = GameObject.Instantiate(gameObject);
+                /*   GameObjectEntity.AddToEntityManager(em, instance);
+                  foreach (Transform child in instance.Transform)
+                      AddRecurse(manager, child, toBeDetached, toBeInjected); */
+                /*  var entity = em.CreateEntity();
+                 em.AddComponentObject(entity, instance.transform);
+                 em.AddSharedComponentData(entity, new SceneTag() { SceneEntity = sceneTag.SceneEntity });
+                 commandBuffer.RemoveComponent<Spawn>(e);
+                 Debug.Log("Instanciate");
+                 instance.hideFlags = HideFlags.None; */
+            }).Run();
             Entities.WithAny<Spawned>().ForEach((int entityInQueryIndex, Entity e) =>
                 {
                     commandBufferP.RemoveComponent<Spawned>(entityInQueryIndex, e);
