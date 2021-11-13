@@ -67,7 +67,7 @@ namespace RPG.Core
             });
         }
     }
-    [DisableAutoCreation]
+
     public class GameObjectInstanciateSystem : SystemBase
     {
 
@@ -90,6 +90,7 @@ namespace RPG.Core
             var cm = entityCommandBufferSystem.CreateCommandBuffer();
             var cmp = cm.AsParallelWriter();
             var entities = GetComponentDataFromEntity<GameObjectSpawner>(true);
+
             Entities
             .WithReadOnly(entities)
             .WithNone<GameObjectSpawnDestroy>()
@@ -100,9 +101,9 @@ namespace RPG.Core
                 if (!entities.HasComponent(gameObjectSpawn.SpawnerEntity))
                 {
                     Debug.Log("But spawner doesn't");
-                    /*  cmp.AddComponent<GameObjectSpawnDestroy>(entityInQueryIndex, e); */
+                    cmp.AddComponent<GameObjectSpawnDestroy>(entityInQueryIndex, e);
                 }
-            }).Run();
+            }).ScheduleParallel();
 
             Entities
             .WithNone<GameObjectSpawnHandle>()

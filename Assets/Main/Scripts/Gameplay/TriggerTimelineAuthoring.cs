@@ -7,6 +7,7 @@ using RPG.Control;
 using Cinemachine;
 using UnityEngine;
 using RPG.Hybrid;
+using System.Collections.Generic;
 
 namespace RPG.Gameplay
 {
@@ -30,20 +31,54 @@ namespace RPG.Gameplay
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
     public class PlayableDeclareReferencedDirectorConversionSystem : GameObjectConversionSystem
     {
+        HashSet<PlayableAsset> dones;
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            dones = new HashSet<PlayableAsset>();
+        }
         protected override void OnUpdate()
         {
+            dones.Clear();
             Entities.ForEach((PlayableDirector playableDirector) =>
            {
-               DeclareAssetDependency(playableDirector.gameObject, playableDirector.playableAsset);
+               DeclareAssetDependencyRecurse(playableDirector, playableDirector.playableAsset);
            });
 
+        }
+        protected void DeclareAssetDependencyRecurse(PlayableDirector playableDirector, PlayableAsset asset)
+        {
+            if (asset == null) { return; };
+            if (dones.Contains(asset))
+            {
+                return;
+            }
+            dones.Add(asset);
+            DeclareAssetDependency(playableDirector.gameObject, asset);
+            DeclareReferencedAsset(asset);
+            var outputs = asset.outputs;
+            foreach (var output in outputs)
+            {
+                if (output.sourceObject is PlayableAsset playableAsset)
+                {
+                    DeclareAssetDependencyRecurse(playableDirector, playableAsset);
+
+                }
+            }
         }
     }
     [UpdateAfter(typeof(CinemachineCameraConversionSystem))]
     public class PlayableDirectorConversionSystem : GameObjectConversionSystem
     {
+        HashSet<PlayableAsset> dones;
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            dones = new HashSet<PlayableAsset>();
+        }
         protected override void OnUpdate()
         {
+            dones.Clear();
             CinemachineBrain brain = null;
             for (int i = 0; i < World.All.Count; i++)
             {
@@ -61,35 +96,64 @@ namespace RPG.Gameplay
 
             Entities.ForEach((PlayableDirector playableDirector) =>
             {
-                var entity = GetPrimaryEntity(playableDirector);
-                /* DstEntityManager.AddComponentObject(entity, playableDirector); */
                 AddHybridComponent(playableDirector);
-                Debug.Log("Brain is not null");
-                var outputs = playableDirector.playableAsset.outputs;
-                foreach (var output in outputs)
+                if (playableDirector.playableAsset == null) { return; }
+                var entity = GetPrimaryEntity(playableDirector);
+                LinkBrain(playableDirector, brain, entity);
+                ConvertOutputRecurse(playableDirector, playableDirector.playableAsset);
+            });
+
+            Entities.ForEach((CinemachineTrack track) =>
+            {
+                Debug.Log("Convert CinemachineTrack");
+            });
+        }
+        private void LinkBrain(PlayableDirector playableDirector, CinemachineBrain brain, Entity entity)
+        {
+
+            var outputs = playableDirector.playableAsset.outputs;
+            foreach (var output in outputs)
+            {
+
+                if (output.sourceObject is CinemachineTrack cinemachineTrack)
                 {
-                    if (output.sourceObject is Component mono)
+                    if (brain != null)
                     {
-                        AddHybridComponent(mono);
+                        Debug.Log("Set Generic Binding");
+                        playableDirector.SetGenericBinding(output.sourceObject, brain);
                     }
-                    if (output.sourceObject is CinemachineTrack cinemachineTrack)
+                    else
                     {
+                        DstEntityManager.AddComponent<LinkCinemachineBrain>(entity);
+                        break;
+                    }
 
-                        if (brain != null)
-                        {
-                            Debug.Log("Set Generic Binding");
-                            playableDirector.SetGenericBinding(output.sourceObject, brain);
-                        }
-                        else
-                        {
-                            DstEntityManager.AddComponent<LinkCinemachineBrain>(entity);
-                        }
+                }
+            }
 
+        }
+        private void ConvertOutputRecurse(PlayableDirector playableDirector, PlayableAsset asset)
+        {
+            if (dones.Contains(asset))
+            {
+                return;
+            }
+            dones.Add(asset);
+            var outputs = asset.outputs;
+            foreach (var output in outputs)
+            {
+                if (output.sourceObject is PlayableAsset playableAsset)
+                {
+                    if (HasPrimaryEntity(playableAsset))
+                    {
+                        var outputEntity = GetPrimaryEntity(playableAsset);
+                        DstEntityManager.AddComponentObject(outputEntity, playableAsset);
+                        ConvertOutputRecurse(playableDirector, playableAsset);
                     }
 
                 }
 
-            });
+            }
         }
     }
     [UpdateInGroup(typeof(InitializationSystemGroup))]
@@ -146,7 +210,7 @@ namespace RPG.Gameplay
                     {
                         commandBufferP.AddComponent<Play>(entityInQueryIndex, e);
                         commandBufferP.AddComponent(entityInQueryIndex, e, new TriggeredBy { Entity = collidWith });
-                        commandBufferP.AddComponent<Disabled>(entityInQueryIndex, collidWith);
+                        commandBufferP.AddComponent<DisabledControl>(entityInQueryIndex, collidWith);
                         return;
                     }
                 }
@@ -167,12 +231,12 @@ namespace RPG.Gameplay
             .WithAll<Playing>()
             .ForEach((Entity e, PlayableDirector playableDirector, in TriggeredBy collidPlayer) =>
             {
-                if (playableDirector.state != PlayState.Playing)
+                if (playableDirector.playableGraph.IsDone())
                 {
                     var trigger = collidPlayer.Entity;
                     commandBuffer.RemoveComponent<Playing>(e);
                     commandBuffer.AddComponent<Played>(e);
-                    commandBuffer.RemoveComponent<Disabled>(trigger);
+                    commandBuffer.RemoveComponent<DisabledControl>(trigger);
                 }
             }).WithoutBurst().Run();
 

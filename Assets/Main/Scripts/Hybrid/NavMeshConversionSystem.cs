@@ -11,7 +11,10 @@ public class NavMeshAgentReferenceAssetConversionSystem : GameObjectConversionSy
 {
     protected override void OnUpdate()
     {
-
+        Entities.ForEach((NavMeshSurface surface) =>
+        {
+            DeclareReferencedAsset(surface.navMeshData);
+        });
     }
 }
 

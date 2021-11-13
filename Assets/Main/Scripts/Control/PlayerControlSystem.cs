@@ -5,6 +5,7 @@ using RPG.Combat;
 
 namespace RPG.Control
 {
+    public struct DisabledControl : IComponentData { };
     [UpdateInGroup(typeof(ControlSystemGroup))]
     public class PlayersMoveSystem : SystemBase
     {
@@ -20,6 +21,7 @@ namespace RPG.Control
             var commandBuffer = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             Entities
             .WithAll<PlayerControlled>()
+            .WithNone<DisabledControl>()
             .ForEach((Entity player, int entityInQueryIndex, ref MoveTo moveTo, in MouseClick mouseClick, in WorldClick worldClick) =>
             {
                 if (mouseClick.CapturedThisFrame)
@@ -31,6 +33,7 @@ namespace RPG.Control
             }).ScheduleParallel();
 
             Entities
+            .WithNone<DisabledControl>()
             .WithAll<PlayerControlled>()
             .ForEach((Entity player, ref Fighter fighter, in MouseClick mouseClick) =>
             {
@@ -55,6 +58,7 @@ namespace RPG.Control
             }).ScheduleParallel();
             // Look at fighter target if exists
             Entities
+            .WithNone<DisabledControl>()
             .WithAll<PlayerControlled>()
             .ForEach((ref LookAt lookAt, in Fighter fighter, in MouseClick mouseClick) =>
             {
@@ -94,6 +98,7 @@ namespace RPG.Control
         protected override void OnUpdate()
         {
             Entities
+            .WithNone<DisabledControl>()
             .WithNone<WorldClick>()
             .WithAny<PlayerControlled>()
             .ForEach((in Fighter f) =>
