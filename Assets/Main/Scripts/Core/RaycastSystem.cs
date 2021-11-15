@@ -21,46 +21,47 @@ namespace RPG.Core
 
         public Entity Hitter;
     }
-    [UpdateInGroup(typeof(CoreSystemGroup))]
+
     [UpdateAfter(typeof(MouseInputSystem))]
+    [UpdateInGroup(typeof(CoreSystemGroup))]
     public class RaycastSystem : SystemBase
     {
         BuildPhysicsWorld buildPhysicsWorld;
+        StepPhysicsWorld stepPhysicsWorld;
 
         protected override void OnCreate()
         {
             base.OnCreate();
             buildPhysicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
-
+            stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
         }
         protected override void OnUpdate()
         {
+
             var physicsWorld = buildPhysicsWorld.PhysicsWorld;
             var collisionWorld = physicsWorld.CollisionWorld;
-            var inputDeps = JobHandle.CombineDependencies(this.Dependency, buildPhysicsWorld.GetOutputDependency());
+            Dependency = JobHandle.CombineDependencies(Dependency, buildPhysicsWorld.GetOutputDependency(), stepPhysicsWorld.GetOutputDependency());
+            var raycastJob = Entities
+                 .WithReadOnly(physicsWorld)
+                 .WithReadOnly(collisionWorld)
+                 .WithChangeFilter<Raycast>()
+                 .ForEach((ref Raycast raycast, ref DynamicBuffer<HittedByRaycast> rayHits) =>
+                 {
+                     if (!raycast.Completed)
+                     {
+                         RaycastInput input = new RaycastInput() { Start = raycast.Ray.Origin, End = raycast.Ray.Displacement * raycast.Distance, Filter = CollisionFilter.Default };
+                         var hits = new NativeList<RaycastHit>(Allocator.Temp);
+                         collisionWorld.CastRay(input, ref hits);
+                         for (int i = 0; i < hits.Length; i++)
+                         {
+                             var hittedEntity = physicsWorld.Bodies[hits[i].RigidBodyIndex].Entity;
+                             rayHits.Add(new HittedByRaycast { Hit = hits[i], Hitted = hittedEntity });
+                         }
+                         raycast.Completed = true;
+                     }
 
-            var handle = Entities
-            .WithReadOnly(physicsWorld)
-            .WithReadOnly(collisionWorld)
-            .WithChangeFilter<Raycast>()
-            .ForEach((ref Raycast raycast, ref DynamicBuffer<HittedByRaycast> rayHits) =>
-            {
-                if (!raycast.Completed)
-                {
-                    RaycastInput input = new RaycastInput() { Start = raycast.Ray.Origin, End = raycast.Ray.Displacement * raycast.Distance, Filter = CollisionFilter.Default };
-                    var hits = new NativeList<RaycastHit>(Allocator.Temp);
-                    collisionWorld.CastRay(input, ref hits);
-                    for (int i = 0; i < hits.Length; i++)
-                    {
-                        var hittedEntity = physicsWorld.Bodies[hits[i].RigidBodyIndex].Entity;
-                        rayHits.Add(new HittedByRaycast { Hit = hits[i], Hitted = hittedEntity });
-                    }
-                    raycast.Completed = true;
-                }
-
-            }).ScheduleParallel(inputDeps);
-            handle.Complete();
-
+                 }).ScheduleParallel(Dependency);
+            Dependency = raycastJob;
         }
     }
     [UpdateBefore(typeof(EndSimulationEntityCommandBufferSystem))]

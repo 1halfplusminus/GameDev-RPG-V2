@@ -28,6 +28,7 @@ namespace RPG.Gameplay
     {
 
     }
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
     public class PlayableDeclareReferencedDirectorConversionSystem : GameObjectConversionSystem
     {
@@ -67,6 +68,7 @@ namespace RPG.Gameplay
             }
         }
     }
+
     [UpdateAfter(typeof(CinemachineCameraConversionSystem))]
     public class PlayableDirectorConversionSystem : GameObjectConversionSystem
     {
@@ -103,10 +105,10 @@ namespace RPG.Gameplay
                 ConvertOutputRecurse(playableDirector, playableDirector.playableAsset);
             });
 
-            Entities.ForEach((CinemachineTrack track) =>
+            /* Entities.ForEach((CinemachineTrack track) =>
             {
                 Debug.Log("Convert CinemachineTrack");
-            });
+            }); */
         }
         private void LinkBrain(PlayableDirector playableDirector, CinemachineBrain brain, Entity entity)
         {

@@ -20,6 +20,13 @@ namespace RPG.Mouvement
 
     public class MoveToSystem : SystemBase
     {
+        EntityCommandBufferSystem entityCommandBufferSystem;
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        }
         protected override void OnUpdate()
         {
             // Calcule distance 
@@ -60,7 +67,15 @@ namespace RPG.Mouvement
                 moveTo.Position = position.Value;
             }).ScheduleParallel();
 
+            var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            Entities
+            .WithAll<WarpTo>()
+            .ForEach((int entityInQueryIndex, Entity e) =>
+            {
+                commandBuffer.RemoveComponent<WarpTo>(entityInQueryIndex, e);
+            }).ScheduleParallel();
 
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
 
         }
     }
@@ -77,8 +92,18 @@ namespace RPG.Mouvement
         protected override void OnUpdate()
         {
 
-            // TODO : Refractor
+            // TODO : Refractor get in paralle
             var lookAts = GetComponentDataFromEntity<LookAt>(true);
+
+            // Warp when spawned or warp to
+            Entities.WithoutBurst()
+            .WithAny<Spawned, WarpTo>()
+            .ForEach((NavMeshAgent agent, ref MoveTo moveTo, in Translation position) =>
+            {
+                agent.Warp(position.Value);
+                moveTo.Position = position.Value;
+
+            }).Run();
 
             Entities
             .WithReadOnly(lookAts)
@@ -86,7 +111,7 @@ namespace RPG.Mouvement
             .WithStoreEntityQueryInField(ref navMeshAgentQueries)
             .WithoutBurst()
             .WithAll<Mouvement>()
-            .WithNone<IsDeadTag>()
+            .WithNone<IsDeadTag, WarpTo>()
             .ForEach((Entity e, NavMeshAgent agent, ref Translation position, ref Mouvement mouvement, ref MoveTo moveTo, ref Rotation rotation) =>
             {
 
@@ -108,14 +133,7 @@ namespace RPG.Mouvement
                 }
 
             }).Run();
-            // Initialize navigation agent when spawned
-            Entities.WithoutBurst()
-            .WithAll<Spawned>()
-            .ForEach((NavMeshAgent agent, ref Translation position) =>
-            {
-                agent.Warp(position.Value);
 
-            }).Run();
         }
     }
 

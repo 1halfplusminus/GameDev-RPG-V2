@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2505150948550738330}
-  - component: {fileID: 4495089011082432229}
   - component: {fileID: 2342953641598622859}
   - component: {fileID: 6664542834273659049}
   - component: {fileID: 1755125366199443088}
   - component: {fileID: -4135300498245888384}
+  - component: {fileID: 286300910}
   m_Layer: 0
   m_Name: Third Person Camera Moment 1
   m_TagString: Untagged
@@ -28,7 +28,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2505150948550738325}
-  m_LocalRotation: {x: 0.2807938, y: -0.028600432, z: 0.00837172, w: 0.9593054}
+  m_LocalRotation: {x: 0.2807932, y: -0.028597292, z: 0.00837056, w: 0.95930564}
   m_LocalPosition: {x: 2.2, y: 9.84, z: -17.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -36,19 +36,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 32.63, y: -3.415, z: 0}
---- !u!114 &4495089011082432229
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2505150948550738325}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ConversionMode: 0
 --- !u!114 &2342953641598622859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,6 +113,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d8133af023214ae993fc28d2fd97a1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &286300910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2505150948550738325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ConversionMode: 1
 --- !u!1 &9026123611294315901
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ad980451443d70438faac0bc6c235a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_TrackedObjectOffset: {x: 0, y: 0, z: 0}
+  m_TrackedObjectOffset: {x: -0.075500205, y: 7.0452676, z: 1.2719202}
   m_LookaheadTime: 0.817
   m_LookaheadSmoothing: 0
   m_LookaheadIgnoreY: 0
@@ -192,7 +192,7 @@ MonoBehaviour:
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
   m_ScreenY: 0.50163
-  m_CameraDistance: 20.6
+  m_CameraDistance: 13.511948
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_DeadZoneDepth: 0

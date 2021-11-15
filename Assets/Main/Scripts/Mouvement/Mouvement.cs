@@ -1,5 +1,6 @@
 
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Physics;
 
 namespace RPG.Mouvement
@@ -13,5 +14,8 @@ namespace RPG.Mouvement
         public float Speed;
     }
 
-    
+    public struct WarpTo : IComponentData
+    {
+        public float3 Destination;
+    }
 }

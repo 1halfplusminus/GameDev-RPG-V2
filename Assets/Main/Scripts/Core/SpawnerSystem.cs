@@ -206,13 +206,17 @@ namespace RPG.Core
             .WithoutBurst()
             .ForEach((Entity e, GameObject prefab, in Spawn toSpawn, in LocalToWorld localToWorld, in SceneTag sceneTag) =>
             {
-                var instance = Object.Instantiate(prefab);
-                AddSceneGUIDRecurse(instance, sceneTag.SceneEntity, e);
+                if (prefab != null)
+                {
+                    var instance = Object.Instantiate(prefab);
+                    AddSceneGUIDRecurse(instance, sceneTag.SceneEntity, e);
 
-                var instancedEntity = em.CreateEntity();
-                em.AddSharedComponentData(instancedEntity, sceneTag);
-                em.AddComponentObject(instancedEntity, instance);
-                commandBuffer.RemoveComponent<Spawn>(e);
+                    var instancedEntity = em.CreateEntity();
+                    em.AddSharedComponentData(instancedEntity, sceneTag);
+                    em.AddComponentObject(instancedEntity, instance);
+                    commandBuffer.RemoveComponent<Spawn>(e);
+                }
+
             }).Run();
             Entities.
              WithAny<Spawned>()

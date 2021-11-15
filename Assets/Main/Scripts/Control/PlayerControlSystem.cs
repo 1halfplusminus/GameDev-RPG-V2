@@ -20,6 +20,13 @@ namespace RPG.Control
         {
             var commandBuffer = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             Entities
+            .WithAll<DisabledControl>()
+            .ForEach((ref MoveTo moveTo) =>
+            {
+                moveTo.Stopped = true;
+
+            }).ScheduleParallel();
+            Entities
             .WithAll<PlayerControlled>()
             .WithNone<DisabledControl>()
             .ForEach((Entity player, int entityInQueryIndex, ref MoveTo moveTo, in MouseClick mouseClick, in WorldClick worldClick) =>

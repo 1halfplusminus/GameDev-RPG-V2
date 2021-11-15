@@ -4,11 +4,14 @@ using Unity.Entities;
 using RPG.Core;
 using RPG.Control;
 using Unity.Scenes;
-
+using RPG.Mouvement;
+using Unity.Collections;
+using Unity.Mathematics;
+using Unity.Transforms;
 
 namespace RPG.Gameplay
 {
-    using Unity.Collections;
+
 #if UNITY_EDITOR
     using UnityEditor;
     public class PortalAuthoring : MonoBehaviour
@@ -18,8 +21,10 @@ namespace RPG.Gameplay
 
         public int OtherScenePortalIndex;
 
-
         public int PortalIndex;
+
+        [SerializeField]
+        public Transform Warppoint;
     }
 
     public class PortalConversionSystem : GameObjectConversionSystem
@@ -37,7 +42,9 @@ namespace RPG.Gameplay
             {
                 var SceneGUID = new GUID(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(portalAuthoring.Scene)));
                 var entity = GetPrimaryEntity(portalAuthoring);
-                DstEntityManager.AddComponentData(entity, new Portal { Index = portalAuthoring.PortalIndex, SceneGUID = SceneGUID });
+                DstEntityManager.AddComponentData(entity, new Portal { Index = portalAuthoring.PortalIndex, WarpPoint = new LocalToWorld() { Value = portalAuthoring.Warppoint.transform.localToWorldMatrix } });
+                DstEntityManager.AddComponentData(entity, new LinkPortal { Index = portalAuthoring.OtherScenePortalIndex, SceneGUID = SceneGUID });
+                /*                DstEntityManager.AddComponentData(entity, new LocalToWorld() { Value = portalAuthoring.Warppoint.localToWorldMatrix }); */
                 /* var sceneEntity = sceneSystem.LoadSceneAsync(SceneGUID, new SceneSystem.LoadParameters { Flags = SceneLoadFlags.DisableAutoLoad });
                 DstEntityManager.AddSharedComponentData(sceneEntity, new SceneSection() { SceneGUID = SceneGUID }); */
             });
@@ -48,12 +55,24 @@ namespace RPG.Gameplay
     {
         public int Index;
 
+        public LocalToWorld WarpPoint;
+    }
+    public struct LinkPortal : IComponentData
+    {
+        public int Index;
         public Unity.Entities.Hash128 SceneGUID;
+
     }
     public struct CollidWithPlayer : IComponentData
     {
         public Entity Entity;
     }
+    public struct WarpToPortal : IComponentData
+    {
+        public int PortalIndex;
+    }
+
+
     public class CollidWithPlayerSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
@@ -94,18 +113,23 @@ namespace RPG.Gameplay
         public Entity Entity;
     }
 
-
+    [UpdateAfter(typeof(CoreSystemGroup))]
     public class PortalSystem : SystemBase
     {
         SceneSystem sceneSystem;
 
 
         EntityCommandBufferSystem entityCommandBufferSystem;
+
+        EntityQuery portalQuery;
+
+        EntityQuery needWarpQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
             sceneSystem = World.GetOrCreateSystem<SceneSystem>();
-
+            portalQuery = GetEntityQuery(ComponentType.ReadOnly(typeof(LocalToWorld)), ComponentType.ReadOnly(typeof(Portal)));
+            needWarpQuery = GetEntityQuery(ComponentType.ReadOnly(typeof(WarpToPortal)));
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
@@ -113,41 +137,49 @@ namespace RPG.Gameplay
             var _sceneSystem = sceneSystem;
             var em = EntityManager;
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
+            var commandBufferP = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            var query = portalQuery;
             Entities
-            .ForEach((Entity e, in CollidWithPlayer collidWithPlayer, in Portal portal, in SceneSection currentScene) =>
+            .ForEach((Entity e, in CollidWithPlayer collidWithPlayer, in Portal portal, in SceneSection currentScene, in LinkPortal linkPortal) =>
             {
 
                 Debug.Log("Unload Scene" + currentScene.SceneGUID);
-                var sceneEntity = _sceneSystem.LoadSceneAsync(portal.SceneGUID);
+                var sceneEntity = _sceneSystem.LoadSceneAsync(linkPortal.SceneGUID);
                 _sceneSystem.UnloadScene(_sceneSystem.GetSceneEntity(currentScene.SceneGUID));
-                /*              _sceneSystem.UnloadScene(currentScene.SceneEntity); */
-                /*     var sceneQuery = em.CreateEntityQuery(new EntityQueryDesc()
-                    {
-                        All = new[] { ComponentType.ReadOnly(typeof(SceneTag)) },
-                        None = new[] { ComponentType.ReadWrite(typeof(SubScene)), ComponentType.ReadWrite(typeof(SceneReference)) }
-                    });
-                    sceneQuery.SetSharedComponentFilter(new SceneTag { SceneEntity = currentScene.SceneEntity });
-                    commandBuffer.DestroyEntitiesForEntityQuery(sceneQuery); */
-
-                /*    commandBuffer.DestroyEntitiesForEntityQuery(sceneQuery); */
-                /*                commandBuffer.AddComponent(e, new LoadingScene() { }); */
-                /*          commandBuffer.AddComponent(sceneEntity, new SceneReference() { SceneGUID = currentScene.SceneGUID }); */
-
+                var newSceneRef = em.GetComponentData<SceneReference>(sceneEntity);
+                Debug.Log("Loaded Scene " + newSceneRef.SceneGUID);
+                commandBuffer.AddComponent(collidWithPlayer.Entity, new WarpToPortal { PortalIndex = linkPortal.Index });
 
             })
             .WithStructuralChanges()
             .WithoutBurst()
             .Run();
 
-            /*      Entities
-                 .WithStructuralChanges()
-                     .WithoutBurst()
-                     .ForEach((Entity e, in LoadingScene loadingScene, in Portal portal) =>
-                     {
-                         Debug.Log("Here");
-                         var sceneEntity = _sceneSystem.LoadSceneAsync(portal.SceneGUID, new SceneSystem.LoadParameters() { AutoLoad = true });
+            if (needWarpQuery.CalculateEntityCount() == 0) { return; }
+            Debug.Log("Need Warp");
+            var indexedPortals = new NativeHashMap<int, (LocalToWorld, Portal)>(portalQuery.CalculateEntityCount(), Allocator.TempJob);
+            var indexedPortalWriter = indexedPortals.AsParallelWriter();
+            Entities
+            .ForEach((Entity e, int entityInQueryIndex, in Portal portal, in LocalToWorld localToWorld) =>
+            {
+                indexedPortalWriter.TryAdd(portal.Index, (localToWorld, portal));
+            }).ScheduleParallel();
 
-                     }).Run(); */
+            Entities
+            .WithReadOnly(indexedPortals)
+            .WithDisposeOnCompletion(indexedPortals)
+            .ForEach((int entityInQueryIndex, Entity e, in WarpToPortal warp) =>
+            {
+                if (indexedPortals.ContainsKey(warp.PortalIndex))
+                {
+                    Debug.Log("Portail Found Warping Player");
+                    var destination = indexedPortals[warp.PortalIndex].Item2.WarpPoint;
+                    commandBufferP.AddComponent(entityInQueryIndex, e, new Translation() { Value = destination.Position });
+                    commandBufferP.AddComponent(entityInQueryIndex, e, new WarpTo() { Destination = destination.Position });
+                    commandBufferP.AddComponent(entityInQueryIndex, e, new Rotation() { Value = quaternion.LookRotation(destination.Forward, destination.Up) });
+                    commandBufferP.RemoveComponent<WarpToPortal>(entityInQueryIndex, e);
+                }
+            }).ScheduleParallel();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }

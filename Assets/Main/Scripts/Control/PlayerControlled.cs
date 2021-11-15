@@ -1,9 +1,6 @@
 using RPG.Core;
 using Unity.Entities;
-using RPG.Mouvement;
 using RPG.Combat;
-using Unity.Transforms;
-using Unity.Animation.Hybrid;
 
 namespace RPG.Control
 {
