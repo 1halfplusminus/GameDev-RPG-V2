@@ -103,7 +103,7 @@ namespace RPG.Gameplay
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
-    public struct LoadingScene : IComponentData
+    public struct SceneLoading : IComponentData
     {
         public Entity Player;
         public Entity Scene;
@@ -155,8 +155,21 @@ namespace RPG.Gameplay
             .WithoutBurst()
             .Run();
 
-            if (needWarpQuery.CalculateEntityCount() == 0) { return; }
-            Debug.Log("Need Warp");
+            if (needWarpQuery.CalculateEntityCount() == 0)
+            {
+                Entities
+                .ForEach((ref AnySceneLoading loading) =>
+                {
+                    loading.Value = false;
+                }).ScheduleParallel();
+                return;
+
+            }
+            Entities
+            .ForEach((ref AnySceneLoading loading) =>
+            {
+                loading.Value = true;
+            }).ScheduleParallel();
             var indexedPortals = new NativeHashMap<int, (LocalToWorld, Portal)>(portalQuery.CalculateEntityCount(), Allocator.TempJob);
             var indexedPortalWriter = indexedPortals.AsParallelWriter();
             Entities

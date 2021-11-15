@@ -1,8 +1,7 @@
 
 using Unity.Entities;
 using Unity.Animation;
-using Unity.Physics;
-using Unity.Physics.Systems;
+
 
 namespace RPG.Core
 {
