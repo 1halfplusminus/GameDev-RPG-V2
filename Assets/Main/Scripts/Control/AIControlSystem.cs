@@ -153,17 +153,18 @@ namespace RPG.Control
     public class ChaseBehaviourSystem : SystemBase
     {
         EntityQuery playerControlledQuery;
-
+        EntityQuery playerChaserQuery;
         EntityCommandBufferSystem beginSimulationEntityCommandBufferSystem;
         protected override void OnCreate()
         {
             base.OnCreate();
             playerControlledQuery = GetEntityQuery(typeof(PlayerControlled), ComponentType.ReadOnly<LocalToWorld>());
+            playerChaserQuery = GetEntityQuery(typeof(ChasePlayer));
             beginSimulationEntityCommandBufferSystem = World.GetOrCreateSystem<BeginPresentationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
         {
-
+            if (playerChaserQuery.CalculateEntityCount() == 0) { return; }
             var playerPositions = new NativeHashMap<Entity, LocalToWorld>(playerControlledQuery.CalculateEntityCount(), Allocator.TempJob);
             var playerPositionsWriter = playerPositions.AsParallelWriter();
             Entities
