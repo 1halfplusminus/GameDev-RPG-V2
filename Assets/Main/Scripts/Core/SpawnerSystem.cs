@@ -97,7 +97,6 @@ namespace RPG.Core
             .WithAll<GameObjectSpawnHandle>()
             .ForEach((int entityInQueryIndex, Entity e, in GameObjectSpawn gameObjectSpawn) =>
             {
-                Debug.Log("I'm still here");
                 if (!entities.HasComponent(gameObjectSpawn.SpawnerEntity))
                 {
                     Debug.Log("But spawner doesn't");
