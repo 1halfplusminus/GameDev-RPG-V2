@@ -105,29 +105,10 @@ namespace RPG.Gameplay
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
-    public struct LoadScene : IComponentData
-    {
-        public Unity.Entities.Hash128 SceneGUID;
-    }
-    public struct UnloadScene : IComponentData
-    {
-        public Entity Entity;
-    }
 
-    public struct AnySceneLoading : IComponentData
-    {
-        public FixedList128<Entity> Triggers;
-    }
-    public struct AnySceneFinishLoading : IComponentData
-    {
-        public FixedList128<Entity> Triggers;
-    }
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-
     public class PortalSystem : SystemBase
     {
-        SceneSystem sceneSystem;
-
 
         EntityCommandBufferSystem entityCommandBufferSystem;
 
@@ -138,14 +119,10 @@ namespace RPG.Gameplay
         protected override void OnCreate()
         {
             base.OnCreate();
-            sceneSystem = World.GetOrCreateSystem<SceneSystem>();
-            portalQuery = GetEntityQuery(ComponentType.ReadOnly(typeof(LocalToWorld)), ComponentType.ReadOnly(typeof(Portal)));
-            needWarpQuery = GetEntityQuery(ComponentType.ReadOnly(typeof(WarpToPortal)));
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
         {
-            var _sceneSystem = sceneSystem;
             var em = EntityManager;
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
             var commandBufferP = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
@@ -154,71 +131,30 @@ namespace RPG.Gameplay
             .ForEach((Entity e, in CollidWithPlayer collidWithPlayer, in Portal portal, in SceneSection currentScene, in LinkPortal linkPortal) =>
             {
 
-                Debug.Log("Unload Scene" + currentScene.SceneGUID);
-                var sceneEntity = _sceneSystem.LoadSceneAsync(linkPortal.SceneGUID);
-                _sceneSystem.UnloadScene(_sceneSystem.GetSceneEntity(currentScene.SceneGUID));
-                var newSceneRef = em.GetComponentData<SceneReference>(sceneEntity);
-                Debug.Log("Loaded Scene " + newSceneRef.SceneGUID);
+                commandBuffer.AddComponent<TriggerSceneLoad>(collidWithPlayer.Entity, new TriggerSceneLoad() { SceneGUID = linkPortal.SceneGUID });
+                commandBuffer.AddComponent<TriggerUnloadScene>(collidWithPlayer.Entity, new TriggerUnloadScene() { SceneGUID = currentScene.SceneGUID });
                 commandBuffer.AddComponent(collidWithPlayer.Entity, new WarpToPortal { PortalIndex = linkPortal.Index });
             })
             .WithStructuralChanges()
             .WithoutBurst()
             .Run();
 
-            // Delete scene finish loading notification
-            Entities
-            .WithAny<AnySceneFinishLoading>()
-            .ForEach((int entityInQueryIndex, Entity e) =>
+            if (!needWarpQuery.IsEmpty)
             {
-                commandBufferP.RemoveComponent<AnySceneFinishLoading>(entityInQueryIndex, e);
-            }).ScheduleParallel();
-
-            if (needWarpQuery.IsEmpty)
-            {
-                Entities
-                .ForEach((int entityInQueryIndex, Entity e, in AnySceneLoading anySceneLoading) =>
-                {
-                    commandBufferP.RemoveComponent<AnySceneLoading>(entityInQueryIndex, e);
-                    commandBufferP.AddComponent<AnySceneFinishLoading>(entityInQueryIndex, e, new AnySceneFinishLoading { Triggers = anySceneLoading.Triggers });
-                }).ScheduleParallel();
-            }
-            else
-            {
-                var nativeListTrigger = new NativeList<Entity>(needWarpQuery.CalculateEntityCount(), Allocator.TempJob);
-                var nativeListTriggerWriter = nativeListTrigger.AsParallelWriter();
-                Entities
-                .WithAny<WarpToPortal>()
-                .ForEach((Entity e) =>
-                {
-                    nativeListTriggerWriter.AddNoResize(e);
-                }).ScheduleParallel();
-
-
-                Entities
-                .WithReadOnly(nativeListTrigger)
-                .WithDisposeOnCompletion(nativeListTrigger)
-                .WithAny<SceneLoadingListener>()
-                .ForEach((int entityInQueryIndex, Entity e) =>
-                {
-                    var triggers = new FixedList128<Entity>();
-                    foreach (var trigger in nativeListTrigger)
-                    {
-                        triggers.Add(trigger);
-                    }
-                    commandBufferP.AddComponent(entityInQueryIndex, e, new AnySceneLoading { Triggers = triggers });
-                })
-                .ScheduleParallel();
 
                 var indexedPortals = new NativeHashMap<int, (LocalToWorld, Portal)>(portalQuery.CalculateEntityCount(), Allocator.TempJob);
                 var indexedPortalWriter = indexedPortals.AsParallelWriter();
                 Entities
+                .WithStoreEntityQueryInField(ref portalQuery)
                 .ForEach((Entity e, int entityInQueryIndex, in Portal portal, in LocalToWorld localToWorld) =>
                 {
                     indexedPortalWriter.TryAdd(portal.Index, (localToWorld, portal));
                 }).ScheduleParallel();
 
                 Entities
+                .WithStoreEntityQueryInField(ref needWarpQuery)
                 .WithReadOnly(indexedPortals)
+                .WithNone<TriggerUnloadScene>()
                 .WithDisposeOnCompletion(indexedPortals)
                 .ForEach((int entityInQueryIndex, Entity e, in WarpToPortal warp) =>
                 {

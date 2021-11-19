@@ -46,8 +46,8 @@ namespace RPG.UI
                 Current = To;
                 return;
             }
-            var step = math.smoothstep(0.0f, Duration, _timeElapsed);
-            Current = math.lerp(From, To, step);
+            var step = math.smoothstep(Current, Duration, _timeElapsed);
+            Current = math.lerp(From, To, _timeElapsed / Duration);
             Debug.Log($"current opacity: {Current} ,  step: {step}");
         }
 
@@ -101,7 +101,7 @@ namespace RPG.UI
                 commandBuffer.AddComponent(e, new DeltaTime { });
                 commandBuffer.AddComponent(e, new Fade()
                 {
-                    To = 1f,
+                    To = 100f,
                     From = 0.0f,
                     Duration = 1f
                 });
@@ -122,17 +122,14 @@ namespace RPG.UI
                 commandBuffer.AddComponent(e, new Fade()
                 {
                     To = 0f,
-                    From = 1f,
+                    From = 100f,
                     Duration = 1.5f
                 });
                 commandBuffer.AddComponent(e, new EnableControl()
                 {
                     Entities = anySceneLoading.Triggers
                 });
-                // foreach (var trigger in anySceneLoading.Triggers)
-                // {
-                //     commandBuffer.RemoveComponent<DisabledControl>(trigger);
-                // }
+
             })
             .WithoutBurst()
             .Run();
@@ -176,7 +173,6 @@ namespace RPG.UI
                     commandBufferP.RemoveComponent<Fade>(entityInQueryIndex, e);
                     return;
                 }
-                Debug.Log($"Updating Fading  {fade.Duration} DeltaTime: {deltaTime.Value}");
                 fade.Update(deltaTime.Value);
             })
             .ScheduleParallel();
@@ -220,6 +216,8 @@ namespace RPG.UI
             {
 
                 var visualElement = uiDocument.rootVisualElement.Q<VisualElement>();
+                visualElement.visible = true;
+                visualElement.SetEnabled(true);
                 visualElement.style.visibility = Visibility.Visible;
                 visualElement.style.display = DisplayStyle.Flex;
                 commandBuffer.RemoveComponent<Show>(e);

@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:VisualElement name="root" style="height: auto; flex-grow: 1; justify-content: center; align-items: center; color: rgb(255, 255, 255); background-color: rgb(255, 255, 255); opacity: 0; visibility: visible; display: flex;">
+    <ui:VisualElement name="root" style="height: auto; flex-grow: 1; justify-content: center; align-items: center; color: rgb(255, 255, 255); background-color: rgb(255, 255, 255); opacity: 0.01; visibility: visible; display: flex;">
         <ui:Label text="Loading ..." display-tooltip-when-elided="true" name="Label" style="flex-wrap: wrap; flex-direction: row; height: 355px; -unity-text-align: middle-center; font-size: 50px; align-items: auto; justify-content: space-around; width: 30%; display: none;" />
     </ui:VisualElement>
 </ui:UXML>
