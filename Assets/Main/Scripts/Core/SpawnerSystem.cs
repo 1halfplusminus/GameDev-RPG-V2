@@ -12,6 +12,8 @@ namespace RPG.Core
 
         public Entity Spawner;
 
+        public Unity.Entities.Hash128 Id;
+
     }
     public struct GameObjectSpawner : IComponentData
     {
@@ -59,9 +61,14 @@ namespace RPG.Core
                 var entity = TryGetPrimaryEntity(sceneGUIDAuthoring);
                 if (entity != Entity.Null)
                 {
+
                     DstEntityManager.AddSharedComponentData(entity, new SceneTag() { SceneEntity = sceneGUIDAuthoring.SceneEntity });
                     DstEntityManager.AddComponentData(entity, new GameObjectSpawn() { SpawnerEntity = sceneGUIDAuthoring.Spawner });
                     DstEntityManager.AddComponentData(entity, new Spawned() { });
+                    if (sceneGUIDAuthoring.Id != default)
+                    {
+                        DstEntityManager.AddComponentData(entity, new Identifier() { Id = sceneGUIDAuthoring.Id });
+                    }
                     AddHybridComponent(sceneGUIDAuthoring);
                 }
             });
@@ -157,14 +164,19 @@ namespace RPG.Core
             rootGameObjectSpawner = new GameObject("__SpawnerSystem__");
 
         }
-        protected void AddSceneGUIDRecurse(GameObject gameObject, Entity sceneEntity, Entity spawnerEntity)
+        protected void AddSceneGUIDRecurse(GameObject gameObject, Entity sceneEntity, Entity spawnerEntity, UnityEngine.Hash128 hash = default)
         {
             var component = gameObject.AddComponent<SceneGUIDAuthoring>();
             component.Spawner = spawnerEntity;
             component.SceneEntity = sceneEntity;
+            if (hash != default)
+            {
+                /* hash.Append(gameObject.)
+                component.Id = hash; */
+            }
             foreach (Transform child in gameObject.transform)
             {
-                AddSceneGUIDRecurse(child.gameObject, sceneEntity, spawnerEntity);
+                AddSceneGUIDRecurse(child.gameObject, sceneEntity, spawnerEntity, hash);
             }
         }
         protected override void OnUpdate()
@@ -209,7 +221,6 @@ namespace RPG.Core
                 {
                     var instance = Object.Instantiate(prefab);
                     AddSceneGUIDRecurse(instance, sceneTag.SceneEntity, e);
-
                     var instancedEntity = em.CreateEntity();
                     em.AddSharedComponentData(instancedEntity, sceneTag);
                     em.AddComponentObject(instancedEntity, instance);

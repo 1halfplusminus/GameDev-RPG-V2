@@ -105,10 +105,9 @@ namespace RPG.Gameplay
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
-    public struct SceneLoading : IComponentData
+    public struct LoadScene : IComponentData
     {
-        public Entity Player;
-        public Entity Scene;
+        public Unity.Entities.Hash128 SceneGUID;
     }
     public struct UnloadScene : IComponentData
     {
@@ -165,8 +164,6 @@ namespace RPG.Gameplay
             .WithStructuralChanges()
             .WithoutBurst()
             .Run();
-
-
 
             // Delete scene finish loading notification
             Entities

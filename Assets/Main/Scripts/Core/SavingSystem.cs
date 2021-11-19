@@ -4,15 +4,14 @@ using Unity.Entities;
 using Unity.Entities.Serialization;
 using Unity.Collections;
 using System.IO;
-using Unity.Animation.Hybrid;
 using UnityEngine;
-using RPG.Control;
 using Unity.Transforms;
 using RPG.Mouvement;
 using RPG.Gameplay;
-using System.Runtime.Serialization.Formatters.Binary;
 using Unity.Jobs;
 using Hash128 = Unity.Entities.Hash128;
+using UnityEngine.Playables;
+using System;
 
 public struct Identifier : IComponentData
 {
@@ -23,18 +22,29 @@ public class SaveableConversionSystem : GameObjectConversionSystem
 {
     protected override void OnUpdate()
     {
-        Entities.ForEach((Transform transform) =>
+        Entities.WithNone<PlayableDirector>().ForEach((Transform transform) =>
         {
-            var entity = TryGetPrimaryEntity(transform);
-            if (entity != Entity.Null)
-            {
-                var id = transform.gameObject.GetInstanceID();
-                var hash = new UnityEngine.Hash128();
-                hash.Append(id);
-                var identifier = new Identifier { Id = hash };
-                DstEntityManager.AddComponentData<Identifier>(entity, identifier);
-            }
+            var hash = new UnityEngine.Hash128();
+            hash.Append(transform.gameObject.GetInstanceID());
+            AddHashComponent(transform, hash);
         });
+        Entities.ForEach((PlayableDirector director) =>
+        {
+            var hash = new UnityEngine.Hash128();
+            hash.Append(director.playableAsset.GetInstanceID());
+            AddHashComponent(director, hash);
+        });
+    }
+
+    private void AddHashComponent(Component transform, Hash128 hash)
+    {
+        var entity = TryGetPrimaryEntity(transform);
+        if (entity != Entity.Null && !DstEntityManager.HasComponent<Identifier>(entity))
+        {
+
+            var identifier = new Identifier { Id = hash };
+            DstEntityManager.AddComponentData<Identifier>(entity, identifier);
+        }
     }
 }
 public struct Identified : IComponentData
@@ -47,72 +57,7 @@ public interface ISavingConversionSystem
 
 
 }
-/* 
-[DisableAutoCreation]
-public class LoadPosititionSystem : SystemBase, ISavingConversionSystem
-{
-    public EntityManager DstEntityManager { get; }
 
-    SavingConversionSystem conversionSystem;
-
-    EntityCommandBufferSystem entityCommandBuffer;
-    public LoadPosititionSystem(EntityManager entityManager)
-    {
-        DstEntityManager = entityManager;
-
-    }
-    protected override void OnCreate()
-    {
-        base.OnCreate();
-        conversionSystem = DstEntityManager.World.GetExistingSystem<SavingConversionSystem>();
-        entityCommandBuffer = DstEntityManager.World.GetExistingSystem<EntityCommandBufferSystem>();
-    }
-    protected override void OnUpdate()
-    {
-        var identifiableEntities = conversionSystem.IdentifiableEntities;
-        var pWriter = entityCommandBuffer.CreateCommandBuffer().AsParallelWriter();
-        Entities
-        .WithReadOnly(identifiableEntities)
-
-        .ForEach((int entityInQueryIndex, in Translation translation, in Identifier identifier, in WarpTo warpTo) =>
-        {
-            SavingConversionSystem.TryGetEntity(identifiableEntities, identifier.Id, out var entity);
-            if (entity != Entity.Null)
-            {
-                pWriter.AddComponent(entityInQueryIndex, entity, translation);
-                pWriter.AddComponent(entityInQueryIndex, entity, warpTo);
-            }
-
-        }).ScheduleParallel();
-    }
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-    }
-
-} */
-/* public class AbstractSaveSystem<T> : SystemBase, ISavingConversionSystem where T : IComponentData
-{
-    public EntityManager DstEntityManager { get; set; }
-    SavingConversionSystem conversionSystem;
-    EntityCommandBuffer commandBuffer;
-    protected override void OnCreate()
-    {
-        base.OnCreate();
-        conversionSystem = DstEntityManager.World.GetOrCreateSystem<SavingConversionSystem>();
-        commandBuffer = new EntityCommandBuffer(Allocator.Persistent);
-    }
-    protected override void OnUpdate()
-    {
-        var identifiableEntities = conversionSystem.IdentifiableEntities;
-        var pWriter = commandBuffer.AsParallelWriter();
-    }
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-        commandBuffer.Dispose();
-    }
-} */
 [DisableAutoCreation]
 [UpdateAfter(typeof(SavingConversionSystem))]
 public class SavePositionSystem : SystemBase, ISavingConversionSystem
@@ -203,16 +148,7 @@ public class SavePlayedSystem : SystemBase, ISavingConversionSystem
 
 
 }
-[DisableAutoCreation]
-public class LoadingConversionSystem : SystemBase, ISavingConversionSystem
-{
-    public EntityManager DstEntityManager { get; set; }
 
-    protected override void OnUpdate()
-    {
-
-    }
-}
 
 public class SavingConversionSystem : SystemBase
 {
