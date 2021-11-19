@@ -43,21 +43,59 @@ public struct Identified : IComponentData
 }
 public interface ISavingConversionSystem
 {
-    EntityManager DstEntityManager { get; set; }
-}
-[DisableAutoCreation]
-[UpdateAfter(typeof(SavingConversionSystem))]
-public class SavePositionSystem : SystemBase, ISavingConversionSystem
-{
+    EntityManager DstEntityManager { get; }
 
+
+}
+/* 
+[DisableAutoCreation]
+public class LoadPosititionSystem : SystemBase, ISavingConversionSystem
+{
+    public EntityManager DstEntityManager { get; }
+
+    SavingConversionSystem conversionSystem;
+
+    EntityCommandBufferSystem entityCommandBuffer;
+    public LoadPosititionSystem(EntityManager entityManager)
+    {
+        DstEntityManager = entityManager;
+
+    }
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+        conversionSystem = DstEntityManager.World.GetExistingSystem<SavingConversionSystem>();
+        entityCommandBuffer = DstEntityManager.World.GetExistingSystem<EntityCommandBufferSystem>();
+    }
+    protected override void OnUpdate()
+    {
+        var identifiableEntities = conversionSystem.IdentifiableEntities;
+        var pWriter = entityCommandBuffer.CreateCommandBuffer().AsParallelWriter();
+        Entities
+        .WithReadOnly(identifiableEntities)
+
+        .ForEach((int entityInQueryIndex, in Translation translation, in Identifier identifier, in WarpTo warpTo) =>
+        {
+            SavingConversionSystem.TryGetEntity(identifiableEntities, identifier.Id, out var entity);
+            if (entity != Entity.Null)
+            {
+                pWriter.AddComponent(entityInQueryIndex, entity, translation);
+                pWriter.AddComponent(entityInQueryIndex, entity, warpTo);
+            }
+
+        }).ScheduleParallel();
+    }
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+    }
+
+} */
+/* public class AbstractSaveSystem<T> : SystemBase, ISavingConversionSystem where T : IComponentData
+{
     public EntityManager DstEntityManager { get; set; }
     SavingConversionSystem conversionSystem;
     EntityCommandBuffer commandBuffer;
-
-    public SavePositionSystem(EntityManager entityManager)
-    {
-        DstEntityManager = entityManager;
-    }
     protected override void OnCreate()
     {
         base.OnCreate();
@@ -68,47 +106,135 @@ public class SavePositionSystem : SystemBase, ISavingConversionSystem
     {
         var identifiableEntities = conversionSystem.IdentifiableEntities;
         var pWriter = commandBuffer.AsParallelWriter();
+    }
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        commandBuffer.Dispose();
+    }
+} */
+[DisableAutoCreation]
+[UpdateAfter(typeof(SavingConversionSystem))]
+public class SavePositionSystem : SystemBase, ISavingConversionSystem
+{
+
+    public EntityManager DstEntityManager { get; }
+    SavingConversionSystem conversionSystem;
+
+    EntityCommandBufferSystem commandBufferSystem;
+    public SavePositionSystem(EntityManager entityManager)
+    {
+        DstEntityManager = entityManager;
+
+    }
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+        conversionSystem = DstEntityManager.World.GetOrCreateSystem<SavingConversionSystem>();
+        commandBufferSystem = DstEntityManager.World.GetOrCreateSystem<EntityCommandBufferSystem>();
+
+    }
+    protected override void OnUpdate()
+    {
+        var identifiableEntities = conversionSystem.IdentifiableEntities;
+        var pWriter = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
         Entities
         .WithReadOnly(identifiableEntities)
         .ForEach((int entityInQueryIndex, in Translation translation, in Identifier identifier) =>
         {
             var entity = SavingConversionSystem.GetOrCreateEntity(identifiableEntities, identifier.Id, pWriter, entityInQueryIndex);
             pWriter.AddComponent(entityInQueryIndex, entity, translation);
+            pWriter.AddComponent(entityInQueryIndex, entity, new WarpTo { Destination = translation.Value });
         }).ScheduleParallel();
-        Dependency.Complete();
-        var exclusifTransaction = DstEntityManager.BeginExclusiveEntityTransaction();
-        commandBuffer.Playback(exclusifTransaction);
-        DstEntityManager.EndExclusiveEntityTransaction();
+
+        commandBufferSystem.AddJobHandleForProducer(Dependency);
+
     }
 
     protected override void OnDestroy()
     {
-        base.OnCreate();
-        commandBuffer.Dispose();
+        base.OnDestroy();
     }
+
+
+}
+
+[DisableAutoCreation]
+[UpdateAfter(typeof(SavingConversionSystem))]
+public class SavePlayedSystem : SystemBase, ISavingConversionSystem
+{
+
+    public EntityManager DstEntityManager { get; }
+    SavingConversionSystem conversionSystem;
+
+    EntityCommandBufferSystem commandBufferSystem;
+    public SavePlayedSystem(EntityManager entityManager)
+    {
+        DstEntityManager = entityManager;
+
+    }
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+        conversionSystem = DstEntityManager.World.GetOrCreateSystem<SavingConversionSystem>();
+        commandBufferSystem = DstEntityManager.World.GetOrCreateSystem<EntityCommandBufferSystem>();
+
+    }
+    protected override void OnUpdate()
+    {
+        var identifiableEntities = conversionSystem.IdentifiableEntities;
+        var pWriter = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+        Entities
+        .WithReadOnly(identifiableEntities)
+        .ForEach((int entityInQueryIndex, in Played played, in Identifier identifier) =>
+        {
+            var entity = SavingConversionSystem.GetOrCreateEntity(identifiableEntities, identifier.Id, pWriter, entityInQueryIndex);
+            pWriter.AddComponent(entityInQueryIndex, entity, played);
+        }).ScheduleParallel();
+
+        commandBufferSystem.AddJobHandleForProducer(Dependency);
+
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+    }
+
+
 }
 [DisableAutoCreation]
+public class LoadingConversionSystem : SystemBase, ISavingConversionSystem
+{
+    public EntityManager DstEntityManager { get; set; }
+
+    protected override void OnUpdate()
+    {
+
+    }
+}
+
 public class SavingConversionSystem : SystemBase
 {
     NativeHashMap<Unity.Entities.Hash128, Entity> identifiableEntities;
 
     EntityQuery identiableQuery;
 
-    EntityCommandBuffer commandBuffer;
+
 
     public NativeHashMap<Unity.Entities.Hash128, Entity> IdentifiableEntities { get { return identifiableEntities; } }
+
+    EntityCommandBufferSystem entityCommandBufferSystem;
 
     protected override void OnCreate()
     {
         base.OnCreate();
         identifiableEntities = new NativeHashMap<Unity.Entities.Hash128, Entity>(0, Allocator.Persistent);
-        commandBuffer = new EntityCommandBuffer(Allocator.Persistent);
+        entityCommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
 
     }
-    public JobHandle GetOutputDependency()
-    {
-        return Dependency;
-    }
+
+
     public static bool TryGetEntity(NativeHashMap<Unity.Entities.Hash128, Entity> entities, Hash128 hash, out Entity entity)
     {
         entity = Entity.Null;
@@ -146,6 +272,7 @@ public class SavingConversionSystem : SystemBase
     }
     protected override void OnUpdate()
     {
+        var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
         identifiableEntities.Capacity += identiableQuery.CalculateEntityCount();
         var identifiedNowWritter = identifiableEntities.AsParallelWriter();
         var commandBufferP = commandBuffer.AsParallelWriter();
@@ -158,20 +285,21 @@ public class SavingConversionSystem : SystemBase
             commandBufferP.AddComponent<Identified>(entityInQueryIndex, e);
         })
         .ScheduleParallel();
-        Dependency.Complete();
-        var exclusifTransaction = EntityManager.BeginExclusiveEntityTransaction();
-        commandBuffer.Playback(exclusifTransaction);
-        EntityManager.EndExclusiveEntityTransaction();
+
+        entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+
     }
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
         identifiableEntities.Dispose();
-        commandBuffer.Dispose();
     }
 
 }
+
+
+
 [UpdateInGroup(typeof(InitializationSystemGroup))]
 [DisableAutoCreation]
 public class SaveSystem : SystemBase
@@ -195,7 +323,7 @@ public class SaveSystem : SystemBase
         RecreateLoadingWorld();
         saveableQuery = GetEntityQuery(new EntityQueryDesc()
         {
-            All = new ComponentType[] { ComponentType.ReadOnly(typeof(Translation)), ComponentType.ReadOnly(typeof(Identifier)) },
+            All = new ComponentType[] { ComponentType.ReadOnly(typeof(Identifier)) },
         });
     }
 
@@ -219,6 +347,7 @@ public class SaveSystem : SystemBase
 
         savingWorld.CreateSystem<UpdateWorldTimeSystem>();
         savingWorld.CreateSystem<InitializationSystemGroup>();
+        savingWorld.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
     }
     private void RecreateLoadingWorld()
     {
@@ -227,50 +356,34 @@ public class SaveSystem : SystemBase
             loadingWorld.Dispose();
         }
 
-        loadingWorld = new World("Loading Conversion");
+        loadingWorld = new World("Loading");
     }
     public void Load()
     {
         if (File.Exists(SAVING_PATH))
         {
             UnityEngine.Debug.Log("File Exists Loading File");
-            var currentWorld = World;
+            // Load world from file
             RecreateLoadingWorld();
             using var binaryReader = CreateFileReader();
-            SerializeUtility.DeserializeWorld(loadingWorld.EntityManager.BeginExclusiveEntityTransaction(), binaryReader, objects);
+            SerializeUtility.DeserializeWorld(loadingWorld.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);
             loadingWorld.EntityManager.EndExclusiveEntityTransaction();
-
-            var loadingWorldIdentifiableEntities = IndexIdentifiableEntities(loadingWorld.EntityManager);
-            var currentWorldIdentifiableEntities = IndexIdentifiableEntities(currentWorld.EntityManager);
-            using var loadingEntitiesHash = loadingWorldIdentifiableEntities.GetKeyArray(Allocator.Temp);
-            foreach (var hash in loadingEntitiesHash)
+            SystemBase[] systems = GetSavingSystem(World.EntityManager);
+            foreach (var system in systems)
             {
-                if (currentWorldIdentifiableEntities.ContainsKey(hash))
-                {
-                    Debug.Log("Find corresponding entities");
-                    if (loadingWorld.EntityManager.HasComponent<Translation>(loadingWorldIdentifiableEntities[hash]))
-                    {
-                        var translation = loadingWorld.EntityManager.GetComponentData<Translation>(loadingWorldIdentifiableEntities[hash]);
-                        currentWorld.EntityManager.AddComponentData<Translation>(currentWorldIdentifiableEntities[hash], new Translation() { Value = translation.Value });
-                        currentWorld.EntityManager.AddComponentData<WarpTo>(currentWorldIdentifiableEntities[hash], new WarpTo() { Destination = translation.Value });
-                    }
-                    if (loadingWorld.EntityManager.HasComponent<Played>(loadingWorldIdentifiableEntities[hash]))
-                    {
-                        currentWorld.EntityManager.AddComponent<Played>(currentWorldIdentifiableEntities[hash]);
-                    }
-
-                }
+                loadingWorld.AddSystem(system);
+                system.Update();
             }
 
-            loadingWorldIdentifiableEntities.Dispose();
-            currentWorldIdentifiableEntities.Dispose();
-
             loadingWorld.EntityManager.CompleteAllJobs();
-            currentWorld.EntityManager.CompleteAllJobs();
+
         }
     }
 
-
+    private SystemBase[] GetSavingSystem(EntityManager em)
+    {
+        return new SystemBase[] { new SavePositionSystem(em), new SavePlayedSystem(em) };
+    }
 
     private NativeHashMap<Unity.Entities.Hash128, Entity> IndexIdentifiableEntities(EntityManager em)
     {
@@ -303,37 +416,38 @@ public class SaveSystem : SystemBase
     }
     public void AddQueryToSaveWorld(EntityQuery query)
     {
-        using var saveableEntitities = saveableQuery.ToEntityArray(Allocator.Temp);
-        using var outputs = new NativeArray<Entity>(saveableQuery.CalculateEntityCountWithoutFiltering(), Allocator.Persistent);
-        savingWorld.EntityManager.CopyEntitiesFrom(World.EntityManager, saveableEntitities, outputs);
-        savingWorld.EntityManager.RemoveComponent<SceneTag>(outputs);
+        AddQueryToWorld(savingWorld, query);
+    }
+    public void AddQueryToWorld(World world, EntityQuery query)
+    {
+        var count = query.CalculateEntityCountWithoutFiltering();
+        using var saveableEntitities = query.ToEntityArray(Allocator.Temp);
+        using var outputs = new NativeArray<Entity>(query.CalculateEntityCountWithoutFiltering(), Allocator.Temp);
+        world.EntityManager.CopyEntitiesFrom(World.EntityManager, saveableEntitities, outputs);
+        world.EntityManager.RemoveComponent<SceneTag>(outputs);
+
 
     }
     public void Save()
     {
         RecreateSavingWorld();
         AddQueryToSaveWorld(saveableQuery);
-        AddQueryToSaveWorld(GetEntityQuery(typeof(Played)));
 
         var savingConversionWorld = new World("Saving");
+        SystemBase[] systems = GetSavingSystem(savingConversionWorld.EntityManager);
+        foreach (var system in systems)
+        {
+            savingWorld.AddSystem(system);
+            system.Update();
+        }
 
-        savingConversionWorld.GetOrCreateSystem<SavingConversionSystem>().Update();
-        savingConversionWorld.Update();
-
-        savingConversionWorld.GetOrCreateSystem<SavingConversionSystem>().GetOutputDependency().Complete();
-
-        var savePositionSystem = new SavePositionSystem(savingConversionWorld.EntityManager);
-        savingWorld.AddSystem(savePositionSystem);
-
-        savePositionSystem.Update();
+        savingConversionWorld.GetExistingSystem<BeginInitializationEntityCommandBufferSystem>().Update();
 
         savingWorld.EntityManager.CompleteAllJobs();
         savingConversionWorld.EntityManager.CompleteAllJobs();
 
         using var binaryWriter = CreateFileWriter();
         SerializeUtility.SerializeWorld(savingConversionWorld.EntityManager, binaryWriter);
-        /*   SerializeUtility.SerializeWorld(savingWorld.EntityManager, binaryWriter, out objects); */
-
     }
 
     private StreamBinaryWriter CreateFileWriter()
