@@ -58,8 +58,9 @@ public interface ISavingConversionSystem
 
 }
 
+public class SavingSystemGroup : ComponentSystemGroup { }
 [DisableAutoCreation]
-[UpdateAfter(typeof(SavingConversionSystem))]
+[UpdateInGroup(typeof(SavingSystemGroup))]
 public class SavePositionSystem : SystemBase, ISavingConversionSystem
 {
 
@@ -105,7 +106,8 @@ public class SavePositionSystem : SystemBase, ISavingConversionSystem
 }
 
 [DisableAutoCreation]
-[UpdateAfter(typeof(SavingConversionSystem))]
+
+[UpdateInGroup(typeof(SavingSystemGroup))]
 public class SavePlayedSystem : SystemBase, ISavingConversionSystem
 {
 
@@ -242,8 +244,9 @@ public class SaveSystem : SystemBase
 {
     const string SAVING_PATH = "save.bin";
 
-    World loadingWorld;
-    World savingWorld;
+    World conversionWorld;
+
+    World serializedWorld;
 
     StreamBinaryWriter streamBinaryWriter;
 
@@ -251,12 +254,13 @@ public class SaveSystem : SystemBase
 
     EntityQuery saveableQuery;
 
+    public World ConversionWorld { get { return conversionWorld; } }
+    public World SerializedWorld { get { return serializedWorld; } }
     object[] objects;
     protected override void OnCreate()
     {
         base.OnCreate();
-        RecreateSavingWorld();
-        RecreateLoadingWorld();
+        RecreateSerializeConversionWorld();
         saveableQuery = GetEntityQuery(new EntityQueryDesc()
         {
             All = new ComponentType[] { ComponentType.ReadOnly(typeof(Identifier)) },
@@ -272,27 +276,25 @@ public class SaveSystem : SystemBase
         }).ScheduleParallel();
     }
 
-    private void RecreateSavingWorld()
+    public World RecreateSerializeConversionWorld()
     {
-        if (savingWorld != null && savingWorld.IsCreated)
+        if (conversionWorld != null && conversionWorld.IsCreated)
         {
-            savingWorld.Dispose();
+            conversionWorld.Dispose();
         }
 
-        savingWorld = new World("Saving Conversion");
-
-        savingWorld.CreateSystem<UpdateWorldTimeSystem>();
-        savingWorld.CreateSystem<InitializationSystemGroup>();
-        savingWorld.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
+        conversionWorld = CreateConversionWorld();
+        return conversionWorld;
     }
-    private void RecreateLoadingWorld()
+    public static World CreateConversionWorld()
     {
-        if (loadingWorld != null && loadingWorld.IsCreated)
-        {
-            loadingWorld.Dispose();
-        }
 
-        loadingWorld = new World("Loading");
+        var conversionWorld = new World("Saving Conversion");
+        conversionWorld.CreateSystem<UpdateWorldTimeSystem>();
+        var initializationSystemGroup = conversionWorld.CreateSystem<InitializationSystemGroup>();
+        var beginInitializationECS = conversionWorld.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
+        initializationSystemGroup.AddSystemToUpdateList(beginInitializationECS);
+        return conversionWorld;
     }
     public void Load()
     {
@@ -300,23 +302,25 @@ public class SaveSystem : SystemBase
         {
             UnityEngine.Debug.Log("File Exists Loading File");
             // Load world from file
-            RecreateLoadingWorld();
+            using var conversionWorld = RecreateSerializeConversionWorld();
             using var binaryReader = CreateFileReader();
-            SerializeUtility.DeserializeWorld(loadingWorld.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);
-            loadingWorld.EntityManager.EndExclusiveEntityTransaction();
-            SystemBase[] systems = GetSavingSystem(World.EntityManager);
-            foreach (var system in systems)
-            {
-                loadingWorld.AddSystem(system);
-                system.Update();
-            }
+            SerializeUtility.DeserializeWorld(conversionWorld.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);
+            conversionWorld.EntityManager.EndExclusiveEntityTransaction();
 
-            loadingWorld.EntityManager.CompleteAllJobs();
-
+            AddConversionSystems(conversionWorld, World.EntityManager);
+            UpdateConversionSystems(conversionWorld);
         }
     }
+    public void Load(EntityQuery query)
+    {
+        // Load world from file
+        using var conversionWorld = RecreateSerializeConversionWorld();
+        AddQueryToConversionWorld(query);
 
-    private SystemBase[] GetSavingSystem(EntityManager em)
+        AddConversionSystems(conversionWorld, World.EntityManager);
+        UpdateConversionSystems(conversionWorld);
+    }
+    private static SystemBase[] GetSavingSystem(EntityManager em)
     {
         return new SystemBase[] { new SavePositionSystem(em), new SavePlayedSystem(em) };
     }
@@ -350,40 +354,90 @@ public class SaveSystem : SystemBase
         streamBinaryReader = new StreamBinaryReader(SAVING_PATH);
         return streamBinaryReader;
     }
-    public void AddQueryToSaveWorld(EntityQuery query)
+    public void AddQueryToConversionWorld(EntityQuery query)
     {
-        AddQueryToWorld(savingWorld, query);
+        AddQueryToWorld(World.EntityManager, conversionWorld, query);
     }
-    public void AddQueryToWorld(World world, EntityQuery query)
+    public static void AddQueryToWorld(EntityManager srcEntityManager, World dstWorld, EntityQuery query)
     {
-        var count = query.CalculateEntityCountWithoutFiltering();
+        var count = query.CalculateEntityCount();
         using var saveableEntitities = query.ToEntityArray(Allocator.Temp);
-        using var outputs = new NativeArray<Entity>(query.CalculateEntityCountWithoutFiltering(), Allocator.Temp);
-        world.EntityManager.CopyEntitiesFrom(World.EntityManager, saveableEntitities, outputs);
-        world.EntityManager.RemoveComponent<SceneTag>(outputs);
-
-
+        using var outputs = new NativeArray<Entity>(count, Allocator.Temp);
+        dstWorld.EntityManager.CopyEntitiesFrom(srcEntityManager, saveableEntitities, outputs);
+        dstWorld.EntityManager.RemoveComponent<SceneTag>(outputs);
     }
     public void Save()
     {
-        RecreateSavingWorld();
-        AddQueryToSaveWorld(saveableQuery);
+        var serializedSavingWorld = Save(saveableQuery);
+        using var binaryWriter = CreateFileWriter();
+        SerializeUtility.SerializeWorld(serializedSavingWorld.EntityManager, binaryWriter);
+    }
+    public World Save(EntityQuery query)
+    {
 
-        var savingConversionWorld = new World("Saving");
-        SystemBase[] systems = GetSavingSystem(savingConversionWorld.EntityManager);
+        using var conversionWorld = RecreateSerializeConversionWorld();
+        AddQueryToConversionWorld(query);
+        Debug.Log($"Save query {conversionWorld.Name}");
+        World serializedSavingWorld = GetOrCreateSerializedWorld();
+
+        AddConversionSystems(conversionWorld, serializedSavingWorld.EntityManager);
+
+        UpdateConversionSystems(conversionWorld);
+        UpdateSerializedWorld(serializedSavingWorld);
+
+        conversionWorld.EntityManager.CompleteAllJobs();
+        serializedSavingWorld.EntityManager.CompleteAllJobs();
+
+        return serializedSavingWorld;
+    }
+    public static void Save(EntityManager srcEntityManager, World conversionWorld, World SerializeWorld, EntityQuery query)
+    {
+        AddQueryToWorld(srcEntityManager, conversionWorld, query);
+
+        World serializedSavingWorld = CreateSerializedWorld();
+
+        AddConversionSystems(conversionWorld, serializedSavingWorld.EntityManager);
+
+        UpdateConversionSystems(conversionWorld);
+        UpdateSerializedWorld(serializedSavingWorld);
+
+        conversionWorld.EntityManager.CompleteAllJobs();
+        serializedSavingWorld.EntityManager.CompleteAllJobs();
+    }
+    private static void UpdateSerializedWorld(World world)
+    {
+        world.GetOrCreateSystem<InitializationSystemGroup>().Update();
+    }
+    private static void UpdateConversionSystems(World world)
+    {
+        world.GetOrCreateSystem<SavingSystemGroup>().Update();
+    }
+    private static void AddConversionSystems(World conversionWorld, EntityManager dstManager)
+    {
+        SystemBase[] systems = GetSavingSystem(dstManager);
+        var savingSystemGroup = conversionWorld.GetOrCreateSystem<SavingSystemGroup>();
         foreach (var system in systems)
         {
-            savingWorld.AddSystem(system);
-            system.Update();
+            conversionWorld.AddSystem(system);
+            savingSystemGroup.AddSystemToUpdateList(system);
         }
+    }
+    private World GetOrCreateSerializedWorld()
+    {
+        if (serializedWorld == null || !serializedWorld.IsCreated)
+        {
+            serializedWorld = CreateSerializedWorld();
+        }
+        return serializedWorld;
+    }
 
-        savingConversionWorld.GetExistingSystem<BeginInitializationEntityCommandBufferSystem>().Update();
-
-        savingWorld.EntityManager.CompleteAllJobs();
-        savingConversionWorld.EntityManager.CompleteAllJobs();
-
-        using var binaryWriter = CreateFileWriter();
-        SerializeUtility.SerializeWorld(savingConversionWorld.EntityManager, binaryWriter);
+    private static World CreateSerializedWorld()
+    {
+        var serializedWorld = new World("Serialized World");
+        var initializationSystemGroup = serializedWorld.GetOrCreateSystem<InitializationSystemGroup>();
+        var endInitializationCommandBuffer = serializedWorld.GetOrCreateSystem<EndInitializationEntityCommandBufferSystem>();
+        initializationSystemGroup.AddSystemToUpdateList(endInitializationCommandBuffer);
+        return serializedWorld;
     }
 
     private StreamBinaryWriter CreateFileWriter()
@@ -398,13 +452,9 @@ public class SaveSystem : SystemBase
         base.OnDestroy();
         DisposeFileWriter();
         DisposeFileReader();
-        if (loadingWorld != null && loadingWorld.IsCreated)
+        if (conversionWorld != null && conversionWorld.IsCreated)
         {
-            loadingWorld.Dispose();
-        }
-        if (savingWorld != null && savingWorld.IsCreated)
-        {
-            savingWorld.Dispose();
+            conversionWorld.Dispose();
         }
     }
 

@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement>
+        <ui:Button text="Save File" display-tooltip-when-elided="true" name="Save" enable-rich-text="true" />
+        <ui:Button text="Load File" display-tooltip-when-elided="true" name="Load" />
+    </ui:VisualElement>
+    <ui:DropdownField label="Scenes" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="Scene" />
+    <ui:Button text="LoadScene" display-tooltip-when-elided="true" name="LoadScene" />
+    <ui:Button text="Save Scene" display-tooltip-when-elided="true" name="SaveScene" />
+</ui:UXML>

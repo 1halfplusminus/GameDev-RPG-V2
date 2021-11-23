@@ -3,9 +3,15 @@ using Unity.Entities;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
+using Unity.Collections;
+using System.Collections.Generic;
+using Unity.Scenes;
+
 public class SaveEditorWindow : EditorWindow
 {
-    World CurrentWorld;
+    [SerializeField] public VisualTreeAsset visualTreeAsset;
+
+    public World CurrentWorld;
 
     [MenuItem("Tools/Test Save")]
     static void Save()
@@ -19,7 +25,7 @@ public class SaveEditorWindow : EditorWindow
         // Sets a minimum size to the window.
         window.minSize = new Vector2(250, 50);
 
-        Debug.Log(World.DefaultGameObjectInjectionWorld);
+        window.CurrentWorld = World.DefaultGameObjectInjectionWorld;
 
     }
 
@@ -28,37 +34,69 @@ public class SaveEditorWindow : EditorWindow
     {
 
         // Reference to the root of the window.
-        var root = rootVisualElement;
+        var root = visualTreeAsset.Instantiate();
 
         // Creates our button and sets its Text property.
-        var saveButton = new Button() { text = "Save" };
-
-        // Gives it some style.
-        saveButton.style.width = 160;
-        saveButton.style.height = 30;
-
+        var saveButton = root.Q<Button>("Save");
         saveButton.clicked += () =>
         {
             var saveSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SaveSystem>();
             saveSystem.Save();
         };
-        // Adds it to the root.
-        root.Add(saveButton);
-
 
         // Creates our button and sets its Text property.
-        var loadButton = new Button() { text = "Load" };
+        var loadButton = root.Q<Button>("Load");
 
-        // Gives it some style.
-        loadButton.style.width = 160;
-        loadButton.style.height = 30;
         loadButton.clicked += () =>
         {
             var saveSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SaveSystem>();
             saveSystem.Load();
         };
-        // Adds it to the root.
-        root.Add(loadButton);
+
+        var scenes = root.Q<DropdownField>("Scene");
+        var userData = new List<Unity.Entities.Hash128>();
+        scenes.choices = new List<string>();
+        scenes.userData = userData;
+        var scenesQuery = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(SubScene), typeof(SceneSectionData));
+        using var sceneEntities = scenesQuery.ToEntityArray(Allocator.Temp);
+        for (int i = 0; i < scenesQuery.CalculateEntityCount(); i++)
+        {
+            var sceneEntity = sceneEntities[i];
+            var subScene = World.DefaultGameObjectInjectionWorld.EntityManager.GetComponentObject<SubScene>(sceneEntity);
+            userData.Add(subScene.SceneGUID);
+            scenes.choices.Add(subScene.SceneName);
+        }
+
+        var saveSceneButton = root.Q<Button>("SaveScene");
+
+        saveSceneButton.clicked += () =>
+        {
+            var saveSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SaveSystem>();
+            var sceneSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SceneSystem>();
+            var sceneGUID = userData[scenes.index];
+            var sceneEntity = sceneSystem.GetSceneEntity(sceneGUID);
+
+            var query = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(Identifier), typeof(SceneTag));
+            query.AddSharedComponentFilter(new SceneTag() { SceneEntity = sceneEntity });
+            saveSystem.Save(query);
+            Debug.Log($"Saving Scene For {scenes.choices[scenes.index]} : {sceneEntity.Index} : GUID {sceneGUID}");
+        };
+
+        var loadSceneButton = root.Q<Button>("LoadScene");
+
+        loadSceneButton.clicked += () =>
+        {
+            var saveSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SaveSystem>();
+            var sceneSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SceneSystem>();
+            var sceneGUID = userData[scenes.index];
+            var sceneEntity = sceneSystem.GetSceneEntity(sceneGUID);
+
+            var query = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(Identifier), typeof(SceneTag));
+            query.AddSharedComponentFilter(new SceneTag() { SceneEntity = sceneEntity });
+            saveSystem.Load(query);
+            Debug.Log($"Loading Scene For {scenes.choices[scenes.index]} : {sceneEntity.Index}");
+        };
+        rootVisualElement.Add(root);
     }
 }
 #endif
