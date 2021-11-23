@@ -65,10 +65,10 @@ namespace RPG.Core
                     DstEntityManager.AddSharedComponentData(entity, new SceneTag() { SceneEntity = sceneGUIDAuthoring.SceneEntity });
                     DstEntityManager.AddComponentData(entity, new GameObjectSpawn() { SpawnerEntity = sceneGUIDAuthoring.Spawner });
                     DstEntityManager.AddComponentData(entity, new Spawned() { });
-                    if (sceneGUIDAuthoring.Id != default)
+                    /* if (sceneGUIDAuthoring.Id != default)
                     {
                         DstEntityManager.AddComponentData(entity, new Identifier() { Id = sceneGUIDAuthoring.Id });
-                    }
+                    } */
                     AddHybridComponent(sceneGUIDAuthoring);
                 }
             });
