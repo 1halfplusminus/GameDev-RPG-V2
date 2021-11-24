@@ -2,25 +2,51 @@ using Unity.Entities;
 using UnityEngine;
 using Hash128 = Unity.Entities.Hash128;
 using UnityEngine.Playables;
+using UnityEngine.AI;
+using RPG.Control;
+using RPG.Core;
 
 namespace RPG.Saving
 {
+    public struct SpawnIdentifier : IComponentData
+    {
+        public Hash128 Id;
+    }
     public class SaveableConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()
         {
-            Entities.WithNone<PlayableDirector>().ForEach((Transform transform) =>
-            {
-                var hash = new UnityEngine.Hash128();
-                hash.Append(transform.gameObject.GetInstanceID());
-                AddHashComponent(transform, hash);
-            });
+
             Entities.ForEach((PlayableDirector director) =>
             {
                 var hash = new UnityEngine.Hash128();
                 hash.Append(director.playableAsset.GetInstanceID());
                 AddHashComponent(director, hash);
             });
+            Entities
+            .WithNone<PlayableDirector>().ForEach((PlayerSpawner playerSpawner) =>
+            {
+                var hash = new UnityEngine.Hash128();
+                hash.Append(playerSpawner.gameObject.GetInstanceID());
+                var entity = TryGetPrimaryEntity(playerSpawner);
+                if (entity != Entity.Null)
+                {
+
+                    var identifier = new SpawnIdentifier { Id = hash };
+                    DstEntityManager.AddComponentData<SpawnIdentifier>(entity, identifier);
+                }
+            });
+
+            Entities
+            .WithAny<PlayerControlledAuthoring, GuardLocationAuthoring>()
+            .WithNone<PlayableDirector, PlayerSpawner>().ForEach((Transform transform) =>
+            {
+                var hash = new UnityEngine.Hash128();
+                hash.Append(transform.gameObject.GetInstanceID());
+                /*     hash.Append(transform.GetSiblingIndex()); */
+                AddHashComponent(transform, hash);
+            });
+
         }
 
         private void AddHashComponent(Component transform, Hash128 hash)
