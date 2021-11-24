@@ -176,7 +176,6 @@ namespace RPG.Saving
 
         public World ConversionWorld { get { return conversionWorld; } }
         public World SerializedWorld { get { return serializedWorld; } }
-        object[] objects;
         protected override void OnCreate()
         {
             base.OnCreate();

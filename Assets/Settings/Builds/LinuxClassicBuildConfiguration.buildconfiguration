@@ -30,7 +30,10 @@
             "ManagedStrippingLevel": 0
         },
         {
-            "$type": "Unity.Scenes.Editor.Build.LiveLink, Unity.Scenes.Editor"
+            "$type": "Unity.Build.Classic.ClassicScriptingSettings, Unity.Build.Classic",
+            "ScriptingBackend": 0,
+            "Il2CppCompilerConfiguration": 1,
+            "UseIncrementalGC": false
         }
     ]
 }
