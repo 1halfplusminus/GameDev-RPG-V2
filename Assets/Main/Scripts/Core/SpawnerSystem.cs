@@ -149,6 +149,8 @@ namespace RPG.Core
 
         GameObject rootGameObjectSpawner;
 
+        EntityQuery hasSpawnEntityQuery;
+
         protected override void OnDestroy()
         {
             base.OnDestroy();
@@ -162,7 +164,7 @@ namespace RPG.Core
             base.OnCreate();
             entityCommandBufferSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
             rootGameObjectSpawner = new GameObject("__SpawnerSystem__");
-
+            hasSpawnEntityQuery = GetEntityQuery(typeof(HasSpawn));
         }
         protected void AddSceneGUIDRecurse(GameObject gameObject, Entity sceneEntity, Entity spawnerEntity, UnityEngine.Hash128 hash = default)
         {
@@ -184,7 +186,6 @@ namespace RPG.Core
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
             var commandBufferP = commandBuffer.AsParallelWriter();
             var em = EntityManager;
-
             Entities.WithNone<HasHybridComponent, GameObject, GameObjectSpawner>().ForEach((int entityInQueryIndex, Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
                  {
 
@@ -203,13 +204,15 @@ namespace RPG.Core
             .WithAny<HasHybridComponent>()
             .WithStructuralChanges()
             .ForEach((Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
-           {
-               var instance = em.Instantiate(toSpawn.Prefab);
-               commandBuffer.AddComponent(instance, new Translation { Value = localToWorld.Position });
-               commandBuffer.AddComponent(instance, new Rotation { Value = localToWorld.Rotation });
-               commandBuffer.AddComponent<Spawned>(instance);
-               commandBuffer.RemoveComponent<Spawn>(e);
-           }
+                {
+                    var instance = em.Instantiate(toSpawn.Prefab);
+                    commandBuffer.AddComponent(instance, new Translation { Value = localToWorld.Position });
+                    commandBuffer.AddComponent(instance, new Rotation { Value = localToWorld.Rotation });
+                    commandBuffer.AddComponent<Spawned>(instance);
+
+                    commandBuffer.AddComponent(e, new HasSpawn { Entity = instance });
+                    commandBuffer.RemoveComponent<Spawn>(e);
+                }
             ).Run();
             Entities
             .WithStructuralChanges()
@@ -243,6 +246,7 @@ namespace RPG.Core
                     commandBufferP.RemoveComponent<Spawned>(entityInQueryIndex, e);
                 }
             ).ScheduleParallel();
+
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }

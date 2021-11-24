@@ -23,6 +23,11 @@ namespace RPG.Core
     {
 
     }
+    public struct SceneLoaded : IComponentData
+    {
+        public Entity SceneEntity;
+        public Unity.Entities.Hash128 SceneGUID;
+    }
     public struct LoadSceneAsync : IComponentData
     {
         public Entity SceneEntity;
@@ -51,18 +56,21 @@ namespace RPG.Core
 
         EntityCommandBufferSystem entityCommandBufferSystem;
 
-
-
         EntityQuery sceneLoadingQuery;
+
+        EntityQuery sceneLoadedQuery;
 
         protected override void OnCreate()
         {
             base.OnCreate();
             sceneSystem = World.GetOrCreateSystem<SceneSystem>();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            sceneLoadedQuery = GetEntityQuery(ComponentType.ReadOnly(typeof(SceneLoaded)));
+
         }
         protected override void OnUpdate()
         {
+            EntityManager.RemoveComponent<SceneLoaded>(sceneLoadedQuery);
             var _sceneSystem = sceneSystem;
             var em = EntityManager;
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
@@ -87,7 +95,10 @@ namespace RPG.Core
                 _sceneSystem.UnloadScene(sceneEntity);
                 commandBuffer.AddComponent(e, new UnloadScene() { SceneEntity = sceneEntity });
                 commandBuffer.RemoveComponent<TriggerUnloadScene>(e);
-            }).WithStructuralChanges().WithoutBurst().Run();
+            })
+            .WithStructuralChanges()
+            .WithoutBurst()
+            .Run();
 
             // Delete scene finish loading notification
             Entities
@@ -108,7 +119,8 @@ namespace RPG.Core
             }
             else
             {
-                var nativeListTrigger = new NativeList<Entity>(sceneLoadingQuery.CalculateEntityCount(), Allocator.TempJob);
+                var sceneLoadingCount = sceneLoadingQuery.CalculateEntityCount();
+                var nativeListTrigger = new NativeList<Entity>(sceneLoadingCount, Allocator.TempJob);
                 var nativeListTriggerWriter = nativeListTrigger.AsParallelWriter();
                 Entities
                 .WithStoreEntityQueryInField(ref sceneLoadingQuery)
@@ -133,19 +145,23 @@ namespace RPG.Core
                 .ScheduleParallel();
                 using var loadingScenes = sceneLoadingQuery.ToEntityArray(Allocator.Temp);
                 using var loadingScenesData = sceneLoadingQuery.ToComponentDataArray<LoadSceneAsync>(Allocator.Temp);
-                using var sceneLoadedList = new NativeList<Entity>(Allocator.Temp);
+                using var sceneLoadedList = new NativeHashMap<Entity, SceneLoaded>(sceneLoadingCount, Allocator.Temp);
                 for (int i = 0; i < loadingScenes.Length; i++)
                 {
                     if (sceneSystem.IsSceneLoaded(loadingScenesData[i].SceneEntity))
                     {
                         Debug.Log("Scene is loaded");
-                        sceneLoadedList.Add(loadingScenes[i]);
+                        sceneLoadedList.Add(loadingScenes[i], new SceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
+                        EntityManager.AddComponentData(loadingScenes[i], new SceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
                     }
                 }
-                var sceneLoaded = sceneLoadedList.ToArray(Allocator.Temp);
+                var sceneLoaded = sceneLoadedList.GetKeyArray(Allocator.Temp);
+                var sceneLoadedData = sceneLoadedList.GetValueArray(Allocator.Temp);
                 EntityManager.RemoveComponent<LoadSceneAsync>(sceneLoaded);
                 sceneLoaded.Dispose();
+                sceneLoadedData.Dispose();
             }
+
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
 
 
