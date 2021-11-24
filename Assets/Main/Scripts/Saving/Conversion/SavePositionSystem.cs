@@ -4,6 +4,7 @@ using RPG.Mouvement;
 using Unity.Jobs;
 using RPG.Core;
 using RPG.Control;
+using UnityEngine;
 
 namespace RPG.Saving
 {
@@ -32,9 +33,6 @@ namespace RPG.Saving
                   new EntityQueryDesc()
                   {
                       All = new ComponentType[] { ComponentType.ReadOnly<Identifier>() },
-                      None = new ComponentType[] {
-
-                       }
                   }
             );
 
@@ -51,6 +49,7 @@ namespace RPG.Saving
             .ForEach((int entityInQueryIndex, in Translation translation, in Identifier identifier) =>
             {
                 var entity = IdentifiableSystem.GetOrCreateEntity(identifiableEntities, identifier.Id, pWriter, entityInQueryIndex);
+                Debug.Log($"Save position for entity {entity}");
                 pWriter.AddComponent(entityInQueryIndex, entity, translation);
                 pWriter.AddComponent(entityInQueryIndex, entity, new WarpTo { Destination = translation.Value });
             }).ScheduleParallel();

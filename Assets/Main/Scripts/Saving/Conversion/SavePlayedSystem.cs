@@ -34,10 +34,6 @@ namespace RPG.Saving
                 new EntityQueryDesc()
                 {
                     All = new ComponentType[] { ComponentType.ReadOnly<Identifier>() },
-                    None = new ComponentType[] {
-                        ComponentType.ReadOnly<HasSpawn>(),
-                        ComponentType.ReadOnly<Parent>()
-                    }
                 }
             );
         }
@@ -93,10 +89,6 @@ namespace RPG.Saving
                 new EntityQueryDesc()
                 {
                     All = new ComponentType[] { ComponentType.ReadOnly<Identifier>() },
-                    None = new ComponentType[] {
-                        ComponentType.ReadOnly<HasSpawn>(),
-                        ComponentType.ReadOnly<SkinMatrix>()
-                    }
                 }
             );
         }

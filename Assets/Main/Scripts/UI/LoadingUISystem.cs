@@ -13,6 +13,8 @@ namespace RPG.UI
     {
         public FixedList128<Entity> Entities;
     }
+
+    public struct IsLoading : IComponentData { }
     public struct UIReady : IComponentData { }
     public struct Fade : IComponentData
     {
@@ -95,6 +97,7 @@ namespace RPG.UI
 
             Entities
             .WithAll<LoadingUI>()
+            .WithNone<IsLoading>()
             .ForEach((Entity e, UIDocument uiDocument, in AnySceneLoading anySceneLoading) =>
             {
                 commandBuffer.AddComponent(e, new Show() { });
@@ -105,6 +108,7 @@ namespace RPG.UI
                     From = 0.0f,
                     Duration = 1f
                 });
+                commandBuffer.AddComponent<IsLoading>(e);
                 foreach (var trigger in anySceneLoading.Triggers)
                 {
                     commandBuffer.AddComponent<DisabledControl>(trigger);
@@ -114,10 +118,12 @@ namespace RPG.UI
             .Run();
 
             Entities
+            .WithAny<IsLoading>()
             .WithAll<LoadingUI>()
             .ForEach((Entity e, UIDocument uiDocument, in AnySceneFinishLoading anySceneLoading) =>
             {
                 Debug.Log("Hide UI when Loading finish");
+                commandBuffer.RemoveComponent<IsLoading>(e);
                 commandBuffer.AddComponent(e, new DeltaTime { });
                 commandBuffer.AddComponent(e, new Fade()
                 {

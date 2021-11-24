@@ -48,7 +48,7 @@ namespace RPG.Core
         public FixedList128<Entity> Triggers;
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
-
+    [UpdateAfter(typeof(SpawnSystem))]
     public class SceneLoadingSystem : SystemBase
     {
         SceneSystem sceneSystem;
@@ -60,12 +60,19 @@ namespace RPG.Core
 
         EntityQuery sceneLoadedQuery;
 
+        EntityQuery waitForSpawn;
+
         protected override void OnCreate()
         {
             base.OnCreate();
             sceneSystem = World.GetOrCreateSystem<SceneSystem>();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
             sceneLoadedQuery = GetEntityQuery(ComponentType.ReadOnly(typeof(SceneLoaded)));
+            waitForSpawn = GetEntityQuery(new EntityQueryDesc
+            {
+                All = new ComponentType[] { typeof(Spawn), typeof(SceneTag) },
+                None = new ComponentType[] { typeof(HasSpawn) }
+            });
 
         }
         protected override void OnUpdate()
@@ -90,16 +97,23 @@ namespace RPG.Core
 
             Entities.ForEach((Entity e, in TriggerUnloadScene unloadScene) =>
             {
-                Debug.Log("Unload Scene" + unloadScene.SceneGUID);
+                Debug.Log($"Unload Scene {unloadScene.SceneGUID}");
                 var sceneEntity = sceneSystem.GetSceneEntity(unloadScene.SceneGUID);
-                _sceneSystem.UnloadScene(sceneEntity);
                 commandBuffer.AddComponent(e, new UnloadScene() { SceneEntity = sceneEntity });
                 commandBuffer.RemoveComponent<TriggerUnloadScene>(e);
+            })
+            .WithoutBurst()
+            .Run();
+
+            Entities.ForEach((Entity e, in UnloadScene unloadScene) =>
+            {
+                Debug.Log($"Unload Scene {unloadScene.SceneEntity}");
+                _sceneSystem.UnloadScene(unloadScene.SceneEntity);
+                commandBuffer.RemoveComponent<UnloadScene>(e);
             })
             .WithStructuralChanges()
             .WithoutBurst()
             .Run();
-
             // Delete scene finish loading notification
             Entities
             .WithAny<AnySceneFinishLoading>()
@@ -150,16 +164,31 @@ namespace RPG.Core
                 {
                     if (sceneSystem.IsSceneLoaded(loadingScenesData[i].SceneEntity))
                     {
-                        Debug.Log("Scene is loaded");
-                        sceneLoadedList.Add(loadingScenes[i], new SceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
-                        EntityManager.AddComponentData(loadingScenes[i], new SceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
+                        var allSectionLoaded = false;
+                        var resolvedSections = EntityManager.GetBuffer<ResolvedSectionEntity>(loadingScenesData[i].SceneEntity);
+                        for (int j = 0; j < resolvedSections.Length; j++)
+                        {
+                            waitForSpawn.SetSharedComponentFilter(new SceneTag() { SceneEntity = resolvedSections[j].SectionEntity });
+                            var sectionLoaded = sceneSystem.IsSectionLoaded(resolvedSections[j].SectionEntity) && waitForSpawn.CalculateEntityCount() == 0;
+                            allSectionLoaded = j == 0 ? sectionLoaded : allSectionLoaded && sectionLoaded;
+                            waitForSpawn.ResetFilter();
+                            if (sectionLoaded == false)
+                            {
+                                break;
+                            }
+                        }
+                        if (allSectionLoaded)
+                        {
+                            Debug.Log("Scene is loaded");
+                            sceneLoadedList.Add(loadingScenes[i], new SceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
+                            EntityManager.AddComponentData(loadingScenes[i], new SceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
+                        }
+
                     }
                 }
                 var sceneLoaded = sceneLoadedList.GetKeyArray(Allocator.Temp);
-                var sceneLoadedData = sceneLoadedList.GetValueArray(Allocator.Temp);
                 EntityManager.RemoveComponent<LoadSceneAsync>(sceneLoaded);
                 sceneLoaded.Dispose();
-                sceneLoadedData.Dispose();
             }
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);

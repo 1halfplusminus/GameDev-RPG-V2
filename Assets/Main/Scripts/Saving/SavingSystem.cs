@@ -76,6 +76,7 @@ namespace RPG.Saving
             identifiableEntities = new NativeHashMap<Unity.Entities.Hash128, Entity>(0, Allocator.Persistent);
             entityCommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
             identifiedQuery = GetEntityQuery(typeof(Identifier));
+            RequireForUpdate(identiableQuery);
         }
 
 
@@ -322,7 +323,7 @@ namespace RPG.Saving
         {
 
             using var conversionWorld = RecreateSerializeConversionWorld();
-            AddQueryToWorld(World.EntityManager, conversionWorld, saveableQuery);
+            AddQueryToWorld(World.EntityManager, conversionWorld, query);
             Debug.Log($"Save query {conversionWorld.Name}");
             var serializedSavingWorld = GetOrCreateSerializedWorld();
 

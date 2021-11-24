@@ -127,19 +127,21 @@ namespace RPG.Mouvement
             .WithStoreEntityQueryInField(ref navMeshAgentQueries)
             .ForEach((Entity e, NavMeshAgent agent, ref Translation position, ref Mouvement mouvement, ref MoveTo moveTo, ref Rotation rotation) =>
             {
-
-                agent.speed = moveTo.CalculeSpeed(in mouvement);
-                agent.SetDestination(moveTo.Position);
-                position.Value = agent.transform.position;
-                mouvement.Velocity = new Velocity
+                if (agent.isOnNavMesh)
                 {
-                    Linear = agent.transform.InverseTransformDirection(agent.velocity),
-                    Angular = agent.angularSpeed
+                    agent.speed = moveTo.CalculeSpeed(in mouvement);
+                    agent.SetDestination(moveTo.Position);
+                    position.Value = agent.transform.position;
+                    mouvement.Velocity = new Velocity
+                    {
+                        Linear = agent.transform.InverseTransformDirection(agent.velocity),
+                        Angular = agent.angularSpeed
 
-                };
-                if (!lookAts.HasComponent(e) || lookAts[e].Entity == Entity.Null)
-                {
-                    rotation.Value = agent.transform.rotation;
+                    };
+                    if (!lookAts.HasComponent(e) || lookAts[e].Entity == Entity.Null)
+                    {
+                        rotation.Value = agent.transform.rotation;
+                    }
                 }
 
             }).WithoutBurst().Run();

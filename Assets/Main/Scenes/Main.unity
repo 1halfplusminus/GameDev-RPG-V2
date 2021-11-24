@@ -212,8 +212,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 288054092}
-  - component: {fileID: 288054094}
-  - component: {fileID: 288054093}
   m_Layer: 0
   m_Name: Core
   m_TagString: Untagged
@@ -238,39 +236,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &288054093
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 288054091}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d988e81d694d2b9092bae91fc325c69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &288054094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 288054091}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d30974bf68d61043b1572197db94cdc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SimulationType: 1
-  m_Gravity:
-    x: -0
-    y: -9.81
-    z: -0
-  m_SolverIterationCount: 4
-  m_EnableSolverStabilizationHeuristic: 0
-  m_MultiThreaded: 1
-  m_SynchronizeCollisionWorld: 0
 --- !u!1 &791656640
 GameObject:
   m_ObjectHideFlags: 0
@@ -452,7 +417,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1115021032}
-  m_LocalRotation: {x: 0.5402602, y: -0, z: -0, w: 0.841498}
+  m_LocalRotation: {x: 0.5402602, y: -0, z: -0, w: 0.8414981}
   m_LocalPosition: {x: 1.27, y: 18.22, z: -13.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -539,6 +504,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 1
+--- !u!1 &1327317184 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8949126279174711208, guid: a5b32b84d9195eaa9afecbdd65b8158a, type: 3}
+  m_PrefabInstance: {fileID: 8949126278313228796}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1327317185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1327317184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ConversionMode: 0
 --- !u!1 &1859132751
 GameObject:
   m_ObjectHideFlags: 0
@@ -626,7 +609,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _SceneAsset: {fileID: 102900000, guid: 52511c4efbf1699ceb2637c33bd936cd, type: 3}
-  _HierarchyColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  _HierarchyColor: {r: 0.14509803, g: 0.46597221, b: 0.8666667, a: 1}
   AutoLoadScene: 1
   _SceneGUID:
     Value:
@@ -764,6 +747,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3271459011970855836, guid: 30f64df7ac9ead4d2b5cf7bf05f82a3c, type: 3}
+      propertyPath: m_Lightmapping
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30f64df7ac9ead4d2b5cf7bf05f82a3c, type: 3}
 --- !u!1001 &8949126278313228796
@@ -822,12 +809,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8949126279174711210, guid: a5b32b84d9195eaa9afecbdd65b8158a, type: 3}
+      propertyPath: m_MultiThreaded
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8949126279174711210, guid: a5b32b84d9195eaa9afecbdd65b8158a, type: 3}
       propertyPath: m_SimulationType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8949126279174711210, guid: a5b32b84d9195eaa9afecbdd65b8158a, type: 3}
       propertyPath: m_SolverIterationCount
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8949126279174711210, guid: a5b32b84d9195eaa9afecbdd65b8158a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a5b32b84d9195eaa9afecbdd65b8158a, type: 3}

@@ -22,12 +22,15 @@
             "$type": "Unity.Build.Classic.ClassicBuildProfile, Unity.Build.Classic",
             "$version": 1,
             "Platform": "linux",
-            "Configuration": 1
+            "Configuration": 3
         },
         {
             "$type": "Unity.Build.Classic.ClassicCodeStrippingOptions, Unity.Build.Classic",
             "StripEngineCode": false,
             "ManagedStrippingLevel": 0
+        },
+        {
+            "$type": "Unity.Scenes.Editor.Build.LiveLink, Unity.Scenes.Editor"
         }
     ]
 }
