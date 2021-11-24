@@ -193,29 +193,33 @@ namespace RPG.Gameplay
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
+            RequireForUpdate(GetEntityQuery(new EntityQueryDesc
+            {
+                All = new ComponentType[] {
+                    typeof(PlayableDirector),
+                },
+                Any = new ComponentType[] {
+                    typeof(CollidWithPlayer),
+                    typeof(Playing),
+                    typeof(TriggeredBy)
+                },
+                None = new ComponentType[] {
+                    typeof(Played)
+                }
+            }));
         }
         protected override void OnUpdate()
         {
-            var playerControlleds = GetComponentDataFromEntity<PlayerControlled>(true);
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
             var commandBufferP = commandBuffer.AsParallelWriter();
             Entities
-            .WithReadOnly(playerControlleds)
             .WithAll<PlayableDirector>()
             .WithNone<Played, Playing>()
-            .ForEach((int entityInQueryIndex, Entity e, in DynamicBuffer<StatefulTriggerEvent> statefulCollisionEvents) =>
+            .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer collidWithPlayer) =>
             {
-                for (int i = 0; i < statefulCollisionEvents.Length; i++)
-                {
-                    var collidWith = statefulCollisionEvents[i].GetOtherEntity(e);
-                    if (playerControlleds.HasComponent(collidWith))
-                    {
-                        commandBufferP.AddComponent<Play>(entityInQueryIndex, e);
-                        commandBufferP.AddComponent(entityInQueryIndex, e, new TriggeredBy { Entity = collidWith });
-                        commandBufferP.AddComponent<DisabledControl>(entityInQueryIndex, collidWith);
-                        return;
-                    }
-                }
+                commandBufferP.AddComponent<Play>(entityInQueryIndex, e);
+                commandBufferP.AddComponent(entityInQueryIndex, e, new TriggeredBy { Entity = collidWithPlayer.Entity });
+                commandBufferP.AddComponent<DisabledControl>(entityInQueryIndex, collidWithPlayer.Entity);
             }).ScheduleParallel();
 
             Entities
