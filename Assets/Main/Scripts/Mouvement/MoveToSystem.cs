@@ -29,8 +29,8 @@ namespace RPG.Mouvement
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             // Calcule distance 
             Entities
-            .WithNone<IsDeadTag>()
             .WithChangeFilter<MoveTo>()
+            .WithNone<IsDeadTag>()
             .ForEach((int entityInQueryIndex, Entity e, ref MoveTo moveTo, in LocalToWorld localToWorld) =>
             {
                 moveTo.Distance = math.distance(moveTo.Position, localToWorld.Position);
@@ -39,12 +39,28 @@ namespace RPG.Mouvement
                     moveTo.Stopped = true;
                     moveTo.Position = localToWorld.Position;
                 }
-                if (moveTo.Stopped)
-                {
-                    commandBuffer.RemoveComponent<IsMoving>(entityInQueryIndex, e);
-                    commandBuffer.AddComponent(entityInQueryIndex, e, new Mouvement { Velocity = new Velocity { Linear = float3.zero, Angular = float3.zero } });
-                }
-                else
+            }).ScheduleParallel();
+
+            Entities
+           .WithChangeFilter<MoveTo>()
+           .WithAny<IsMoving>()
+           .WithNone<IsDeadTag>()
+           .ForEach((int entityInQueryIndex, Entity e, ref MoveTo moveTo, ref Mouvement mouvement) =>
+           {
+               if (moveTo.Stopped)
+               {
+                   commandBuffer.RemoveComponent<IsMoving>(entityInQueryIndex, e);
+                   mouvement.Velocity = new Velocity { Linear = float3.zero, Angular = float3.zero };
+               }
+
+           }).ScheduleParallel();
+
+            Entities
+            .WithChangeFilter<MoveTo>()
+            .WithNone<IsDeadTag, IsMoving>()
+            .ForEach((int entityInQueryIndex, Entity e, ref MoveTo moveTo, ref Mouvement mouvement) =>
+            {
+                if (!moveTo.Stopped)
                 {
                     commandBuffer.AddComponent<IsMoving>(entityInQueryIndex, e);
                 }
@@ -104,33 +120,29 @@ namespace RPG.Mouvement
             }).Run();
 
             Entities
-            .WithReadOnly(lookAts)
-            .WithChangeFilter<MoveTo>()
-            .WithStoreEntityQueryInField(ref navMeshAgentQueries)
-            .WithoutBurst()
-            .WithAll<Mouvement, IsMoving>()
+            .WithAny<IsMoving>()
             .WithNone<IsDeadTag, WarpTo>()
+            .WithChangeFilter<MoveTo>()
+            .WithReadOnly(lookAts)
+            .WithStoreEntityQueryInField(ref navMeshAgentQueries)
             .ForEach((Entity e, NavMeshAgent agent, ref Translation position, ref Mouvement mouvement, ref MoveTo moveTo, ref Rotation rotation) =>
             {
 
-                if (agent.isOnNavMesh && !moveTo.Stopped)
+                agent.speed = moveTo.CalculeSpeed(in mouvement);
+                agent.SetDestination(moveTo.Position);
+                position.Value = agent.transform.position;
+                mouvement.Velocity = new Velocity
                 {
-                    agent.speed = moveTo.CalculeSpeed(in mouvement);
-                    agent.SetDestination(moveTo.Position);
-                    position.Value = agent.transform.position;
-                    mouvement.Velocity = new Velocity
-                    {
-                        Linear = agent.transform.InverseTransformDirection(agent.velocity),
-                        Angular = agent.angularSpeed
+                    Linear = agent.transform.InverseTransformDirection(agent.velocity),
+                    Angular = agent.angularSpeed
 
-                    };
-                    if (!lookAts.HasComponent(e) || lookAts[e].Entity == Entity.Null)
-                    {
-                        rotation.Value = agent.transform.rotation;
-                    }
+                };
+                if (!lookAts.HasComponent(e) || lookAts[e].Entity == Entity.Null)
+                {
+                    rotation.Value = agent.transform.rotation;
                 }
 
-            }).Run();
+            }).WithoutBurst().Run();
 
         }
     }

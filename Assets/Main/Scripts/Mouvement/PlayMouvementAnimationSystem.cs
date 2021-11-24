@@ -11,6 +11,7 @@ namespace RPG.Mouvement
         protected override void OnUpdate()
         {
             Entities
+            .WithAny<IsMoving>()
             .WithChangeFilter<Mouvement>()
             .ForEach((ref CharacterAnimation characterAnimation, in Mouvement mouvement) =>
             {
@@ -37,6 +38,14 @@ namespace RPG.Mouvement
                 }
 
             }).ScheduleParallel();
+            Entities
+           .WithNone<IsMoving>()
+           .WithChangeFilter<Mouvement>()
+           .ForEach((ref CharacterAnimation characterAnimation, in Mouvement mouvement) =>
+           {
+               characterAnimation.Run = math.max(characterAnimation.Run - 0.1f, 0.0f);
+               characterAnimation.Move = math.max(characterAnimation.Move - 0.1f, 0.0f);
+           }).ScheduleParallel();
         }
     }
 }
