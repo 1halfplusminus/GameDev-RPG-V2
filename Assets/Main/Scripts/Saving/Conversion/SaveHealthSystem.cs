@@ -1,16 +1,12 @@
 using Unity.Entities;
-using Unity.Transforms;
-using RPG.Mouvement;
 using Unity.Jobs;
-using UnityEngine;
-using Unity.Collections;
 
 namespace RPG.Saving
 {
     [DisableAutoCreation]
+
     [UpdateInGroup(typeof(SavingConversionSystemGroup))]
-    [UpdateAfter(typeof(SaveIdentifierSystem))]
-    public class SavePositionSystem : SystemBase, ISavingConversionSystem
+    public class SaveHealthSystem : SystemBase, ISavingConversionSystem
     {
 
         public EntityManager DstEntityManager { get; }
@@ -18,8 +14,8 @@ namespace RPG.Saving
 
         EntityCommandBufferSystem commandBufferSystem;
 
-        EntityQuery saveablePosition;
-        public SavePositionSystem(EntityManager entityManager)
+        EntityQuery saveHealthQuery;
+        public SaveHealthSystem(EntityManager entityManager)
         {
             DstEntityManager = entityManager;
 
@@ -29,29 +25,28 @@ namespace RPG.Saving
             base.OnCreate();
             conversionSystem = DstEntityManager.World.GetOrCreateSystem<IdentifiableSystem>();
             commandBufferSystem = DstEntityManager.World.GetOrCreateSystem<EntityCommandBufferSystem>();
-            saveablePosition = DstEntityManager.CreateEntityQuery(
-                  new EntityQueryDesc()
-                  {
-                      All = new ComponentType[] { ComponentType.ReadOnly<Identifier>() },
-                  }
+            saveHealthQuery = DstEntityManager.CreateEntityQuery(
+                new EntityQueryDesc()
+                {
+                    All = new ComponentType[] { ComponentType.ReadOnly<Identifier>() },
+                }
             );
-
         }
         protected override void OnUpdate()
         {
-            var identifiableEntities = saveablePosition.ToEntityArray(Allocator.TempJob);
+            var em = DstEntityManager;
+            var identifiableEntities = IdentifiableSystem.IndexQuery(saveHealthQuery);
             var pWriter = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             Entities
             .WithReadOnly(identifiableEntities)
             .WithDisposeOnCompletion(identifiableEntities)
-            .WithDisposeOnCompletion(identifiableEntities)
-            .ForEach((int entityInQueryIndex, in Translation translation, in Identifier identifier) =>
+            .ForEach((int entityInQueryIndex, in Health health, in Identifier identifier) =>
             {
-                var entity = identifiableEntities[entityInQueryIndex];
-                Debug.Log($"Save position for entity {entity.Index} {entity.Version}");
-                pWriter.AddComponent(entityInQueryIndex, entity, translation);
-                pWriter.AddComponent(entityInQueryIndex, entity, new WarpTo { Destination = translation.Value });
+                var entity = IdentifiableSystem.GetOrCreateEntity(identifiableEntities, identifier.Id, pWriter, entityInQueryIndex);
+                pWriter.AddComponent(entityInQueryIndex, entity, health);
+
             }).ScheduleParallel();
+
             commandBufferSystem.AddJobHandleForProducer(Dependency);
 
         }

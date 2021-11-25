@@ -9,6 +9,7 @@ namespace RPG.Saving
 {
 
     [UpdateInGroup(typeof(SavingSystemGroup))]
+    [UpdateAfter(typeof(SpawnableIdentifiableSystem))]
 
     public class StatefulSceneSystem : SystemBase
     {
@@ -25,11 +26,13 @@ namespace RPG.Saving
             saveSystem = World.GetOrCreateSystem<SaveSystem>();
             sceneSystem = World.GetOrCreateSystem<SceneSystem>();
             sceneEntityQuery = GetEntityQuery(typeof(SceneTag), typeof(Identifier));
+            sceneNeedSavingQuery = GetEntityQuery(typeof(TriggerUnloadScene));
+            sceneNeedLoadingQuery = GetEntityQuery(typeof(SceneLoaded));
             RequireForUpdate(GetEntityQuery(new EntityQueryDesc()
             {
                 Any = new ComponentType[] {
                     typeof(TriggerUnloadScene),
-                     typeof(SceneLoaded)
+                    typeof(SceneLoaded)
                 }
             }));
         }
@@ -43,66 +46,58 @@ namespace RPG.Saving
 
         private void SaveDataOnUnload()
         {
-            var loadScenesAsync = new NativeArray<TriggerUnloadScene>(sceneNeedSavingQuery.CalculateEntityCount(), Allocator.TempJob);
-            var sceneNeedSavingHandle = Entities
-             .WithStoreEntityQueryInField(ref sceneNeedSavingQuery)
-             .ForEach((int entityInQueryIndex, in TriggerUnloadScene loadSceneAsync) =>
-             {
-                 loadScenesAsync[entityInQueryIndex] = loadSceneAsync;
 
-             }).ScheduleParallel(default);
+            var loadScenesAsync = sceneNeedSavingQuery.ToComponentDataArrayAsync<TriggerUnloadScene>(Allocator.TempJob, out var sceneNeedSavingHandle);
             sceneNeedSavingHandle.Complete();
             for (int i = 0; i < loadScenesAsync.Length; i++)
             {
-                var sceneEntity = sceneSystem.GetSceneEntity(loadScenesAsync[i].SceneGUID);
-                var resolvedSections = EntityManager.GetBuffer<ResolvedSectionEntity>(sceneEntity);
-                foreach (var resolvedSection in resolvedSections)
-                {
-                    sceneEntityQuery.AddSharedComponentFilter(new SceneTag() { SceneEntity = resolvedSection.SectionEntity });
-                    var count = sceneEntityQuery.CalculateEntityCount();
-                    if (count > 0)
-                    {
-                        Debug.Log($"Saving Scene State for: {resolvedSection.SectionEntity} {count}");
-                        saveSystem.Save(sceneEntityQuery);
-                    }
-                    sceneEntityQuery.ResetFilter();
-                }
-
+                SaveScene(loadScenesAsync[i].SceneGUID);
             }
             loadScenesAsync.Dispose();
             Dependency = JobHandle.CombineDependencies(Dependency, sceneNeedSavingHandle);
         }
+
+        public void SaveScene(Unity.Entities.Hash128 sceneGUID)
+        {
+            var sceneEntity = sceneSystem.GetSceneEntity(sceneGUID);
+            var resolvedSections = EntityManager.GetBuffer<ResolvedSectionEntity>(sceneEntity);
+            foreach (var resolvedSection in resolvedSections)
+            {
+                sceneEntityQuery.AddSharedComponentFilter(new SceneTag() { SceneEntity = resolvedSection.SectionEntity });
+                var count = sceneEntityQuery.CalculateEntityCount();
+                if (count > 0)
+                {
+                    Debug.Log($"Saving Scene State for: {resolvedSection.SectionEntity} {count}");
+                    saveSystem.Save(sceneEntityQuery);
+                }
+                sceneEntityQuery.ResetFilter();
+            }
+        }
+        public void LoadScene(Unity.Entities.Hash128 sceneGUID)
+        {
+            var sceneEntity = sceneSystem.GetSceneEntity(sceneGUID);
+            var resolvedSections = EntityManager.GetBuffer<ResolvedSectionEntity>(sceneEntity);
+            foreach (var resolvedSection in resolvedSections)
+            {
+                sceneEntityQuery.AddSharedComponentFilter(new SceneTag() { SceneEntity = resolvedSection.SectionEntity });
+                var count = sceneEntityQuery.CalculateEntityCount();
+                if (count > 0)
+                {
+                    Debug.Log($"Loading Scene State for: {resolvedSection.SectionEntity} {count}");
+                    saveSystem.Load(sceneEntityQuery);
+                }
+                sceneEntityQuery.ResetFilter();
+            }
+        }
         private void LoadDataOnLoad()
         {
             var sceneNeedLoadingCount = sceneNeedLoadingQuery.CalculateEntityCount();
-            var loadScenesAsync = new NativeArray<SceneLoaded>(sceneNeedLoadingCount, Allocator.TempJob);
-            var sceneNeedLoadingHandle = Entities
-            .WithStoreEntityQueryInField(ref sceneNeedLoadingQuery)
-            .ForEach((int entityInQueryIndex, in SceneLoaded sceneLoaded) =>
-            {
-                loadScenesAsync[entityInQueryIndex] = sceneLoaded;
-            }).ScheduleParallel(default);
-            sceneNeedLoadingHandle.Complete();
-
+            var loadScenesAsync = sceneNeedLoadingQuery.ToComponentDataArray<SceneLoaded>(Allocator.Temp);
             for (int i = 0; i < loadScenesAsync.Length; i++)
             {
-                var sceneEntity = sceneSystem.GetSceneEntity(loadScenesAsync[i].SceneGUID);
-                var resolvedSections = EntityManager.GetBuffer<ResolvedSectionEntity>(sceneEntity);
-                foreach (var resolvedSection in resolvedSections)
-                {
-                    sceneEntityQuery.AddSharedComponentFilter(new SceneTag() { SceneEntity = resolvedSection.SectionEntity });
-                    var count = sceneEntityQuery.CalculateEntityCount();
-                    if (count > 0)
-                    {
-                        Debug.Log($"Loading Scene State for: {resolvedSection.SectionEntity} {count}");
-                        saveSystem.Load(sceneEntityQuery);
-                    }
-                    sceneEntityQuery.ResetFilter();
-                }
-
+                LoadScene(loadScenesAsync[i].SceneGUID);
             }
             loadScenesAsync.Dispose();
-            Dependency = JobHandle.CombineDependencies(Dependency, sceneNeedLoadingHandle);
         }
     }
 }

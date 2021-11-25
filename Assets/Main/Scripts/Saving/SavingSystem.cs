@@ -62,7 +62,7 @@ namespace RPG.Saving
                 if (ids.ContainsKey(datas[i].Id))
                 {
                     Debug.Log($"{entities[i]} and {ids[datas[i].Id]} as the same identifier : {datas[i].Id}");
-                    // ids.Remove(datas[i].Id);
+                    ids.Remove(datas[i].Id);
                 }
                 ids.TryAdd(datas[i].Id, entities[i]);
             }
@@ -260,7 +260,7 @@ namespace RPG.Saving
         }
         private static SystemBase[] GetSavingSystem(EntityManager em)
         {
-            return new SystemBase[] { new SavePositionSystem(em), new SavePlayedSystem(em) };
+            return new SystemBase[] { new SaveIdentifierSystem(em), new SavePlayedSystem(em) };
         }
 
         private NativeHashMap<Unity.Entities.Hash128, Entity> IndexIdentifiableEntities(EntityManager em)
@@ -354,6 +354,7 @@ namespace RPG.Saving
                 conversionWorld.AddSystem(system);
                 savingSystemGroup.AddSystemToUpdateList(system);
             }
+            savingSystemGroup.SortSystems();
         }
         private World GetOrCreateSerializedWorld()
         {

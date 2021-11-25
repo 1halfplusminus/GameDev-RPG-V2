@@ -43,7 +43,6 @@ namespace RPG.Saving
             {
                 var hash = new UnityEngine.Hash128();
                 hash.Append(transform.gameObject.GetInstanceID());
-                /*     hash.Append(transform.GetSiblingIndex()); */
                 AddHashComponent(transform, hash);
             });
 
@@ -52,7 +51,7 @@ namespace RPG.Saving
         private void AddHashComponent(Component transform, Hash128 hash)
         {
             var entity = TryGetPrimaryEntity(transform);
-            if (entity != Entity.Null && !DstEntityManager.HasComponent<Identifier>(entity))
+            if (entity != Entity.Null && !DstEntityManager.HasComponent<Identifier>(entity) && !DstEntityManager.HasComponent<Prefab>(entity))
             {
 
                 var identifier = new Identifier { Id = hash };

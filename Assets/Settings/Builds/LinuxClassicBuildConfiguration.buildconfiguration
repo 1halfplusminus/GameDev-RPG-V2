@@ -22,7 +22,7 @@
             "$type": "Unity.Build.Classic.ClassicBuildProfile, Unity.Build.Classic",
             "$version": 1,
             "Platform": "linux",
-            "Configuration": 3
+            "Configuration": 2
         },
         {
             "$type": "Unity.Build.Classic.ClassicCodeStrippingOptions, Unity.Build.Classic",

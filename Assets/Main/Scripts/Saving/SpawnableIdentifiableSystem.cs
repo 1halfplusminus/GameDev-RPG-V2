@@ -2,6 +2,7 @@ using Unity.Entities;
 using UnityEngine;
 using Unity.Jobs;
 using RPG.Core;
+using Unity.Collections;
 
 namespace RPG.Saving
 {
@@ -13,25 +14,30 @@ namespace RPG.Saving
         protected override void OnCreate()
         {
             base.OnCreate();
-            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            entityCommandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
+            identifiableSpawnerQuery = GetEntityQuery(new EntityQueryDesc()
+            {
+                All = new ComponentType[] {
+                    ComponentType.ReadOnly<HasSpawn>(),
+                    ComponentType.ReadOnly<SpawnIdentifier>()
+                },
+                None = new ComponentType[] {
+                    ComponentType.ReadOnly<HasSpawnIdentified>()
+                }
+            });
             RequireForUpdate(identifiableSpawnerQuery);
         }
         protected override void OnUpdate()
         {
-
-            var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-            Entities
-            .WithNone<HasSpawnIdentified>()
-            .WithStoreEntityQueryInField(ref identifiableSpawnerQuery)
-            .ForEach((int entityInQueryIndex, Entity e, in HasSpawn hasSpawn, in SpawnIdentifier identifier) =>
+            using var hasSpawns = identifiableSpawnerQuery.ToComponentDataArray<HasSpawn>(Allocator.Temp);
+            using var spawnIdentifiers = identifiableSpawnerQuery.ToComponentDataArray<SpawnIdentifier>(Allocator.Temp);
+            for (int i = 0; i < hasSpawns.Length; i++)
             {
-                Debug.Log("Change identifier for spawner id");
-                commandBuffer.AddComponent(entityInQueryIndex, hasSpawn.Entity, new Identifier { Id = identifier.Id });
-                commandBuffer.AddComponent<HasSpawnIdentified>(entityInQueryIndex, e);
-            })
-            .ScheduleParallel();
-
-            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+                var hasSpawn = hasSpawns[i];
+                var identifier = spawnIdentifiers[i];
+                EntityManager.AddComponentData(hasSpawn.Entity, new Identifier { Id = identifier.Id });
+            }
+            EntityManager.AddComponent<HasSpawnIdentified>(identifiableSpawnerQuery);
         }
     }
 }
