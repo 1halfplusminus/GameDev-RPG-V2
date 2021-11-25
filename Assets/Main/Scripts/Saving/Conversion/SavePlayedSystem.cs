@@ -6,23 +6,30 @@ using Unity.Animation;
 using Unity.Transforms;
 using Unity.Deformations;
 using Unity.Collections;
+using System.Collections.Generic;
 
 namespace RPG.Saving
 {
-    [DisableAutoCreation]
+
 
     [UpdateInGroup(typeof(SavingConversionSystemGroup))]
     [UpdateAfter(typeof(SaveIdentifierSystem))]
-    public class SavePlayedSystem : SystemBase, ISavingConversionSystem
+    public abstract class SaveConversionSystemBase<T> : SystemBase, ISavingConversionSystem where T : struct, IComponentData
     {
 
         public EntityManager DstEntityManager { get; }
-        IdentifiableSystem conversionSystem;
+        SaveIdentifierSystem conversionSystem;
 
         EntityCommandBufferSystem commandBufferSystem;
 
-        EntityQuery savePlayedQuery;
-        public SavePlayedSystem(EntityManager entityManager)
+        EntityQuery dstQuery;
+
+        EntityQuery query;
+
+        List<SceneSection> sceneSections;
+
+
+        public SaveConversionSystemBase(EntityManager entityManager)
         {
             DstEntityManager = entityManager;
 
@@ -30,40 +37,62 @@ namespace RPG.Saving
         protected override void OnCreate()
         {
             base.OnCreate();
-            conversionSystem = DstEntityManager.World.GetOrCreateSystem<IdentifiableSystem>();
+            conversionSystem = EntityManager.World.GetOrCreateSystem<SaveIdentifierSystem>();
             commandBufferSystem = DstEntityManager.World.GetOrCreateSystem<EntityCommandBufferSystem>();
-            savePlayedQuery = DstEntityManager.CreateEntityQuery(
-                new EntityQueryDesc()
-                {
-                    All = new ComponentType[] { ComponentType.ReadOnly<Identifier>() },
-                }
+            EntityQueryDesc description = new EntityQueryDesc()
+            {
+                All = new ComponentType[] { ComponentType.ReadOnly<Identifier>(), ComponentType.ReadOnly<SceneSection>() },
+            };
+            dstQuery = DstEntityManager.CreateEntityQuery(
+                description
             );
+            query = EntityManager.CreateEntityQuery(description);
         }
         protected override void OnUpdate()
         {
-            var em = DstEntityManager;
-            var identifiableEntities = savePlayedQuery.ToEntityArray(Allocator.TempJob);
-            var pWriter = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-            Entities
-            .WithReadOnly(identifiableEntities)
-            .WithDisposeOnCompletion(identifiableEntities)
-            .WithDisposeOnCompletion(identifiableEntities)
-            .ForEach((int entityInQueryIndex, in Played played, in Identifier identifier) =>
+            sceneSections = new List<SceneSection>();
+            EntityManager.GetAllUniqueSharedComponentData<SceneSection>(sceneSections);
+            var components = GetComponentDataFromEntity<T>(true);
+            foreach (var sceneSection in sceneSections)
             {
-                var entity = identifiableEntities[entityInQueryIndex];
-                Debug.Log($"Save played to {entity.Index} {entity.Version}");
-                pWriter.AddComponent(entityInQueryIndex, entity, played);
-            }).ScheduleParallel();
+                query.SetSharedComponentFilter(sceneSection);
+                using var entities = query.ToEntityArray(Allocator.Temp);
+                for (int i = 0; i < entities.Length; i++)
+                {
+                    if (components.HasComponent(entities[i]))
+                    {
+                        Convert(conversionSystem.GetTarget(entities[i]), entities[i], components, DstEntityManager, EntityManager);
+                    }
+                }
+                dstQuery.ResetFilter();
+                query.ResetFilter();
+            }
 
-            commandBufferSystem.AddJobHandleForProducer(Dependency);
 
         }
+
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
         }
 
+        abstract protected void Convert(Entity dstEntity, Entity entity, ComponentDataFromEntity<T> components, EntityManager dstManager, EntityManager entityManager);
+    }
+    [DisableAutoCreation]
 
+    [UpdateInGroup(typeof(SavingConversionSystemGroup))]
+    [UpdateAfter(typeof(SaveIdentifierSystem))]
+    public class SavePlayedSystem : SaveConversionSystemBase<Played>
+    {
+        public SavePlayedSystem(EntityManager entityManager) : base(entityManager)
+        {
+        }
+
+        protected override void Convert(Entity dstEntity, Entity entity, ComponentDataFromEntity<Played> components, EntityManager dstManager, EntityManager entityManager)
+        {
+            Debug.Log($"Save played for {dstEntity}");
+            DstEntityManager.AddComponent<Played>(dstEntity);
+        }
     }
 }

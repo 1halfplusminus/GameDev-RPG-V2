@@ -9269,6 +9269,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 286300910, guid: 205180d2078088a19a427e5701ce7080, type: 3}
+      propertyPath: ConversionMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2505150948550738325, guid: 205180d2078088a19a427e5701ce7080, type: 3}
       propertyPath: m_Name
       value: Third Person Camera Moment 1
@@ -16579,12 +16583,13 @@ GameObject:
   - component: {fileID: 601020547606573249}
   - component: {fileID: 601020547606573250}
   - component: {fileID: 601020547606573251}
+  - component: {fileID: 601020547606573252}
   m_Layer: 0
   m_Name: Bridge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!114 &601020547606573249
 MonoBehaviour:
@@ -16661,6 +16666,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.020000001, y: 0.039776426, z: 0.000874703}
   m_Center: {x: 0.010000001, y: 0.010111794, z: -0.0004373515}
+--- !u!114 &601020547606573252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601020547606573248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ConversionMode: 0
 --- !u!23 &668493325791665531
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -19258,7 +19276,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 6795462705980167066, guid: 490e8eb70d3d3e7ac91a5363e1615617, type: 3}
+  - {fileID: 2100000, guid: c1e7121edf62e64e2b31cf12d35e41fe, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

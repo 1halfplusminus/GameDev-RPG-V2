@@ -25,7 +25,7 @@ namespace RPG.Saving
             base.OnCreate();
             saveSystem = World.GetOrCreateSystem<SaveSystem>();
             sceneSystem = World.GetOrCreateSystem<SceneSystem>();
-            sceneEntityQuery = GetEntityQuery(typeof(SceneTag), typeof(Identifier));
+            sceneEntityQuery = GetEntityQuery(typeof(SceneSection), typeof(Identifier));
             sceneNeedSavingQuery = GetEntityQuery(typeof(TriggerUnloadScene));
             sceneNeedLoadingQuery = GetEntityQuery(typeof(SceneLoaded));
             RequireForUpdate(GetEntityQuery(new EntityQueryDesc()
@@ -41,7 +41,6 @@ namespace RPG.Saving
         {
             SaveDataOnUnload();
             LoadDataOnLoad();
-
         }
 
         private void SaveDataOnUnload()
@@ -60,34 +59,26 @@ namespace RPG.Saving
         public void SaveScene(Unity.Entities.Hash128 sceneGUID)
         {
             var sceneEntity = sceneSystem.GetSceneEntity(sceneGUID);
-            var resolvedSections = EntityManager.GetBuffer<ResolvedSectionEntity>(sceneEntity);
-            foreach (var resolvedSection in resolvedSections)
+            sceneEntityQuery.AddSharedComponentFilter(new SceneSection() { SceneGUID = sceneGUID });
+            var count = sceneEntityQuery.CalculateEntityCount();
+            if (count > 0)
             {
-                sceneEntityQuery.AddSharedComponentFilter(new SceneTag() { SceneEntity = resolvedSection.SectionEntity });
-                var count = sceneEntityQuery.CalculateEntityCount();
-                if (count > 0)
-                {
-                    Debug.Log($"Saving Scene State for: {resolvedSection.SectionEntity} {count}");
-                    saveSystem.Save(sceneEntityQuery);
-                }
-                sceneEntityQuery.ResetFilter();
+                Debug.Log($"Saving Scene State for: {sceneGUID} {count}");
+                saveSystem.Save(sceneEntityQuery);
             }
+            sceneEntityQuery.ResetFilter();
         }
         public void LoadScene(Unity.Entities.Hash128 sceneGUID)
         {
             var sceneEntity = sceneSystem.GetSceneEntity(sceneGUID);
-            var resolvedSections = EntityManager.GetBuffer<ResolvedSectionEntity>(sceneEntity);
-            foreach (var resolvedSection in resolvedSections)
+            sceneEntityQuery.AddSharedComponentFilter(new SceneSection() { SceneGUID = sceneGUID });
+            var count = sceneEntityQuery.CalculateEntityCount();
+            if (count > 0)
             {
-                sceneEntityQuery.AddSharedComponentFilter(new SceneTag() { SceneEntity = resolvedSection.SectionEntity });
-                var count = sceneEntityQuery.CalculateEntityCount();
-                if (count > 0)
-                {
-                    Debug.Log($"Loading Scene State for: {resolvedSection.SectionEntity} {count}");
-                    saveSystem.Load(sceneEntityQuery);
-                }
-                sceneEntityQuery.ResetFilter();
+                Debug.Log($"Loading Scene State for: {sceneGUID} {count}");
+                saveSystem.Load(sceneEntityQuery);
             }
+            sceneEntityQuery.ResetFilter();
         }
         private void LoadDataOnLoad()
         {

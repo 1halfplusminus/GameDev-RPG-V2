@@ -181,7 +181,7 @@ namespace RPG.Saving
             base.OnCreate();
             saveableQuery = GetEntityQuery(new EntityQueryDesc()
             {
-                All = new ComponentType[] { ComponentType.ReadOnly(typeof(Identifier)) },
+                All = new ComponentType[] { ComponentType.ReadOnly(typeof(Identifier)), ComponentType.ReadOnly(typeof(SceneSection)) },
             });
         }
 
@@ -221,13 +221,15 @@ namespace RPG.Saving
             {
                 UnityEngine.Debug.Log("File Exists Loading File");
                 // Load world from file
-                using var conversionWorld = RecreateSerializeConversionWorld();
+                var conversionWorld = RecreateSerializeConversionWorld();
                 // Load File
                 using var binaryReader = CreateFileReader(saveFile.ToString());
                 SerializeUtility.DeserializeWorld(conversionWorld.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);
                 conversionWorld.EntityManager.EndExclusiveEntityTransaction();
 
                 Load(conversionWorld);
+
+                GetOrCreateSerializedWorld().EntityManager.CopyAndReplaceEntitiesFrom(conversionWorld.EntityManager);
             }
         }
 
@@ -240,9 +242,10 @@ namespace RPG.Saving
         public void Load(EntityQuery query)
         {
             var serializedWorld = GetOrCreateSerializedWorld();
-            using var currentWorldIdentified = IdentifiableSystem.IndexQuery(query);
-            using var serializedWorldIdentified = IdentifiableSystem.IndexQuery(serializedWorld.EntityManager.CreateEntityQuery(ComponentType.ReadOnly(typeof(Identifier))));
-            using var keys = currentWorldIdentified.GetKeyArray(Allocator.Temp);
+
+            /*             using var currentWorldIdentified = IdentifiableSystem.IndexQuery(query); */
+            var serializedWorldIdentified = serializedWorld.EntityManager.CreateEntityQuery(ComponentType.ReadOnly(typeof(Identifier)));
+            /* using var keys = currentWorldIdentified.GetKeyArray(Allocator.Temp);
             using var listToSerializeEntity = new NativeList<Entity>(Allocator.Temp);
             for (int i = 0; i < keys.Length; i++)
             {
@@ -252,15 +255,16 @@ namespace RPG.Saving
                     listToSerializeEntity.Add(serializedWorldIdentified[key]);
                 }
             }
-            var srcEntities = listToSerializeEntity.ToArray(Allocator.Temp);
+            var srcEntities = listToSerializeEntity.ToArray(Allocator.Temp); */
             using var conversionWorld = RecreateSerializeConversionWorld();
-            conversionWorld.EntityManager.CopyEntitiesFrom(serializedWorld.EntityManager, srcEntities);
-            srcEntities.Dispose();
+            AddQueryToWorld(serializedWorld.EntityManager, conversionWorld, serializedWorldIdentified);
+            /*        conversionWorld.EntityManager.CopyEntitiesFrom(serializedWorld.EntityManager, srcEntities);
+                   srcEntities.Dispose(); */
             Load(conversionWorld);
         }
         private static SystemBase[] GetSavingSystem(EntityManager em)
         {
-            return new SystemBase[] { new SaveIdentifierSystem(em), new SavePlayedSystem(em) };
+            return new SystemBase[] { new SaveIdentifierSystem(em), new SavePlayedSystem(em), new SaveHealthSystem(em), new SavePositionSystem(em) };
         }
 
         private NativeHashMap<Unity.Entities.Hash128, Entity> IndexIdentifiableEntities(EntityManager em)
