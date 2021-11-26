@@ -9,6 +9,7 @@ using Unity.Jobs;
 using Hash128 = Unity.Entities.Hash128;
 using Unity.Assertions;
 using RPG.Core;
+using System;
 
 namespace RPG.Saving
 {
@@ -162,6 +163,8 @@ namespace RPG.Saving
     [UpdateInGroup(typeof(SavingSystemGroup))]
     public class SaveSystem : SystemBase
     {
+
+        const int SERIALIZATION_WORLD_FLAG = 1;
         const string SAVING_PATH = "save.bin";
 
         World conversionWorld;
@@ -219,18 +222,23 @@ namespace RPG.Saving
         {
             if (File.Exists(saveFile.ToString()))
             {
-                UnityEngine.Debug.Log("File Exists Loading File");
-                // Load world from file
-                var conversionWorld = RecreateSerializeConversionWorld();
-                // Load File
-                using var binaryReader = CreateFileReader(saveFile.ToString());
-                SerializeUtility.DeserializeWorld(conversionWorld.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);
-                conversionWorld.EntityManager.EndExclusiveEntityTransaction();
-
-                Load(conversionWorld);
-
-                GetOrCreateSerializedWorld().EntityManager.CopyAndReplaceEntitiesFrom(conversionWorld.EntityManager);
+                LoadFileInSerializedWorld(saveFile);
+                LoadSerializedWorld();
             }
+        }
+
+        private void LoadFileInSerializedWorld(FixedString128 saveFile)
+        {
+            UnityEngine.Debug.Log("File Exists Loading File");
+            // Load world from file
+            var conversionWorld = RecreateSerializeConversionWorld();
+            using var binaryReader = CreateFileReader(saveFile.ToString());
+            SerializeUtility.DeserializeWorld(conversionWorld.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);
+            conversionWorld.EntityManager.EndExclusiveEntityTransaction();
+
+            var serializedWorld = GetOrCreateSerializedWorld();
+            AddConversionSystems(conversionWorld, serializedWorld.EntityManager);
+            UpdateConversionSystems(conversionWorld);
         }
 
         public void Load(World conversionWorld)
@@ -239,32 +247,18 @@ namespace RPG.Saving
             UpdateConversionSystems(conversionWorld);
         }
 
-        public void Load(EntityQuery query)
+        public void LoadSerializedWorld()
         {
-            var serializedWorld = GetOrCreateSerializedWorld();
-
-            /*             using var currentWorldIdentified = IdentifiableSystem.IndexQuery(query); */
-            var serializedWorldIdentified = serializedWorld.EntityManager.CreateEntityQuery(ComponentType.ReadOnly(typeof(Identifier)));
-            /* using var keys = currentWorldIdentified.GetKeyArray(Allocator.Temp);
-            using var listToSerializeEntity = new NativeList<Entity>(Allocator.Temp);
-            for (int i = 0; i < keys.Length; i++)
-            {
-                var key = keys[i];
-                if (serializedWorldIdentified.ContainsKey(key))
-                {
-                    listToSerializeEntity.Add(serializedWorldIdentified[key]);
-                }
-            }
-            var srcEntities = listToSerializeEntity.ToArray(Allocator.Temp); */
             using var conversionWorld = RecreateSerializeConversionWorld();
+            var serializedWorld = GetOrCreateSerializedWorld();
+            var serializedWorldIdentified = serializedWorld.EntityManager.CreateEntityQuery(ComponentType.ReadOnly(typeof(Identifier)));
             AddQueryToWorld(serializedWorld.EntityManager, conversionWorld, serializedWorldIdentified);
-            /*        conversionWorld.EntityManager.CopyEntitiesFrom(serializedWorld.EntityManager, srcEntities);
-                   srcEntities.Dispose(); */
             Load(conversionWorld);
         }
-        private static SystemBase[] GetSavingSystem(EntityManager em)
+
+        private static List<SystemBase> GetSavingSystem(EntityManager em)
         {
-            return new SystemBase[] { new SaveIdentifierSystem(em), new SavePlayedSystem(em), new SaveHealthSystem(em), new SavePositionSystem(em) };
+            return new List<SystemBase> { new MapIdentifierSystem(em), new SavePlayedSystem(em), new SaveHealthSystem(em), new SavePositionSystem(em) };
         }
 
         private NativeHashMap<Unity.Entities.Hash128, Entity> IndexIdentifiableEntities(EntityManager em)
@@ -349,9 +343,23 @@ namespace RPG.Saving
         {
             world.GetOrCreateSystem<SavingConversionSystemGroup>().Update();
         }
+        private static void AddConversionSystem(World conversionWorld, SystemBase system)
+        {
+            var savingSystemGroup = conversionWorld.GetOrCreateSystem<SavingConversionSystemGroup>();
+            conversionWorld.AddSystem(system);
+            savingSystemGroup.AddSystemToUpdateList(system);
+            savingSystemGroup.SortSystems();
+        }
         private static void AddConversionSystems(World conversionWorld, EntityManager dstManager)
         {
-            SystemBase[] systems = GetSavingSystem(dstManager);
+            var systems = GetSavingSystem(dstManager);
+            Debug.Log($"Add Conversion Systems for dst world to {dstManager.World.Name} with flag: {dstManager.World.Flags}");
+            if (dstManager.World.Flags != WorldFlags.Game)
+            {
+                Debug.Log($"Add Create Identifier to {dstManager.World.Name} with flag: {dstManager.World.Flags}");
+                var createIdentifierSystem = new CreateIdentifierSystem(dstManager);
+                systems.Add(createIdentifierSystem);
+            }
             var savingSystemGroup = conversionWorld.GetOrCreateSystem<SavingConversionSystemGroup>();
             foreach (var system in systems)
             {

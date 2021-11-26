@@ -7,10 +7,11 @@ using Unity.Collections;
 using System.Collections.Generic;
 using Unity.Scenes;
 using RPG.Saving;
+using UnityEngine.AddressableAssets;
 
 public class SaveEditorWindow : EditorWindow
 {
-    [SerializeField] public VisualTreeAsset visualTreeAsset;
+    public VisualTreeAsset visualTreeAsset;
 
     public World CurrentWorld;
 
@@ -28,12 +29,23 @@ public class SaveEditorWindow : EditorWindow
 
         window.CurrentWorld = World.DefaultGameObjectInjectionWorld;
 
+        Addressables.LoadAssetAsync<VisualTreeAsset>("SaveEditorWindow").Completed += (e) =>
+            {
+                if (e.IsDone)
+                {
+                    Debug.Log($"Here ${e.Result.name}");
+                    window.visualTreeAsset = e.Result;
+                    window.OnEnable();
+                    window.Show();
+                }
+            };
     }
 
 
     private void OnEnable()
     {
-
+        Debug.Log("On Enable");
+        if (visualTreeAsset == null) { return; }
         // Reference to the root of the window.
         var root = visualTreeAsset.Instantiate();
 
@@ -94,7 +106,7 @@ public class SaveEditorWindow : EditorWindow
 
             var query = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(Identifier), typeof(SceneTag));
             query.AddSharedComponentFilter(new SceneTag() { SceneEntity = sceneEntity });
-            saveSystem.Load(query);
+            saveSystem.LoadSerializedWorld();
             Debug.Log($"Loading Scene For {scenes.choices[scenes.index]} : {sceneEntity.Index}");
         };
         rootVisualElement.Add(root);

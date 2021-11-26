@@ -9,7 +9,7 @@ namespace RPG.Saving
 {
     [DisableAutoCreation]
     [UpdateInGroup(typeof(SavingConversionSystemGroup))]
-    [UpdateAfter(typeof(SaveIdentifierSystem))]
+    [UpdateAfter(typeof(MapIdentifierSystem))]
     public class SavePositionSystem : SaveConversionSystemBase<Translation>
     {
         public SavePositionSystem(EntityManager entityManager) : base(entityManager)
@@ -18,9 +18,14 @@ namespace RPG.Saving
 
         protected override void Convert(Entity dstEntity, Entity entity, ComponentDataFromEntity<Translation> components, EntityManager dstManager, EntityManager entityManager)
         {
-            Debug.Log($"Save translation for {dstEntity}");
-            DstEntityManager.AddComponentData<Translation>(dstEntity, components[entity]);
-            DstEntityManager.AddComponentData<WarpTo>(dstEntity, new WarpTo { Destination = components[entity].Value });
+            var dstSection = dstManager.GetSharedComponentData<SceneSection>(dstEntity);
+            var currentSection = entityManager.GetSharedComponentData<SceneSection>(entity);
+            if (dstSection.SceneGUID == currentSection.SceneGUID)
+            {
+                Debug.Log($"Save translation for {dstEntity}");
+                DstEntityManager.AddComponentData<Translation>(dstEntity, components[entity]);
+                DstEntityManager.AddComponentData<WarpTo>(dstEntity, new WarpTo { Destination = components[entity].Value });
+            }
         }
     }
     /*  [DisableAutoCreation]

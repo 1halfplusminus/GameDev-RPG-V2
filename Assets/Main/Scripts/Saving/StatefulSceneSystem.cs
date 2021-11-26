@@ -76,7 +76,7 @@ namespace RPG.Saving
             if (count > 0)
             {
                 Debug.Log($"Loading Scene State for: {sceneGUID} {count}");
-                saveSystem.Load(sceneEntityQuery);
+                saveSystem.LoadSerializedWorld();
             }
             sceneEntityQuery.ResetFilter();
         }

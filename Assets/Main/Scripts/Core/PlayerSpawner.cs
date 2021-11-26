@@ -3,6 +3,8 @@ using UnityEngine;
 using Unity.Entities;
 using System.Collections.Generic;
 using Unity.Transforms;
+using UnityEditor;
+using System.IO;
 
 namespace RPG.Core
 {
@@ -14,6 +16,7 @@ namespace RPG.Core
         public bool HasHybridComponent;
 
         public bool GameObjectSpawn;
+
         public void OnDrawGizmos()
         {
 
@@ -39,6 +42,7 @@ namespace RPG.Core
         }
 
     }
+
     public class SpawnConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()

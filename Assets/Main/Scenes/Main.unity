@@ -417,7 +417,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1115021032}
-  m_LocalRotation: {x: 0.5402602, y: -0, z: -0, w: 0.8414981}
+  m_LocalRotation: {x: 0.5402602, y: -0, z: -0, w: 0.841498}
   m_LocalPosition: {x: 1.27, y: 18.22, z: -13.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -553,7 +553,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _SceneAsset: {fileID: 102900000, guid: db7d16cc5e421a73f8863a13c0b96385, type: 3}
   _HierarchyColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  AutoLoadScene: 1
+  AutoLoadScene: 0
   _SceneGUID:
     Value:
       x: 3428964285

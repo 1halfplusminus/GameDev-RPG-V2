@@ -90,6 +90,7 @@ namespace RPG.Core
                 Debug.Log("Loaded Scene " + newSceneRef.SceneGUID);
                 commandBuffer.AddComponent(e, new LoadSceneAsync() { SceneEntity = sceneEntity, SceneGUID = newSceneRef.SceneGUID });
                 commandBuffer.RemoveComponent<TriggerSceneLoad>(e);
+                commandBuffer.AddComponent<InScene>(e, new InScene() { SceneGUID = newSceneRef.SceneGUID });
             })
             .WithStructuralChanges()
             .WithoutBurst()

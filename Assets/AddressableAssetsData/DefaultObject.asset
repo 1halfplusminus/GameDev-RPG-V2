@@ -9,12 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83423c6821253f946aa2dd9db23584ed, type: 3}
-  m_Name: GlobalEntitySceneDependency
+  m_Script: {fileID: 11500000, guid: 3a189bb168d8d90478a09ea08c2f3d72, type: 3}
+  m_Name: DefaultObject
   m_EditorClassIdentifier: 
-  cacheGUID:
-    Value:
-      x: 2338742644
-      y: 3589770793
-      z: 3937309594
-      w: 2464321896
+  m_AddressableAssetSettingsGuid: 789d5733da6e0ca849db077a8751b187

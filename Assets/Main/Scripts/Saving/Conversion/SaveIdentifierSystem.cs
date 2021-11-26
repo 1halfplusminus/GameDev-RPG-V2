@@ -6,7 +6,7 @@ namespace RPG.Saving
 {
     [DisableAutoCreation]
     [UpdateInGroup(typeof(SavingConversionSystemGroup))]
-    public class SaveIdentifierSystem : SystemBase, ISavingConversionSystem
+    public class MapIdentifierSystem : SystemBase, ISavingConversionSystem
     {
         public EntityManager DstEntityManager { get; }
         IdentifiableSystem conversionSystem;
@@ -18,7 +18,7 @@ namespace RPG.Saving
         EntityQuery dstIdentifiedQuery;
 
         NativeArray<EntityRemapInfo> remapInfos;
-        public SaveIdentifierSystem(EntityManager entityManager)
+        public MapIdentifierSystem(EntityManager entityManager)
         {
             DstEntityManager = entityManager;
         }
@@ -45,7 +45,7 @@ namespace RPG.Saving
             using var indexIdentified = IdentifiableSystem.IndexQuery(saveIdentifiedQuery);
             using var indexedDstIdentified = IdentifiableSystem.IndexQuery(dstIdentifiedQuery);
             using var ids = indexIdentified.GetKeyArray(Allocator.Temp);
-            remapInfos = EntityManager.CreateEntityRemapArray(Allocator.Temp);
+            remapInfos = EntityManager.CreateEntityRemapArray(Allocator.Persistent);
             for (int i = 0; i < ids.Length; i++)
             {
                 var id = ids[i];
@@ -53,44 +53,8 @@ namespace RPG.Saving
                 {
                     EntityRemapUtility.AddEntityRemapping(ref remapInfos, indexIdentified[id], indexedDstIdentified[id]);
                 }
-                else
-                {
-                    var entity = DstEntityManager.CreateEntity(new ComponentType[] { ComponentType.ReadOnly<Identifier>(), ComponentType.ReadOnly<SceneSection>() });
-                    var sceneTag = EntityManager.GetSharedComponentData<SceneSection>(indexIdentified[id]);
-                    DstEntityManager.AddComponentData(entity, new Identifier { Id = id });
-                    DstEntityManager.AddSharedComponentData(entity, sceneTag);
-                    EntityRemapUtility.AddEntityRemapping(ref remapInfos, indexIdentified[id], entity);
-                }
+
             }
-            /* using var identified = saveIdentifiedQuery.ToComponentDataArray<Identifier>(Allocator.Temp);
-            using var identifiedEntity = saveIdentifiedQuery.ToEntityArray(Allocator.Temp);
-            using var dstIdentified = dstIdentifiedQuery.ToComponentDataArray<Identifier>(Allocator.Temp);
-            using var dstEntities = dstIdentifiedQuery.ToEntityArray(Allocator.Temp);
-            remapInfos = new NativeArray<EntityRemapInfo>(identified.Length, Allocator.Persistent);
-            var archetype = DstEntityManager.CreateArchetype(new ComponentType[] { typeof(Identifier) });
-            for (int i = 0; i < identified.Length; i++)
-            {
-                for (int j = 0; j < dstIdentified.Length; j++)
-                {
-                    if (dstIdentified[i].Id == identified[i].Id)
-                    {
-                        if (i < dstEntities.Length)
-                        {
-                            EntityRemapUtility.AddEntityRemapping(ref remapInfos, identifiedEntity[i], dstEntities[i]);
-                        }
-                        var target = EntityRemapUtility.RemapEntity(ref remapInfos, identifiedEntity[i]);
-                        if (target == Entity.Null)
-                        {
-
-                            var entity = DstEntityManager.CreateEntity(new ComponentType[] { ComponentType.ReadOnly<Identifier>(), ComponentType.ReadOnly<SceneSection>() });
-                            var sceneTag = EntityManager.GetSharedComponentData<SceneSection>(identifiedEntity[i]);
-                            DstEntityManager.AddComponentData(entity, identified[i]);
-                            DstEntityManager.AddSharedComponentData(entity, sceneTag);
-
-                        }
-                    }
-                }
- */
         }
 
         public Entity GetTarget(Entity entity)
@@ -106,6 +70,66 @@ namespace RPG.Saving
                 remapInfos.Dispose();
             }
         }
+    }
+
+
+
+    [DisableAutoCreation]
+    [UpdateInGroup(typeof(SavingConversionSystemGroup))]
+    [UpdateBefore(typeof(MapIdentifierSystem))]
+    public class CreateIdentifierSystem : SystemBase, ISavingConversionSystem
+    {
+        public EntityManager DstEntityManager { get; }
+        IdentifiableSystem conversionSystem;
+
+        EntityCommandBufferSystem commandBufferSystem;
+
+        EntityQuery saveIdentifiedQuery;
+
+        EntityQuery dstIdentifiedQuery;
+
+
+        public CreateIdentifierSystem(EntityManager entityManager)
+        {
+            DstEntityManager = entityManager;
+        }
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            var description = new EntityQueryDesc()
+            {
+                All = new ComponentType[] { ComponentType.ReadOnly<Identifier>(), ComponentType.ReadOnly<SceneSection>() }
+            };
+            saveIdentifiedQuery = EntityManager.CreateEntityQuery(
+               description
+            );
+            dstIdentifiedQuery = DstEntityManager.CreateEntityQuery(
+              description
+            );
+
+        }
+        protected override void OnUpdate()
+        {
+
+
+            using var indexIdentified = IdentifiableSystem.IndexQuery(saveIdentifiedQuery);
+            using var indexedDstIdentified = IdentifiableSystem.IndexQuery(dstIdentifiedQuery);
+            using var ids = indexIdentified.GetKeyArray(Allocator.Temp);
+            for (int i = 0; i < ids.Length; i++)
+            {
+                var id = ids[i];
+                if (!indexedDstIdentified.ContainsKey(id))
+                {
+                    var entity = DstEntityManager.CreateEntity(new ComponentType[] { ComponentType.ReadOnly<Identifier>(), ComponentType.ReadOnly<SceneSection>() });
+                    var sceneTag = EntityManager.GetSharedComponentData<SceneSection>(indexIdentified[id]);
+                    DstEntityManager.AddComponentData(entity, new Identifier { Id = id });
+                    DstEntityManager.AddSharedComponentData(entity, sceneTag);
+                }
+
+            }
+        }
+
     }
 
 }

@@ -13,12 +13,12 @@ namespace RPG.Saving
 
 
     [UpdateInGroup(typeof(SavingConversionSystemGroup))]
-    [UpdateAfter(typeof(SaveIdentifierSystem))]
+    [UpdateAfter(typeof(MapIdentifierSystem))]
     public abstract class SaveConversionSystemBase<T> : SystemBase, ISavingConversionSystem where T : struct, IComponentData
     {
 
         public EntityManager DstEntityManager { get; }
-        SaveIdentifierSystem conversionSystem;
+        MapIdentifierSystem conversionSystem;
 
         EntityCommandBufferSystem commandBufferSystem;
 
@@ -37,7 +37,7 @@ namespace RPG.Saving
         protected override void OnCreate()
         {
             base.OnCreate();
-            conversionSystem = EntityManager.World.GetOrCreateSystem<SaveIdentifierSystem>();
+            conversionSystem = EntityManager.World.GetOrCreateSystem<MapIdentifierSystem>();
             commandBufferSystem = DstEntityManager.World.GetOrCreateSystem<EntityCommandBufferSystem>();
             EntityQueryDesc description = new EntityQueryDesc()
             {
@@ -61,7 +61,12 @@ namespace RPG.Saving
                 {
                     if (components.HasComponent(entities[i]))
                     {
-                        Convert(conversionSystem.GetTarget(entities[i]), entities[i], components, DstEntityManager, EntityManager);
+                        var target = conversionSystem.GetTarget(entities[i]);
+                        if (target != Entity.Null)
+                        {
+                            Convert(conversionSystem.GetTarget(entities[i]), entities[i], components, DstEntityManager, EntityManager);
+                        }
+
                     }
                 }
                 dstQuery.ResetFilter();
@@ -82,7 +87,7 @@ namespace RPG.Saving
     [DisableAutoCreation]
 
     [UpdateInGroup(typeof(SavingConversionSystemGroup))]
-    [UpdateAfter(typeof(SaveIdentifierSystem))]
+    [UpdateAfter(typeof(MapIdentifierSystem))]
     public class SavePlayedSystem : SaveConversionSystemBase<Played>
     {
         public SavePlayedSystem(EntityManager entityManager) : base(entityManager)

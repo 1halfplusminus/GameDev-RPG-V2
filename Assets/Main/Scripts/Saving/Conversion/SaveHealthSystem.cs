@@ -8,7 +8,7 @@ namespace RPG.Saving
     [DisableAutoCreation]
 
     [UpdateInGroup(typeof(SavingConversionSystemGroup))]
-    [UpdateAfter(typeof(SaveIdentifierSystem))]
+    [UpdateAfter(typeof(MapIdentifierSystem))]
     public class SaveHealthSystem : SaveConversionSystemBase<Health>
     {
         public SaveHealthSystem(EntityManager entityManager) : base(entityManager)
