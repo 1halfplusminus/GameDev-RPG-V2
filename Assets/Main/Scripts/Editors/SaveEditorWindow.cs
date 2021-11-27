@@ -80,35 +80,35 @@ public class SaveEditorWindow : EditorWindow
             scenes.choices.Add(subScene.SceneName);
         }
 
-        var saveSceneButton = root.Q<Button>("SaveScene");
+        /*    var saveSceneButton = root.Q<Button>("SaveScene");
 
-        saveSceneButton.clicked += () =>
-        {
-            var saveSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SaveSystem>();
-            var sceneSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SceneSystem>();
-            var sceneGUID = userData[scenes.index];
-            var sceneEntity = sceneSystem.GetSceneEntity(sceneGUID);
+           saveSceneButton.clicked += () =>
+           {
+               var saveSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SaveSystem>();
+               var sceneSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SceneSystem>();
+               var sceneGUID = userData[scenes.index];
+               var sceneEntity = sceneSystem.GetSceneEntity(sceneGUID);
 
-            var query = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(Identifier), typeof(SceneTag));
-            query.AddSharedComponentFilter(new SceneTag() { SceneEntity = sceneEntity });
-            saveSystem.Save(query);
-            Debug.Log($"Saving Scene For {scenes.choices[scenes.index]} : {sceneEntity.Index} : GUID {sceneGUID}");
-        };
+               var query = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(Identifier), typeof(SceneTag));
+               query.AddSharedComponentFilter(new SceneTag() { SceneEntity = sceneEntity });
+               saveSystem.Save(query);
+               Debug.Log($"Saving Scene For {scenes.choices[scenes.index]} : {sceneEntity.Index} : GUID {sceneGUID}");
+           };
 
-        var loadSceneButton = root.Q<Button>("LoadScene");
+           var loadSceneButton = root.Q<Button>("LoadScene");
 
-        loadSceneButton.clicked += () =>
-        {
-            var saveSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SaveSystem>();
-            var sceneSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SceneSystem>();
-            var sceneGUID = userData[scenes.index];
-            var sceneEntity = sceneSystem.GetSceneEntity(sceneGUID);
+           loadSceneButton.clicked += () =>
+           {
+               var saveSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SaveSystem>();
+               var sceneSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SceneSystem>();
+               var sceneGUID = userData[scenes.index];
+               var sceneEntity = sceneSystem.GetSceneEntity(sceneGUID);
 
-            var query = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(Identifier), typeof(SceneTag));
-            query.AddSharedComponentFilter(new SceneTag() { SceneEntity = sceneEntity });
-            saveSystem.LoadSerializedWorld();
-            Debug.Log($"Loading Scene For {scenes.choices[scenes.index]} : {sceneEntity.Index}");
-        };
+               var query = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(Identifier), typeof(SceneTag));
+               query.AddSharedComponentFilter(new SceneTag() { SceneEntity = sceneEntity });
+               saveSystem.LoadSerializedWorld();
+               Debug.Log($"Loading Scene For {scenes.choices[scenes.index]} : {sceneEntity.Index}");
+           }; */
         rootVisualElement.Add(root);
     }
 }

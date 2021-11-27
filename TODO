@@ -1,0 +1,14 @@
+
+Spawner System:
+  ☐ Rename player spawner to a more fitting name
+  ☐ Finish new spawning system
+    ☐ Create a prefab in editor and use that prefab created on fly to spawn entity
+Saving System:
+  ☐ State should be persisted between scene: @started(21-11-27 17:23)
+  ☐ Player should be able to save progression in save file @started(21-11-27 17:24)
+    ☐ Check if working in build mode @started(21-11-27 17:25)
+    ☐ Toggle save to file with Ctr + S 
+    ☐ Toggle load from file Ctr + L
+  
+  
+  

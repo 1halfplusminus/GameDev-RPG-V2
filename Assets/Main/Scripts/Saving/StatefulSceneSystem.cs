@@ -7,6 +7,7 @@ using Unity.Jobs;
 
 namespace RPG.Saving
 {
+    public struct DontLoadSceneState : IComponentData { }
 
     [UpdateInGroup(typeof(SavingSystemGroup))]
     [UpdateAfter(typeof(SpawnableIdentifiableSystem))]
@@ -27,12 +28,20 @@ namespace RPG.Saving
             sceneSystem = World.GetOrCreateSystem<SceneSystem>();
             sceneEntityQuery = GetEntityQuery(typeof(SceneSection), typeof(Identifier));
             sceneNeedSavingQuery = GetEntityQuery(typeof(TriggerUnloadScene));
-            sceneNeedLoadingQuery = GetEntityQuery(typeof(SceneLoaded));
+            sceneNeedLoadingQuery = GetEntityQuery(new EntityQueryDesc()
+            {
+                All = new ComponentType[] {
+                    typeof(TriggeredSceneLoaded)
+                },
+                None = new ComponentType[] {
+                    typeof(DontLoadSceneState)
+                }
+            });
             RequireForUpdate(GetEntityQuery(new EntityQueryDesc()
             {
                 Any = new ComponentType[] {
                     typeof(TriggerUnloadScene),
-                    typeof(SceneLoaded)
+                    typeof(TriggeredSceneLoaded)
                 }
             }));
         }
@@ -64,7 +73,7 @@ namespace RPG.Saving
             if (count > 0)
             {
                 Debug.Log($"Saving Scene State for: {sceneGUID} {count}");
-                saveSystem.Save(sceneEntityQuery);
+                saveSystem.Save(sceneEntityQuery, SavingStateType.SCENE);
             }
             sceneEntityQuery.ResetFilter();
         }
@@ -76,14 +85,14 @@ namespace RPG.Saving
             if (count > 0)
             {
                 Debug.Log($"Loading Scene State for: {sceneGUID} {count}");
-                saveSystem.LoadSerializedWorld();
+                saveSystem.LoadSerializedWorld(SavingStateType.SCENE);
             }
             sceneEntityQuery.ResetFilter();
         }
         private void LoadDataOnLoad()
         {
             var sceneNeedLoadingCount = sceneNeedLoadingQuery.CalculateEntityCount();
-            var loadScenesAsync = sceneNeedLoadingQuery.ToComponentDataArray<SceneLoaded>(Allocator.Temp);
+            var loadScenesAsync = sceneNeedLoadingQuery.ToComponentDataArray<TriggeredSceneLoaded>(Allocator.Temp);
             for (int i = 0; i < loadScenesAsync.Length; i++)
             {
                 LoadScene(loadScenesAsync[i].SceneGUID);

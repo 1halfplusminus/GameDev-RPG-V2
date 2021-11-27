@@ -158,13 +158,33 @@ namespace RPG.Saving
 
     }
 
+    public enum SavingStateType : byte
+    {
+
+        SCENE = 1 << 0,
+        FILE = 3 << 0,
+    }
+    public enum SavingStateDirection : byte
+    {
+
+        LOADING = 4 << 0,
+        SAVING = 12 << 0,
+
+    }
+
+
+    public struct SavingState : IComponentData
+    {
+        public SavingStateDirection Direction;
+        public SavingStateType Type;
+
+    }
 
 
     [UpdateInGroup(typeof(SavingSystemGroup))]
     public class SaveSystem : SystemBase
     {
 
-        const int SERIALIZATION_WORLD_FLAG = 1;
         const string SAVING_PATH = "save.bin";
 
         World conversionWorld;
@@ -194,6 +214,24 @@ namespace RPG.Saving
 
         }
 
+        private void CreateSavingStateEntity(EntityManager em, SavingStateType type, SavingStateDirection direction)
+        {
+            var entity = em.CreateEntity(typeof(SavingState));
+            em.AddComponentData(entity, new SavingState { Direction = direction, Type = type });
+        }
+        private void UnloadAllCurrentlyLoadedScene(EntityManager dstManager)
+        {
+            if (dstManager.World.Flags == WorldFlags.Game)
+            {
+                var loadedSceneQuery = dstManager.CreateEntityQuery(typeof(SceneLoaded));
+                using var currentLoadedScene = loadedSceneQuery.ToComponentDataArray<SceneLoaded>(Allocator.Temp);
+                using var loadedScenes = loadedSceneQuery.ToEntityArray(Allocator.Temp);
+                for (int i = 0; i < currentLoadedScene.Length; i++)
+                {
+                    dstManager.AddComponentData(loadedScenes[i], new UnloadScene() { SceneEntity = loadedScenes[i] });
+                }
+            }
+        }
         public World RecreateSerializeConversionWorld()
         {
             if (conversionWorld != null && conversionWorld.IsCreated)
@@ -222,8 +260,9 @@ namespace RPG.Saving
         {
             if (File.Exists(saveFile.ToString()))
             {
+                UnloadAllCurrentlyLoadedScene(EntityManager);
                 LoadFileInSerializedWorld(saveFile);
-                LoadSerializedWorld();
+                LoadSerializedWorld(SavingStateType.FILE);
             }
         }
 
@@ -231,34 +270,36 @@ namespace RPG.Saving
         {
             UnityEngine.Debug.Log("File Exists Loading File");
             // Load world from file
-            var conversionWorld = RecreateSerializeConversionWorld();
+            using var tempFileConversionWorld = RecreateSerializeConversionWorld();
             using var binaryReader = CreateFileReader(saveFile.ToString());
-            SerializeUtility.DeserializeWorld(conversionWorld.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);
+            SerializeUtility.DeserializeWorld(tempFileConversionWorld.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);
             conversionWorld.EntityManager.EndExclusiveEntityTransaction();
 
             var serializedWorld = GetOrCreateSerializedWorld();
-            AddConversionSystems(conversionWorld, serializedWorld.EntityManager);
-            UpdateConversionSystems(conversionWorld);
+            CreateSavingStateEntity(tempFileConversionWorld.EntityManager, SavingStateType.FILE, SavingStateDirection.SAVING);
+            AddConversionSystems(tempFileConversionWorld, serializedWorld.EntityManager);
+            UpdateConversionSystems(tempFileConversionWorld);
         }
 
-        public void Load(World conversionWorld)
+        public void Load(World conversionWorld, SavingStateType type)
         {
+            CreateSavingStateEntity(conversionWorld.EntityManager, type, SavingStateDirection.LOADING);
             AddConversionSystems(conversionWorld, World.EntityManager);
             UpdateConversionSystems(conversionWorld);
         }
 
-        public void LoadSerializedWorld()
+        public void LoadSerializedWorld(SavingStateType type)
         {
-            using var conversionWorld = RecreateSerializeConversionWorld();
+            var conversionWorld = RecreateSerializeConversionWorld();
             var serializedWorld = GetOrCreateSerializedWorld();
             var serializedWorldIdentified = serializedWorld.EntityManager.CreateEntityQuery(ComponentType.ReadOnly(typeof(Identifier)));
             AddQueryToWorld(serializedWorld.EntityManager, conversionWorld, serializedWorldIdentified);
-            Load(conversionWorld);
+            Load(conversionWorld, type);
         }
 
         private static List<SystemBase> GetSavingSystem(EntityManager em)
         {
-            return new List<SystemBase> { new MapIdentifierSystem(em), new SavePlayedSystem(em), new SaveHealthSystem(em), new SavePositionSystem(em) };
+            return new List<SystemBase> { new MapIdentifierSystem(em), new SavePlayedSystem(em), new SaveHealthSystem(em), new SavePositionSystem(em), new SaveInSceneSystem(em) };
         }
 
         private NativeHashMap<Unity.Entities.Hash128, Entity> IndexIdentifiableEntities(EntityManager em)
@@ -312,14 +353,17 @@ namespace RPG.Saving
         }
         public void Save(FixedString128 saveFile)
         {
-            var serializedSavingWorld = Save(saveableQuery);
+
+            var serializedSavingWorld = Save(saveableQuery, SavingStateType.FILE);
             using var binaryWriter = CreateFileWriter(saveFile);
             SerializeUtility.SerializeWorld(serializedSavingWorld.EntityManager, binaryWriter);
         }
-        public World Save(EntityQuery query)
+        public World Save(EntityQuery query, SavingStateType type)
         {
 
-            using var conversionWorld = RecreateSerializeConversionWorld();
+
+            var conversionWorld = RecreateSerializeConversionWorld();
+            CreateSavingStateEntity(conversionWorld.EntityManager, type, SavingStateDirection.SAVING);
             AddQueryToWorld(World.EntityManager, conversionWorld, query);
             Debug.Log($"Save query {conversionWorld.Name}");
             var serializedSavingWorld = GetOrCreateSerializedWorld();

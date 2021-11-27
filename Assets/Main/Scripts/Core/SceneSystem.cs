@@ -23,9 +23,13 @@ namespace RPG.Core
     {
 
     }
-    public struct SceneLoaded : IComponentData
+    public struct TriggeredSceneLoaded : IComponentData
     {
         public Entity SceneEntity;
+        public Unity.Entities.Hash128 SceneGUID;
+    }
+    public struct SceneLoaded : IComponentData
+    {
         public Unity.Entities.Hash128 SceneGUID;
     }
     public struct LoadSceneAsync : IComponentData
@@ -67,7 +71,7 @@ namespace RPG.Core
             base.OnCreate();
             sceneSystem = World.GetOrCreateSystem<SceneSystem>();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-            sceneLoadedQuery = GetEntityQuery(ComponentType.ReadOnly(typeof(SceneLoaded)));
+            sceneLoadedQuery = GetEntityQuery(ComponentType.ReadOnly(typeof(TriggeredSceneLoaded)));
             waitForSpawn = GetEntityQuery(new EntityQueryDesc
             {
                 All = new ComponentType[] { typeof(Spawn), typeof(SceneTag) },
@@ -77,7 +81,7 @@ namespace RPG.Core
         }
         protected override void OnUpdate()
         {
-            EntityManager.RemoveComponent<SceneLoaded>(sceneLoadedQuery);
+            EntityManager.RemoveComponent<TriggeredSceneLoaded>(sceneLoadedQuery);
             var _sceneSystem = sceneSystem;
             var em = EntityManager;
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
@@ -87,10 +91,10 @@ namespace RPG.Core
             {
                 var sceneEntity = _sceneSystem.LoadSceneAsync(triggerSceneLoad.SceneGUID);
                 var newSceneRef = em.GetComponentData<SceneReference>(sceneEntity);
-                Debug.Log("Loaded Scene " + newSceneRef.SceneGUID);
+                Debug.Log($"Loading Scene {newSceneRef.SceneGUID}");
                 commandBuffer.AddComponent(e, new LoadSceneAsync() { SceneEntity = sceneEntity, SceneGUID = newSceneRef.SceneGUID });
                 commandBuffer.RemoveComponent<TriggerSceneLoad>(e);
-                commandBuffer.AddComponent<InScene>(e, new InScene() { SceneGUID = newSceneRef.SceneGUID });
+
             })
             .WithStructuralChanges()
             .WithoutBurst()
@@ -110,6 +114,7 @@ namespace RPG.Core
             {
                 Debug.Log($"Unload Scene {unloadScene.SceneEntity}");
                 _sceneSystem.UnloadScene(unloadScene.SceneEntity);
+                commandBuffer.RemoveComponent<SceneLoaded>(unloadScene.SceneEntity);
                 commandBuffer.RemoveComponent<UnloadScene>(e);
             })
             .WithStructuralChanges()
@@ -160,7 +165,7 @@ namespace RPG.Core
                 .ScheduleParallel();
                 using var loadingScenes = sceneLoadingQuery.ToEntityArray(Allocator.Temp);
                 using var loadingScenesData = sceneLoadingQuery.ToComponentDataArray<LoadSceneAsync>(Allocator.Temp);
-                using var sceneLoadedList = new NativeHashMap<Entity, SceneLoaded>(sceneLoadingCount, Allocator.Temp);
+                using var sceneLoadedList = new NativeHashMap<Entity, TriggeredSceneLoaded>(sceneLoadingCount, Allocator.Temp);
                 for (int i = 0; i < loadingScenes.Length; i++)
                 {
                     if (sceneSystem.IsSceneLoaded(loadingScenesData[i].SceneEntity))
@@ -180,11 +185,20 @@ namespace RPG.Core
                         }
                         if (allSectionLoaded)
                         {
-                            Debug.Log("Scene is loaded");
-                            sceneLoadedList.Add(loadingScenes[i], new SceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
-                            EntityManager.AddComponentData(loadingScenes[i], new SceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
+                            Debug.Log($"Scene {loadingScenesData[i].SceneGUID} is loaded");
+                            EntityManager.AddComponentData(loadingScenesData[i].SceneEntity, new SceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
+                            sceneLoadedList.Add(loadingScenes[i], new TriggeredSceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
+                            EntityManager.AddComponentData(loadingScenes[i], new TriggeredSceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
+                        }
+                        else
+                        {
+                            Debug.Log($"Scene section for {loadingScenesData[i].SceneGUID} is still loading");
                         }
 
+                    }
+                    else
+                    {
+                        Debug.Log($"Scene {loadingScenesData[i].SceneGUID} is still loading");
                     }
                 }
                 var sceneLoaded = sceneLoadedList.GetKeyArray(Allocator.Temp);
