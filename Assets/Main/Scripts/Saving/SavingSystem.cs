@@ -42,7 +42,7 @@ namespace RPG.Saving
     public class SaveSystem : SystemBase
     {
 
-        const string SAVING_PATH = "save.bin";
+        string SAVING_PATH;
 
         World conversionWorld;
 
@@ -63,6 +63,7 @@ namespace RPG.Saving
             {
                 All = new ComponentType[] { ComponentType.ReadOnly(typeof(Identifier)), ComponentType.ReadOnly(typeof(SceneSection)) },
             });
+            SAVING_PATH = $"{Application.persistentDataPath}/save.bin";
         }
 
 

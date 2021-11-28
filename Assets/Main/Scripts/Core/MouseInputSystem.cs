@@ -8,6 +8,7 @@ using Unity.Physics;
 using static ExtensionMethods.EcsConversionExtension;
 
 
+
 namespace RPG.Core
 {
     [GenerateAuthoringComponent]
@@ -21,24 +22,45 @@ namespace RPG.Core
         public int Frame;
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
+    public class InputSystem : SystemBase
+    {
+
+        GameInput input;
+
+        public GameInput Input { get { return input; } }
+        protected override void OnCreate()
+        {
+            // FIXME: Create entity in a conversion system
+            base.OnCreate();
+            input = new GameInput();
+            input.Enable();
+
+        }
+        protected override void OnUpdate()
+        {
+
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            input.Disable();
+        }
+    }
+    [UpdateInGroup(typeof(CoreSystemGroup))]
 
     public class MouseInputSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         GameInput input;
-
         MouseClick capturedClick;
 
         protected override void OnCreate()
         {
             entityCommandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
-            input = new GameInput();
-            input.Enable();
+            input = World.GetOrCreateSystem<InputSystem>().Input;
         }
-        protected override void OnDestroy()
-        {
-            input.Disable();
-        }
+
         protected MouseClick ReadClick()
         {
 
@@ -96,7 +118,7 @@ namespace RPG.Core
             }).ScheduleParallel();
         }
     }
-
+    [DisableAutoCreation]
     public class DebugPlayerMouseInputSystem : SystemBase
     {
         protected override void OnUpdate()

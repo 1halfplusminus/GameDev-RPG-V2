@@ -9,12 +9,11 @@ namespace RPG.Saving
     [UpdateInGroup(typeof(SavingSystemGroup))]
     public class SpawnableIdentifiableSystem : SystemBase
     {
-        EntityCommandBufferSystem entityCommandBufferSystem;
+
         EntityQuery identifiableSpawnerQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
-            entityCommandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
             identifiableSpawnerQuery = GetEntityQuery(new EntityQueryDesc()
             {
                 All = new ComponentType[] {

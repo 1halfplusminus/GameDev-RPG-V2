@@ -15,9 +15,8 @@ namespace RPG.Core
     [UpdateAfter(typeof(RaycastSystem))]
     public class ClickOnTerrainSystem : SystemBase
     {
-        const float MAX_DISTANCE = 10000000f;
-        EntityQuery queryClicks;
-        EntityQuery queryTerrains;
+
+
         EntityCommandBufferSystem commandBufferSystem;
         protected override void OnCreate()
         {

@@ -10,10 +10,10 @@ Saving System:
       ✔ Fix played not saved when playing in build @done(21-11-28 16:44)
       ✔ Played is not loaded when scene state is restored @done(21-11-28 16:44)
     Debug Saving System:
-      ☐ Toggle save to file with Ctr + S 
-      ☐ Toggle load from file Ctr + L
-      ☐ Test if saving and load file work in build mode
-  ☐ Looking at udemy vidoes on how they implement it @started(21-11-27 20:20)
+      ✔ Toggle save to file with Ctr + S @started(21-11-29 10:14) @done(21-11-29 10:14) @lasted(54s)
+      ✔ Toggle load from file Ctr + L @done(21-11-29 10:14)
+      ✔ Test if saving and load file work in build mode @done(21-11-29 10:34)
+  ☐ Looking at udemy videos on how they implement it @started(21-11-27 20:20)
 VFX on hit system:
   ☐ Create a conversion system that get all addresable with a label & convert them as entity to be spawned as vfx effect
   ☐ Spawn VFX on hit
