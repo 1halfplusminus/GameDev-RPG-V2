@@ -63,10 +63,13 @@ namespace RPG.Saving
             {
                 All = new ComponentType[] { ComponentType.ReadOnly(typeof(Identifier)), ComponentType.ReadOnly(typeof(SceneSection)) },
             });
-            SAVING_PATH = $"{Application.persistentDataPath}/save.bin";
+            SAVING_PATH = GetPathFromSaveFile("save.bin");
         }
 
-
+        protected string GetPathFromSaveFile(string saveFile)
+        {
+            return Path.Combine(Application.persistentDataPath, saveFile);
+        }
         protected override void OnUpdate()
         {
 
