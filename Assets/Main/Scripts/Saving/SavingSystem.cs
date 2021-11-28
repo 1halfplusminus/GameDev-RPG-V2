@@ -122,7 +122,7 @@ namespace RPG.Saving
                 UnloadAllCurrentlyLoadedScene(EntityManager);
                 LoadFileInSerializedWorld(saveFile);
                 LoadSerializedWorld(SavingStateType.FILE);
-                EntityManager.CompleteAllJobs();
+
             }
         }
 
@@ -139,7 +139,7 @@ namespace RPG.Saving
             CreateSavingStateEntity(tempFileConversionWorld.EntityManager, SavingStateType.FILE, SavingStateDirection.SAVING);
             AddConversionSystems(tempFileConversionWorld, serializedWorld.EntityManager);
             UpdateConversionSystems(tempFileConversionWorld);
-            tempFileConversionWorld.EntityManager.CompleteAllJobs();
+
         }
 
         public void Load(World conversionWorld, SavingStateType type)
@@ -151,7 +151,7 @@ namespace RPG.Saving
 
         public void LoadSerializedWorld(SavingStateType type)
         {
-            var conversionWorld = RecreateSerializeConversionWorld();
+            using var conversionWorld = RecreateSerializeConversionWorld();
             var serializedWorld = GetOrCreateSerializedWorld();
             var serializedWorldIdentified = serializedWorld
             .EntityManager.CreateEntityQuery(ComponentType.ReadOnly<Identifier>());

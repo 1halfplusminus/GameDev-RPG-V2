@@ -4,15 +4,15 @@ Spawner System:
   ☐ Finish new spawning system
     ☐ Create a prefab in editor and use that prefab created on fly to spawn entity
 Saving System:
-  ☐ State should be persisted between scene: @started(21-11-27 17:23)
-  ☐ Player should be able to save progression in save file @started(21-11-27 17:24)
-    ☐ Check if working in build mode @started(21-11-27 17:25)
-      ☐ Fix played not saved when playing in build
-      ☐ Played is not loaded when scene state is restored
-
+  ✔ State should be persisted between scene: @started(21-11-27 17:23) @done(21-11-28 16:44) @lasted(23h21m21s)
+  ✔ Player should be able to save progression in save file @started(21-11-28 16:44) @done(21-11-28 16:44) @lasted(4s)
+    ✔ Check if working in build mode @started(21-11-27 17:25) @done(21-11-28 16:44) @lasted(23h19m8s)
+      ✔ Fix played not saved when playing in build @done(21-11-28 16:44)
+      ✔ Played is not loaded when scene state is restored @done(21-11-28 16:44)
     Debug Saving System:
       ☐ Toggle save to file with Ctr + S 
       ☐ Toggle load from file Ctr + L
+      ☐ Test if saving and load file work in build mode
   ☐ Looking at udemy vidoes on how they implement it @started(21-11-27 20:20)
 VFX on hit system:
   ☐ Create a conversion system that get all addresable with a label & convert them as entity to be spawned as vfx effect
