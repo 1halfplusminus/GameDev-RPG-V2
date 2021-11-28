@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028386, g: 0.22571427, b: 0.3069231, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -198,7 +198,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &157592980952474267
 MonoBehaviour:
@@ -390,31 +390,6 @@ MonoBehaviour:
   - Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
     Value: {fileID: 3020227930344030348}
---- !u!114 &157592981201192316
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7173820152354852923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c62b946cf86d11615a1a423b87d1a1c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &157592981201192318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7173820152354852923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b2da85fd21c88b95a2b2ed9bec37235, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SceneAsset: {fileID: 102900000, guid: db7d16cc5e421a73f8863a13c0b96385, type: 3}
 --- !u!4 &192080884869743412
 Transform:
   m_ObjectHideFlags: 0
@@ -3193,9 +3168,9 @@ NavMeshAgent:
   avoidancePriority: 50
   m_AngularSpeed: 1200
   m_StoppingDistance: 2
-  m_AutoTraverseOffMeshLink: 1
+  m_AutoTraverseOffMeshLink: 0
   m_AutoBraking: 1
-  m_AutoRepath: 1
+  m_AutoRepath: 0
   m_Height: 2
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
@@ -3221,9 +3196,8 @@ GameObject:
   - component: {fileID: 912894020136712484}
   - component: {fileID: 5967675064491401401}
   - component: {fileID: 7214651280754839060}
-  - component: {fileID: 157592981201192316}
-  - component: {fileID: 157592981201192318}
   - component: {fileID: 7173820152354852924}
+  - component: {fileID: 7173820152354852925}
   m_Layer: 0
   m_Name: Morie Hero
   m_TagString: Untagged
@@ -3244,6 +3218,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
+--- !u!114 &7173820152354852925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7173820152354852923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b2da85fd21c88b95a2b2ed9bec37235, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SceneAsset: {fileID: 102900000, guid: db7d16cc5e421a73f8863a13c0b96385, type: 3}
 --- !u!4 &7212305661665114056
 Transform:
   m_ObjectHideFlags: 0
@@ -3450,7 +3437,7 @@ Transform:
   - {fileID: 7212305661665114056}
   - {fileID: 8141032301711352378}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7602489938190320128
 GameObject:

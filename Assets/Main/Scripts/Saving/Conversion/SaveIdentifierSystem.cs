@@ -9,9 +9,6 @@ namespace RPG.Saving
     public class MapIdentifierSystem : SystemBase, ISavingConversionSystem
     {
         public EntityManager DstEntityManager { get; }
-        IdentifiableSystem conversionSystem;
-
-        EntityCommandBufferSystem commandBufferSystem;
 
         EntityQuery saveIdentifiedQuery;
 
@@ -28,7 +25,7 @@ namespace RPG.Saving
             base.OnCreate();
             var description = new EntityQueryDesc()
             {
-                All = new ComponentType[] { ComponentType.ReadOnly<Identifier>(), ComponentType.ReadOnly<SceneSection>() }
+                All = new ComponentType[] { ComponentType.ReadOnly<Identifier>() }
             };
             saveIdentifiedQuery = EntityManager.CreateEntityQuery(
                description
@@ -51,7 +48,7 @@ namespace RPG.Saving
                 var id = ids[i];
                 if (indexedDstIdentified.ContainsKey(id))
                 {
-                    EntityRemapUtility.AddEntityRemapping(ref remapInfos, indexIdentified[id], indexedDstIdentified[id]);
+                    AddEntityRemapping(ref remapInfos, indexIdentified[id], indexedDstIdentified[id]);
                 }
 
             }
@@ -59,7 +56,7 @@ namespace RPG.Saving
 
         public Entity GetTarget(Entity entity)
         {
-            return EntityRemapUtility.RemapEntity(ref remapInfos, entity);
+            return RemapEntity(ref remapInfos, entity);
         }
 
         protected override void OnDestroy()
@@ -80,9 +77,6 @@ namespace RPG.Saving
     public class CreateIdentifierSystem : SystemBase, ISavingConversionSystem
     {
         public EntityManager DstEntityManager { get; }
-        IdentifiableSystem conversionSystem;
-
-        EntityCommandBufferSystem commandBufferSystem;
 
         EntityQuery saveIdentifiedQuery;
 
@@ -118,15 +112,21 @@ namespace RPG.Saving
             using var ids = indexIdentified.GetKeyArray(Allocator.Temp);
             for (int i = 0; i < ids.Length; i++)
             {
+
+                var entity = Entity.Null;
                 var id = ids[i];
+                var sceneTag = EntityManager.GetSharedComponentData<SceneSection>(indexIdentified[id]);
                 if (!indexedDstIdentified.ContainsKey(id))
                 {
-                    var entity = DstEntityManager.CreateEntity(new ComponentType[] { ComponentType.ReadOnly<Identifier>(), ComponentType.ReadOnly<SceneSection>() });
-                    var sceneTag = EntityManager.GetSharedComponentData<SceneSection>(indexIdentified[id]);
-                    DstEntityManager.AddComponentData(entity, new Identifier { Id = id });
-                    DstEntityManager.AddSharedComponentData(entity, sceneTag);
-                }
+                    entity = DstEntityManager.CreateEntity(new ComponentType[] { ComponentType.ReadOnly<Identifier>(), ComponentType.ReadOnly<SceneSection>() });
 
+                }
+                else
+                {
+                    entity = indexedDstIdentified[id];
+                }
+                DstEntityManager.AddComponentData(entity, new Identifier { Id = id });
+                DstEntityManager.AddSharedComponentData(entity, sceneTag);
             }
         }
 

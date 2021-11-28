@@ -1,160 +1,17 @@
-using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Entities.Serialization;
 using Unity.Collections;
 using System.IO;
 using UnityEngine;
-using Unity.Jobs;
-using Hash128 = Unity.Entities.Hash128;
-using Unity.Assertions;
 using RPG.Core;
-using System;
+
 
 namespace RPG.Saving
 {
-    public struct Identifier : IComponentData
-    {
-        public Unity.Entities.Hash128 Id;
-    }
-    public struct Identified : IComponentData
-    {
 
-    }
-    public interface ISavingConversionSystem
-    {
-        EntityManager DstEntityManager { get; }
-
-
-    }
     public struct HasSpawnIdentified : IComponentData
     {
-
-    }
-
-    [UpdateInGroup(typeof(SavingSystemGroup))]
-    [UpdateBefore(typeof(SaveSystem))]
-    public class IdentifiableSystem : SystemBase
-    {
-        NativeHashMap<Unity.Entities.Hash128, Entity> identifiableEntities;
-
-        EntityQuery identiableQuery;
-        EntityQuery identifiedQuery;
-        public NativeHashMap<Unity.Entities.Hash128, Entity> IdentifiableEntities
-        {
-            get
-            {
-                var ids = IndexQuery(identifiedQuery);
-                return ids;
-            }
-        }
-
-        EntityCommandBufferSystem entityCommandBufferSystem;
-
-        private JobHandle outputDependency;
-
-        public static NativeHashMap<Unity.Entities.Hash128, Entity> IndexQuery(EntityQuery query)
-        {
-            var ids = new NativeHashMap<Unity.Entities.Hash128, Entity>(query.CalculateEntityCount(), Allocator.TempJob);
-            var datas = query.ToComponentDataArray<Identifier>(Allocator.Temp);
-            var entities = query.ToEntityArray(Allocator.Temp);
-            for (int i = 0; i < datas.Length; i++)
-            {
-                if (ids.ContainsKey(datas[i].Id))
-                {
-                    Debug.Log($"{entities[i]} and {ids[datas[i].Id]} as the same identifier : {datas[i].Id}");
-                    ids.Remove(datas[i].Id);
-                }
-                ids.TryAdd(datas[i].Id, entities[i]);
-            }
-            entities.Dispose();
-            datas.Dispose();
-            return ids;
-        }
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            identifiableEntities = new NativeHashMap<Unity.Entities.Hash128, Entity>(0, Allocator.Persistent);
-            entityCommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
-            identifiedQuery = GetEntityQuery(typeof(Identifier));
-            RequireForUpdate(identiableQuery);
-        }
-
-
-        public static bool TryGetEntity(in NativeHashMap<Unity.Entities.Hash128, Entity> entities, Hash128 hash, out Entity entity)
-        {
-            entity = Entity.Null;
-            if (entities.ContainsKey(hash))
-            {
-                entity = entities[hash];
-                return true;
-            }
-            return false;
-        }
-        public static Entity GetOrCreateEntity(in NativeHashMap<Unity.Entities.Hash128, Entity> entities, Hash128 hash, EntityCommandBuffer transaction)
-        {
-
-            var entityFound = TryGetEntity(entities, hash, out var entity);
-            if (!entityFound)
-            {
-                entity = transaction.CreateEntity();
-                transaction.AddComponent<Identifier>(entity, new Identifier { Id = hash });
-
-            }
-
-            return entity;
-        }
-        public static Entity GetOrCreateEntity(in NativeHashMap<Unity.Entities.Hash128, Entity> entities, Hash128 hash, EntityCommandBuffer.ParallelWriter transaction, int entityInQueryIndex)
-        {
-
-            var entityFound = TryGetEntity(entities, hash, out var entity);
-            if (!entityFound)
-            {
-                Debug.Log($"Entity not found creating {entity}");
-                entity = transaction.CreateEntity(entityInQueryIndex);
-                transaction.AddComponent<Identifier>(entityInQueryIndex, entity, new Identifier { Id = hash });
-            }
-
-            return entity;
-        }
-        protected override void OnUpdate()
-        {
-            /*          identifiableEntities.Clear(); */
-            var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
-            identifiableEntities.Capacity += identiableQuery.CalculateEntityCount();
-            var identifiedNowWritter = identifiableEntities.AsParallelWriter();
-            var commandBufferP = commandBuffer.AsParallelWriter();
-            Entities
-            .WithStoreEntityQueryInField(ref identiableQuery)
-            .WithNone<Identified>()
-            .ForEach((int entityInQueryIndex, Entity e, in Identifier identifier) =>
-            {
-                commandBufferP.AddComponent<Identified>(entityInQueryIndex, e);
-            })
-            .ScheduleParallel();
-
-            // Entities
-            // .WithAll<Identified>()
-            // .ForEach((int entityInQueryIndex, Entity e, in Identifier identifier) =>
-            // {
-            //     identifiedNowWritter.TryAdd(identifier.Id, e);
-            // })
-            // .ScheduleParallel();
-
-            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
-
-            outputDependency = Dependency;
-        }
-
-        public JobHandle GetOutputDependency()
-        {
-            return outputDependency;
-        }
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-            identifiableEntities.Dispose();
-        }
 
     }
 
@@ -231,6 +88,7 @@ namespace RPG.Saving
                     dstManager.AddComponentData(loadedScenes[i], new UnloadScene() { SceneEntity = loadedScenes[i] });
                 }
             }
+
         }
         public World RecreateSerializeConversionWorld()
         {
@@ -245,7 +103,7 @@ namespace RPG.Saving
         public static World CreateConversionWorld()
         {
 
-            var conversionWorld = new World("Saving Conversion");
+            var conversionWorld = new World("Saving Conversion", WorldFlags.Staging);
             conversionWorld.CreateSystem<UpdateWorldTimeSystem>();
             var initializationSystemGroup = conversionWorld.CreateSystem<InitializationSystemGroup>();
             var beginInitializationECS = conversionWorld.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
@@ -260,15 +118,17 @@ namespace RPG.Saving
         {
             if (File.Exists(saveFile.ToString()))
             {
+                Debug.Log("File Exists Loading File");
                 UnloadAllCurrentlyLoadedScene(EntityManager);
                 LoadFileInSerializedWorld(saveFile);
                 LoadSerializedWorld(SavingStateType.FILE);
+                EntityManager.CompleteAllJobs();
             }
         }
 
         private void LoadFileInSerializedWorld(FixedString128 saveFile)
         {
-            UnityEngine.Debug.Log("File Exists Loading File");
+
             // Load world from file
             using var tempFileConversionWorld = RecreateSerializeConversionWorld();
             using var binaryReader = CreateFileReader(saveFile.ToString());
@@ -279,6 +139,7 @@ namespace RPG.Saving
             CreateSavingStateEntity(tempFileConversionWorld.EntityManager, SavingStateType.FILE, SavingStateDirection.SAVING);
             AddConversionSystems(tempFileConversionWorld, serializedWorld.EntityManager);
             UpdateConversionSystems(tempFileConversionWorld);
+            tempFileConversionWorld.EntityManager.CompleteAllJobs();
         }
 
         public void Load(World conversionWorld, SavingStateType type)
@@ -292,7 +153,8 @@ namespace RPG.Saving
         {
             var conversionWorld = RecreateSerializeConversionWorld();
             var serializedWorld = GetOrCreateSerializedWorld();
-            var serializedWorldIdentified = serializedWorld.EntityManager.CreateEntityQuery(ComponentType.ReadOnly(typeof(Identifier)));
+            var serializedWorldIdentified = serializedWorld
+            .EntityManager.CreateEntityQuery(ComponentType.ReadOnly<Identifier>());
             AddQueryToWorld(serializedWorld.EntityManager, conversionWorld, serializedWorldIdentified);
             Load(conversionWorld, type);
         }
@@ -302,33 +164,6 @@ namespace RPG.Saving
             return new List<SystemBase> { new MapIdentifierSystem(em), new SavePlayedSystem(em), new SaveHealthSystem(em), new SavePositionSystem(em), new SaveInSceneSystem(em) };
         }
 
-        private NativeHashMap<Unity.Entities.Hash128, Entity> IndexIdentifiableEntities(EntityManager em)
-        {
-            var identifyEntityQuery = em.CreateEntityQuery(typeof(Identifier));
-            using var loadingIdentifiers = identifyEntityQuery.ToComponentDataArray<Identifier>(Allocator.Temp);
-            using var loadingEntities = identifyEntityQuery.ToEntityArray(Allocator.Temp);
-            var loadingEntityByIdentifier = new NativeHashMap<Unity.Entities.Hash128, Entity>(loadingEntities.Length, Allocator.Persistent);
-            for (int i = 0; i < loadingEntities.Length; i++)
-            {
-                var identifier = loadingIdentifiers[i];
-                if (!loadingEntityByIdentifier.ContainsKey(identifier.Id))
-                {
-                    var entity = loadingEntities[i];
-                    loadingEntityByIdentifier[identifier.Id] = entity;
-                }
-                else
-                {
-                    Debug.LogError("Multiple entity with same identifier");
-                }
-
-            }
-            return loadingEntityByIdentifier;
-        }
-
-        private StreamBinaryReader CreateFileReader()
-        {
-            return CreateFileReader(SAVING_PATH);
-        }
         private StreamBinaryReader CreateFileReader(string savePath)
         {
             DisposeFileReader();
@@ -345,7 +180,6 @@ namespace RPG.Saving
             using var saveableEntitities = query.ToEntityArray(Allocator.Temp);
             using var outputs = new NativeArray<Entity>(count, Allocator.Temp);
             dstWorld.EntityManager.CopyEntitiesFrom(srcEntityManager, saveableEntitities, outputs);
-            dstWorld.EntityManager.RemoveComponent<SceneTag>(outputs);
         }
         public void Save()
         {
@@ -362,7 +196,7 @@ namespace RPG.Saving
         {
 
 
-            var conversionWorld = RecreateSerializeConversionWorld();
+            using var conversionWorld = RecreateSerializeConversionWorld();
             CreateSavingStateEntity(conversionWorld.EntityManager, type, SavingStateDirection.SAVING);
             AddQueryToWorld(World.EntityManager, conversionWorld, query);
             Debug.Log($"Save query {conversionWorld.Name}");
@@ -372,9 +206,6 @@ namespace RPG.Saving
 
             UpdateConversionSystems(conversionWorld);
             UpdateSerializedWorld(serializedSavingWorld);
-
-            conversionWorld.EntityManager.CompleteAllJobs();
-            serializedSavingWorld.EntityManager.CompleteAllJobs();
 
             return serializedSavingWorld;
         }
@@ -398,13 +229,13 @@ namespace RPG.Saving
         {
             var systems = GetSavingSystem(dstManager);
             Debug.Log($"Add Conversion Systems for dst world to {dstManager.World.Name} with flag: {dstManager.World.Flags}");
-            if (dstManager.World.Flags != WorldFlags.Game)
+            var savingSystemGroup = conversionWorld.GetOrCreateSystem<SavingConversionSystemGroup>();
+            if ((dstManager.World.Flags & WorldFlags.Conversion) != WorldFlags.None)
             {
                 Debug.Log($"Add Create Identifier to {dstManager.World.Name} with flag: {dstManager.World.Flags}");
                 var createIdentifierSystem = new CreateIdentifierSystem(dstManager);
                 systems.Add(createIdentifierSystem);
             }
-            var savingSystemGroup = conversionWorld.GetOrCreateSystem<SavingConversionSystemGroup>();
             foreach (var system in systems)
             {
                 conversionWorld.AddSystem(system);
@@ -423,17 +254,14 @@ namespace RPG.Saving
 
         private static World CreateSerializedWorld()
         {
-            var serializedWorld = new World("Serialized World");
+            var serializedWorld = new World("Serialized World", WorldFlags.Conversion);
             var initializationSystemGroup = serializedWorld.GetOrCreateSystem<InitializationSystemGroup>();
             var endInitializationCommandBuffer = serializedWorld.GetOrCreateSystem<EndInitializationEntityCommandBufferSystem>();
             initializationSystemGroup.AddSystemToUpdateList(endInitializationCommandBuffer);
             return serializedWorld;
         }
 
-        private StreamBinaryWriter CreateFileWriter()
-        {
-            return CreateFileWriter(SAVING_PATH);
-        }
+
         private StreamBinaryWriter CreateFileWriter(FixedString128 saveFile)
         {
             DisposeFileWriter();

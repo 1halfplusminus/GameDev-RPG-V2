@@ -1,4 +1,4 @@
-
+#if UNITY_EDITOR
 using UnityEngine;
 using Unity.Entities;
 using Unity.Transforms;
@@ -66,3 +66,5 @@ namespace RPG.Core
         }
     }
 }
+
+#endif

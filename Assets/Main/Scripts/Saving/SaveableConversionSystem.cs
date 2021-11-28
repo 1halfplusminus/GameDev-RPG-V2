@@ -2,9 +2,11 @@ using Unity.Entities;
 using UnityEngine;
 using Hash128 = Unity.Entities.Hash128;
 using UnityEngine.Playables;
-using UnityEngine.AI;
 using RPG.Control;
 using RPG.Core;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace RPG.Saving
 {
@@ -20,7 +22,10 @@ namespace RPG.Saving
             Entities.ForEach((PlayableDirector director) =>
             {
                 var hash = new UnityEngine.Hash128();
-                hash.Append(director.playableAsset.GetInstanceID());
+#if UNITY_EDITOR
+                hash.Append(AssetDatabase.GUIDFromAssetPath(AssetDatabase.GetAssetPath(director.playableAsset)).ToString());
+#endif
+
                 AddHashComponent(director, hash);
             });
             Entities
@@ -33,7 +38,7 @@ namespace RPG.Saving
                 {
 
                     var identifier = new SpawnIdentifier { Id = hash };
-                    DstEntityManager.AddComponentData<SpawnIdentifier>(entity, identifier);
+                    DstEntityManager.AddComponentData(entity, identifier);
                 }
             });
 

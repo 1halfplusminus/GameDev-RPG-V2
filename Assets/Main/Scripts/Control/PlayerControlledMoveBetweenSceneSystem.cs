@@ -1,4 +1,4 @@
-using RPG.Control;
+
 using RPG.Core;
 using RPG.Saving;
 using Unity.Entities;
@@ -8,7 +8,7 @@ namespace RPG.Control
     [GenerateAuthoringComponent]
     public struct InScene : IComponentData
     {
-        public Unity.Entities.Hash128 SceneGUID;
+        public Hash128 SceneGUID;
     }
     public struct InSceneEntity : IComponentData
     {
@@ -19,7 +19,7 @@ namespace RPG.Control
     {
 
     }
-
+    [UpdateInGroup(typeof(ControlSystemGroup))]
     public class PlayerControlledMoveBetweenSceneSystem : SystemBase
     {
         EntityCommandBufferSystem commandBufferSystem;
@@ -51,7 +51,7 @@ namespace RPG.Control
             .ForEach((int entityInQueryIndex, Entity e, in InScene inScene) =>
             {
                 commandBuffer.AddComponent(entityInQueryIndex, e, new TriggerSceneLoad { SceneGUID = inScene.SceneGUID });
-                commandBuffer.AddComponent<DontLoadSceneState>(entityInQueryIndex, e);
+                /*       commandBuffer.AddComponent<DontLoadSceneState>(entityInQueryIndex, e); */
             }).ScheduleParallel();
 
             Entities
@@ -60,7 +60,7 @@ namespace RPG.Control
            .ForEach((int entityInQueryIndex, Entity e) =>
            {
                commandBuffer.AddComponent<InSceneLoaded>(entityInQueryIndex, e);
-               commandBuffer.RemoveComponent<DontLoadSceneState>(entityInQueryIndex, e);
+               /*          commandBuffer.RemoveComponent<DontLoadSceneState>(entityInQueryIndex, e); */
            }).ScheduleParallel();
             commandBufferSystem.AddJobHandleForProducer(Dependency);
         }

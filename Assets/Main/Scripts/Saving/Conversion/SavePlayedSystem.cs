@@ -1,17 +1,12 @@
 using Unity.Entities;
 using RPG.Gameplay;
-using Unity.Jobs;
-using RPG.Core;
 using Unity.Animation;
-using Unity.Transforms;
-using Unity.Deformations;
-using Unity.Collections;
-using RPG.Mouvement;
+
 
 namespace RPG.Saving
 {
+    // FIXME: Refactor like in scene
     [DisableAutoCreation]
-
     [UpdateInGroup(typeof(SavingConversionSystemGroup))]
     [UpdateAfter(typeof(MapIdentifierSystem))]
     public class SavePlayedSystem : SaveConversionSystemBase<Played>
@@ -20,10 +15,22 @@ namespace RPG.Saving
         {
         }
 
-        protected override void Convert(Entity dstEntity, Entity entity, Played component, SceneSection section)
+        protected override void OnUpdate()
         {
-            Debug.Log($"Save played for {dstEntity}");
-            DstEntityManager.AddComponent<Played>(dstEntity);
+            Entities.ForEach((Entity e, in Played played) =>
+            {
+                Convert(GetPrimaryEntity(e), e);
+            }).WithStructuralChanges().Run();
+        }
+        protected override void Convert(Entity dstEntity, Entity entity)
+        {
+            if (dstEntity != Entity.Null)
+            {
+                var savingState = GetSingleton<SavingState>();
+                Debug.Log($"{savingState.Direction} played for {dstEntity}");
+                DstEntityManager.AddComponent<Played>(dstEntity);
+            }
+
         }
     }
 }

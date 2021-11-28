@@ -114,8 +114,11 @@ namespace RPG.Mouvement
             .WithAny<Spawned, WarpTo>()
             .ForEach((NavMeshAgent agent, ref MoveTo moveTo, in Translation position) =>
             {
-                agent.Warp(position.Value);
-                moveTo.Position = position.Value;
+                if (agent.isOnNavMesh)
+                {
+                    agent.Warp(position.Value);
+                    moveTo.Position = position.Value;
+                }
 
             }).Run();
 

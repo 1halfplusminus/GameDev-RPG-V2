@@ -611,11 +611,11 @@ PlayerSettings:
     1: []
   platformArchitecture: {}
   scriptingBackend:
-    Standalone: 0
-  il2cppCompilerConfiguration:
     Standalone: 1
-  managedStrippingLevel:
+  il2cppCompilerConfiguration:
     Standalone: 0
+  managedStrippingLevel:
+    Standalone: 1
   incrementalIl2cppBuild: {}
   suppressCommonWarnings: 1
   allowUnsafeCode: 0

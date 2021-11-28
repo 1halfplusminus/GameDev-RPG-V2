@@ -4,8 +4,8 @@ using RPG.Control;
 
 namespace RPG.Saving
 {
-    [DisableAutoCreation]
 
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(SavingConversionSystemGroup))]
     [UpdateAfter(typeof(MapIdentifierSystem))]
     public class SaveInSceneSystem : SaveConversionSystemBase<InScene>
@@ -14,12 +14,13 @@ namespace RPG.Saving
         {
         }
 
-        protected override void Convert(Entity dstEntity, Entity entity, InScene component, SceneSection section)
+        protected override void Convert(Entity dstEntity, Entity entity)
         {
+            var component = GetComponent(entity);
             var savingState = GetSingleton<SavingState>();
             if (savingState.Type == SavingStateType.FILE)
             {
-                Debug.Log($"{savingState.Direction.ToString()} In Scene for {dstEntity}");
+                Debug.Log($"{savingState.Direction} In Scene for {dstEntity}");
                 DstEntityManager.AddComponentData(dstEntity, component);
                 DstEntityManager.RemoveComponent<InSceneLoaded>(dstEntity);
                 DstEntityManager.RemoveComponent<InSceneEntity>(dstEntity);

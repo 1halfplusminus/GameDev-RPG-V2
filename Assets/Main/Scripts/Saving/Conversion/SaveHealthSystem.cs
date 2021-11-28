@@ -5,8 +5,8 @@ using UnityEngine;
 
 namespace RPG.Saving
 {
+    // FIXME: Refactor like in scene
     [DisableAutoCreation]
-
     [UpdateInGroup(typeof(SavingConversionSystemGroup))]
     [UpdateAfter(typeof(MapIdentifierSystem))]
     public class SaveHealthSystem : SaveConversionSystemBase<Health>
@@ -15,10 +15,12 @@ namespace RPG.Saving
         {
         }
 
-        protected override void Convert(Entity dstEntity, Entity entity, Health component, SceneSection section)
+        protected override void Convert(Entity dstEntity, Entity entity)
         {
-            Debug.Log($"Save health for {dstEntity}");
-            DstEntityManager.AddComponentData<Health>(dstEntity, component);
+
+            var savingState = GetSingleton<SavingState>();
+            Debug.Log($"{savingState.Direction} health for {dstEntity}");
+            DstEntityManager.AddComponentData(dstEntity, GetComponent(entity));
         }
     }
 }

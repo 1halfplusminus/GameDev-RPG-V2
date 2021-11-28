@@ -1,10 +1,7 @@
 
 using UnityEngine;
 using Unity.Entities;
-using System.Collections.Generic;
 using Unity.Transforms;
-using UnityEditor;
-using System.IO;
 
 namespace RPG.Core
 {

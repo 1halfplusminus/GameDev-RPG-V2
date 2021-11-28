@@ -5,6 +5,10 @@ using Unity.Entities;
 
 namespace RPG.Saving
 {
+    /** 
+    FIXME: Each class that extends this system iterate over all the saveable & call convert on them
+    That class should take a list of system in constructor that implement a IConvertSave interface & call convert on these system
+   **/
     [UpdateInGroup(typeof(SavingConversionSystemGroup))]
     [UpdateAfter(typeof(MapIdentifierSystem))]
     public abstract class SaveConversionSystemBase<T> : SystemBase, ISavingConversionSystem where T : struct, IComponentData
@@ -13,13 +17,7 @@ namespace RPG.Saving
         public EntityManager DstEntityManager { get; }
         MapIdentifierSystem conversionSystem;
 
-        EntityCommandBufferSystem commandBufferSystem;
-
-        EntityQuery dstQuery;
-
         EntityQuery query;
-
-        List<SceneSection> sceneSections;
 
 
         public SaveConversionSystemBase(EntityManager entityManager)
@@ -31,49 +29,56 @@ namespace RPG.Saving
         {
             base.OnCreate();
             conversionSystem = EntityManager.World.GetOrCreateSystem<MapIdentifierSystem>();
-            commandBufferSystem = DstEntityManager.World.GetOrCreateSystem<EntityCommandBufferSystem>();
-            EntityQueryDesc description = new EntityQueryDesc()
+            var description = new EntityQueryDesc()
             {
                 All = new ComponentType[] { ComponentType.ReadOnly<Identifier>(), ComponentType.ReadOnly<SceneSection>() },
             };
-            dstQuery = DstEntityManager.CreateEntityQuery(
-                description
-            );
             query = EntityManager.CreateEntityQuery(description);
         }
         protected override void OnUpdate()
         {
-            sceneSections = new List<SceneSection>();
-            DstEntityManager.GetAllUniqueSharedComponentData<SceneSection>(sceneSections);
+            using var entities = query.ToEntityArray(Allocator.Temp);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                if (EntityManager.HasComponent<T>(entities[i]))
+                {
+                    var target = conversionSystem.GetTarget(entities[i]);
+                    if (target != Entity.Null)
+                    {
+                        Convert(target, entities[i]);
+                    }
+
+                }
+            }
+            /* sceneSections = new List<SceneSection>();
+            DstEntityManager.GetAllUniqueSharedComponentData(sceneSections);
 
             foreach (var sceneSection in sceneSections)
             {
-                using var entities = query.ToEntityArray(Allocator.Temp);
-                for (int i = 0; i < entities.Length; i++)
-                {
-                    if (EntityManager.HasComponent<T>(entities[i]))
-                    {
-                        var target = conversionSystem.GetTarget(entities[i]);
-                        if (target != Entity.Null)
-                        {
-                            Convert(conversionSystem.GetTarget(entities[i]), entities[i], EntityManager.GetComponentData<T>(entities[i]), sceneSection);
-                        }
-
-                    }
-                }
+               
                 dstQuery.ResetFilter();
                 query.ResetFilter();
-            }
+            } */
 
 
         }
-
-
+        protected Entity GetPrimaryEntity(Entity e)
+        {
+            return conversionSystem.GetTarget(e);
+        }
+        protected T GetComponent(Entity entity)
+        {
+            return EntityManager.GetComponentData<T>(entity);
+        }
+        protected bool HasComponent(Entity entity)
+        {
+            return EntityManager.HasComponent<T>(entity);
+        }
         protected override void OnDestroy()
         {
             base.OnDestroy();
         }
 
-        abstract protected void Convert(Entity dstEntity, Entity entity, T data, SceneSection sceneSection);
+        abstract protected void Convert(Entity dstEntity, Entity entity);
     }
 }

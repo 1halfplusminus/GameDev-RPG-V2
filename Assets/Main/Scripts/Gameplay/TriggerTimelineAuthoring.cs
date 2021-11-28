@@ -214,7 +214,7 @@ namespace RPG.Gameplay
             var commandBufferP = commandBuffer.AsParallelWriter();
             Entities
             .WithAll<PlayableDirector>()
-            .WithNone<Played, Playing>()
+            .WithNone<Played, Playing, Spawned>()
             .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer collidWithPlayer) =>
             {
                 commandBufferP.AddComponent<Play>(entityInQueryIndex, e);

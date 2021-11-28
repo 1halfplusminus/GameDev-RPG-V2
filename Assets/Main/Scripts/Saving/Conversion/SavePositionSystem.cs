@@ -10,6 +10,7 @@ using RPG.Control;
 
 namespace RPG.Saving
 {
+    // FIXME: Refactor like in scene
     [DisableAutoCreation]
     [UpdateInGroup(typeof(SavingConversionSystemGroup))]
     [UpdateBefore(typeof(SaveInSceneSystem))]
@@ -20,36 +21,31 @@ namespace RPG.Saving
         }
 
         protected override void Convert(Entity dstEntity,
-                                        Entity entity,
-                                       Translation component, SceneSection section)
+                                        Entity entity)
         {
+            var component = GetComponent(entity);
             // If saving type is File Copy Position to dst world
             var savingState = GetSingleton<SavingState>();
             if (savingState.Type == SavingStateType.FILE)
             {
-                CopyPositionToDstWorld(dstEntity, entity, component);
+                CopyPositionToDstWorld(dstEntity, component);
             }
             // If is loading from state restore only position for entity not player controlled & with in scene
             if (savingState.Type == SavingStateType.SCENE)
             {
                 if (!EntityManager.HasComponent<InScene>(entity))
                 {
-                    CopyPositionToDstWorld(dstEntity, entity, component);
+                    CopyPositionToDstWorld(dstEntity, component);
                 }
             }
         }
 
-        private void SavePositionNPC(Entity dstEntity, Entity entity, Translation component)
+        private void CopyPositionToDstWorld(Entity dstEntity, Translation component)
         {
-            if (DstEntityManager.HasComponent<InScene>(dstEntity)) { return; }
-            CopyPositionToDstWorld(dstEntity, entity, component);
-        }
-
-        private void CopyPositionToDstWorld(Entity dstEntity, Entity entity, Translation component)
-        {
-            Debug.Log($"Save translation for {dstEntity}");
-            DstEntityManager.AddComponentData<Translation>(dstEntity, component);
-            DstEntityManager.AddComponentData<WarpTo>(dstEntity, new WarpTo { Destination = component.Value });
+            var savingState = GetSingleton<SavingState>();
+            Debug.Log($"{savingState.Direction} translation for {dstEntity}");
+            DstEntityManager.AddComponentData(dstEntity, component);
+            DstEntityManager.AddComponentData(dstEntity, new WarpTo { Destination = component.Value });
         }
     }
 

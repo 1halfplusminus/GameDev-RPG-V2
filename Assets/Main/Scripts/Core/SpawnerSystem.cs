@@ -1,7 +1,6 @@
 using Unity.Entities;
 using UnityEngine;
 using Unity.Transforms;
-using Unity.Collections;
 using System.Collections.Generic;
 
 namespace RPG.Core
@@ -9,6 +8,8 @@ namespace RPG.Core
     public class SceneGUIDAuthoring : MonoBehaviour
     {
         public Unity.Entities.Hash128 SceneGUID;
+
+        public int Section;
         public Entity SceneEntity;
 
         public Entity Spawner;
@@ -63,14 +64,11 @@ namespace RPG.Core
                 if (entity != Entity.Null)
                 {
 
-                    DstEntityManager.AddSharedComponentData(entity, new SceneSection { SceneGUID = sceneGUIDAuthoring.SceneGUID });
+                    Debug.Log("Convert Spawned Entity");
+                    DstEntityManager.AddSharedComponentData(entity, new SceneSection { SceneGUID = sceneGUIDAuthoring.SceneGUID, Section = sceneGUIDAuthoring.Section });
                     DstEntityManager.AddSharedComponentData(entity, new SceneTag() { SceneEntity = sceneGUIDAuthoring.SceneEntity });
                     DstEntityManager.AddComponentData(entity, new GameObjectSpawn() { SpawnerEntity = sceneGUIDAuthoring.Spawner });
                     DstEntityManager.AddComponentData(entity, new Spawned() { });
-                    /* if (sceneGUIDAuthoring.Id != default)
-                    {
-                        DstEntityManager.AddComponentData(entity, new Identifier() { Id = sceneGUIDAuthoring.Id });
-                    } */
                     AddHybridComponent(sceneGUIDAuthoring);
                 }
             });
@@ -151,7 +149,6 @@ namespace RPG.Core
 
         GameObject rootGameObjectSpawner;
 
-        EntityQuery hasSpawnEntityQuery;
 
         protected override void OnDestroy()
         {
@@ -166,22 +163,17 @@ namespace RPG.Core
             base.OnCreate();
             entityCommandBufferSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
             rootGameObjectSpawner = new GameObject("__SpawnerSystem__");
-            hasSpawnEntityQuery = GetEntityQuery(typeof(HasSpawn));
         }
-        protected void AddSceneGUIDRecurse(GameObject gameObject, Entity sceneEntity, Entity spawnerEntity, Unity.Entities.Hash128 sceneGUID, UnityEngine.Hash128 hash = default)
+        protected void AddSceneGUIDRecurse(GameObject gameObject, Entity sceneEntity, Entity spawnerEntity, Unity.Entities.Hash128 sceneGUID, int section, UnityEngine.Hash128 hash = default)
         {
             var component = gameObject.AddComponent<SceneGUIDAuthoring>();
             component.SceneGUID = sceneGUID;
             component.Spawner = spawnerEntity;
             component.SceneEntity = sceneEntity;
-            if (hash != default)
-            {
-                /* hash.Append(gameObject.)
-                component.Id = hash; */
-            }
+            component.Section = section;
             foreach (Transform child in gameObject.transform)
             {
-                AddSceneGUIDRecurse(child.gameObject, sceneEntity, spawnerEntity, sceneGUID, hash);
+                AddSceneGUIDRecurse(child.gameObject, sceneEntity, spawnerEntity, sceneGUID, section, hash);
             }
         }
         protected override void OnUpdate()
@@ -218,6 +210,7 @@ namespace RPG.Core
                 }
             ).Run();
             Entities
+            .WithChangeFilter<Spawn>()
             .WithStructuralChanges()
             .WithAny<GameObjectSpawner>()
             .WithoutBurst()
@@ -226,22 +219,27 @@ namespace RPG.Core
                 if (prefab != null)
                 {
                     var instance = Object.Instantiate(prefab);
-                    AddSceneGUIDRecurse(instance, sceneTag.SceneEntity, e, section.SceneGUID);
-                    var instancedEntity = em.CreateEntity();
+                    AddSceneGUIDRecurse(instance, sceneTag.SceneEntity, e, section.SceneGUID, section.Section);
+                    /* var instancedEntity = em.CreateEntity();
                     em.AddSharedComponentData(instancedEntity, sceneTag);
                     em.AddSharedComponentData(instancedEntity, section);
-                    em.AddComponentObject(instancedEntity, instance);
-                    commandBuffer.RemoveComponent<Spawn>(e);
+                    em.AddComponentObject(instancedEntity, instance); */
+                    // commandBuffer.RemoveComponent<Spawn>(e);
                 }
 
             }).Run();
             Entities.
              WithAny<Spawned>()
-            .ForEach((SceneGUIDAuthoring sceneGUIDAuthoring) =>
+            .ForEach((Entity e, SceneGUIDAuthoring sceneGUIDAuthoring) =>
                  {
                      if (sceneGUIDAuthoring.transform.parent == null)
                      {
                          sceneGUIDAuthoring.transform.parent = rootGameObjectSpawner.transform;
+                         if (sceneGUIDAuthoring.Spawner != Entity.Null)
+                         {
+                             commandBuffer.RemoveComponent<Spawn>(sceneGUIDAuthoring.Spawner);
+                             commandBuffer.AddComponent(sceneGUIDAuthoring.Spawner, new HasSpawn { Entity = e });
+                         }
                      }
                  }
             ).WithoutBurst().Run();

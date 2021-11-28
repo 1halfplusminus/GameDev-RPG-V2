@@ -55,19 +55,16 @@ namespace RPG.Saving
         private void SaveDataOnUnload()
         {
 
-            var loadScenesAsync = sceneNeedSavingQuery.ToComponentDataArrayAsync<TriggerUnloadScene>(Allocator.TempJob, out var sceneNeedSavingHandle);
-            sceneNeedSavingHandle.Complete();
+            var loadScenesAsync = sceneNeedSavingQuery.ToComponentDataArray<TriggerUnloadScene>(Allocator.TempJob);
             for (int i = 0; i < loadScenesAsync.Length; i++)
             {
                 SaveScene(loadScenesAsync[i].SceneGUID);
             }
             loadScenesAsync.Dispose();
-            Dependency = JobHandle.CombineDependencies(Dependency, sceneNeedSavingHandle);
         }
 
         public void SaveScene(Unity.Entities.Hash128 sceneGUID)
         {
-            var sceneEntity = sceneSystem.GetSceneEntity(sceneGUID);
             sceneEntityQuery.AddSharedComponentFilter(new SceneSection() { SceneGUID = sceneGUID });
             var count = sceneEntityQuery.CalculateEntityCount();
             if (count > 0)
@@ -79,7 +76,6 @@ namespace RPG.Saving
         }
         public void LoadScene(Unity.Entities.Hash128 sceneGUID)
         {
-            var sceneEntity = sceneSystem.GetSceneEntity(sceneGUID);
             sceneEntityQuery.AddSharedComponentFilter(new SceneSection() { SceneGUID = sceneGUID });
             var count = sceneEntityQuery.CalculateEntityCount();
             if (count > 0)
@@ -91,7 +87,6 @@ namespace RPG.Saving
         }
         private void LoadDataOnLoad()
         {
-            var sceneNeedLoadingCount = sceneNeedLoadingQuery.CalculateEntityCount();
             var loadScenesAsync = sceneNeedLoadingQuery.ToComponentDataArray<TriggeredSceneLoaded>(Allocator.Temp);
             for (int i = 0; i < loadScenesAsync.Length; i++)
             {
