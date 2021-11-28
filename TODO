@@ -1,6 +1,6 @@
 
 Spawner System:
-  ☐ Rename player spawner to a more fitting name
+  ✔ Rename player spawner to a more fitting name @done(21-11-29 10:42)
   ☐ Finish new spawning system
     ☐ Create a prefab in editor and use that prefab created on fly to spawn entity
 Saving System:

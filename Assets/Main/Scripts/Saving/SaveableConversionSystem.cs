@@ -29,7 +29,7 @@ namespace RPG.Saving
                 AddHashComponent(director, hash);
             });
             Entities
-            .WithNone<PlayableDirector>().ForEach((PlayerSpawner playerSpawner) =>
+            .WithNone<PlayableDirector>().ForEach((ObjectSpawner playerSpawner) =>
             {
                 var hash = new UnityEngine.Hash128();
                 hash.Append(playerSpawner.gameObject.GetInstanceID());
@@ -44,7 +44,7 @@ namespace RPG.Saving
 
             Entities
             .WithAny<PlayerControlledAuthoring, GuardLocationAuthoring>()
-            .WithNone<PlayableDirector, PlayerSpawner>().ForEach((Transform transform) =>
+            .WithNone<PlayableDirector, ObjectSpawner>().ForEach((Transform transform) =>
             {
                 var hash = new UnityEngine.Hash128();
                 hash.Append(transform.gameObject.GetInstanceID());

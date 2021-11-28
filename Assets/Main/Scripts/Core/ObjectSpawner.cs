@@ -6,7 +6,7 @@ using Unity.Transforms;
 namespace RPG.Core
 {
 
-    public class PlayerSpawner : MonoBehaviour
+    public class ObjectSpawner : MonoBehaviour
     {
         public GameObject Prefab;
 
@@ -44,7 +44,7 @@ namespace RPG.Core
     {
         protected override void OnUpdate()
         {
-            Entities.ForEach((PlayerSpawner spawner) =>
+            Entities.ForEach((ObjectSpawner spawner) =>
             {
                 var prefabEntity = GetPrimaryEntity(spawner.Prefab);
                 var entity = GetPrimaryEntity(spawner);
@@ -67,7 +67,7 @@ namespace RPG.Core
     {
         protected override void OnUpdate()
         {
-            Entities.ForEach((PlayerSpawner spawner) =>
+            Entities.ForEach((ObjectSpawner spawner) =>
             {
                 DeclareReferencedPrefab(spawner.Prefab);
 
