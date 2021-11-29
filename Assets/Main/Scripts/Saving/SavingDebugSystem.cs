@@ -1,10 +1,13 @@
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using RPG.Control;
 using RPG.Core;
+using RPG.Mouvement;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -13,11 +16,39 @@ using UnityEngine.InputSystem;
 
 namespace RPG.Saving
 {
+    public interface ISerializer
+    {
+        object Serialize(EntityManager em, Entity e);
+        void UnSerialize(EntityManager em, Entity e, object state);
+    }
+    public struct Saveable : IComponentData
+    {
+        public FixedList128<ComponentType> types;
+    }
+    public struct CharacterSerialisation : ISerializer
+    {
+        public object Serialize(EntityManager em, Entity e)
+        {
+            Debug.Log($"Serialize {e}");
+            return em.GetComponentData<Translation>(e);
+        }
+
+        public void UnSerialize(EntityManager em, Entity e, object state)
+        {
+            Debug.Log($"Unserialize ${e}");
+            if (state is Translation translation)
+            {
+                em.AddComponentData(e, translation);
+                em.AddComponentData(e, new WarpTo() { Destination = translation.Value });
+            }
+
+        }
+    }
 
     [UpdateInGroup(typeof(SavingSystemGroup))]
     public class SavingDebugSystem : SystemBase
     {
-
+        Dictionary<EntityQueryMask, ISerializer> serializers;
         SaveSystem saveSystem;
         EntityQuery requestForUpdateQuery;
 
@@ -37,6 +68,8 @@ namespace RPG.Saving
                 }
             });
             savePath = SaveSystem.GetPathFromSaveFile("test.save");
+            serializers = new Dictionary<EntityQueryMask, ISerializer>();
+            serializers.Add(GetEntityQuery(typeof(Translation)).GetEntityQueryMask(), new CharacterSerialisation());
             RequireForUpdate(requestForUpdateQuery);
         }
         protected override void OnUpdate()
@@ -66,51 +99,64 @@ namespace RPG.Saving
             Debug.Log($"Loading from file {savePath}");
             using var stream = File.Open(savePath, FileMode.Open);
             var formatter = new BinaryFormatter();
-            var result = formatter.Deserialize(stream);
-            if (result is Translation position)
+            var state = formatter.Deserialize(stream);
+            RestoreState(state);
+        }
+        private object CaptureState()
+        {
+            var state = new Dictionary<string, object>();
+            var queryIdentifier = GetEntityQuery(typeof(Identifier), typeof(Saveable));
+            using var identifieds = queryIdentifier.ToComponentDataArray<Identifier>(Allocator.Temp);
+            using var saveables = queryIdentifier.ToComponentDataArray<Saveable>(Allocator.Temp);
+            using var identifiedEntities = queryIdentifier.ToEntityArray(Allocator.Temp);
+
+            for (int i = 0; i < identifiedEntities.Length; i++)
             {
-                Debug.Log($"Deserialized player position: {position.Value}");
+                var entity = identifiedEntities[i];
+                var identified = identifieds[i];
+                foreach (var serializer in serializers)
+                {
+
+                    if (serializer.Key.Matches(entity))
+                    {
+                        var r = serializer.Value.Serialize(EntityManager, entity);
+                        state.Add(identified.Id.ToString(), r);
+                        break;
+                    }
+                }
 
             }
-        }
 
-        private void GetHolaMundoInUTF8()
+            return state;
+        }
+        private void RestoreState(object state)
         {
-            /*  var toWrite = new byte[] {
-                    0xc2,0xa1,0x48,0x6f,0x6c,0x6c,0x61,0x20,0x6d,0x75,0x6e,0x64,0x6f,0x21
-            }; */
-            // var toWrite = Encoding.UTF8.GetBytes("¡Hola Mundo!");
+            Dictionary<string, object> stateDict = (Dictionary<string, object>)state;
+            var queryIdentifier = GetEntityQuery(typeof(Identifier), typeof(Saveable));
+            using var identifieds = queryIdentifier.ToComponentDataArray<Identifier>(Allocator.Temp);
+            using var saveables = queryIdentifier.ToComponentDataArray<Saveable>(Allocator.Temp);
+            using var identifiedEntities = queryIdentifier.ToEntityArray(Allocator.Temp);
+            for (int i = 0; i < identifiedEntities.Length; i++)
+            {
+                var entity = identifiedEntities[i];
+                foreach (var serializer in serializers)
+                {
+
+                    if (serializer.Key.Matches(entity))
+                    {
+                        serializer.Value.UnSerialize(EntityManager, entity, stateDict[identifieds[i].Id.ToString()]);
+                        break;
+                    }
+                }
+            }
         }
         private void SaveUdemyCourse()
         {
             Debug.Log($"Writing to {savePath}");
             using var stream = File.Open(savePath, FileMode.Create);
-            var queryPlayer = GetEntityQuery(typeof(PlayerControlled), typeof(Translation));
-            var playerEntity = queryPlayer.GetSingletonEntity();
-            var playerPosition = queryPlayer.GetSingleton<Translation>();
-
             var formatter = new BinaryFormatter();
-            formatter.Serialize(stream, playerPosition);
+            formatter.Serialize(stream, CaptureState());
         }
 
-        protected byte[] SavePlayerPosition(float3 position)
-        {
-            var buffer = new byte[4 * 3];
-            BitConverter.GetBytes(position.x).CopyTo(buffer, 0);
-            BitConverter.GetBytes(position.y).CopyTo(buffer, 4);
-            BitConverter.GetBytes(position.z).CopyTo(buffer, 8);
-            return buffer;
-        }
-
-        protected float3 DeserializePosition(byte[] bytes)
-        {
-            var position = new float3
-            {
-                x = BitConverter.ToSingle(bytes, 0),
-                y = BitConverter.ToSingle(bytes, 4),
-                z = BitConverter.ToSingle(bytes, 8)
-            };
-            return position;
-        }
     }
 }

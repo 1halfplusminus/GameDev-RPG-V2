@@ -18,7 +18,14 @@ namespace RPG.Saving
     {
         protected override void OnUpdate()
         {
-
+            Entities
+            .WithNone<ObjectSpawner>()
+            .ForEach((SaveableAuthoring saveable) =>
+            {
+                var hash = new UnityEngine.Hash128();
+                hash.Append(saveable.UniqueIdentifier);
+                AddHashComponent(saveable, hash);
+            });
             Entities.ForEach((PlayableDirector director) =>
             {
                 var hash = new UnityEngine.Hash128();
@@ -28,19 +35,33 @@ namespace RPG.Saving
 
                 AddHashComponent(director, hash);
             });
+
             Entities
-            .WithNone<PlayableDirector>().ForEach((ObjectSpawner playerSpawner) =>
+            .ForEach((ObjectSpawner playerSpawner, SaveableAuthoring saveable) =>
             {
                 var hash = new UnityEngine.Hash128();
-                hash.Append(playerSpawner.gameObject.GetInstanceID());
+                hash.Append(saveable.UniqueIdentifier);
                 var entity = TryGetPrimaryEntity(playerSpawner);
                 if (entity != Entity.Null)
                 {
-
+                    Debug.Log("Add identifier from saveable entity");
                     var identifier = new SpawnIdentifier { Id = hash };
                     DstEntityManager.AddComponentData(entity, identifier);
                 }
             });
+            Entities
+            .WithNone<PlayableDirector, SaveableAuthoring>().ForEach((ObjectSpawner playerSpawner) =>
+             {
+                 var hash = new UnityEngine.Hash128();
+                 hash.Append(playerSpawner.gameObject.GetInstanceID());
+                 var entity = TryGetPrimaryEntity(playerSpawner);
+                 if (entity != Entity.Null)
+                 {
+
+                     var identifier = new SpawnIdentifier { Id = hash };
+                     DstEntityManager.AddComponentData(entity, identifier);
+                 }
+             });
 
             Entities
             .WithAny<PlayerControlledAuthoring, GuardLocationAuthoring>()

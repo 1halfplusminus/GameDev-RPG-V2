@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6341906578980584260}
   - component: {fileID: 391773681381979515}
   - component: {fileID: 7852310173102652146}
+  - component: {fileID: 4917639806165686630}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -102,6 +103,7 @@ MonoBehaviour:
   AttackDuration: 1.08
   HitEvents:
   - 0.2
+  WeaponDamage: 0
 --- !u!114 &391773681381979515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -118,6 +120,7 @@ MonoBehaviour:
   Attack: 0
   AttackCooldown: 0
   Run: 0
+  Dead: 0
 --- !u!114 &7852310173102652146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,3 +134,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Value: 100
+--- !u!114 &4917639806165686630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5695745319709861324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fe23c9f6649d98adbe2f5facd269bac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SaveableTypes: []
+  UniqueIdentifier: 
