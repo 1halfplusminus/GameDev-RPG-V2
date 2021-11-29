@@ -3230,7 +3230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b2da85fd21c88b95a2b2ed9bec37235, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneAsset: {fileID: 102900000, guid: db7d16cc5e421a73f8863a13c0b96385, type: 3}
+  SceneAsset: {fileID: 0}
 --- !u!4 &7212305661665114056
 Transform:
   m_ObjectHideFlags: 0

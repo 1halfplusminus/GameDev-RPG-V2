@@ -14,7 +14,11 @@ namespace RPG.Core
         SceneAsset SceneAsset;
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
-            dstManager.AddComponentData(entity, new TriggerSceneLoad { SceneGUID = new GUID(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(SceneAsset))) });
+            if (SceneAsset != null)
+            {
+                dstManager.AddComponentData(entity, new TriggerSceneLoad { SceneGUID = new GUID(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(SceneAsset))) });
+            }
+
         }
     }
 }
