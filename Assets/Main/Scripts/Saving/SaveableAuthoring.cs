@@ -1,10 +1,12 @@
-#if UNITY_EDITOR
+
 using System;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Experimental.SceneManagement;
+#endif
 using UnityEngine;
 
 namespace RPG.Saving
@@ -28,16 +30,17 @@ namespace RPG.Saving
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
+#if UNITY_EDITOR
             var saveablesTypes = new FixedList128<ComponentType>();
             foreach (var saveableType in SaveableTypes)
             {
                 var type = ComponentType.ReadOnly(Type.GetType(saveableType.Id));
-                Debug.Log($"Mark Type: {saveableType.Id} as saveable");
                 saveablesTypes.Add(type);
             }
             dstManager.AddComponentData(entity, new Saveable { types = saveablesTypes });
+#endif
         }
-
+#if UNITY_EDITOR
         private void Update()
         {
             if (Application.IsPlaying(gameObject)) { return; }
@@ -56,6 +59,7 @@ namespace RPG.Saving
 
 
         }
+#endif
+
     }
 }
-#endif

@@ -18,6 +18,7 @@ namespace RPG.Saving
     {
         protected override void OnUpdate()
         {
+
             Entities
             .WithNone<ObjectSpawner>()
             .ForEach((SaveableAuthoring saveable) =>
@@ -44,7 +45,6 @@ namespace RPG.Saving
                 var entity = TryGetPrimaryEntity(playerSpawner);
                 if (entity != Entity.Null)
                 {
-                    Debug.Log("Add identifier from saveable entity");
                     var identifier = new SpawnIdentifier { Id = hash };
                     DstEntityManager.AddComponentData(entity, identifier);
                 }

@@ -9,7 +9,11 @@ using RPG.Core;
 
 namespace RPG.Saving
 {
-
+    public abstract class SaveSystemBase : SystemBase
+    {
+        public abstract void Save(string saveFile);
+        public abstract void Load(string saveFile);
+    }
     public struct HasSpawnIdentified : IComponentData
     {
 
@@ -37,9 +41,10 @@ namespace RPG.Saving
 
     }
 
-
+    //FIXME: TO REMOVE
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(SavingSystemGroup))]
-    public class SaveSystem : SystemBase
+    public class SaveSystem : SaveSystemBase
     {
 
         string SAVING_PATH;
@@ -302,6 +307,16 @@ namespace RPG.Saving
             {
                 streamBinaryWriter.Dispose();
             }
+        }
+
+        public override void Save(string saveFile)
+        {
+            Save(new FixedString128(saveFile));
+        }
+
+        public override void Load(string saveFile)
+        {
+            Load(new FixedString128(saveFile));
         }
     }
 }

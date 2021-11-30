@@ -91,7 +91,7 @@ namespace RPG.Gameplay
                 {
                     Entity brainEntity = query.GetSingletonEntity();
                     brain = em.GetComponentObject<CinemachineBrain>(brainEntity);
-                    Debug.Log("Brain found");
+                    Debug.Log($"Brain found");
                     break;
                 }
             }
@@ -121,7 +121,7 @@ namespace RPG.Gameplay
                 {
                     if (brain != null)
                     {
-                        Debug.Log("Set Generic Binding");
+                        Debug.Log($"Set Generic Binding");
                         playableDirector.SetGenericBinding(output.sourceObject, brain);
                     }
                     else

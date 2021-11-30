@@ -9,7 +9,7 @@ namespace RPG.Animation
 #if UNITY_EDITOR
 
     using Unity.Animation.Hybrid;
-
+    [DisableAutoCreation]
     public class ClipPlayerConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()

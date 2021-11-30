@@ -11,6 +11,10 @@ using UnityEngine;
 
 namespace RPG.Mouvement
 {
+    public struct Warped : IComponentData
+    {
+
+    }
     public struct IsMoving : IComponentData { }
     [UpdateInGroup(typeof(MouvementSystemGroup))]
 
@@ -83,10 +87,11 @@ namespace RPG.Mouvement
             }).ScheduleParallel();
 
             Entities
-            .WithAll<WarpTo>()
+            .WithAll<WarpTo, Warped>()
             .ForEach((int entityInQueryIndex, Entity e) =>
             {
                 commandBuffer.RemoveComponent<WarpTo>(entityInQueryIndex, e);
+                commandBuffer.RemoveComponent<Warped>(entityInQueryIndex, e);
             }).ScheduleParallel();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
@@ -97,11 +102,12 @@ namespace RPG.Mouvement
     [UpdateAfter(typeof(MoveToSystem))]
     public class MoveToNavMeshAgentSystem : SystemBase
     {
-
+        EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery navMeshAgentQueries;
         protected override void OnCreate()
         {
             base.OnCreate();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
         {
@@ -109,15 +115,19 @@ namespace RPG.Mouvement
             // TODO : Refractor get in paralle
             var lookAts = GetComponentDataFromEntity<LookAt>(true);
 
+            var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
             // Warp when spawned or warp to
             Entities.WithoutBurst()
             .WithAny<Spawned, WarpTo>()
-            .ForEach((NavMeshAgent agent, ref MoveTo moveTo, in Translation position) =>
+            .ForEach((Entity e, NavMeshAgent agent, ref MoveTo moveTo, in Translation position) =>
             {
                 if (agent.isOnNavMesh)
                 {
-                    agent.Warp(position.Value);
-                    moveTo.Position = position.Value;
+                    if (agent.Warp(position.Value))
+                    {
+                        moveTo.Position = position.Value;
+                        commandBuffer.AddComponent<Warped>(e);
+                    }
                 }
 
             }).Run();

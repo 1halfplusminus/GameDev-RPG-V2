@@ -4,11 +4,12 @@ using Unity.Entities;
 using Unity.Transforms;
 using UnityEditor;
 using System.IO;
+using UnityEditor.Experimental.SceneManagement;
 
 namespace RPG.Core
 {
     [ExecuteAlways]
-    public class SpawnerAuthoring : MonoBehaviour
+    public class SpawnerAuthoring : MonoBehaviour, IConvertGameObjectToEntity
     {
         public bool HasHybridComponent;
 
@@ -16,17 +17,47 @@ namespace RPG.Core
 
         public GameObject Prefab;
 
-        public void Start()
+        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
-            if (Prefab == null)
+            if (transform.childCount > 0)
             {
-                Debug.Log("Convert");
+                var firstChild = transform.GetChild(0)?.gameObject;
+                var firstChildEntity = conversionSystem.GetPrimaryEntity(firstChild);
+                if (firstChildEntity != Entity.Null)
+                {
+                    dstManager.AddComponent<Disabled>(firstChildEntity);
+                    Debug.LogError($"NOOPPPPPPPPPPPPPPPPPPPPPPPPPE");
+                    conversionSystem.PostUpdateCommands.DestroyEntity(firstChildEntity);
+                }
+            }
+
+        }
+
+        public void Update()
+        {
+            if (Application.IsPlaying(gameObject)) { return; }
+            if (PrefabStageUtility.GetPrefabStage(gameObject) != null)
+            {
+                Debug.Log("In prefab");
+                return;
+            }
+            var serializedObject = new SerializedObject(this);
+            var property = serializedObject.FindProperty(nameof(Prefab));
+            if (property.objectReferenceValue == null)
+            {
                 var dir = "Assets/Tmp";
                 Directory.CreateDirectory(dir);
                 var prefab = transform.GetChild(0).gameObject;
-                GameObject newInstanceofSpawn = PrefabUtility.SaveAsPrefabAsset(prefab, $"{dir}/{prefab.GetInstanceID()}.prefab");
-                Prefab = newInstanceofSpawn;
+                var copy = Instantiate(prefab);
+                copy.AddComponent<StopConvertToEntity>();
+                copy.AddComponent<Destroy>();
+                copy.SetActive(false);
+                GameObject newInstanceofSpawn = PrefabUtility.SaveAsPrefabAsset(copy, $"{dir}/{prefab.GetInstanceID()}.prefab");
+                property.objectReferenceValue = newInstanceofSpawn;
+                serializedObject.ApplyModifiedProperties();
+                DestroyImmediate(copy);
             }
+
         }
     }
     public class SpawnerConversionSystem : GameObjectConversionSystem

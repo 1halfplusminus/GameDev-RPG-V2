@@ -16,6 +16,7 @@ Saving System:
   Looking at udemy videos on how they implement it:
     ✔ Convert string to binary @done(21-11-29 11:12)
     ✔ Use Generated GUID in editor like unique identifier instead of gameobject instance ID @done(21-11-30 10:01)
+    ☐ ISaveable Component
 VFX on hit system:
   ☐ Create a conversion system that get all addresable with a label & convert them as entity to be spawned as vfx effect
   ☐ Spawn VFX on hit

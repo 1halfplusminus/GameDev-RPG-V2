@@ -1,5 +1,7 @@
 using UnityEngine;
 using RPG.Core;
+using RPG.Mouvement;
+
 namespace RPG.Control
 {
     public class GuardLocationAuthoring : MonoBehaviour
@@ -26,11 +28,15 @@ namespace RPG.Control
             Entities.ForEach((GuardLocationAuthoring guardLocationAuthoring) =>
             {
                 var entity = GetPrimaryEntity(guardLocationAuthoring);
-                DstEntityManager.AddComponentData<GuardLocation>(entity, new GuardLocation { Value = guardLocationAuthoring.GuardLocation });
                 DstEntityManager.AddComponent<LookAt>(entity);
                 if (guardLocationAuthoring.GuardOriginalLocation)
                 {
+                    DstEntityManager.AddComponentData(entity, new GuardLocation { Value = guardLocationAuthoring.gameObject.transform.position });
                     DstEntityManager.AddComponent<GuardOriginalLocationTag>(entity);
+                }
+                else
+                {
+                    DstEntityManager.AddComponentData(entity, new GuardLocation { Value = guardLocationAuthoring.GuardLocation });
                 }
             });
         }

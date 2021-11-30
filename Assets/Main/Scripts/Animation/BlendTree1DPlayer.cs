@@ -15,6 +15,7 @@ namespace RPG.Animation
         public BlendTree BlendTree;
 
     }
+    [DisableAutoCreation]
     [UpdateAfter(typeof(RigConversion))]
 
     public class BlendTree1DPlayerConversionSystem : GameObjectConversionSystem

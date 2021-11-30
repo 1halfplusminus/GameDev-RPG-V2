@@ -8,7 +8,8 @@ using Unity.Jobs;
 namespace RPG.Saving
 {
     public struct DontLoadSceneState : IComponentData { }
-
+    // FIXME: TO REMOVE
+    [DisableAutoCreation]
     [UpdateInGroup(typeof(SavingSystemGroup))]
     [UpdateAfter(typeof(SpawnableIdentifiableSystem))]
 
