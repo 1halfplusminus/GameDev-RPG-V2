@@ -25,11 +25,8 @@ namespace RPG.Saving
         public void UnSerialize(EntityManager em, Entity e, object state)
         {
             Debug.Log($"UnSerialize played for {e}");
-            if (state is bool played && played == true)
-            {
-                Debug.Log($"Add played for {e}");
-                em.AddComponent<Played>(e);
-            }
+            Debug.Log($"Add played for {e}");
+            em.AddComponent<Played>(e);
         }
     }
 }

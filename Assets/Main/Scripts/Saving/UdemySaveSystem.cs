@@ -104,12 +104,9 @@ namespace RPG.Saving
             foreach (var serializer in serializers)
             {
                 var serializerKey = serializer.GetType().ToString();
-                if (serializer.Key.Matches(entity))
+                if (entityState.ContainsKey(serializerKey))
                 {
-                    if (entityState.ContainsKey(serializerKey))
-                    {
-                        serializer.Value.UnSerialize(EntityManager, entity, entityState[serializerKey]);
-                    }
+                    serializer.Value.UnSerialize(EntityManager, entity, entityState[serializerKey]);
                 }
             }
         }

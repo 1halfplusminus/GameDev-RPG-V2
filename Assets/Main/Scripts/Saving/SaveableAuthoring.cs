@@ -116,8 +116,12 @@ namespace RPG.Saving
 
         private void OnDestroy()
         {
-            var em = World.DefaultGameObjectInjectionWorld.EntityManager;
-            em.DestroyEntity(entity);
+            if (World.DefaultGameObjectInjectionWorld != null)
+            {
+                var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+                em.DestroyEntity(entity);
+            }
+
         }
 #endif
 

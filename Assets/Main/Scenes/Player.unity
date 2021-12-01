@@ -180,7 +180,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7979986417888468897, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: UniqueIdentifier
-      value: 2a179e7f-b2de-4cea-8614-d8f5d4161426
+      value: PLAYER
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
