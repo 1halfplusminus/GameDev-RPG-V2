@@ -1,8 +1,8 @@
 
 Spawner System:
   ✔ Rename player spawner to a more fitting name @done(21-11-29 10:42)
-  ☐ Finish new spawning system
-    ☐ Create a prefab in editor and use that prefab created on fly to spawn entity
+  ✔ Finish new spawning system @done(21-12-01 11:15)
+    ✔ Create a prefab in editor and use that prefab created on fly to spawn entity @done(21-12-01 11:15)
 Saving System:
   ✔ State should be persisted between scene: @started(21-11-27 17:23) @done(21-11-28 16:44) @lasted(23h21m21s)
   ✔ Player should be able to save progression in save file @started(21-11-28 16:44) @done(21-11-28 16:44) @lasted(4s)
@@ -16,9 +16,13 @@ Saving System:
   Looking at udemy videos on how they implement it:
     ✔ Convert string to binary @done(21-11-29 11:12)
     ✔ Use Generated GUID in editor like unique identifier instead of gameobject instance ID @done(21-11-30 10:01)
-    ☐ ISaveable Component
+    ✔ ISaveable Component @done(21-12-01 11:09)
+    ✔ Deduplication UUIDs @started(21-12-01 11:14) @done(21-12-01 11:14) @lasted(34s)
+    ☐ Restoring Health
+    ☐ Reloading The Last Scene
+
 VFX on hit system:
-  ☐ Create a conversion system that get all addresable with a label & convert them as entity to be spawned as vfx effect
+  ☐ Create a conversion system that get all adressable with a label & convert them as entity to be spawned as vfx effect
   ☐ Spawn VFX on hit
   ☐ Destroy vfx when effect is finish
 

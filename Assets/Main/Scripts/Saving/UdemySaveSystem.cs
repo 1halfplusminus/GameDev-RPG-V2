@@ -14,7 +14,7 @@ namespace RPG.Saving
     [UpdateInGroup(typeof(SavingSystemGroup))]
     public class UdemySaveSystem : SaveSystemBase
     {
-        Dictionary<EntityQueryMask, ISerializer> serializers;
+        List<ISerializer> serializers;
         EntityQuery queryIdentifier;
         protected override void OnCreate()
         {
@@ -48,7 +48,13 @@ namespace RPG.Saving
             {
                 using var stream = File.Open(fileName, FileMode.Open);
                 var formatter = new BinaryFormatter();
-                return formatter.Deserialize(stream) as Dictionary<string, object>;
+
+                try
+                {
+                    return formatter.Deserialize(stream) as Dictionary<string, object>;
+                }
+                catch (Exception) { };
+
             }
             var state = new Dictionary<string, object>();
             return state;
@@ -74,10 +80,13 @@ namespace RPG.Saving
             var serializersState = new Dictionary<string, object>();
             foreach (var serializer in serializers)
             {
-                if (serializer.Key.Matches(entity))
+                var serializerKey = serializer.GetType().ToString();
+                var entityQuery = GetEntityQuery(serializer.GetEntityQueryDesc());
+                if (entityQuery.Matches(entity))
                 {
-                    var r = serializer.Value.Serialize(EntityManager, entity);
-                    serializersState[serializer.GetType().ToString()] = r;
+                    var r = serializer.Serialize(EntityManager, entity);
+                    Debug.Log($"Capture Serializer State serializer key: ${serializerKey} value:  {r}");
+                    serializersState[serializerKey] = r;
                 }
             }
             return serializersState;
@@ -104,9 +113,11 @@ namespace RPG.Saving
             foreach (var serializer in serializers)
             {
                 var serializerKey = serializer.GetType().ToString();
+
                 if (entityState.ContainsKey(serializerKey))
                 {
-                    serializer.Value.UnSerialize(EntityManager, entity, entityState[serializerKey]);
+                    Debug.Log($"Restore Serializer State serializer key: ${serializerKey} value:  {entityState[serializerKey]}");
+                    serializer.UnSerialize(EntityManager, entity, entityState[serializerKey]);
                 }
             }
         }
@@ -128,7 +139,7 @@ namespace RPG.Saving
 
         private void RegisterAllISerializers()
         {
-            serializers = new Dictionary<EntityQueryMask, ISerializer>();
+            serializers = new List<ISerializer>();
             var type = typeof(ISerializer);
             var types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
@@ -138,8 +149,8 @@ namespace RPG.Saving
                 var serializer = Activator.CreateInstance(serializerType);
                 if (serializer is ISerializer casted)
                 {
-                    var entityQuery = GetEntityQuery(casted.GetEntityQueryDesc());
-                    serializers[entityQuery.GetEntityQueryMask()] = casted;
+
+                    serializers.Add(casted);
                 }
 
             }

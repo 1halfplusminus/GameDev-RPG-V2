@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace RPG.Saving
 {
-    public struct CharacterSerialisation : ISerializer
+    public struct PositionSerializer : ISerializer
     {
         public EntityQueryDesc GetEntityQueryDesc()
         {
