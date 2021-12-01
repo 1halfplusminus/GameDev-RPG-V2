@@ -20,13 +20,13 @@ namespace RPG.Saving
 
         public object Serialize(EntityManager em, Entity e)
         {
-            Debug.Log($"Serialize {e}");
+            Debug.Log($"Serialize translation {e}");
             return em.GetComponentData<Translation>(e);
         }
 
         public void UnSerialize(EntityManager em, Entity e, object state)
         {
-            Debug.Log($"Unserialize ${e}");
+            Debug.Log($"Unserialize translation for ${e}");
             if (state is Translation translation)
             {
                 if (!em.HasComponent<TriggeredSceneLoaded>(e))

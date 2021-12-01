@@ -20,7 +20,7 @@ namespace RPG.Saving
         {
             base.OnCreate();
             RegisterAllISerializers();
-            queryIdentifier = GetEntityQuery(typeof(Identifier), typeof(Saveable));
+            queryIdentifier = GetEntityQuery(typeof(Identifier));
         }
         protected override void OnUpdate()
         {
@@ -57,7 +57,6 @@ namespace RPG.Saving
         private void CaptureState(Dictionary<string, object> rootState)
         {
             using var identifieds = queryIdentifier.ToComponentDataArray<Identifier>(Allocator.Temp);
-            using var saveables = queryIdentifier.ToComponentDataArray<Saveable>(Allocator.Temp);
             using var identifiedEntities = queryIdentifier.ToEntityArray(Allocator.Temp);
 
             for (int i = 0; i < identifiedEntities.Length; i++)
@@ -86,9 +85,7 @@ namespace RPG.Saving
 
         private void RestoreState(Dictionary<string, object> rootState)
         {
-            var queryIdentifier = GetEntityQuery(typeof(Identifier), typeof(Saveable));
             using var identifieds = queryIdentifier.ToComponentDataArray<Identifier>(Allocator.Temp);
-            using var saveables = queryIdentifier.ToComponentDataArray<Saveable>(Allocator.Temp);
             using var identifiedEntities = queryIdentifier.ToEntityArray(Allocator.Temp);
             for (int i = 0; i < identifiedEntities.Length; i++)
             {
