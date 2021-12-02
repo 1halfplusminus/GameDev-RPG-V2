@@ -1,44 +1,152 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using RPG.Core;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Transforms;
 using UnityEngine;
+using Hash128 = Unity.Entities.Hash128;
+using System.Linq;
 
 namespace RPG.Saving
 {
+    public struct LastSceneSerializer : ISerializer
+    {
+        public EntityQueryDesc GetEntityQueryDesc()
+        {
+            return new EntityQueryDesc()
+            {
+                All = new ComponentType[] { ComponentType.ReadOnly<LastScene>() }
+            };
+        }
+
+        public object Serialize(EntityManager em, Entity e)
+        {
+            var lastScenesBuffer = em.GetBuffer<LastScene>(e);
+            using var nativeArray = lastScenesBuffer.ToNativeArray(Allocator.Temp);
+            var array = nativeArray.ToArray();
+            return array;
+        }
+
+        public void UnSerialize(EntityManager em, Entity e, object state)
+        {
+
+            if (state is LastScene[] lastScenes)
+            {
+                var lastScene = lastScenes.LastOrDefault();
+                if (lastScenes.Length >= 1)
+                {
+                    Debug.Log($"Unserializing LastScene {lastScene.SceneGUID}");
+                    em.AddComponentData(e, new TriggerSceneLoad { SceneGUID = lastScene.SceneGUID });
+                }
+
+            }
+
+        }
+    }
+
+    public struct SceneSaveCheckpoint : IComponentData
+    {
+
+    }
+    [Serializable]
+    public struct LastScene : IBufferElementData
+    {
+        public Hash128 SceneGUID;
+    }
     [UpdateInGroup(typeof(SavingSystemGroup))]
     public class UdemySaveSystem : SaveSystemBase
     {
         List<ISerializer> serializers;
         EntityQuery queryIdentifier;
+
+        EntityQuery lastSceneBuildQuery;
+
+        EntityQuery sceneLoadedQuery;
+
+        const string LastSceneEntityIdentifier = "LastSceneBuildIndex";
+
+
+        protected EntityQueryDesc LastSceneBuildEntityQueryDesc()
+        {
+            return new EntityQueryDesc()
+            {
+                All = new ComponentType[] { ComponentType.ReadOnly<LastScene>(), ComponentType.ReadOnly<Identifier>() }
+            };
+        }
+        protected void CreateLastBuildEntity()
+        {
+            var entity = EntityManager.CreateEntity(LastSceneBuildEntityQueryDesc().All);
+            EntityManager.AddBuffer<LastScene>(entity);
+            var hash = new UnityEngine.Hash128();
+            hash.Append(LastSceneEntityIdentifier);
+            EntityManager.AddComponentData(entity, new Identifier() { Id = hash });
+        }
         protected override void OnCreate()
         {
             base.OnCreate();
             RegisterAllISerializers();
             queryIdentifier = GetEntityQuery(typeof(Identifier));
+            lastSceneBuildQuery = GetEntityQuery(LastSceneBuildEntityQueryDesc());
+            CreateLastBuildEntity();
         }
         protected override void OnUpdate()
         {
-            Entities.ForEach((TriggeredSceneLoaded sceneLoaded) =>
+            var lastSceneEntity = lastSceneBuildQuery.GetSingletonEntity();
+            var lastSceneBuildBuffer = EntityManager.GetBuffer<LastScene>(lastSceneEntity);
+            var sceneLoadedCount = sceneLoadedQuery.CalculateEntityCount();
+            if (sceneLoadedCount > 0)
+            {
+                lastSceneBuildBuffer.Clear();
+                lastSceneBuildBuffer.Capacity = sceneLoadedCount;
+            }
+
+            Entities
+            .WithStoreEntityQueryInField(ref sceneLoadedQuery)
+            .WithChangeFilter<SceneLoaded>()
+            .ForEach((SceneLoaded sceneLoaded) =>
+            {
+                lastSceneBuildBuffer.Add(new LastScene { SceneGUID = sceneLoaded.SceneGUID });
+            }).Schedule();
+
+            Entities.ForEach((in TriggeredSceneLoaded sceneLoaded) =>
             {
                 Load(SaveSystem.GetPathFromSaveFile("test.save"));
+
             }).WithStructuralChanges().WithoutBurst().Run();
-            Entities.ForEach((TriggerUnloadScene sceneUnLoad) =>
+            Entities.ForEach((Entity e, in SceneSaveCheckpoint sceneLoaded) =>
+           {
+               Save(SaveSystem.GetPathFromSaveFile("test.save"));
+               EntityManager.RemoveComponent<SceneSaveCheckpoint>(e);
+           }).WithStructuralChanges().WithoutBurst().Run();
+            Entities.ForEach((in TriggerUnloadScene sceneUnLoad) =>
             {
                 Save(SaveSystem.GetPathFromSaveFile("test.save"));
             }).WithStructuralChanges().WithoutBurst().Run();
-        }
 
+        }
+        public override bool LoadLastScene(string savePath)
+        {
+            var states = LoadFile(savePath);
+            var lastSceneEntity = lastSceneBuildQuery.GetSingletonEntity();
+            var lastSceneEntityId = lastSceneBuildQuery.GetSingleton<Identifier>();
+            var id = lastSceneEntityId.Id.ToString();
+            if (states.ContainsKey(id))
+            {
+                var lastSceneState = (Dictionary<string, object>)states[id];
+                RestoreSerializersState(lastSceneState, lastSceneEntity);
+                return true;
+            }
+            return false;
+        }
         public override void Load(string savePath)
         {
             Debug.Log($"Loading from file {savePath}");
-
-            RestoreState(LoadFile(savePath));
+            var states = LoadFile(savePath);
+            var lastSceneEntityId = lastSceneBuildQuery.GetSingleton<Identifier>();
+            states.Remove(lastSceneEntityId.Id.ToString());
+            RestoreState(states);
         }
 
         private Dictionary<string, object> LoadFile(string fileName)
@@ -155,6 +263,7 @@ namespace RPG.Saving
 
             }
         }
+
     }
 }
 

@@ -1,7 +1,9 @@
 
+using System;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
+using UnityEngine;
 
 namespace RPG.Mouvement
 {
@@ -13,7 +15,7 @@ namespace RPG.Mouvement
 
         public float Speed;
     }
-
+    [Serializable]
     public struct WarpTo : IComponentData
     {
         public float3 Destination;

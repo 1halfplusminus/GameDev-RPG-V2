@@ -1440,15 +1440,14 @@ GameObject:
   - component: {fileID: 9198290619554727063}
   - component: {fileID: 2464562307063255977}
   - component: {fileID: 1123742229230621250}
-  - component: {fileID: 3853286948490027725}
   - component: {fileID: 3142420853972500397}
   - component: {fileID: 8632880847188824218}
   - component: {fileID: 8635965599112968116}
   - component: {fileID: 390904578215180243}
   - component: {fileID: 3609472514424561473}
   - component: {fileID: 3165293975074451672}
-  - component: {fileID: 1729444566928709949}
   - component: {fileID: 7979986417888468897}
+  - component: {fileID: -5488440909320222580}
   m_Layer: 0
   m_Name: Morie Hero (1)
   m_TagString: Untagged
@@ -1463,7 +1462,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3809403721112327955}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.41, y: 0.073, z: -7.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1568,58 +1567,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad84ca32a53736eb7a08d39a538c804c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3853286948490027725
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3809403721112327955}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9783206fb6aeeea46b3b394e3a7bb659, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Graph: {fileID: 11400000, guid: 4313e68c60b058cbc95f1c98f528edea, type: 2}
-  Context: {fileID: 3142420853972500397}
-  ExposedObjects:
-  - TargetGUID:
-      NodeIDPart1: 1147206770769689075
-      NodeIDPart2: 5222970459871323292
-      PortUniqueName: Root Motion Source
-    Value: {fileID: 0}
-  - TargetGUID:
-      NodeIDPart1: 8367569594123536243
-      NodeIDPart2: 8028071421114195081
-      PortUniqueName: Root Motion Source
-    Value: {fileID: 0}
-  - TargetGUID:
-      NodeIDPart1: 192830419637534042
-      NodeIDPart2: 14585982553011175089
-      PortUniqueName: Root Motion Source
-    Value: {fileID: 0}
-  - TargetGUID:
-      NodeIDPart1: 5968649610939107113
-      NodeIDPart2: 5296856355323026862
-      PortUniqueName: Root Motion Source
-    Value: {fileID: 0}
-  - TargetGUID:
-      NodeIDPart1: 11418573606549997661
-      NodeIDPart2: 3155372933239637430
-      PortUniqueName: Root Motion Source
-    Value: {fileID: 0}
-  - TargetGUID:
-      NodeIDPart1: 14400622985741704571
-      NodeIDPart2: 7100278992776980629
-      PortUniqueName: Root Motion Source
-    Value: {fileID: 0}
-  PhaseIdentification: Unity.Animation.ProcessLateAnimationGraphLoaderSystem+Tag,
-    Unity.Animation.DefaultGraphPipeline, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  ShowBindings: 1
-  Inputs:
-  - Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    Value: {fileID: 9198290619554727063}
 --- !u!114 &3142420853972500397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1974,19 +1921,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
---- !u!114 &1729444566928709949
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3809403721112327955}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b2da85fd21c88b95a2b2ed9bec37235, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SceneAsset: {fileID: 102900000, guid: db7d16cc5e421a73f8863a13c0b96385, type: 3}
 --- !u!114 &7979986417888468897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2000,7 +1934,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SaveableTypes: []
-  UniqueIdentifier: 86a46f9d-be15-4110-8bc7-4aeddb48d6dc
+  UniqueIdentifier: PLAYER
+--- !u!114 &-5488440909320222580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3809403721112327955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05c45ce61706f8298b512fbf88bc79cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IDLE: {fileID: 0}
+  Walk: {fileID: 0}
 --- !u!1 &3932828201327968579
 GameObject:
   m_ObjectHideFlags: 0

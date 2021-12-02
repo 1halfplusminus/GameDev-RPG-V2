@@ -8,13 +8,15 @@ namespace RPG.Animation
     using UnityEditor.Animations;
     using Unity.Animation.Hybrid;
     using RPG.Core;
+    using System.Collections.Generic;
 
     class BlendTree1DPlayer : MonoBehaviour
     {
 
-        public BlendTree BlendTree;
+        public List<BlendTree> BlendTree;
 
     }
+
     [DisableAutoCreation]
     [UpdateAfter(typeof(RigConversion))]
 
@@ -33,12 +35,19 @@ namespace RPG.Animation
                     ClipConfiguration = clipConfiguration,
                     SampleRate = 60f
                 };
-                var blendTreeIndex = BlendTreeConversion.Convert(player.BlendTree, entity, DstEntityManager, bakeOptions);
-                var graphSetup = new BlendTree1DSetup
+                for (int i = 0; i < player.BlendTree.Count; i++)
                 {
-                    BlendTreeIndex = blendTreeIndex,
-                };
-                DstEntityManager.AddComponentData(entity, graphSetup);
+
+                    var blendTreeIndex = BlendTreeConversion.Convert(player.BlendTree[i], entity, DstEntityManager, bakeOptions);
+                    if (i == 0)
+                    {
+                        var graphSetup = new BlendTree1DSetup
+                        {
+                            BlendTreeIndex = blendTreeIndex,
+                        };
+                        DstEntityManager.AddComponentData(entity, graphSetup);
+                    }
+                }
                 DstEntityManager.AddComponent<DeltaTime>(entity);
 
             });

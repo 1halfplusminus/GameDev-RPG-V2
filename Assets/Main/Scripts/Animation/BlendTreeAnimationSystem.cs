@@ -7,6 +7,14 @@ using Unity.Burst;
 
 namespace RPG.Animation
 {
+    [GenerateAuthoringComponent]
+    struct CurrentlyPlayingBlendTree : IComponentData
+    {
+
+        public int BlendTree;
+        public float Value;
+
+    }
     public struct BlendTree1DSetup : IAnimationSetup
     {
         public int BlendTreeIndex;
@@ -26,29 +34,45 @@ namespace RPG.Animation
         public BlobAssetReference<BlendTree1D> BlendTreeAsset;
         public float paramX;
     }
-    [DisableAutoCreation]
+
     public class BlendTree1DGraphSystem : AnimationSystemBase<
      BlendTree1DSetup,
      BlendTree1DData,
      ProcessDefaultAnimationGraph
      >
     {
+        protected override void OnUpdate()
+        {
+            var set = animationSystem.Set;
+            var em = EntityManager;
+            Entities.ForEach((Entity e, ref BlendTree1DData data, ref CurrentlyPlayingBlendTree blendTree) =>
+            {
+                var blendTreeComponent = em.GetBuffer<BlendTree1DResource>(e);
+                var blendTreeAsset = BlendTreeBuilder.CreateBlendTree1DFromComponents(blendTreeComponent[blendTree.BlendTree], em, e);
+                data.BlendTreeAsset = blendTreeAsset;
+
+
+            });
+            base.OnUpdate();
+        }
         protected override BlendTree1DData CreateGraph(Entity e, ref Rig rig, ProcessDefaultAnimationGraph graphSystem, ref BlendTree1DSetup setup)
         {
             var set = graphSystem.Set;
             var blendTreeComponent = EntityManager.GetBuffer<BlendTree1DResource>(e);
             var blendTreeAsset = BlendTreeBuilder.CreateBlendTree1DFromComponents(blendTreeComponent[setup.BlendTreeIndex], EntityManager, e);
-            var data = new BlendTree1DData();
+            var data = new BlendTree1DData
+            {
+                BlendTreeNode = set.Create<BlendTree1DNode>(),
+                BlendTreeAsset = blendTreeAsset,
 
-            data.BlendTreeNode = set.Create<BlendTree1DNode>();
-            data.BlendTreeAsset = blendTreeAsset;
+                EntityNode = set.CreateComponentNode(e),
+                DeltaTimeNode = set.Create<ConvertDeltaTimeToFloatNode>(),
+                TimeCounterNode = set.Create<TimeCounterNode>(),
+                TimeLoopNode = set.Create<TimeLoopNode>(),
+                FloatRcpNode = set.Create<FloatRcpNode>(),
+                BlendTreeInputNode = set.Create<ExtractBlendTree1DParametersNode>()
+            };
 
-            data.EntityNode = set.CreateComponentNode(e);
-            data.DeltaTimeNode = set.Create<ConvertDeltaTimeToFloatNode>();
-            data.TimeCounterNode = set.Create<TimeCounterNode>();
-            data.TimeLoopNode = set.Create<TimeLoopNode>();
-            data.FloatRcpNode = set.Create<FloatRcpNode>();
-            data.BlendTreeInputNode = set.Create<ExtractBlendTree1DParametersNode>();
 
             set.Connect(data.EntityNode, data.DeltaTimeNode, ConvertDeltaTimeToFloatNode.KernelPorts.Input);
             set.Connect(data.DeltaTimeNode, ConvertDeltaTimeToFloatNode.KernelPorts.Output, data.TimeCounterNode, TimeCounterNode.KernelPorts.DeltaTime);
@@ -71,6 +95,7 @@ namespace RPG.Animation
         protected override void DestroyGraph(Entity e, ProcessDefaultAnimationGraph graphSystem, ref BlendTree1DData data)
         {
             var set = graphSystem.Set;
+            set.Destroy(data.FloatRcpNode);
             set.Destroy(data.DeltaTimeNode);
             set.Destroy(data.TimeCounterNode);
             set.Destroy(data.TimeLoopNode);

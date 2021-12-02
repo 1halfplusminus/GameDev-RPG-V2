@@ -1,16 +1,12 @@
-
-using System;
-using System.Text;
-using RPG.Control;
 using RPG.Core;
 using Unity.Entities;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace RPG.Saving
 {
     [UpdateInGroup(typeof(SavingSystemGroup))]
+    [UpdateAfter(typeof(SaveSystemBase))]
     public class SavingDebugSystem : SystemBase
     {
 
@@ -37,11 +33,32 @@ namespace RPG.Saving
             RequireForUpdate(requestForUpdateQuery);
 
         }
+        protected override void OnStartRunning()
+        {
+            base.OnStartRunning();
+            if (!saveSystem.LoadLastScene(savePath))
+            {
+                NewGame();
+            }
+        }
+
+        protected void NewGame()
+        {
+
+            SceneLoadingSystem.UnloadAllCurrentlyLoadedScene(EntityManager);
+            var gameSettingsEntity = GetSingletonEntity<GameSettings>();
+            var gameSettings = GetSingleton<GameSettings>();
+            EntityManager.AddComponentData(gameSettingsEntity, new TriggerSceneLoad() { SceneGUID = gameSettings.NewGameScene });
+        }
         protected override void OnUpdate()
         {
             var keyboard = Keyboard.current;
             if (keyboard != null)
             {
+                if (keyboard.altKey.isPressed && keyboard.nKey.wasPressedThisFrame)
+                {
+                    // NewGame();
+                }
                 if (keyboard.altKey.isPressed && keyboard.sKey.wasPressedThisFrame)
                 {
                     Debug.Log("Saving in file");
@@ -51,9 +68,10 @@ namespace RPG.Saving
                 }
                 if (keyboard.altKey.isPressed && keyboard.lKey.wasPressedThisFrame)
                 {
+                    SceneLoadingSystem.UnloadAllCurrentlyLoadedScene(EntityManager);
                     //FIXME: Load should not be called directly the save system should react to a component that request a Load
                     // saveSystem.Load();
-                    saveSystem.Load(savePath);
+                    saveSystem.LoadLastScene(savePath);
                 }
             }
         }

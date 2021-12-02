@@ -3817,44 +3817,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9783206fb6aeeea46b3b394e3a7bb659, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Graph: {fileID: 11400000, guid: 26eeeb1c25ba4def1a1b7b9ff7bb1426, type: 2}
+  Graph: {fileID: 0}
   Context: {fileID: 6748935984287833189}
-  ExposedObjects:
-  - TargetGUID:
-      NodeIDPart1: 13931374818038408328
-      NodeIDPart2: 2310700803569680292
-      PortUniqueName: Root Motion Source
-    Value: {fileID: 0}
-  - TargetGUID:
-      NodeIDPart1: 4018467193561646304
-      NodeIDPart2: 14951283673617596041
-      PortUniqueName: Root Motion Source
-    Value: {fileID: 0}
-  - TargetGUID:
-      NodeIDPart1: 18115735151069895238
-      NodeIDPart2: 15526875910347871901
-      PortUniqueName: Root Motion Source
-    Value: {fileID: 0}
-  - TargetGUID:
-      NodeIDPart1: 3447534743256736968
-      NodeIDPart2: 4178878571087090307
-      PortUniqueName: Root Motion Source
-    Value: {fileID: 0}
-  - TargetGUID:
-      NodeIDPart1: 11167231774948714793
-      NodeIDPart2: 13295190274187959990
-      PortUniqueName: Root Motion Source
-    Value: {fileID: 0}
-  - TargetGUID:
-      NodeIDPart1: 10462060231787932940
-      NodeIDPart2: 18035509962948914618
-      PortUniqueName: Root Motion Source
-    Value: {fileID: 0}
-  - TargetGUID:
-      NodeIDPart1: 13621692158484936590
-      NodeIDPart2: 9461642750133055161
-      PortUniqueName: Root Motion Source
-    Value: {fileID: 0}
+  ExposedObjects: []
   PhaseIdentification: Unity.Animation.ProcessLateAnimationGraphLoaderSystem+Tag,
     Unity.Animation.DefaultGraphPipeline, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   ShowBindings: 1

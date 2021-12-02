@@ -7,7 +7,6 @@ using UnityEngine;
 namespace RPG.Core
 {
 
-
     public class TriggerSceneLoadAuthoring : MonoBehaviour, IConvertGameObjectToEntity
     {
         [SerializeField]

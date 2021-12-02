@@ -106,7 +106,7 @@ namespace RPG.UI
                 {
                     To = 100f,
                     From = 0.0f,
-                    Duration = 1f
+                    Duration = 0.1f
                 });
                 commandBuffer.AddComponent<IsLoading>(e);
                 foreach (var trigger in anySceneLoading.Triggers)

@@ -91,7 +91,7 @@ namespace RPG.Gameplay
                 {
                     Entity brainEntity = query.GetSingletonEntity();
                     brain = em.GetComponentObject<CinemachineBrain>(brainEntity);
-                    Debug.Log($"Brain found");
+                    // Debug.Log($"Brain found");
                     break;
                 }
             }

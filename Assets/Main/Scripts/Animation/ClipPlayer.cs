@@ -29,6 +29,7 @@ namespace RPG.Animation
         }
     }
 
+
 #endif
 
     public class ClipPlayer : MonoBehaviour
@@ -47,8 +48,8 @@ namespace RPG.Animation
         public GraphHandle Graph;
         public NodeHandle<ClipPlayerNode> ClipPlayerNode;
 
-    }
 
+    }
     [DisableAutoCreation]
     [UpdateBefore(typeof(DefaultAnimationSystemGroup))]
     public class PlayClipSystemBase : AnimationSystemBase<PlayClip, PlayClipStateComponent, ProcessDefaultAnimationGraph>

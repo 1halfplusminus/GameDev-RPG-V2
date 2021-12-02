@@ -13,6 +13,12 @@ namespace RPG.Saving
     {
         public abstract void Save(string saveFile);
         public abstract void Load(string saveFile);
+
+        public abstract bool LoadLastScene(string saveFile);
+    }
+    public struct IsLoadingSave : IComponentData
+    {
+
     }
     public struct HasSpawnIdentified : IComponentData
     {
@@ -85,20 +91,7 @@ namespace RPG.Saving
             var entity = em.CreateEntity(typeof(SavingState));
             em.AddComponentData(entity, new SavingState { Direction = direction, Type = type });
         }
-        private void UnloadAllCurrentlyLoadedScene(EntityManager dstManager)
-        {
-            if (dstManager.World.Flags == WorldFlags.Game)
-            {
-                var loadedSceneQuery = dstManager.CreateEntityQuery(typeof(SceneLoaded));
-                using var currentLoadedScene = loadedSceneQuery.ToComponentDataArray<SceneLoaded>(Allocator.Temp);
-                using var loadedScenes = loadedSceneQuery.ToEntityArray(Allocator.Temp);
-                for (int i = 0; i < currentLoadedScene.Length; i++)
-                {
-                    dstManager.AddComponentData(loadedScenes[i], new UnloadScene() { SceneEntity = loadedScenes[i] });
-                }
-            }
 
-        }
         public World RecreateSerializeConversionWorld()
         {
             if (conversionWorld != null && conversionWorld.IsCreated)
@@ -128,7 +121,7 @@ namespace RPG.Saving
             if (File.Exists(saveFile.ToString()))
             {
                 Debug.Log("File Exists Loading File");
-                UnloadAllCurrentlyLoadedScene(EntityManager);
+                SceneLoadingSystem.UnloadAllCurrentlyLoadedScene(EntityManager);
                 LoadFileInSerializedWorld(saveFile);
                 LoadSerializedWorld(SavingStateType.FILE);
 
@@ -317,6 +310,11 @@ namespace RPG.Saving
         public override void Load(string saveFile)
         {
             Load(new FixedString128(saveFile));
+        }
+
+        public override bool LoadLastScene(string saveFile)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

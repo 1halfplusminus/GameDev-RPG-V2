@@ -10,6 +10,7 @@ using Unity.Transforms;
 
 namespace RPG.Gameplay
 {
+    using RPG.Saving;
 
 #if UNITY_EDITOR
     using UnityEditor;
@@ -98,8 +99,8 @@ namespace RPG.Gameplay
             .ForEach((Entity e, in CollidWithPlayer collidWithPlayer, in Portal portal, in SceneSection currentScene, in LinkPortal linkPortal) =>
             {
 
-                commandBuffer.AddComponent<TriggerSceneLoad>(collidWithPlayer.Entity, new TriggerSceneLoad() { SceneGUID = linkPortal.SceneGUID });
-                commandBuffer.AddComponent<TriggerUnloadScene>(collidWithPlayer.Entity, new TriggerUnloadScene() { SceneGUID = currentScene.SceneGUID });
+                commandBuffer.AddComponent(collidWithPlayer.Entity, new TriggerSceneLoad() { SceneGUID = linkPortal.SceneGUID });
+                commandBuffer.AddComponent(collidWithPlayer.Entity, new TriggerUnloadScene() { SceneGUID = currentScene.SceneGUID });
                 commandBuffer.AddComponent(collidWithPlayer.Entity, new WarpToPortal { PortalIndex = linkPortal.Index });
             })
             .WithStructuralChanges()
@@ -122,13 +123,15 @@ namespace RPG.Gameplay
                 .WithStoreEntityQueryInField(ref needWarpQuery)
                 .WithReadOnly(indexedPortals)
                 .WithNone<TriggerUnloadScene>()
+                .WithAll<TriggeredSceneLoaded>()
                 .WithDisposeOnCompletion(indexedPortals)
                 .ForEach((int entityInQueryIndex, Entity e, in WarpToPortal warp) =>
                 {
                     if (indexedPortals.ContainsKey(warp.PortalIndex))
                     {
-                        Debug.Log("Portail Found Warping Player");
+                        Debug.Log($"Portail Found Warping Player to {warp.PortalIndex}");
                         var destination = indexedPortals[warp.PortalIndex].Item2.WarpPoint;
+                        commandBufferP.AddComponent<SceneSaveCheckpoint>(entityInQueryIndex, e);
                         commandBufferP.AddComponent(entityInQueryIndex, e, new Translation() { Value = destination.Position });
                         commandBufferP.AddComponent(entityInQueryIndex, e, new WarpTo() { Destination = destination.Position });
                         commandBufferP.AddComponent(entityInQueryIndex, e, new Rotation() { Value = quaternion.LookRotation(destination.Forward, destination.Up) });

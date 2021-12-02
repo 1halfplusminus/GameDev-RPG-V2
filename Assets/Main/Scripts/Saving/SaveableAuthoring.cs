@@ -33,17 +33,7 @@ namespace RPG.Saving
         [SerializeField]
         public string UniqueIdentifier = "";
 
-        private void Start()
-        {
-            Debug.Log($"Start {gameObject.name}");
-            var em = World.DefaultGameObjectInjectionWorld.EntityManager;
-            entity = em.CreateEntity();
-            if (!string.IsNullOrEmpty(UniqueIdentifier) && IsUnique(UniqueIdentifier))
-            {
-                AddIdentifierToEntity(UniqueIdentifier);
-            }
 
-        }
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
@@ -58,6 +48,19 @@ namespace RPG.Saving
 #endif
         }
 #if UNITY_EDITOR
+        private void Start()
+        {
+
+            if (Application.IsPlaying(gameObject)) { return; }
+            var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+            entity = em.CreateEntity();
+            if (!string.IsNullOrEmpty(UniqueIdentifier) && IsUnique(UniqueIdentifier))
+            {
+                AddIdentifierToEntity(UniqueIdentifier);
+            }
+
+
+        }
         private void Update()
         {
             if (Application.IsPlaying(gameObject)) { return; }

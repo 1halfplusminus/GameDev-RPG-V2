@@ -130,6 +130,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5488440909320222580, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: Run
+      value: 
+      objectReference: {fileID: 7400000, guid: bdfdb036a49dbd7ea91cfa37ed45b5be, type: 2}
+    - target: {fileID: -5488440909320222580, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: IDLE
+      value: 
+      objectReference: {fileID: 7400000, guid: 90250ab376c82354f9093ea609f555d7, type: 2}
+    - target: {fileID: -5488440909320222580, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: Walk
+      value: 
+      objectReference: {fileID: 7400000, guid: 27d598172131cb94089bbac2123f46b8, type: 2}
     - target: {fileID: 3809403721112327955, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: m_Name
       value: Morie Hero
@@ -178,9 +190,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7979986417888468897, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
-      propertyPath: UniqueIdentifier
-      value: PLAYER
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9198290619554727063, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}

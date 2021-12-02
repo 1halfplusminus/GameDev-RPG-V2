@@ -65,7 +65,20 @@ namespace RPG.Core
         EntityQuery sceneLoadedQuery;
 
         EntityQuery waitForSpawn;
+        public static void UnloadAllCurrentlyLoadedScene(EntityManager dstManager)
+        {
+            if (dstManager.World.Flags == WorldFlags.Game)
+            {
+                var loadedSceneQuery = dstManager.CreateEntityQuery(typeof(SceneLoaded));
+                using var currentLoadedScene = loadedSceneQuery.ToComponentDataArray<SceneLoaded>(Allocator.Temp);
+                using var loadedScenes = loadedSceneQuery.ToEntityArray(Allocator.Temp);
+                for (int i = 0; i < currentLoadedScene.Length; i++)
+                {
+                    dstManager.AddComponentData(loadedScenes[i], new UnloadScene() { SceneEntity = loadedScenes[i] });
+                }
+            }
 
+        }
         protected override void OnCreate()
         {
             base.OnCreate();
@@ -89,11 +102,15 @@ namespace RPG.Core
             Entities
             .ForEach((Entity e, in TriggerSceneLoad triggerSceneLoad) =>
             {
-                var sceneEntity = _sceneSystem.LoadSceneAsync(triggerSceneLoad.SceneGUID);
-                var newSceneRef = em.GetComponentData<SceneReference>(sceneEntity);
-                Debug.Log($"Loading Scene {newSceneRef.SceneGUID}");
-                commandBuffer.AddComponent(e, new LoadSceneAsync() { SceneEntity = sceneEntity, SceneGUID = newSceneRef.SceneGUID });
-                commandBuffer.RemoveComponent<TriggerSceneLoad>(e);
+                var sceneEntity = _sceneSystem.GetSceneEntity(triggerSceneLoad.SceneGUID);
+                if (sceneEntity == Entity.Null || !_sceneSystem.IsSceneLoaded(sceneEntity))
+                {
+                    sceneEntity = _sceneSystem.LoadSceneAsync(triggerSceneLoad.SceneGUID);
+                    var newSceneRef = em.GetComponentData<SceneReference>(sceneEntity);
+                    Debug.Log($"Loading Scene {newSceneRef.SceneGUID}");
+                    commandBuffer.AddComponent(e, new LoadSceneAsync() { SceneEntity = sceneEntity, SceneGUID = newSceneRef.SceneGUID });
+                    commandBuffer.RemoveComponent<TriggerSceneLoad>(e);
+                }
 
             })
             .WithStructuralChanges()
@@ -134,7 +151,7 @@ namespace RPG.Core
                 .ForEach((int entityInQueryIndex, Entity e, in AnySceneLoading anySceneLoading) =>
                 {
                     commandBufferP.RemoveComponent<AnySceneLoading>(entityInQueryIndex, e);
-                    commandBufferP.AddComponent<AnySceneFinishLoading>(entityInQueryIndex, e, new AnySceneFinishLoading { Triggers = anySceneLoading.Triggers });
+                    commandBufferP.AddComponent(entityInQueryIndex, e, new AnySceneFinishLoading { Triggers = anySceneLoading.Triggers });
                 }).ScheduleParallel();
             }
             else
