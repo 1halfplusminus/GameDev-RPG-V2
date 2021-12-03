@@ -18,7 +18,10 @@ namespace RPG.Control
         protected override void OnUpdate()
         {
             var waypointsByPath = GetBufferFromEntity<PatrolWaypoint>(true);
-            Entities.WithReadOnly(waypointsByPath).WithAll<Spawned>().ForEach((ref Patrolling patrolling, in PatrollingPath path) =>
+            Entities
+            .WithReadOnly(waypointsByPath)
+            .WithChangeFilter<PatrollingPath>()
+            .ForEach((ref Patrolling patrolling, in PatrollingPath path) =>
             {
                 var waypoints = waypointsByPath[path.Entity];
                 patrolling.Start(waypoints.Length);
@@ -281,10 +284,11 @@ namespace RPG.Control
             }).ScheduleParallel();
 
             Entities
-           .WithNone<IsSuspicious>().WithChangeFilter<GuardAnimation>().ForEach((ref GuardAnimation animation) =>
-           {
-               animation.NervouslyLookingAround = math.max(animation.NervouslyLookingAround - 0.1f, 0.0f);
-           }).ScheduleParallel();
+           .WithNone<IsSuspicious>()
+           .WithChangeFilter<GuardAnimation>().ForEach((ref GuardAnimation animation) =>
+             {
+                 animation.NervouslyLookingAround = 0.0f;
+             }).ScheduleParallel();
         }
     }
 }
