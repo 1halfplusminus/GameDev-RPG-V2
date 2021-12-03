@@ -24,7 +24,8 @@ Saving System:
 Simple Weapon System:@high 
   ☐ Character should change attack animation depending of weapon
   ☐ Character should be able to pick weapon on floor
-  ☐ Weapon should play vfx on hit
+  ☐ Weapon should play vfx on hit / attack
+  ☐ Particule effect could trigger damage on hit
 VFX on hit system:
   ☐ Create a conversion system that get all adressable with a label & convert them as entity to be spawned as vfx effect
   ☐ Spawn VFX on hit
@@ -36,9 +37,11 @@ Animation System:@high @today
     ☐ Create a animation system that have the same setup as character animation graph @high
       ✔ Create the idle / walk animation 
       ✔ Create the idle / walk => run mixer @done(21-12-02 23:10)
-      ☐ Create the attack / move cycle mixer
-
-  
+      ✔ Create the attack / move cycle mixer @done(21-12-03 10:59)
+      ✔ Create a Dead mixer @done(21-12-03 10:59)
+      ☐ Create Guarding mixer
+AI System:
+  ☐ Fix patrolling @high
 
 Gameplay:
   Dialogue system:

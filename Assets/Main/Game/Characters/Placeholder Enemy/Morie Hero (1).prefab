@@ -1437,7 +1437,6 @@ GameObject:
   - component: {fileID: 13269270568525901}
   - component: {fileID: 6302724733382121449}
   - component: {fileID: 809469740015579474}
-  - component: {fileID: 9198290619554727063}
   - component: {fileID: 2464562307063255977}
   - component: {fileID: 1123742229230621250}
   - component: {fileID: 3142420853972500397}
@@ -1525,23 +1524,6 @@ MonoBehaviour:
   HitEvents:
   - 0.8
   WeaponDamage: 10
---- !u!114 &9198290619554727063
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3809403721112327955}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df0df971e93d141be9ef51ffe6f8abd5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Move: 0
-  Attack: 0
-  AttackCooldown: 0
-  Run: 0
-  Dead: 0
 --- !u!114 &2464562307063255977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1947,8 +1929,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05c45ce61706f8298b512fbf88bc79cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IDLE: {fileID: 0}
-  Walk: {fileID: 0}
+  IDLE: {fileID: 7400000, guid: 90250ab376c82354f9093ea609f555d7, type: 2}
+  Walk: {fileID: 7400000, guid: 27d598172131cb94089bbac2123f46b8, type: 2}
+  Run: {fileID: 7400000, guid: bdfdb036a49dbd7ea91cfa37ed45b5be, type: 2}
+  Attack: {fileID: 7400000, guid: 3f97c25c54b04f25d848c02dc082375f, type: 2}
+  Dead: {fileID: 0}
 --- !u!1 &3932828201327968579
 GameObject:
   m_ObjectHideFlags: 0

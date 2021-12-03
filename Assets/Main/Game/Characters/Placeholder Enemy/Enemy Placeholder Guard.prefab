@@ -3783,18 +3783,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8167571134889102839, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+    - {fileID: 6289934918805679374, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
---- !u!114 &6371539101496094734 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6289934918805679374, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
-  m_PrefabInstance: {fileID: 1091585754159865088}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1299507469631316153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df0df971e93d141be9ef51ffe6f8abd5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1820324530307414531 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1613697079563282179, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
@@ -3805,31 +3795,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2102847174563085753, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
   m_PrefabInstance: {fileID: 1091585754159865088}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &-3088144995083432100
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1299507469631316153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9783206fb6aeeea46b3b394e3a7bb659, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Graph: {fileID: 0}
-  Context: {fileID: 6748935984287833189}
-  ExposedObjects: []
-  PhaseIdentification: Unity.Animation.ProcessLateAnimationGraphLoaderSystem+Tag,
-    Unity.Animation.DefaultGraphPipeline, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  ShowBindings: 1
-  Inputs:
-  - Identification: CharacterAnimation, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
-    Value: {fileID: 6371539101496094734}
-  - Identification: RPG.Animation.GuardAnimation, Assembly-CSharp, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-    Value: {fileID: 6488695818498842805}
 --- !u!114 &-2899455245883258136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3844,6 +3809,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChaseDistance: 6
   SuspiciousTime: 9
+--- !u!114 &-781755918778158974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1299507469631316153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05c45ce61706f8298b512fbf88bc79cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IDLE: {fileID: 7400000, guid: 90250ab376c82354f9093ea609f555d7, type: 2}
+  Walk: {fileID: 7400000, guid: 27d598172131cb94089bbac2123f46b8, type: 2}
+  Run: {fileID: 7400000, guid: bdfdb036a49dbd7ea91cfa37ed45b5be, type: 2}
+  Attack: {fileID: 7400000, guid: 3f97c25c54b04f25d848c02dc082375f, type: 2}
+  Dead: {fileID: 7400000, guid: 420885869796a7ece9d0044b7f41940b, type: 2}
 --- !u!114 &2121927805176826258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3858,19 +3840,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GuardOriginalLocation: 1
   GuardLocation: {x: 0, y: 0, z: 0}
---- !u!114 &6488695818498842805
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1299507469631316153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7b0f05c0675c51b18e6caa87a695052, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NervouslyLookingAround: 0
 --- !u!114 &6748935984287833189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3982,3 +3951,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad84ca32a53736eb7a08d39a538c804c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &996991808763579324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1299507469631316153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0db86c823571f0638ca2cf3c68a61ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LookingAround: {fileID: 7400000, guid: a8928fcb53504dd8a8d32a5bd1a04b28, type: 2}
