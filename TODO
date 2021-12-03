@@ -1,6 +1,8 @@
 Fighter System:
+  
   ☐ Get Animation Event From Animation Clip Data
   ☐ Remove hit information from fighter and put it on a weapon component because attack animation is depending on weapon
+
 Spawner System:
   ✔ Rename player spawner to a more fitting name @done(21-11-29 10:42)
   ✔ Finish new spawning system @done(21-12-01 11:15)
@@ -24,6 +26,7 @@ Saving System:
     ✔ Reloading The Last Scene @done(21-12-02 16:19)
     ✔ Test on Build Game @done(21-12-02 23:10)
 Simple Weapon System:@high 
+  ✔ Add Weapon Socket In Rig for Weapon @done(21-12-03 16:08)
   ☐ Character should change attack animation depending of weapon
   ☐ Character should be able to pick weapon on floor
   ☐ Weapon should play vfx on hit / attack
@@ -35,6 +38,7 @@ VFX on hit system:
   
 Animation System:@high @today
   ✘ Fix crash with AnimationNode @cancelled(21-12-01 19:39)
+  ☐ Add a socket to character animation for hand
   ☐ Optimaze animation system with UberClip
   ☐ Create a custom animation system @started(21-12-01 19:39)
     ☐ Create a animation system that have the same setup as character animation graph @high
