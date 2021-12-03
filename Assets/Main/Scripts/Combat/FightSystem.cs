@@ -7,11 +7,14 @@ using Unity.Mathematics;
 
 namespace RPG.Combat
 {
-    [UpdateAfter(typeof(MouvementSystemGroup))]
-    public class CombatSystemGroup : ComponentSystemGroup
-    {
+    // public struct SpawnWeapon : IComponentData
+    // {
+    //     Entity Prefab;
+    // }
+    // public struct Weapon : IComponentData
+    // {
 
-    }
+    // }
     [UpdateAfter(typeof(CombatTargettingSystem))]
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class MoveTowardTargetSystem : SystemBase

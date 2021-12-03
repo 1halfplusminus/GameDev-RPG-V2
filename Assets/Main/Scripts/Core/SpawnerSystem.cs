@@ -43,6 +43,7 @@ namespace RPG.Core
     public struct Spawn : IComponentData
     {
         public Entity Prefab;
+        public Entity Parent;
     }
 
     public struct Spawned : IComponentData
@@ -185,6 +186,11 @@ namespace RPG.Core
                  {
 
                      var instance = commandBufferP.Instantiate(entityInQueryIndex, toSpawn.Prefab);
+                     if (toSpawn.Parent != Entity.Null)
+                     {
+                         commandBufferP.AddComponent(entityInQueryIndex, instance, new Parent { Value = toSpawn.Parent });
+                         commandBufferP.AddComponent<LocalToParent>(entityInQueryIndex, instance);
+                     }
                      commandBufferP.AddComponent(entityInQueryIndex, instance, new Translation { Value = localToWorld.Position });
                      commandBufferP.AddComponent(entityInQueryIndex, instance, new Rotation { Value = localToWorld.Rotation });
                      commandBufferP.AddComponent<Spawned>(entityInQueryIndex, instance);

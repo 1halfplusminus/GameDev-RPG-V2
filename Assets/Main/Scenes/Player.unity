@@ -123,97 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &540324255
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 553645796}
-    m_Modifications:
-    - target: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 15.0000105
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.033999827
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.1609999
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.27200013
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.42089894
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.42118242
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.52753836
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.6059313
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 16.544
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 84.696
-      objectReference: {fileID: 0}
-    - target: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: -95.333
-      objectReference: {fileID: 0}
-    - target: {fileID: 6505506798603314204, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-      propertyPath: m_Name
-      value: Starter Sword
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
---- !u!1 &540324256 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6505506798603314204, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-  m_PrefabInstance: {fileID: 540324255}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &540324257
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 540324256}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24e71dfe142c3804292455a0ed49bfff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &540324258 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5837759524870815398, guid: 2def7693f2d1cbd6d92f44ae752a8938, type: 3}
-  m_PrefabInstance: {fileID: 540324255}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &553645796 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 980329735747438525, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
@@ -230,6 +139,14 @@ PrefabInstance:
       propertyPath: Dead
       value: 
       objectReference: {fileID: 7400000, guid: 420885869796a7ece9d0044b7f41940b, type: 2}
+    - target: {fileID: 809469740015579474, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: WeaponPrefab
+      value: 
+      objectReference: {fileID: 7377326180664589832, guid: 72694306773c065e7a5485a2db335828, type: 3}
+    - target: {fileID: 809469740015579474, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: WeaponSocket
+      value: 
+      objectReference: {fileID: 553645796}
     - target: {fileID: 3142420853972500397, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Bones.Array.size
       value: 99
@@ -241,7 +158,7 @@ PrefabInstance:
     - target: {fileID: 3142420853972500397, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Bones.Array.data[67]
       value: 
-      objectReference: {fileID: 540324258}
+      objectReference: {fileID: 0}
     - target: {fileID: 3142420853972500397, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Bones.Array.data[68]
       value: 

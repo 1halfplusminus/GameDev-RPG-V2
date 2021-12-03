@@ -1,10 +1,12 @@
 
 using Unity.Entities;
 using RPG.Core;
-using UnityEngine;
+using Unity.Animation.Hybrid;
+using Unity.Transforms;
 
 namespace RPG.Combat
 {
+    [UpdateAfter(typeof(RigConversion))]
     public class FighterConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()
@@ -28,9 +30,33 @@ namespace RPG.Combat
                 });
                 DstEntityManager.AddComponent<LookAt>(entity);
                 DstEntityManager.AddComponent<DeltaTime>(entity);
-                /*                 DstEntityManager.AddComponentData(entity, new CharacterState { State = CharacterStateMask.Dead | CharacterStateMask.Moving }); */
+
+                var weaponPrefabEntity = TryGetPrimaryEntity(fighter.WeaponPrefab);
+                if (weaponPrefabEntity != Entity.Null)
+                {
+                    var weaponSocketEntity = GetPrimaryEntity(fighter.WeaponSocket);
+                    var weaponSpawnerEntity = CreateAdditionalEntity(fighter);
+                    DstEntityManager.AddComponentData(weaponSpawnerEntity, new Spawn() { Prefab = weaponPrefabEntity, Parent = weaponSocketEntity });
+                    DstEntityManager.AddComponentData(weaponSpawnerEntity, new LocalToWorld { Value = fighter.WeaponPrefab.transform.localToWorldMatrix });
+                    /*    DstEntityManager.AddComponentData(weaponSpawnerEntity, new LocalToWorld { Value = fighter.WeaponSocket.transform.localToWorldMatrix }); */
+                }
+
             });
         }
     }
+    [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
+    public class FighterDeclareReferencedObjectsConversionSystem : GameObjectConversionSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach((FighterAuthoring fighter) =>
+            {
+                if (fighter.WeaponPrefab != null)
+                {
+                    DeclareReferencedPrefab(fighter.WeaponPrefab);
+                }
 
+            });
+        }
+    }
 }
