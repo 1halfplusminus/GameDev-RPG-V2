@@ -1,4 +1,6 @@
-
+Fighter System:
+  ☐ Get Animation Event From Animation Clip Data
+  ☐ Remove hit information from fighter and put it on a weapon component because attack animation is depending on weapon
 Spawner System:
   ✔ Rename player spawner to a more fitting name @done(21-11-29 10:42)
   ✔ Finish new spawning system @done(21-12-01 11:15)
@@ -33,6 +35,7 @@ VFX on hit system:
   
 Animation System:@high @today
   ✘ Fix crash with AnimationNode @cancelled(21-12-01 19:39)
+  ☐ Optimaze animation system with UberClip
   ☐ Create a custom animation system @started(21-12-01 19:39)
     ☐ Create a animation system that have the same setup as character animation graph @high
       ✔ Create the idle / walk animation 
@@ -40,6 +43,7 @@ Animation System:@high @today
       ✔ Create the attack / move cycle mixer @done(21-12-03 10:59)
       ✔ Create a Dead mixer @done(21-12-03 10:59)
       ✔ Create Guarding mixer @done(21-12-03 13:45)
+    ✔ Test in build mode @done(21-12-03 14:03)
 AI System:
   ☐ Fix patrolling @high
 
