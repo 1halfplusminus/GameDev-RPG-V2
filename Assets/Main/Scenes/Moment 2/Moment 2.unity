@@ -1094,10 +1094,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: NavMeshSurface
       objectReference: {fileID: 0}
-    - target: {fileID: 7839285736255231638, guid: 5f0ed456db0002bd086c168ff2a85a9c, type: 3}
-      propertyPath: m_NavMeshData
-      value: 
-      objectReference: {fileID: 23800000, guid: 5ff57ed5858c481d68de71d2c5b5914a, type: 2}
     - target: {fileID: 7839285736255231639, guid: 5f0ed456db0002bd086c168ff2a85a9c, type: 3}
       propertyPath: m_RootOrder
       value: 4
