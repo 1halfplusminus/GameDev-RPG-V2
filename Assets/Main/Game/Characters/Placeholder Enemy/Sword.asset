@@ -10,15 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bc432d25d601c0569b9bfe46439a8d48, type: 3}
-  m_Name: Unarmed
+  m_Name: Sword
   m_EditorClassIdentifier: 
-  WeaponPrefab: {fileID: 0}
-  Animation: {fileID: 7549088838577149333, guid: cf01705cf812ba709a666a496a48cb6c, type: 3}
-  Damage: 1.66
-  Range: 0.5
+  WeaponPrefab: {fileID: 7377326180664589832, guid: 72694306773c065e7a5485a2db335828, type: 3}
+  Animation: {fileID: 5435989217927348517, guid: cf01705cf812ba709a666a496a48cb6c, type: 3}
+  Damage: 10
+  Range: 1
   Cooldown: 0.8
-  AttackDuration: 2.13
+  AttackDuration: 1.3000001
   HitEvents:
-  - 0.21
-  - 0.25
-  - 1
+  - 0.6415584

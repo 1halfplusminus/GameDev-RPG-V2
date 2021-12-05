@@ -30,8 +30,8 @@ namespace RPG.Combat
                 DstEntityManager.AddComponent<DeltaTime>(entity);
                 var weaponEntity = GetPrimaryEntity(fighter.Weapon);
                 var socketEntity = GetPrimaryEntity(fighter.WeaponSocket);
-                DstEntityManager.AddComponent<LateAnimationGraphWriteTransformHandle>(socketEntity);
-                DstEntityManager.AddComponentData(weaponEntity, new EquipWeapon { Socket = socketEntity });
+
+                DstEntityManager.AddComponentData(weaponEntity, new EquipInSocket { Socket = socketEntity });
                 DstEntityManager.AddComponentData(socketEntity, new EquipedBy { Entity = entity });
             });
         }
@@ -55,6 +55,7 @@ namespace RPG.Combat
                 if (fighter.Weapon != null)
                 {
                     DeclareReferencedAsset(fighter.Weapon);
+                    DeclareAssetDependency(fighter.gameObject, fighter.Weapon);
                 }
 
             });
@@ -83,7 +84,7 @@ namespace RPG.Combat
             {
                 var weaponEntity = GetPrimaryEntity(weapon);
                 var weaponPrefab = GetPrimaryEntity(weapon.WeaponPrefab);
-                DstEntityManager.AddComponentData(weaponEntity, new WeaponPrefab { Value = weaponPrefab });
+                DstEntityManager.AddComponentData(weaponEntity, new EquippedPrefab { Value = weaponPrefab });
                 if (weapon.Animation != null)
                 {
                     var blobAsset = BlobAssetStore.GetClip(weapon.Animation);

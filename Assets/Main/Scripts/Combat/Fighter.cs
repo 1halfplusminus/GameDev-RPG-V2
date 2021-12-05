@@ -12,11 +12,11 @@ namespace RPG.Combat
         public BlobAssetReference<Clip> Animation;
         public Entity Prefab;
     }
-    public struct WeaponPrefab : IComponentData
+    public struct EquippedPrefab : IComponentData
     {
         public Entity Value;
     }
-    public struct EquipWeapon : IComponentData
+    public struct EquipInSocket : IComponentData
     {
         public Entity Socket;
     }

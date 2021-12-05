@@ -1,13 +1,9 @@
 #if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 using RPG.Saving;
-using Unity.Entities;
 using System.Collections.Generic;
 using Unity.Transforms;
-using UnityEngine;
-using System;
 
 [CustomPropertyDrawer(typeof(SaveableType))]
 public class SaveableType_PropertyDrawer : PropertyDrawer
@@ -30,8 +26,10 @@ public class SaveableType_PropertyDrawer : PropertyDrawer
         };
 
         // Create drawer UI using C#
-        var popup = new UnityEngine.UIElements.PopupWindow();
-        popup.text = "Component";
+        var popup = new UnityEngine.UIElements.PopupWindow
+        {
+            text = "Component"
+        };
         popup.Add(dropdownField);
         container.Add(popup);
 

@@ -5,8 +5,10 @@ using Unity.Jobs;
 using UnityEngine;
 using RPG.Animation;
 
+
 namespace RPG.Combat
 {
+
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class EquipWeaponSystem : SystemBase
     {
@@ -23,8 +25,8 @@ namespace RPG.Combat
             var cbp = cb.AsParallelWriter();
             Entities
 
-            .WithChangeFilter<EquipWeapon>()
-            .ForEach((int entityInQueryIndex, Entity e, in EquipWeapon equipWeapon, in WeaponPrefab prefab, in ChangeAttackAnimation changeAttackAnimation) =>
+            .WithChangeFilter<EquipInSocket>()
+            .ForEach((int entityInQueryIndex, Entity e, in EquipInSocket equipWeapon, in EquippedPrefab prefab, in ChangeAttackAnimation changeAttackAnimation) =>
             {
                 Debug.Log($"equip {e} in socket : ${equipWeapon.Socket}");
                 cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new SpawnWeapon { Prefab = prefab.Value, Animation = changeAttackAnimation.Animation });

@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WeaponPrefab: {fileID: 7377326180664589832, guid: 72694306773c065e7a5485a2db335828, type: 3}
   Animation: {fileID: 7509640188325939964, guid: ef9bb8bd57f094583858804f4afea027, type: 3}
-  Damage: 10
-  Range: 0
+  Damage: 40
+  Range: 1
   Cooldown: 1.1
-  AttackDuration: 1.08
+  AttackDuration: 1.875
   HitEvents:
-  - 0.8
+  - 0.7467533
