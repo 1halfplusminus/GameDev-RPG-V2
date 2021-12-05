@@ -197,4 +197,24 @@ namespace RPG.Animation
             }
         }
     }
+
+    struct ChangeAttackAnimation : IComponentData
+    {
+        public BlobAssetReference<Clip> Animation;
+    }
+    [UpdateAfter(typeof(CharacterAnimationSystemBase))]
+    public class ChangeAttackAnimationSystem : SystemBase
+    {
+        protected override void OnUpdate()
+        {
+            var animationSystem = World.GetOrCreateSystem<ProcessDefaultAnimationGraph>();
+            var set = animationSystem.Set;
+            Entities.WithChangeFilter<ChangeAttackAnimation>().ForEach((ref ChangeAttackAnimation attackAnimation, ref CharacterAnimationData characterAnimation) =>
+            {
+
+                Debug.Log($"Change attack animation");
+                set.SendMessage(characterAnimation.AttackClipPlayerNode, ClipPlayerNode.SimulationPorts.Clip, attackAnimation.Animation);
+            }).WithoutBurst().Run();
+        }
+    }
 }

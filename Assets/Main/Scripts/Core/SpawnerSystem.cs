@@ -191,8 +191,12 @@ namespace RPG.Core
                          commandBufferP.AddComponent(entityInQueryIndex, instance, new Parent { Value = toSpawn.Parent });
                          commandBufferP.AddComponent<LocalToParent>(entityInQueryIndex, instance);
                      }
-                     commandBufferP.AddComponent(entityInQueryIndex, instance, new Translation { Value = localToWorld.Position });
-                     commandBufferP.AddComponent(entityInQueryIndex, instance, new Rotation { Value = localToWorld.Rotation });
+                     if (toSpawn.Parent != e)
+                     {
+                         commandBufferP.AddComponent(entityInQueryIndex, instance, new Translation { Value = localToWorld.Position });
+                         commandBufferP.AddComponent(entityInQueryIndex, instance, new Rotation { Value = localToWorld.Rotation });
+                     }
+
                      commandBufferP.AddComponent<Spawned>(entityInQueryIndex, instance);
 
                      commandBufferP.AddComponent(entityInQueryIndex, e, new HasSpawn { Entity = instance });

@@ -34,7 +34,7 @@ namespace RPG.Animation
         public BlobAssetReference<BlendTree1D> BlendTreeAsset;
         public float paramX;
     }
-
+    [DisableAutoCreation]
     public class BlendTree1DGraphSystem : AnimationSystemBase<
      BlendTree1DSetup,
      BlendTree1DData,

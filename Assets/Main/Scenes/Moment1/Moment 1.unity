@@ -16956,6 +16956,14 @@ PrefabInstance:
       propertyPath: UniqueIdentifier
       value: 1e671991-10e7-4005-a167-4e98b4ce7f8b
       objectReference: {fileID: 0}
+    - target: {fileID: 1290903656868238109, guid: 9a71dbafa694a90eaa5eeaa98b28f7bf, type: 3}
+      propertyPath: Weapon
+      value: 
+      objectReference: {fileID: 11400000, guid: 27504c5bb737e86b9bea38ef1fbc9c3d, type: 2}
+    - target: {fileID: 1290903656868238109, guid: 9a71dbafa694a90eaa5eeaa98b28f7bf, type: 3}
+      propertyPath: WeaponSocket
+      value: 
+      objectReference: {fileID: 1470212142602107264}
     - target: {fileID: 5837064505912649134, guid: 9a71dbafa694a90eaa5eeaa98b28f7bf, type: 3}
       propertyPath: Path
       value: 
@@ -16965,6 +16973,11 @@ PrefabInstance:
 --- !u!4 &1470212142602107263 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 984114566439753519, guid: 9a71dbafa694a90eaa5eeaa98b28f7bf, type: 3}
+  m_PrefabInstance: {fileID: 1470212142602107262}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1470212142602107264 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3792454491383013605, guid: 9a71dbafa694a90eaa5eeaa98b28f7bf, type: 3}
   m_PrefabInstance: {fileID: 1470212142602107262}
   m_PrefabAsset: {fileID: 0}
 --- !u!33 &1523546854755949792

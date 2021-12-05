@@ -5,10 +5,11 @@ using Unity.DataFlowGraph;
 
 namespace RPG.Animation
 {
+    public class AnimationSystemGroup : ComponentSystemGroup { }
     public interface IAnimationSetup : IComponentData { }
     public interface IAnimationData : ISystemStateComponentData { };
 
-
+    [UpdateInGroup(typeof(AnimationSystemGroup))]
     public abstract class AnimationSystemBase<TAnimationSetup, TAnimationData, TAnimationSystem>
     : ComponentSystem
     where TAnimationSetup : struct, IAnimationSetup

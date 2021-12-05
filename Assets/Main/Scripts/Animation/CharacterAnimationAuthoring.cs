@@ -8,6 +8,7 @@ namespace RPG.Animation
 #if UNITY_EDITOR
 
 
+
     class CharacterAnimationAuthoring : MonoBehaviour
     {
         public AnimationClip IDLE;

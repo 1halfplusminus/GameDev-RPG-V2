@@ -1,13 +1,17 @@
 Fighter System:
   ☐ Get Animation Event From Animation Clip Data
-  ☐ Remove hit information from fighter and put it on a weapon component because attack animation is depending on weapon
+  ✔ Remove hit information from fighter and put it on a weapon component because attack animation is depending on weapon @done(21-12-04 22:15)
 Simple Weapon System:@high 
   ✔ Add Weapon Socket In Rig @done(21-12-03 16:08)
+  ✔ Character should change attack animation depending of weapon @done(21-12-04 22:16)
+  ☐ Unarmed as Weapon
   ☐ Damage on hit should depends of weapon
-  ☐ Character should change attack animation depending of weapon
   ☐ Character should be able to pick weapon on floor
   ☐ Weapon should play vfx on hit / attack
   ☐ Particule effect could trigger damage on hit
+
+Fight System:
+  ☐ Optimize DamageSystem add require for update
 VFX on hit system:
   ☐ Create a conversion system that get all adressable with a label & convert them as entity to be spawned as vfx effect
   ☐ Spawn VFX on hit

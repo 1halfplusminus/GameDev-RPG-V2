@@ -4,22 +4,18 @@ using System.Collections.Generic;
 
 namespace RPG.Combat
 {
+
+    using UnityEngine;
+
+
+
     //FIXME: Weapon Authoring ?
     public class FighterAuthoring : MonoBehaviour
     {
+        public WeaponAsset Weapon;
         public Transform WeaponSocket;
 
-        public GameObject WeaponPrefab;
-        //FIXME: Move to Weapon
-        public float WeaponRange;
 
-        public float AttackCooldown;
-
-        public float AttackDuration;
-
-        public List<float> HitEvents;
-
-        public float WeaponDamage;
     }
 
 }

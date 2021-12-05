@@ -1,7 +1,25 @@
+using Unity.Animation;
 using Unity.Entities;
 using Unity.Mathematics;
 namespace RPG.Combat
 {
+    public struct EquipedBy : IComponentData
+    {
+        public Entity Entity;
+    }
+    public struct SpawnWeapon : IComponentData
+    {
+        public BlobAssetReference<Clip> Animation;
+        public Entity Prefab;
+    }
+    public struct WeaponPrefab : IComponentData
+    {
+        public Entity Value;
+    }
+    public struct EquipWeapon : IComponentData
+    {
+        public Entity Socket;
+    }
     public struct IsFighting : IComponentData { }
     public struct Hit : IComponentData
     {
@@ -40,7 +58,7 @@ namespace RPG.Combat
 
         public bool MoveTowardTarget;
 
-        public float WeaponRange;
+        public float Range;
 
         public bool TargetInRange;
 
@@ -48,13 +66,13 @@ namespace RPG.Combat
 
         public bool Attacking;
 
-        public float AttackCooldown;
+        public float Cooldown;
 
         public float AttackDuration;
 
         public Attack CurrentAttack;
 
-        public float WeaponDamage;
+        public float Damage;
     }
 
 }

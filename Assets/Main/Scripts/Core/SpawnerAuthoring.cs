@@ -26,7 +26,6 @@ namespace RPG.Core
                 if (firstChildEntity != Entity.Null)
                 {
                     dstManager.AddComponent<Disabled>(firstChildEntity);
-                    Debug.LogError($"NOOPPPPPPPPPPPPPPPPPPPPPPPPPE");
                     conversionSystem.PostUpdateCommands.DestroyEntity(firstChildEntity);
                 }
             }
@@ -38,7 +37,6 @@ namespace RPG.Core
             if (Application.IsPlaying(gameObject)) { return; }
             if (PrefabStageUtility.GetPrefabStage(gameObject) != null)
             {
-                Debug.Log("In prefab");
                 return;
             }
             var serializedObject = new SerializedObject(this);

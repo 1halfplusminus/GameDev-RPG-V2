@@ -2994,16 +2994,36 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 731676622901207857, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: Weapon
+      value: 
+      objectReference: {fileID: 11400000, guid: 27504c5bb737e86b9bea38ef1fbc9c3d, type: 2}
+    - target: {fileID: 731676622901207857, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: WeaponRange
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 731676622901207857, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: WeaponDamage
-      value: 5
+      value: 1.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 731676622901207857, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: WeaponSocket
+      value: 
+      objectReference: {fileID: 2326901112058334665}
+    - target: {fileID: 731676622901207857, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: HitEvents.Array.size
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 731676622901207857, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: HitEvents.Array.data[0]
-      value: 0.8
+      value: 0.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 731676622901207857, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: HitEvents.Array.data[1]
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 731676622901207857, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: HitEvents.Array.data[2]
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1613697079563282179, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: m_RootOrder
@@ -3824,8 +3844,21 @@ MonoBehaviour:
   IDLE: {fileID: 7400000, guid: 90250ab376c82354f9093ea609f555d7, type: 2}
   Walk: {fileID: 7400000, guid: 27d598172131cb94089bbac2123f46b8, type: 2}
   Run: {fileID: 7400000, guid: bdfdb036a49dbd7ea91cfa37ed45b5be, type: 2}
-  Attack: {fileID: 7400000, guid: 3f97c25c54b04f25d848c02dc082375f, type: 2}
+  Attack: {fileID: 7549088838577149333, guid: cf01705cf812ba709a666a496a48cb6c, type: 3}
   Dead: {fileID: 7400000, guid: 420885869796a7ece9d0044b7f41940b, type: 2}
+--- !u!114 &996991808763579324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1299507469631316153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0db86c823571f0638ca2cf3c68a61ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LookingAround: {fileID: 7400000, guid: a8928fcb53504dd8a8d32a5bd1a04b28, type: 2}
 --- !u!114 &2121927805176826258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3951,16 +3984,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad84ca32a53736eb7a08d39a538c804c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &996991808763579324
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1299507469631316153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0db86c823571f0638ca2cf3c68a61ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  LookingAround: {fileID: 7400000, guid: a8928fcb53504dd8a8d32a5bd1a04b28, type: 2}

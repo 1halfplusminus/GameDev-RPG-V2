@@ -45,6 +45,9 @@ ModelImporter:
   - first:
       74: 2930471250782671410
     second: Bear|BearAction
+  - first:
+      74: 7549088838577149333
+    second: Armature|Punch
   externalObjects: {}
   materials:
     materialImportMode: 2

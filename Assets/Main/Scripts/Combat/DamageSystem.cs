@@ -3,6 +3,7 @@ using Unity.Mathematics;
 
 namespace RPG.Combat
 {
+    //FIXME: Add a require for update
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class DamageSystem : SystemBase
     {
@@ -17,7 +18,7 @@ namespace RPG.Combat
             {
                 if (fighters.HasComponent(hit.Hitter))
                 {
-                    hit.Damage = fighters[hit.Hitter].WeaponDamage;
+                    hit.Damage = fighters[hit.Hitter].Damage;
                 }
             })
             .ScheduleParallel();

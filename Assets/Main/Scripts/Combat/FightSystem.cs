@@ -7,14 +7,6 @@ using Unity.Mathematics;
 
 namespace RPG.Combat
 {
-    // public struct SpawnWeapon : IComponentData
-    // {
-    //     Entity Prefab;
-    // }
-    // public struct Weapon : IComponentData
-    // {
-
-    // }
     [UpdateAfter(typeof(CombatTargettingSystem))]
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class MoveTowardTargetSystem : SystemBase
@@ -45,7 +37,7 @@ namespace RPG.Combat
 
                     }
                     // Range of the weapon
-                    if (math.distance(localToWorld.Position, targetPosition) <= fighter.WeaponRange + moveTo.StoppingDistance)
+                    if (math.distance(localToWorld.Position, targetPosition) <= fighter.Range + moveTo.StoppingDistance)
                     {
                         fighter.TargetInRange = true;
                         fighter.MoveTowardTarget = false;
@@ -135,7 +127,9 @@ namespace RPG.Combat
 
             var commandBuffer = endSimulationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             // Pass hit event as not fired
-            Entities.ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
+            Entities
+            .WithChangeFilter<HitEvent>()
+            .ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
             {
                 if (fighter.CurrentAttack.InCooldown)
                 {
@@ -158,7 +152,9 @@ namespace RPG.Combat
         {
             var commandBuffer = beginSimulationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             // Create hit event
-            Entities.ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
+            Entities
+            .WithChangeFilter<Fighter>()
+            .ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
             {
                 if (fighter.CurrentAttack.TimeElapsedSinceAttack >= 0)
                 {
@@ -176,7 +172,7 @@ namespace RPG.Combat
                 }
             }).ScheduleParallel();
 
-            beginSimulationEntityCommandBufferSystem.AddJobHandleForProducer(this.Dependency);
+            beginSimulationEntityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
     [UpdateAfter(typeof(MoveTowardTargetSystem))]
@@ -223,7 +219,7 @@ namespace RPG.Combat
                      // It attack if time elapsed since last attack >= duration of the attack
                      if (fighter.CurrentAttack.TimeElapsedSinceAttack >= fighter.AttackDuration)
                      {
-                         fighter.CurrentAttack.Cooldown = fighter.AttackCooldown;
+                         fighter.CurrentAttack.Cooldown = fighter.Cooldown;
                          fighter.Attacking = false;
                          fighter.CurrentAttack.TimeElapsedSinceAttack = 0.0f;
 
