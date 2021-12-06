@@ -4,6 +4,8 @@ using RPG.Core;
 using Unity.Animation.Hybrid;
 using Unity.Transforms;
 using RPG.Animation;
+using Unity.Collections;
+
 namespace RPG.Combat
 {
     [UpdateAfter(typeof(RigConversion))]
@@ -14,16 +16,17 @@ namespace RPG.Combat
             Entities.ForEach((FighterAuthoring fighter) =>
             {
                 var entity = GetPrimaryEntity(fighter);
-                CreateHitEvent(fighter, entity);
+                /*    CreateHitEvent(fighter, entity); */
                 DstEntityManager.AddComponent<HittedByRaycast>(entity);
 
                 //FIXME: Weapon value change be assigned when weapon is equiped
                 DstEntityManager.AddComponentData(entity, new Fighter
                 {
-                    Range = fighter.Weapon.Range,
+                    //FIXME: Weapon value change be assigned when weapon is equiped
+                    /* Range = fighter.Weapon.Range,
                     Cooldown = fighter.Weapon.Cooldown,
                     AttackDuration = fighter.Weapon.AttackDuration,
-                    Damage = fighter.Weapon.Damage,
+                    Damage = fighter.Weapon.Damage, */
                     CurrentAttack = Attack.Create()
                 });
                 DstEntityManager.AddComponent<LookAt>(entity);
@@ -33,17 +36,11 @@ namespace RPG.Combat
 
                 DstEntityManager.AddComponentData(weaponEntity, new EquipInSocket { Socket = socketEntity });
                 DstEntityManager.AddComponentData(socketEntity, new EquipedBy { Entity = entity });
+                DstEntityManager.AddBuffer<HitEvent>(entity);
             });
         }
         //FIXME: Weapon value change be assigned when weapon is equiped
-        private void CreateHitEvent(FighterAuthoring fighter, Entity entity)
-        {
-            var hitEvents = DstEntityManager.AddBuffer<HitEvent>(entity);
-            foreach (var hit in fighter.Weapon.HitEvents)
-            {
-                hitEvents.Add(new HitEvent { Time = hit });
-            }
-        }
+
     }
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
     public class FighterDeclareReferencedObjectsConversionSystem : GameObjectConversionSystem
@@ -56,6 +53,7 @@ namespace RPG.Combat
                 {
                     DeclareReferencedAsset(fighter.Weapon);
                     DeclareAssetDependency(fighter.gameObject, fighter.Weapon);
+
                 }
 
             });
@@ -74,6 +72,7 @@ namespace RPG.Combat
 
             });
         }
+
     }
 
     public class WeaponConversionSystem : GameObjectConversionSystem
@@ -85,6 +84,14 @@ namespace RPG.Combat
                 var weaponEntity = GetPrimaryEntity(weapon);
                 var weaponPrefab = GetPrimaryEntity(weapon.WeaponPrefab);
                 DstEntityManager.AddComponentData(weaponEntity, new EquippedPrefab { Value = weaponPrefab });
+                DstEntityManager.AddComponentData(weaponEntity, new Weapon
+                {
+                    AttackDuration = weapon.AttackDuration,
+                    Cooldown = weapon.Cooldown,
+                    Damage = weapon.Damage,
+                    Range = weapon.Range,
+                    HitEvents = CreateHitEvent(weapon)
+                });
                 if (weapon.Animation != null)
                 {
                     var blobAsset = BlobAssetStore.GetClip(weapon.Animation);
@@ -92,7 +99,15 @@ namespace RPG.Combat
                 }
             });
         }
-
-
+        private FixedList32<float> CreateHitEvent(WeaponAsset weapon)
+        {
+            var hitEvents = new FixedList32<float>();
+            hitEvents.Length = weapon.HitEvents.Count;
+            for (int i = 0; i < weapon.HitEvents.Count; i++)
+            {
+                hitEvents[i] = weapon.HitEvents[i];
+            }
+            return hitEvents;
+        }
     }
 }

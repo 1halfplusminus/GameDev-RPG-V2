@@ -1,8 +1,21 @@
 using Unity.Animation;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Collections;
 namespace RPG.Combat
 {
+    public struct Weapon : IComponentData
+    {
+        public float Damage;
+        public float Range;
+        public float Cooldown;
+        public float AttackDuration;
+        public FixedList32<float> HitEvents;
+    }
+    public struct Equipped : IComponentData
+    {
+        public Entity Entity;
+    }
     public struct EquipedBy : IComponentData
     {
         public Entity Entity;
@@ -11,6 +24,7 @@ namespace RPG.Combat
     {
         public BlobAssetReference<Clip> Animation;
         public Entity Prefab;
+        public Entity Weapon;
     }
     public struct EquippedPrefab : IComponentData
     {
