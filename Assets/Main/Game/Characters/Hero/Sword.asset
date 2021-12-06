@@ -18,5 +18,6 @@ MonoBehaviour:
   Range: 1
   Cooldown: 1.1
   AttackDuration: 1.875
+  SocketType: 1
   HitEvents:
   - 0.7467533

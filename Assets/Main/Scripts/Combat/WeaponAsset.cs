@@ -17,6 +17,8 @@ namespace RPG.Combat
         // Fixme should be set with custom editor
         public float AttackDuration;
 
+        public SocketType SocketType;
+
         // Should be set with custom editor
         public List<float> HitEvents;
 

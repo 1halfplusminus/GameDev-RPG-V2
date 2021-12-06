@@ -1,9 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <uie:PropertyField binding-path="WeaponPrefab" name="WeaponPrefab" label="Equipped Prefab" />
+    <uie:PropertyField name="SocketType" binding-path="SocketType" />
     <uie:PropertyField name="Animation" binding-path="Animation" style="visibility: visible;" />
+    <ui:Button text="Update  Animation Data" display-tooltip-when-elided="true" name="UpdateEvent" />
     <uie:PropertyField name="Damage" binding-path="Damage" style="visibility: visible;" />
     <uie:PropertyField name="Range" binding-path="Range" />
     <uie:PropertyField name="AttackDuration" binding-path="AttackDuration" readonly="false" />
     <uie:PropertyField name="HitEvents" binding-path="HitEvents" />
-    <ui:Button text="Update  Animation Data" display-tooltip-when-elided="true" name="UpdateEvent" />
 </ui:UXML>

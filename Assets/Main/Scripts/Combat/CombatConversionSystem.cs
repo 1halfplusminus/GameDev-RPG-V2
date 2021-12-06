@@ -24,15 +24,25 @@ namespace RPG.Combat
                 {
                     CurrentAttack = Attack.Create()
                 });
-
+                DstEntityManager.AddBuffer<HitEvent>(entity);
                 DstEntityManager.AddComponent<LookAt>(entity);
                 DstEntityManager.AddComponent<DeltaTime>(entity);
+                var equipableSockets = new EquipableSockets
+                {
+                    LeftHandSocket = TryGetPrimaryEntity(fighter.LeftHandSocket),
+                    RightHandSocket = TryGetPrimaryEntity(fighter.RightHandSocket)
+                };
+                DstEntityManager.AddComponentData(entity, equipableSockets);
+                foreach (var socket in equipableSockets)
+                {
+                    DstEntityManager.AddComponentData(socket, new EquipedBy { Entity = entity });
+                }
                 var weaponEntity = GetPrimaryEntity(fighter.Weapon);
-                var socketEntity = GetPrimaryEntity(fighter.WeaponSocket);
-                DstEntityManager.AddComponentData(entity, new RightHandWeaponSocket { Entity = socketEntity });
-                DstEntityManager.AddComponentData(weaponEntity, new EquipInSocket { Socket = socketEntity });
-                DstEntityManager.AddComponentData(socketEntity, new EquipedBy { Entity = entity });
-                DstEntityManager.AddBuffer<HitEvent>(entity);
+                var socketEntity = equipableSockets.GetSocketForType(fighter.Weapon.SocketType);
+                if (socketEntity != Entity.Null)
+                {
+                    DstEntityManager.AddComponentData(weaponEntity, new EquipInSocket { Socket = socketEntity });
+                }
             });
         }
         //FIXME: Weapon value change be assigned when weapon is equiped
@@ -49,6 +59,15 @@ namespace RPG.Combat
                 {
                     DeclareReferencedAsset(fighter.Weapon);
                     DeclareAssetDependency(fighter.gameObject, fighter.Weapon);
+                    if (fighter.RightHandSocket.gameObject.GetComponent<LateAnimationGraphWriteTransformHandle>() == null)
+                    {
+                        fighter.RightHandSocket.gameObject.AddComponent<LateAnimationGraphWriteTransformHandle>();
+                    }
+
+                    if (fighter.LeftHandSocket.gameObject.GetComponent<LateAnimationGraphWriteTransformHandle>() == null)
+                    {
+                        fighter.LeftHandSocket.gameObject.AddComponent<LateAnimationGraphWriteTransformHandle>();
+                    }
 
                 }
 
@@ -93,12 +112,13 @@ namespace RPG.Combat
             {
                 var weaponEntity = GetPrimaryEntity(weaponPickup.PickedWeapon);
                 var entity = GetPrimaryEntity(weaponPickup);
-                DstEntityManager.AddComponentData(entity, new PickableWeapon { Entity = weaponEntity });
+                DstEntityManager.AddComponentData(entity, new PickableWeapon { Entity = weaponEntity, SocketType = weaponPickup.PickedWeapon.SocketType });
                 DstEntityManager.AddComponent<StatefulTriggerEvent>(entity);
             });
         }
 
     }
+#if UNITY_EDITOR
     public class WeaponConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()
@@ -114,6 +134,7 @@ namespace RPG.Combat
                     Cooldown = weapon.Cooldown,
                     Damage = weapon.Damage,
                     Range = weapon.Range,
+                    SocketType = weapon.SocketType,
                     HitEvents = CreateHitEvent(weapon)
                 });
                 if (weapon.Animation != null)
@@ -134,4 +155,5 @@ namespace RPG.Combat
             return hitEvents;
         }
     }
+#endif
 }

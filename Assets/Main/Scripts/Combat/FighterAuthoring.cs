@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace RPG.Combat
 {
-
+    using Unity.Animation.Hybrid;
     using UnityEngine;
 
 
@@ -13,9 +13,8 @@ namespace RPG.Combat
     public class FighterAuthoring : MonoBehaviour
     {
         public WeaponAsset Weapon;
-        public Transform WeaponSocket;
-
-
+        public Transform LeftHandSocket;
+        public Transform RightHandSocket;
     }
 
 }

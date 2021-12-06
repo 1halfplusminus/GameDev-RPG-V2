@@ -3010,6 +3010,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1152211722711762949}
     - target: {fileID: 731676622901207857, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: LeftHandSocket
+      value: 
+      objectReference: {fileID: 2326901112058334665}
+    - target: {fileID: 731676622901207857, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: RightHandSocket
+      value: 
+      objectReference: {fileID: 1152211722711762949}
+    - target: {fileID: 731676622901207857, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: HitEvents.Array.size
       value: 3
       objectReference: {fileID: 0}

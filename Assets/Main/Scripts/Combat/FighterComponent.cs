@@ -2,22 +2,47 @@ using Unity.Animation;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Collections;
+using System.Collections.Generic;
+
 namespace RPG.Combat
 {
 
+    public struct EquipableSockets : IComponentData
+    {
+        public Entity LeftHandSocket;
+        public Entity RightHandSocket;
+
+        public Entity GetSocketForWeapon(Weapon weapon)
+        {
+            return GetSocketForType(weapon.SocketType);
+        }
+        public Entity GetSocketForType(SocketType type)
+        {
+            return type switch
+            {
+                SocketType.LeftHand => LeftHandSocket,
+                SocketType.RightHand => RightHandSocket,
+                _ => Entity.Null,
+            };
+        }
+
+        public IEnumerator<Entity> GetEnumerator()
+        {
+            yield return LeftHandSocket;
+            yield return RightHandSocket;
+        }
+    }
     public struct PickableWeapon : IComponentData
     {
         public Entity Entity;
+        public SocketType SocketType;
     }
 
     public struct Picked : IComponentData
     {
 
     }
-    public struct RightHandWeaponSocket : IComponentData
-    {
-        public Entity Entity;
-    }
+
     public struct LeftHandWeaponSocket : IComponentData
     {
         public Entity Entity;
@@ -41,13 +66,19 @@ namespace RPG.Combat
     {
         public Entity Value;
     }
-    public struct FighterEquip : IComponentData
+    public struct Equip : IComponentData
     {
-        public Entity Entity;
+        public Entity Equipable;
+
+        public SocketType SocketType;
     }
     public struct EquipInSocket : IComponentData
     {
         public Entity Socket;
+    }
+    public enum SocketType
+    {
+        LeftHand, RightHand
     }
     public struct Weapon : IComponentData
     {
@@ -56,6 +87,8 @@ namespace RPG.Combat
         public float Cooldown;
         public float AttackDuration;
         public FixedList32<float> HitEvents;
+
+        public SocketType SocketType;
     }
 
     public struct IsFighting : IComponentData { }

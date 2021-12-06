@@ -103,7 +103,7 @@ namespace RPG.Combat
             .WithChangeFilter<EquipInSocket>()
             .ForEach((int entityInQueryIndex, Entity e, in EquipInSocket equipWeapon, in EquippedPrefab prefab, in ChangeAttackAnimation changeAttackAnimation) =>
             {
-                Debug.Log($"Equip {e.Index} in socket : ${equipWeapon.Socket}");
+                Debug.Log($"Equip {e.Index} in socket : ${equipWeapon.Socket.Index}");
                 cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new SpawnWeapon { Prefab = prefab.Value, Animation = changeAttackAnimation.Animation, Weapon = e });
                 cbp.RemoveComponent<EquipInSocket>(entityInQueryIndex, e);
             }).ScheduleParallel();
@@ -123,6 +123,7 @@ namespace RPG.Combat
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+
         }
         protected override void OnUpdate()
         {
@@ -136,7 +137,7 @@ namespace RPG.Combat
             .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer collidWithPlayer, in PickableWeapon picked) =>
             {
                 Debug.Log($" {e.Index} collid with player {collidWithPlayer.Entity.Index} and pickup Weapon: ${picked.Entity.Index}");
-                cbp.AddComponent(entityInQueryIndex, collidWithPlayer.Entity, new FighterEquip { Entity = picked.Entity });
+                cbp.AddComponent(entityInQueryIndex, collidWithPlayer.Entity, new Equip { Equipable = picked.Entity, SocketType = picked.SocketType });
                 cbp.AddComponent<Picked>(entityInQueryIndex, e);
             }).ScheduleParallel();
 
@@ -173,11 +174,12 @@ namespace RPG.Combat
             var cbp = cb.AsParallelWriter();
             Entities
             .WithStoreEntityQueryInField(ref fighterEquipQuery)
-            .ForEach((int entityInQueryIndex, Entity e, in FighterEquip picked, in RightHandWeaponSocket rSocket) =>
+            .ForEach((int entityInQueryIndex, Entity e, in Equip picked, in EquipableSockets sockets) =>
             {
-                Debug.Log($"Player {e.Index} equip pickup Weapon: ${picked.Entity.Index} in socket: {rSocket.Entity}");
-                cbp.AddComponent(entityInQueryIndex, picked.Entity, new EquipInSocket { Socket = rSocket.Entity });
-                cbp.RemoveComponent<FighterEquip>(entityInQueryIndex, e);
+                var socket = sockets.GetSocketForType(picked.SocketType);
+                Debug.Log($"Player {e.Index} equip pickup Weapon: ${picked.Equipable.Index} in socket: {socket.Index}");
+                cbp.AddComponent(entityInQueryIndex, picked.Equipable, new EquipInSocket { Socket = socket });
+                cbp.RemoveComponent<Equip>(entityInQueryIndex, e);
             }).ScheduleParallel();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);

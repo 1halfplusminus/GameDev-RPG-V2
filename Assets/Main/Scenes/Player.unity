@@ -130,10 +130,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 809469740015579474, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
-      propertyPath: Weapon
-      value: 
-      objectReference: {fileID: 11400000, guid: 15095ef48d7c0185baaa99991293c2af, type: 2}
     - target: {fileID: 3809403721112327955, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: m_Name
       value: Morie Hero

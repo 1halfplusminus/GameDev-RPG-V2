@@ -1519,8 +1519,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a97fcf35d59fd3a6aa77dac23a31032, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Weapon: {fileID: 11400000, guid: 34f568bb0a11f4465bbab12cbf085563, type: 2}
-  WeaponSocket: {fileID: 3769601644115343787}
+  Weapon: {fileID: 11400000, guid: 15095ef48d7c0185baaa99991293c2af, type: 2}
+  LeftHandSocket: {fileID: 2010851700558888039}
+  RightHandSocket: {fileID: 3769601644115343787}
 --- !u!114 &2464562307063255977
 MonoBehaviour:
   m_ObjectHideFlags: 0
