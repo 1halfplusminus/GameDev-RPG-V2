@@ -162,12 +162,13 @@ namespace RPG.Control
         {
             base.OnCreate();
             playerControlledQuery = GetEntityQuery(typeof(PlayerControlled), ComponentType.ReadOnly<LocalToWorld>());
+            playerControlledQuery.AddChangedVersionFilter(ComponentType.ReadOnly<LocalToWorld>());
             playerChaserQuery = GetEntityQuery(typeof(ChasePlayer));
             beginSimulationEntityCommandBufferSystem = World.GetOrCreateSystem<BeginPresentationEntityCommandBufferSystem>();
+            RequireForUpdate(playerChaserQuery);
         }
         protected override void OnUpdate()
         {
-            if (playerChaserQuery.CalculateEntityCount() == 0) { return; }
             var playerPositions = new NativeHashMap<Entity, LocalToWorld>(playerControlledQuery.CalculateEntityCount(), Allocator.TempJob);
             var playerPositionsWriter = playerPositions.AsParallelWriter();
             Entities
@@ -176,8 +177,8 @@ namespace RPG.Control
             .ForEach((Entity e, in LocalToWorld position) =>
             {
                 playerPositionsWriter.TryAdd(e, position);
-            }).ScheduleParallel();
-            // Todo: Refractor with a event system create a event when target lost & when target aquired
+            }).Run();
+            //TODO: Refractor with a event system create a event when target lost & when target aquired
             var beginSimulationEntityCommandBuffer = beginSimulationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             Entities
             .WithNone<IsChasingTarget, Spawned>()

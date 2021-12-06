@@ -11,11 +11,36 @@ using UnityEngine;
 
 namespace RPG.Mouvement
 {
-    public struct Warped : IComponentData
+    [UpdateInGroup(typeof(MouvementSystemGroup))]
+    public class IsMovingSystem : SystemBase
     {
+        EntityCommandBufferSystem entityCommandBufferSystem;
 
+        EntityQuery isMovingQuery;
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        }
+        protected override void OnUpdate()
+        {
+            var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            Entities
+            .WithStoreEntityQueryInField(ref isMovingQuery)
+            .WithChangeFilter<MoveTo>()
+            .WithNone<IsDeadTag, IsMoving>()
+            .ForEach((int entityInQueryIndex, Entity e, in MoveTo moveTo, in Mouvement mouvement) =>
+            {
+                if (!moveTo.Stopped)
+                {
+                    commandBuffer.AddComponent<IsMoving>(entityInQueryIndex, e);
+                }
+            }).ScheduleParallel();
+
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+        }
     }
-    public struct IsMoving : IComponentData { }
+    //FIXME: split in smaller system
     [UpdateInGroup(typeof(MouvementSystemGroup))]
 
     public class MoveToSystem : SystemBase
@@ -35,6 +60,7 @@ namespace RPG.Mouvement
             Entities
             .WithChangeFilter<MoveTo>()
             .WithNone<IsDeadTag>()
+            .WithAny<IsMoving>()
             .ForEach((int entityInQueryIndex, Entity e, ref MoveTo moveTo, in LocalToWorld localToWorld) =>
             {
                 moveTo.Distance = math.distance(moveTo.Position, localToWorld.Position);
@@ -59,24 +85,6 @@ namespace RPG.Mouvement
 
            }).ScheduleParallel();
 
-            Entities
-            .WithChangeFilter<MoveTo>()
-            .WithNone<IsDeadTag, IsMoving>()
-            .ForEach((int entityInQueryIndex, Entity e, ref MoveTo moveTo, ref Mouvement mouvement) =>
-            {
-                if (!moveTo.Stopped)
-                {
-                    commandBuffer.AddComponent<IsMoving>(entityInQueryIndex, e);
-                }
-            }).ScheduleParallel();
-            // // Put velocity at zero if stopped
-            // Entities
-            // .WithNone<IsDeadTag, IsMoving>()
-            // .WithChangeFilter<MoveTo>()
-            // .ForEach((Entity e, ref Mouvement mouvement, in MoveTo moveTo) =>
-            // {
-
-            // }).ScheduleParallel();
 
             // Initialize move to when spawned
             Entities

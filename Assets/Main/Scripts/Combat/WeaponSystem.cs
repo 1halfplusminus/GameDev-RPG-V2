@@ -4,7 +4,7 @@ using Unity.Transforms;
 using Unity.Jobs;
 using UnityEngine;
 using RPG.Animation;
-
+using Unity.Rendering;
 
 namespace RPG.Combat
 {
@@ -112,28 +112,17 @@ namespace RPG.Combat
         }
 
     }
-
-    public struct PickableWeapon : IComponentData
-    {
-        public Entity Entity;
-    }
-
-    public struct Picked : IComponentData
-    {
-
-    }
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class WeaponPickupSystem : SystemBase
+    public class CollidWithPickableWeaponSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
 
-        EntityQuery collidWithWeaponQuery;
+        EntityQuery collidWithPickableweaponQuery;
 
         protected override void OnCreate()
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-            /*       RequireForUpdate(collidWithWeaponQuery); */
         }
         protected override void OnUpdate()
         {
@@ -142,7 +131,7 @@ namespace RPG.Combat
 
             Entities
             .WithNone<Picked>()
-            .WithStoreEntityQueryInField(ref collidWithWeaponQuery)
+            .WithStoreEntityQueryInField(ref collidWithPickableweaponQuery)
             .WithChangeFilter<CollidWithPlayer>()
             .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer collidWithPlayer, in PickableWeapon picked) =>
             {
@@ -152,19 +141,43 @@ namespace RPG.Combat
             }).ScheduleParallel();
 
             Entities
-           .ForEach((int entityInQueryIndex, Entity e, in FighterEquip picked, in RightHandWeaponSocket rSocket) =>
-           {
-               Debug.Log($"Player {e.Index} equip pickup Weapon: ${picked.Entity.Index} in socket: {rSocket.Entity}");
-               cbp.AddComponent(entityInQueryIndex, picked.Entity, new EquipInSocket { Socket = rSocket.Entity });
-               cbp.RemoveComponent<FighterEquip>(entityInQueryIndex, e);
-           }).ScheduleParallel();
-
-            Entities
-            .WithAny<Picked>()
+            .WithAll<Picked, RenderMesh, StatefulTriggerEvent>()
             .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer player, in PickableWeapon picked) =>
             {
                 Debug.Log($"{e.Index} was picked");
-                cbp.DestroyEntity(entityInQueryIndex, e);
+                cbp.RemoveComponent<RenderMesh>(entityInQueryIndex, e);
+                cbp.RemoveComponent<StatefulTriggerEvent>(entityInQueryIndex, e);
+            }).ScheduleParallel();
+
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+        }
+
+    }
+
+    [UpdateInGroup(typeof(CombatSystemGroup))]
+    public class EquipPickedWeaponSystem : SystemBase
+    {
+        EntityCommandBufferSystem entityCommandBufferSystem;
+
+        EntityQuery fighterEquipQuery;
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            RequireForUpdate(fighterEquipQuery);
+        }
+        protected override void OnUpdate()
+        {
+            var cb = entityCommandBufferSystem.CreateCommandBuffer();
+            var cbp = cb.AsParallelWriter();
+            Entities
+            .WithStoreEntityQueryInField(ref fighterEquipQuery)
+            .ForEach((int entityInQueryIndex, Entity e, in FighterEquip picked, in RightHandWeaponSocket rSocket) =>
+            {
+                Debug.Log($"Player {e.Index} equip pickup Weapon: ${picked.Entity.Index} in socket: {rSocket.Entity}");
+                cbp.AddComponent(entityInQueryIndex, picked.Entity, new EquipInSocket { Socket = rSocket.Entity });
+                cbp.RemoveComponent<FighterEquip>(entityInQueryIndex, e);
             }).ScheduleParallel();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);

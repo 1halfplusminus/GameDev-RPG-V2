@@ -6,7 +6,12 @@ using UnityEngine;
 using RPG.Core;
 namespace RPG.Mouvement
 {
+    public struct Warped : IComponentData
+    {
 
+    }
+    public struct IsMoving : IComponentData { }
+    
     [GenerateAuthoringComponent]
     public struct MoveTo : IComponentData
     {

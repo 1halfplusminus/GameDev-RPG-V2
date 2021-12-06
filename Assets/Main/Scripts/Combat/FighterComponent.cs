@@ -4,6 +4,16 @@ using Unity.Mathematics;
 using Unity.Collections;
 namespace RPG.Combat
 {
+
+    public struct PickableWeapon : IComponentData
+    {
+        public Entity Entity;
+    }
+
+    public struct Picked : IComponentData
+    {
+
+    }
     public struct RightHandWeaponSocket : IComponentData
     {
         public Entity Entity;
@@ -12,14 +22,7 @@ namespace RPG.Combat
     {
         public Entity Entity;
     }
-    public struct Weapon : IComponentData
-    {
-        public float Damage;
-        public float Range;
-        public float Cooldown;
-        public float AttackDuration;
-        public FixedList32<float> HitEvents;
-    }
+
     public struct Equipped : IComponentData
     {
         public Entity Entity;
@@ -46,6 +49,15 @@ namespace RPG.Combat
     {
         public Entity Socket;
     }
+    public struct Weapon : IComponentData
+    {
+        public float Damage;
+        public float Range;
+        public float Cooldown;
+        public float AttackDuration;
+        public FixedList32<float> HitEvents;
+    }
+
     public struct IsFighting : IComponentData { }
     public struct Hit : IComponentData
     {
