@@ -1,11 +1,15 @@
 using Unity.Entities;
 using RPG.Core;
 using RPG.Control;
+using UnityEngine;
 
-namespace RPG.Gameplay
+namespace RPG.Core
 {
-
-    [UpdateInGroup(typeof(GameplaySystemGroup))]
+    public struct CollidWithPlayer : IComponentData
+    {
+        public Entity Entity;
+    }
+    [UpdateInGroup(typeof(CoreSystemGroup))]
 
     public class CollidWithPlayerSystem : SystemBase
     {
@@ -27,6 +31,7 @@ namespace RPG.Gameplay
                     var otherEntity = triggerEvent.GetOtherEntity(e);
                     if (players.HasComponent(otherEntity))
                     {
+                        Debug.Log($" {e.Index} Collid with player {otherEntity.Index}");
                         commandBufferP.AddComponent(entityInQueryIndex, e, new CollidWithPlayer { Entity = otherEntity });
                         break;
                     }

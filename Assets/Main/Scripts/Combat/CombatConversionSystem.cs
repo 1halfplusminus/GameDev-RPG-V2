@@ -22,18 +22,14 @@ namespace RPG.Combat
                 //FIXME: Weapon value change be assigned when weapon is equiped
                 DstEntityManager.AddComponentData(entity, new Fighter
                 {
-                    //FIXME: Weapon value change be assigned when weapon is equiped
-                    /* Range = fighter.Weapon.Range,
-                    Cooldown = fighter.Weapon.Cooldown,
-                    AttackDuration = fighter.Weapon.AttackDuration,
-                    Damage = fighter.Weapon.Damage, */
                     CurrentAttack = Attack.Create()
                 });
+
                 DstEntityManager.AddComponent<LookAt>(entity);
                 DstEntityManager.AddComponent<DeltaTime>(entity);
                 var weaponEntity = GetPrimaryEntity(fighter.Weapon);
                 var socketEntity = GetPrimaryEntity(fighter.WeaponSocket);
-
+                DstEntityManager.AddComponentData(entity, new RightHandWeaponSocket { Entity = socketEntity });
                 DstEntityManager.AddComponentData(weaponEntity, new EquipInSocket { Socket = socketEntity });
                 DstEntityManager.AddComponentData(socketEntity, new EquipedBy { Entity = entity });
                 DstEntityManager.AddBuffer<HitEvent>(entity);
@@ -75,6 +71,34 @@ namespace RPG.Combat
 
     }
 
+    [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
+    public class WeaponPickupDeclareReferencedObjectsConversionSystem : GameObjectConversionSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach((WeaponPickupAuthoring weaponPickup) =>
+            {
+                DeclareReferencedAsset(weaponPickup.PickedWeapon);
+                DeclareAssetDependency(weaponPickup.gameObject, weaponPickup.PickedWeapon);
+            });
+        }
+
+    }
+    [UpdateAfter(typeof(WeaponConversionSystem))]
+    public class WeaponPickupConversionSystem : GameObjectConversionSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach((WeaponPickupAuthoring weaponPickup) =>
+            {
+                var weaponEntity = GetPrimaryEntity(weaponPickup.PickedWeapon);
+                var entity = GetPrimaryEntity(weaponPickup);
+                DstEntityManager.AddComponentData(entity, new PickableWeapon { Entity = weaponEntity });
+                DstEntityManager.AddComponent<StatefulTriggerEvent>(entity);
+            });
+        }
+
+    }
     public class WeaponConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()

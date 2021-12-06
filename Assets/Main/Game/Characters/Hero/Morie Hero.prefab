@@ -1450,7 +1450,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6222254650908708417}
-  - component: {fileID: 13269270568525901}
   - component: {fileID: 6302724733382121449}
   - component: {fileID: 809469740015579474}
   - component: {fileID: 2464562307063255977}
@@ -1486,20 +1485,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &13269270568525901
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3809403721112327955}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  m_Radius: 0.56
-  m_Height: 2.14
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.76, z: 0.17}
 --- !u!195 &6302724733382121449
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1536,12 +1521,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Weapon: {fileID: 11400000, guid: 34f568bb0a11f4465bbab12cbf085563, type: 2}
   WeaponSocket: {fileID: 3769601644115343787}
-  WeaponRange: 2
-  AttackCooldown: 1.1
-  AttackDuration: 1.08
-  HitEvents:
-  - 0.8
-  WeaponDamage: 10
 --- !u!114 &2464562307063255977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1709,7 +1688,7 @@ MonoBehaviour:
     z: -0.06656468
   m_PrimitiveSize:
     x: 1.6533573
-    y: 1.3493352
+    y: 2.5477364
     z: 0.45168692
   m_PrimitiveOrientation:
     Value:
@@ -1718,15 +1697,15 @@ MonoBehaviour:
       z: 0
     RotationOrder: 4
   m_Capsule:
-    Height: 1.6533573
-    Radius: 0.6746676
-    Axis: 0
+    Height: 2.5477364
+    Radius: 0.82667863
+    Axis: 1
   m_Cylinder:
     Height: 0.45168692
-    Radius: 0.82667863
+    Radius: 1.2738682
     Axis: 2
   m_CylinderSideCount: 20
-  m_SphereRadius: 0.82667863
+  m_SphereRadius: 1.2738682
   m_MinimumSkinnedVertexWeight: 0.1
   m_ConvexHullGenerationParameters:
     m_SimplificationTolerance: 0.024800358
@@ -1753,38 +1732,38 @@ MonoBehaviour:
     m_BelongsToCategories:
       m_Override: 0
       m_Value:
-        Category00: 1
-        Category01: 1
+        Category00: 0
+        Category01: 0
         Category02: 1
-        Category03: 1
-        Category04: 1
-        Category05: 1
-        Category06: 1
-        Category07: 1
-        Category08: 1
-        Category09: 1
-        Category10: 1
-        Category11: 1
-        Category12: 1
-        Category13: 1
-        Category14: 1
-        Category15: 1
-        Category16: 1
-        Category17: 1
-        Category18: 1
-        Category19: 1
-        Category20: 1
-        Category21: 1
-        Category22: 1
-        Category23: 1
-        Category24: 1
-        Category25: 1
-        Category26: 1
-        Category27: 1
-        Category28: 1
-        Category29: 1
-        Category30: 1
-        Category31: 1
+        Category03: 0
+        Category04: 0
+        Category05: 0
+        Category06: 0
+        Category07: 0
+        Category08: 0
+        Category09: 0
+        Category10: 0
+        Category11: 0
+        Category12: 0
+        Category13: 0
+        Category14: 0
+        Category15: 0
+        Category16: 0
+        Category17: 0
+        Category18: 0
+        Category19: 0
+        Category20: 0
+        Category21: 0
+        Category22: 0
+        Category23: 0
+        Category24: 0
+        Category25: 0
+        Category26: 0
+        Category27: 0
+        Category28: 0
+        Category29: 0
+        Category30: 0
+        Category31: 0
     m_CollidesWithCategories:
       m_Override: 0
       m_Value:
@@ -1888,7 +1867,7 @@ MonoBehaviour:
     y: 0.4
     z: 0.4
   m_CustomTags:
-    Tag00: 0
+    Tag00: 1
     Tag01: 0
     Tag02: 0
     Tag03: 0

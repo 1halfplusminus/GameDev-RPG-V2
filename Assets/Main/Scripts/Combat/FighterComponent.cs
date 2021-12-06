@@ -4,6 +4,14 @@ using Unity.Mathematics;
 using Unity.Collections;
 namespace RPG.Combat
 {
+    public struct RightHandWeaponSocket : IComponentData
+    {
+        public Entity Entity;
+    }
+    public struct LeftHandWeaponSocket : IComponentData
+    {
+        public Entity Entity;
+    }
     public struct Weapon : IComponentData
     {
         public float Damage;
@@ -29,6 +37,10 @@ namespace RPG.Combat
     public struct EquippedPrefab : IComponentData
     {
         public Entity Value;
+    }
+    public struct FighterEquip : IComponentData
+    {
+        public Entity Entity;
     }
     public struct EquipInSocket : IComponentData
     {

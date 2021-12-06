@@ -65,10 +65,7 @@ namespace RPG.Gameplay
         public Unity.Entities.Hash128 SceneGUID;
 
     }
-    public struct CollidWithPlayer : IComponentData
-    {
-        public Entity Entity;
-    }
+
     public struct WarpToPortal : IComponentData
     {
         public int PortalIndex;

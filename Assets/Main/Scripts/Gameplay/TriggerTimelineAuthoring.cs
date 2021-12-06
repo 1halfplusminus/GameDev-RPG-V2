@@ -8,7 +8,6 @@ using Cinemachine;
 using UnityEngine;
 using RPG.Hybrid;
 using System.Collections.Generic;
-
 namespace RPG.Gameplay
 {
     public struct LinkCinemachineBrain : IComponentData { }
@@ -117,7 +116,7 @@ namespace RPG.Gameplay
             foreach (var output in outputs)
             {
 
-                if (output.sourceObject is CinemachineTrack cinemachineTrack)
+                if (output.sourceObject is CinemachineTrack)
                 {
                     if (brain != null)
                     {
@@ -199,7 +198,7 @@ namespace RPG.Gameplay
                     typeof(PlayableDirector),
                 },
                 Any = new ComponentType[] {
-                    typeof(CollidWithPlayer),
+                    typeof(Core.CollidWithPlayer),
                     typeof(Playing),
                     typeof(TriggeredBy)
                 },
