@@ -39,6 +39,7 @@ namespace RPG.Combat
                     // Range of the weapon
                     if (math.distance(localToWorld.Position, targetPosition) <= fighter.Range + moveTo.StoppingDistance)
                     {
+                        moveTo.Stopped = true;
                         fighter.TargetInRange = true;
                         fighter.MoveTowardTarget = false;
                         commandBuffer.AddComponent(entityInQueryIndex, e, new LookAt { Entity = fighter.Target });
