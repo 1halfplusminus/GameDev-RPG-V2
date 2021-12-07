@@ -28,7 +28,6 @@ namespace RPG.Combat
             Entities
             .WithReadOnly(weapons)
             .WithStoreEntityQueryInField(ref fighterEquipWeaponQuery)
-            .WithChangeFilter<Equipped>()
             .ForEach((Entity e, ref Fighter fighter, ref DynamicBuffer<HitEvent> hitEvents, in Equipped equiped) =>
             {
                 if (weapons.HasComponent(equiped.Entity))
@@ -44,7 +43,7 @@ namespace RPG.Combat
                     hitEvents.Capacity = weaponHitEvents.Length;
                     for (int i = 0; i < weaponHitEvents.Length; i++)
                     {
-                        hitEvents.Add(new HitEvent { Time = weaponHitEvents[i] });
+                        hitEvents.Add(new HitEvent { Time = weaponHitEvents[i], Equipped = equiped.Entity });
                     }
                 }
             }).ScheduleParallel();

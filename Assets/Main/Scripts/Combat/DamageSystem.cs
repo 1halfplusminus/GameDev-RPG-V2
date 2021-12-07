@@ -14,6 +14,7 @@ namespace RPG.Combat
             var fighters = GetComponentDataFromEntity<Fighter>(true);
             Entities
             .WithReadOnly(fighters)
+            .WithNone<NoDamage>()
             .ForEach((ref Hit hit) =>
             {
                 if (fighters.HasComponent(hit.Hitter))

@@ -5,7 +5,7 @@ namespace RPG.Combat
 {
 
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    // Todo: Create multiple system group for combat Begin and End of combat Update in end of combat
+    //TODO: Create multiple system group for combat Begin and End of combat Update in end of combat
     [UpdateAfter(typeof(DamageSystem))]
     public class HealthSystem : SystemBase
     {

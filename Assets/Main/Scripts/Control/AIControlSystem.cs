@@ -161,8 +161,6 @@ namespace RPG.Control
         protected override void OnCreate()
         {
             base.OnCreate();
-            playerControlledQuery = GetEntityQuery(typeof(PlayerControlled), ComponentType.ReadOnly<LocalToWorld>());
-            playerControlledQuery.AddChangedVersionFilter(ComponentType.ReadOnly<LocalToWorld>());
             playerChaserQuery = GetEntityQuery(typeof(ChasePlayer));
             beginSimulationEntityCommandBufferSystem = World.GetOrCreateSystem<BeginPresentationEntityCommandBufferSystem>();
             RequireForUpdate(playerChaserQuery);
@@ -174,6 +172,7 @@ namespace RPG.Control
             Entities
             .WithDisposeOnCompletion(playerPositionsWriter)
             .WithAll<PlayerControlled>()
+            .WithStoreEntityQueryInField(ref playerControlledQuery)
             .ForEach((Entity e, in LocalToWorld position) =>
             {
                 playerPositionsWriter.TryAdd(e, position);

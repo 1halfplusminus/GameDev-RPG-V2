@@ -5,10 +5,55 @@ using RPG.Mouvement;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
+using Unity.Collections;
 
 namespace RPG.Combat
 {
     [UpdateInGroup(typeof(CombatSystemGroup))]
+    //FIXME: Create a Hit System Group
+    [UpdateBefore(typeof(HealthSystem))]
+    [UpdateAfter(typeof(ProjectileSystem))]
+    [UpdateAfter(typeof(DamageSystem))]
+    public class ShootProjectileSystem : SystemBase
+    {
+        EntityCommandBufferSystem entityCommandBufferSystem;
+        EntityQuery hitQuery;
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        }
+        protected override void OnUpdate()
+        {
+            var cbp = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            var canShootProjectiles = GetComponentDataFromEntity<ShootProjectile>(true);
+            var translations = GetComponentDataFromEntity<Translation>(true);
+            var projectiles = GetComponentDataFromEntity<Projectile>(true);
+            Entities
+            .WithStoreEntityQueryInField(ref hitQuery)
+            .WithNone<IsProjectile>()
+            .WithReadOnly(projectiles)
+            .WithReadOnly(translations)
+            .WithReadOnly(canShootProjectiles).ForEach((int entityInQueryIndex, Entity e, ref Hit hit) =>
+            {
+                if (canShootProjectiles.HasComponent(hit.Hitter))
+                {
+                    Debug.Log($"{hit.Hitter} shoot a projectile at {hit.Hitted}");
+                    var prefabEntity = canShootProjectiles[hit.Hitter].Prefab;
+                    var projectile = projectiles[prefabEntity];
+                    var projectileEntity = cbp.Instantiate(entityInQueryIndex, canShootProjectiles[hit.Hitter].Prefab);
+                    cbp.AddComponent(entityInQueryIndex, projectileEntity, translations[hit.Hitter]);
+                    cbp.AddComponent(entityInQueryIndex, projectileEntity, new Projectile { Target = hit.Hitted, Speed = projectile.Speed, ShootBy = hit.Hitter });
+                    hit.Damage = 0;
+                }
+
+            }).ScheduleParallel();
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+
+        }
+    }
+    [UpdateInGroup(typeof(CombatSystemGroup))]
+    [UpdateBefore(typeof(HitSystem))]
     public class ProjectileSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
@@ -20,21 +65,22 @@ namespace RPG.Combat
         protected override void OnUpdate()
         {
             var cbp = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-            Entities.WithNone<TargetLook>().ForEach((int entityInQueryIndex, Entity e, ref LookAt lookAt, ref MoveTo moveTo, in Projectile p) =>
-            {
-                Debug.Log($"Projectile {e} targetting {p.Target.Index}  ");
-                cbp.AddComponent(entityInQueryIndex, p.Target, new TargetBy { Entity = e });
-                moveTo.Stopped = false;
-                lookAt.Entity = p.Target;
-            }).ScheduleParallel();
+            Entities.WithNone<TargetLook, ProjectileHitted>().ForEach((int entityInQueryIndex, Entity e, ref LookAt lookAt, ref MoveTo moveTo, in Projectile p) =>
+             {
+                 Debug.Log($"Projectile {e} targetting {p.Target.Index}  ");
+                 cbp.AddComponent(entityInQueryIndex, p.Target, new TargetBy { Entity = e });
+                 lookAt.Entity = p.Target;
+             }).ScheduleParallel();
 
-            Entities.ForEach((int entityInQueryIndex, Entity e, in LocalToWorld localToWorld, in TargetBy targetBy) =>
+            Entities
+            .ForEach((int entityInQueryIndex, Entity e, in LocalToWorld localToWorld, in TargetBy targetBy) =>
             {
                 Debug.Log($"Projectile {targetBy.Entity} look target position {localToWorld.Position}  ");
                 cbp.AddComponent(entityInQueryIndex, targetBy.Entity, new TargetLook { Position = localToWorld.Position });
             }).ScheduleParallel();
+
             Entities
-            .WithAny<IsMoving>()
+            .WithNone<ProjectileHitted>()
             .ForEach((int entityInQueryIndex, Entity e, ref MoveTo moveTo, ref Translation t, in TargetLook targetLook, in LocalToWorld localToWorld, in Projectile p, in DeltaTime dt) =>
             {
                 Debug.Log($"Projectile {e} moving to position {targetLook.Position}  ");
@@ -45,8 +91,40 @@ namespace RPG.Combat
                     var direction = targetLook.Position - localToWorld.Position;
                     t.Value += math.normalize(direction) * p.Speed * dt.Value;
                 }
+                if (moveTo.IsAtStoppingDistance && moveTo.Distance != Mathf.Infinity)
+                {
+                    Debug.Log($"Projectile {e} at stopping distance {targetLook.Position}  ");
+                    var hitEntity = cbp.CreateEntity(entityInQueryIndex);
+                    cbp.AddComponent(entityInQueryIndex, hitEntity, new Hit() { Hitter = p.ShootBy, Hitted = p.Target });
+                    cbp.RemoveComponent<TargetBy>(entityInQueryIndex, p.Target);
+                    cbp.AddComponent<IsProjectile>(entityInQueryIndex, hitEntity);
+                    cbp.AddComponent<ProjectileHitted>(entityInQueryIndex, e);
+                    cbp.DestroyEntity(entityInQueryIndex, e);
+                    /*   cbp.AddComponent<IsProjectile>(entityInQueryIndex, hitEntity);
+                      cbp.AddComponent<ProjectileHitted>(entityInQueryIndex, e);
+                      cbp.AddComponent<Disabled>(entityInQueryIndex, e); */
+                }
             }).ScheduleParallel();
+            /* Entities
+            .WithAll<ProjectileHitted>()
+            .ForEach((int entityInQueryIndex, Entity e, ref DynamicBuffer<LinkedEntityGroup> lk) =>
+            {
+                foreach (var linked in lk)
+                {
+                    cbp.DestroyEntity(entityInQueryIndex, linked.Value);
+                }
+                cbp.DestroyEntity(entityInQueryIndex, e);
+            }).ScheduleParallel(); */
+            /*  EntityManager.DestroyEntity(GetEntityQuery(new EntityQueryDesc()
+             {
+                 All = new ComponentType[] {
+                     typeof(Disabled),
+                     typeof(ProjectileHitted),
+                     typeof(Projectile)
+                 }
+             })); */
 
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
     [UpdateAfter(typeof(CombatTargettingSystem))]
@@ -101,11 +179,7 @@ namespace RPG.Combat
     public class CombatTargettingSystem : SystemBase
     {
 
-        protected override void OnCreate()
-        {
-            base.OnCreate();
 
-        }
         protected override void OnUpdate()
         {
 

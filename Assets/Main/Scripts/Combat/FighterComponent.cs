@@ -6,6 +6,10 @@ using System.Collections.Generic;
 
 namespace RPG.Combat
 {
+
+    public struct ProjectileHitted : IComponentData { }
+    public struct IsProjectile : IComponentData { }
+    public struct NoDamage : IComponentData { }
     public struct TargetLook : IComponentData
     {
         public float3 Position;
@@ -17,11 +21,15 @@ namespace RPG.Combat
     public struct ShootProjectile : IComponentData
     {
         public Entity Prefab;
+        public float Speed;
+
     }
     public struct Projectile : IComponentData
     {
         public Entity Target;
         public float Speed;
+
+        public Entity ShootBy;
     }
     public struct EquipableSockets : IComponentData
     {
@@ -109,6 +117,14 @@ namespace RPG.Combat
     }
 
     public struct IsFighting : IComponentData { }
+    public struct HasIt : IBufferElementData
+    {
+        public Entity Hit;
+    }
+    public struct WasHitted : IBufferElementData
+    {
+        public Entity Hit;
+    }
     public struct Hit : IComponentData
     {
         public Entity Hitter;
@@ -120,6 +136,7 @@ namespace RPG.Combat
     {
         public float Time;
         public bool Fired;
+        public Entity Equipped;
     }
 
     public struct Attack : IComponentData
