@@ -49,10 +49,7 @@ namespace RPG.Mouvement
         {
             return SpeedPercent * mouvement.Speed;
         }
-        public bool IsAtPosition(float3 position)
-        {
-            return IsAtStoppingDistance;
-        }
+
     }
 }
 

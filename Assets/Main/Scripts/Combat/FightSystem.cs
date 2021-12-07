@@ -100,29 +100,9 @@ namespace RPG.Combat
                     cbp.AddComponent<IsProjectile>(entityInQueryIndex, hitEntity);
                     cbp.AddComponent<ProjectileHitted>(entityInQueryIndex, e);
                     cbp.DestroyEntity(entityInQueryIndex, e);
-                    /*   cbp.AddComponent<IsProjectile>(entityInQueryIndex, hitEntity);
-                      cbp.AddComponent<ProjectileHitted>(entityInQueryIndex, e);
-                      cbp.AddComponent<Disabled>(entityInQueryIndex, e); */
                 }
             }).ScheduleParallel();
-            /* Entities
-            .WithAll<ProjectileHitted>()
-            .ForEach((int entityInQueryIndex, Entity e, ref DynamicBuffer<LinkedEntityGroup> lk) =>
-            {
-                foreach (var linked in lk)
-                {
-                    cbp.DestroyEntity(entityInQueryIndex, linked.Value);
-                }
-                cbp.DestroyEntity(entityInQueryIndex, e);
-            }).ScheduleParallel(); */
-            /*  EntityManager.DestroyEntity(GetEntityQuery(new EntityQueryDesc()
-             {
-                 All = new ComponentType[] {
-                     typeof(Disabled),
-                     typeof(ProjectileHitted),
-                     typeof(Projectile)
-                 }
-             })); */
+
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
