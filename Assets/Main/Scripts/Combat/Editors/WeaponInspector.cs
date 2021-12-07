@@ -20,9 +20,9 @@ namespace RPG.Combat
             {
                 // Load from default reference
                 m_InspectorXML.CloneTree(myInspector);
-                myInspector.Q<UnityEditor.UIElements.PropertyField>("HitEvents").SetEnabled(false);
-                myInspector.Q<UnityEditor.UIElements.PropertyField>("AttackDuration").SetEnabled(false);
-                var animationSelector = myInspector.Q<UnityEditor.UIElements.PropertyField>("Animation");
+                myInspector.Q<PropertyField>("HitEvents").SetEnabled(false);
+                myInspector.Q<PropertyField>("AttackDuration").SetEnabled(false);
+                var animationSelector = myInspector.Q<PropertyField>("Animation");
                 var updateHitEvents = myInspector.Q<Button>("UpdateEvent");
                 animationSelector.RegisterValueChangeCallback(OnAnimationChange);
                 updateHitEvents.clicked += UpdateAnimationData;

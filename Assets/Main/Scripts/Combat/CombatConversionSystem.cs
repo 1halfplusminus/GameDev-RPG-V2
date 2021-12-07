@@ -5,9 +5,28 @@ using Unity.Animation.Hybrid;
 using Unity.Transforms;
 using RPG.Animation;
 using Unity.Collections;
+using UnityEngine;
+using RPG.Mouvement;
+using Unity.Mathematics;
 
 namespace RPG.Combat
 {
+    public class ProjectileConversionSystem : GameObjectConversionSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach((ProjectileAuthoring p) =>
+            {
+                var target = GetPrimaryEntity(p.Target);
+                var entity = GetPrimaryEntity(p);
+                DstEntityManager.AddComponentData(entity, new Projectile { Target = target, Speed = p.Speed });
+                DstEntityManager.AddComponent<Spawned>(entity);
+                DstEntityManager.AddComponentData(entity, new MoveTo(float3.zero) { Stopped = true });
+                DstEntityManager.AddComponent<LookAt>(entity);
+                DstEntityManager.AddComponent<DeltaTime>(entity);
+            });
+        }
+    }
     [UpdateAfter(typeof(RigConversion))]
     public class FighterConversionSystem : GameObjectConversionSystem
     {
@@ -84,7 +103,7 @@ namespace RPG.Combat
             Entities.ForEach((WeaponAsset weapon) =>
             {
                 DeclareReferencedPrefab(weapon.WeaponPrefab);
-
+                DeclareReferencedPrefab(weapon.Projectile);
             });
         }
 
@@ -137,6 +156,8 @@ namespace RPG.Combat
                     SocketType = weapon.SocketType,
                     HitEvents = CreateHitEvent(weapon)
                 });
+                var projectileEntity = TryGetPrimaryEntity(weapon.Projectile);
+                DstEntityManager.AddComponentData(weaponEntity, new ShootProjectile() { Prefab = projectileEntity });
                 if (weapon.Animation != null)
                 {
                     var blobAsset = BlobAssetStore.GetClip(weapon.Animation);

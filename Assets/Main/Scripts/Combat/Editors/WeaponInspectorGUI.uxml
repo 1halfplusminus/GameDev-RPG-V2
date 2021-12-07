@@ -1,5 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <uie:PropertyField binding-path="WeaponPrefab" name="WeaponPrefab" label="Equipped Prefab" />
+    <uie:PropertyField name="Projectile" binding-path="Projectile" />
     <uie:PropertyField name="SocketType" binding-path="SocketType" />
     <uie:PropertyField name="Animation" binding-path="Animation" style="visibility: visible;" />
     <ui:Button text="Update  Animation Data" display-tooltip-when-elided="true" name="UpdateEvent" />

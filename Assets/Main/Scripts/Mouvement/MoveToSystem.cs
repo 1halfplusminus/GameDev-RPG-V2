@@ -29,7 +29,7 @@ namespace RPG.Mouvement
             .WithStoreEntityQueryInField(ref isMovingQuery)
             .WithChangeFilter<MoveTo>()
             .WithNone<IsDeadTag, IsMoving>()
-            .ForEach((int entityInQueryIndex, Entity e, in MoveTo moveTo, in Mouvement mouvement) =>
+            .ForEach((int entityInQueryIndex, Entity e, in MoveTo moveTo) =>
             {
                 if (!moveTo.Stopped)
                 {

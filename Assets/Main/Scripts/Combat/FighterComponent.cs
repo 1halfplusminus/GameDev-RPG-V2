@@ -6,7 +6,23 @@ using System.Collections.Generic;
 
 namespace RPG.Combat
 {
-
+    public struct TargetLook : IComponentData
+    {
+        public float3 Position;
+    }
+    public struct TargetBy : IComponentData
+    {
+        public Entity Entity;
+    }
+    public struct ShootProjectile : IComponentData
+    {
+        public Entity Prefab;
+    }
+    public struct Projectile : IComponentData
+    {
+        public Entity Target;
+        public float Speed;
+    }
     public struct EquipableSockets : IComponentData
     {
         public Entity LeftHandSocket;
@@ -61,6 +77,7 @@ namespace RPG.Combat
         public BlobAssetReference<Clip> Animation;
         public Entity Prefab;
         public Entity Weapon;
+        public Entity Projectile;
     }
     public struct EquippedPrefab : IComponentData
     {

@@ -11,7 +11,7 @@ namespace RPG.Mouvement
 
     }
     public struct IsMoving : IComponentData { }
-    
+
     [GenerateAuthoringComponent]
     public struct MoveTo : IComponentData
     {

@@ -9,6 +9,8 @@ namespace RPG.Combat
         public GameObject WeaponPrefab;
         public AnimationClip Animation;
 
+        public GameObject Projectile;
+
         public float Damage;
 
         public float Range;

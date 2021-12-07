@@ -13,14 +13,17 @@ namespace RPG.Combat
     {
 
         EntityQuery fighterEquipWeaponQuery;
+        EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()
         {
             base.OnCreate();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
             RequireForUpdate(fighterEquipWeaponQuery);
         }
 
         protected override void OnUpdate()
         {
+            var cbp = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             var weapons = GetComponentDataFromEntity<Weapon>(true);
             Entities
             .WithReadOnly(weapons)
@@ -46,6 +49,7 @@ namespace RPG.Combat
                 }
             }).ScheduleParallel();
             EntityManager.RemoveComponent<Equipped>(fighterEquipWeaponQuery);
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 
     }
@@ -75,8 +79,13 @@ namespace RPG.Combat
                 }
                 cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new Equipped { Entity = spawn.Weapon });
                 cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new ChangeAttackAnimation() { Animation = spawn.Animation });
+                if (spawn.Projectile != Entity.Null)
+                {
+                    cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new ShootProjectile() { Prefab = spawn.Projectile });
+                }
                 cbp.RemoveComponent<SpawnWeapon>(entityInQueryIndex, e);
             }).ScheduleParallel();
+
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 
@@ -101,10 +110,10 @@ namespace RPG.Combat
             Entities
             .WithStoreEntityQueryInField(ref equipPrefabInSocketQuery)
             .WithChangeFilter<EquipInSocket>()
-            .ForEach((int entityInQueryIndex, Entity e, in EquipInSocket equipWeapon, in EquippedPrefab prefab, in ChangeAttackAnimation changeAttackAnimation) =>
+            .ForEach((int entityInQueryIndex, Entity e, in EquipInSocket equipWeapon, in EquippedPrefab prefab, in ChangeAttackAnimation changeAttackAnimation, in ShootProjectile shootProjectile) =>
             {
                 Debug.Log($"Equip {e.Index} in socket : ${equipWeapon.Socket.Index}");
-                cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new SpawnWeapon { Prefab = prefab.Value, Animation = changeAttackAnimation.Animation, Weapon = e });
+                cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new SpawnWeapon { Prefab = prefab.Value, Animation = changeAttackAnimation.Animation, Weapon = e, Projectile = shootProjectile.Prefab });
                 cbp.RemoveComponent<EquipInSocket>(entityInQueryIndex, e);
             }).ScheduleParallel();
 

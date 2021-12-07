@@ -4,9 +4,51 @@ using Unity.Transforms;
 using RPG.Mouvement;
 using Unity.Jobs;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace RPG.Combat
 {
+    [UpdateInGroup(typeof(CombatSystemGroup))]
+    public class ProjectileSystem : SystemBase
+    {
+        EntityCommandBufferSystem entityCommandBufferSystem;
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        }
+        protected override void OnUpdate()
+        {
+            var cbp = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            Entities.WithNone<TargetLook>().ForEach((int entityInQueryIndex, Entity e, ref LookAt lookAt, ref MoveTo moveTo, in Projectile p) =>
+            {
+                Debug.Log($"Projectile {e} targetting {p.Target.Index}  ");
+                cbp.AddComponent(entityInQueryIndex, p.Target, new TargetBy { Entity = e });
+                moveTo.Stopped = false;
+                lookAt.Entity = p.Target;
+            }).ScheduleParallel();
+
+            Entities.ForEach((int entityInQueryIndex, Entity e, in LocalToWorld localToWorld, in TargetBy targetBy) =>
+            {
+                Debug.Log($"Projectile {targetBy.Entity} look target position {localToWorld.Position}  ");
+                cbp.AddComponent(entityInQueryIndex, targetBy.Entity, new TargetLook { Position = localToWorld.Position });
+            }).ScheduleParallel();
+            Entities
+            .WithAny<IsMoving>()
+            .ForEach((int entityInQueryIndex, Entity e, ref MoveTo moveTo, ref Translation t, in TargetLook targetLook, in LocalToWorld localToWorld, in Projectile p, in DeltaTime dt) =>
+            {
+                Debug.Log($"Projectile {e} moving to position {targetLook.Position}  ");
+                moveTo.Position = targetLook.Position;
+                if (!moveTo.IsAtStoppingDistance)
+                {
+                    moveTo.Stopped = false;
+                    var direction = targetLook.Position - localToWorld.Position;
+                    t.Value += math.normalize(direction) * p.Speed * dt.Value;
+                }
+            }).ScheduleParallel();
+
+        }
+    }
     [UpdateAfter(typeof(CombatTargettingSystem))]
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class MoveTowardTargetSystem : SystemBase
