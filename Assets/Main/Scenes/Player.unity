@@ -133,7 +133,7 @@ PrefabInstance:
     - target: {fileID: 809469740015579474, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Weapon
       value: 
-      objectReference: {fileID: 11400000, guid: 05f68aec6972d1e5f995e03bfed1d50d, type: 2}
+      objectReference: {fileID: 11400000, guid: 15095ef48d7c0185baaa99991293c2af, type: 2}
     - target: {fileID: 3809403721112327955, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: m_Name
       value: Morie Hero
@@ -184,3 +184,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+--- !u!1 &142956688 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6273839581067001844, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+  m_PrefabInstance: {fileID: 142956687}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &142956689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 142956688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e71dfe142c3804292455a0ed49bfff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -21,7 +21,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5475211252939139569, guid: ed505d5f1f47b3ecb8b3e4f7a25cb59f, type: 3}
       propertyPath: m_Name
-      value: Red Arrow
+      value: Red Arrow Variant
       objectReference: {fileID: 0}
     - target: {fileID: 5475211252939139582, guid: ed505d5f1f47b3ecb8b3e4f7a25cb59f, type: 3}
       propertyPath: m_RootOrder
