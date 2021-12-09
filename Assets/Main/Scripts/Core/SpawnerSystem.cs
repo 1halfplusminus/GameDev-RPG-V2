@@ -17,6 +17,10 @@ namespace RPG.Core
         public Unity.Entities.Hash128 Id;
 
     }
+    public struct DestroySpawn : IComponentData
+    {
+
+    }
     public struct GameObjectSpawner : IComponentData
     {
 
@@ -182,30 +186,32 @@ namespace RPG.Core
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
             var commandBufferP = commandBuffer.AsParallelWriter();
             var em = EntityManager;
-            Entities.WithNone<HasHybridComponent, GameObject, GameObjectSpawner>().ForEach((int entityInQueryIndex, Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
-                 {
+            Entities
+            .WithNone<DestroySpawn>()
+            .WithNone<HasHybridComponent, GameObject, GameObjectSpawner>().ForEach((int entityInQueryIndex, Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
+                  {
 
-                     var instance = commandBufferP.Instantiate(entityInQueryIndex, toSpawn.Prefab);
-                     if (toSpawn.Parent != Entity.Null)
-                     {
-                         commandBufferP.AddComponent(entityInQueryIndex, instance, new Parent { Value = toSpawn.Parent });
-                         commandBufferP.AddComponent<LocalToParent>(entityInQueryIndex, instance);
-                     }
-                     if (toSpawn.Parent != e)
-                     {
-                         commandBufferP.AddComponent(entityInQueryIndex, instance, new Translation { Value = localToWorld.Position });
-                         commandBufferP.AddComponent(entityInQueryIndex, instance, new Rotation { Value = localToWorld.Rotation });
-                     }
+                      var instance = commandBufferP.Instantiate(entityInQueryIndex, toSpawn.Prefab);
+                      if (toSpawn.Parent != Entity.Null)
+                      {
+                          commandBufferP.AddComponent(entityInQueryIndex, instance, new Parent { Value = toSpawn.Parent });
+                          commandBufferP.AddComponent<LocalToParent>(entityInQueryIndex, instance);
+                      }
+                      if (toSpawn.Parent != e)
+                      {
+                          commandBufferP.AddComponent(entityInQueryIndex, instance, new Translation { Value = localToWorld.Position });
+                          commandBufferP.AddComponent(entityInQueryIndex, instance, new Rotation { Value = localToWorld.Rotation });
+                      }
 
-                     commandBufferP.AddComponent<Spawned>(entityInQueryIndex, instance);
+                      commandBufferP.AddComponent<Spawned>(entityInQueryIndex, instance);
 
-                     commandBufferP.AddComponent(entityInQueryIndex, e, new HasSpawn { Entity = instance });
-                     commandBufferP.RemoveComponent<Spawn>(entityInQueryIndex, e);
-                 }
+                      commandBufferP.AddComponent(entityInQueryIndex, e, new HasSpawn { Entity = instance });
+                      commandBufferP.RemoveComponent<Spawn>(entityInQueryIndex, e);
+                  }
             ).ScheduleParallel();
 
             Entities
-            .WithNone<GameObject, GameObjectSpawner>()
+            .WithNone<GameObject, GameObjectSpawner, DestroySpawn>()
             .WithAny<HasHybridComponent>()
             .WithStructuralChanges()
             .ForEach((Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
@@ -220,6 +226,7 @@ namespace RPG.Core
                 }
             ).Run();
             Entities
+            .WithNone<DestroySpawn>()
             .WithChangeFilter<Spawn>()
             .WithStructuralChanges()
             .WithAny<GameObjectSpawner>()
@@ -258,7 +265,16 @@ namespace RPG.Core
                     commandBufferP.RemoveComponent<Spawned>(entityInQueryIndex, e);
                 }
             ).ScheduleParallel();
-
+            Entities.WithAny<DestroySpawn>().ForEach((int entityInQueryIndex, Entity e, HasSpawn spawn) =>
+                {
+                    commandBufferP.DestroyEntity(entityInQueryIndex, spawn.Entity);
+                }
+            ).ScheduleParallel();
+            Entities.WithAny<DestroySpawn>().ForEach((int entityInQueryIndex, Entity e) =>
+              {
+                  commandBufferP.RemoveComponent<DestroySpawn>(entityInQueryIndex, e);
+              }
+          ).ScheduleParallel();
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }

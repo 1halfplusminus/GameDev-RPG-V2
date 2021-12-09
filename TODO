@@ -5,6 +5,7 @@ Simple Weapon System:@high
   ✔ Add Weapon Socket In Rig @done(21-12-03 16:08)
   ✔ Character should change attack animation depending of weapon @done(21-12-04 22:16)
   ✔ Unarmed as Weapon @done(21-12-07 17:21)
+  ☐ Trails & Prefabs Variant
   ☐ Make projectile weapon
   ☐ Damage on hit should depends of weapon
   ✔ Character should be able to pick weapon on floor @done(21-12-07 17:21)

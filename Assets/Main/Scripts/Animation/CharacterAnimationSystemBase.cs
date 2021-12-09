@@ -202,6 +202,8 @@ namespace RPG.Animation
     {
         public BlobAssetReference<Clip> Animation;
     }
+
+    [UpdateInGroup(typeof(AnimationSystemGroup))]
     [UpdateAfter(typeof(CharacterAnimationSystemBase))]
     public class ChangeAttackAnimationSystem : SystemBase
     {

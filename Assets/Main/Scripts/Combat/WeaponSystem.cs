@@ -80,7 +80,7 @@ namespace RPG.Combat
                 cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new ChangeAttackAnimation() { Animation = spawn.Animation });
                 if (spawn.Projectile != Entity.Null)
                 {
-                    cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new ShootProjectile() { Prefab = spawn.Projectile });
+                    cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new ShootProjectile() { Prefab = spawn.Projectile, Socket = e });
                 }
                 cbp.RemoveComponent<SpawnWeapon>(entityInQueryIndex, e);
             }).ScheduleParallel();
@@ -184,8 +184,15 @@ namespace RPG.Combat
             .WithStoreEntityQueryInField(ref fighterEquipQuery)
             .ForEach((int entityInQueryIndex, Entity e, in Equip picked, in EquipableSockets sockets) =>
             {
+                var listSockets = sockets.ToList();
+                for (int i = 0; i < listSockets.Length; i++)
+                {
+                    // Remove currently equiped weapon
+                    cbp.AddComponent<DestroySpawn>(entityInQueryIndex, listSockets[i]);
+                }
                 var socket = sockets.GetSocketForType(picked.SocketType);
                 Debug.Log($"Player {e.Index} equip pickup Weapon: ${picked.Equipable.Index} in socket: {socket.Index}");
+
                 cbp.AddComponent(entityInQueryIndex, picked.Equipable, new EquipInSocket { Socket = socket });
                 cbp.RemoveComponent<Equip>(entityInQueryIndex, e);
             }).ScheduleParallel();

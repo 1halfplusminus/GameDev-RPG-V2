@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc432d25d601c0569b9bfe46439a8d48, type: 3}
+  m_Name: Enemy Knight Sword
+  m_EditorClassIdentifier: 
+  WeaponPrefab: {fileID: 7377326180664589832, guid: 72694306773c065e7a5485a2db335828, type: 3}
+  Animation: {fileID: 7509640188325939964, guid: 8bf28d004a8653905909dcd6314d79ef, type: 3}
+  Projectile: {fileID: 0}
+  Damage: 20
+  Range: 0.1
+  Cooldown: 0.8
+  AttackDuration: 1.5000001
+  SocketType: 1
+  HitEvents: []

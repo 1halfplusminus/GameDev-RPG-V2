@@ -2,15 +2,60 @@
 using Unity.Entities;
 using RPG.Core;
 using Unity.Animation.Hybrid;
-using Unity.Transforms;
 using RPG.Animation;
 using Unity.Collections;
-using UnityEngine;
 using RPG.Mouvement;
 using Unity.Mathematics;
 
 namespace RPG.Combat
 {
+#if UNITY_EDITOR
+    using Unity.Animation.Hybrid;
+#endif
+    public class WeaponConversionSystem : GameObjectConversionSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach((WeaponAsset weapon) =>
+            {
+                var weaponEntity = GetPrimaryEntity(weapon);
+                var weaponPrefab = GetPrimaryEntity(weapon.WeaponPrefab);
+                DstEntityManager.AddComponentData(weaponEntity, new EquippedPrefab { Value = weaponPrefab });
+                DstEntityManager.AddComponentData(weaponEntity, new Weapon
+                {
+                    AttackDuration = weapon.AttackDuration,
+                    Cooldown = weapon.Cooldown,
+                    Damage = weapon.Damage,
+                    Range = weapon.Range,
+                    SocketType = weapon.SocketType,
+                    HitEvents = CreateHitEvent(weapon)
+                });
+                var projectileEntity = TryGetPrimaryEntity(weapon.Projectile);
+                DstEntityManager.AddComponentData(weaponEntity, new ShootProjectile() { Prefab = projectileEntity });
+#if UNITY_EDITOR
+                if (weapon.Animation != null)
+                {
+                    var blobAsset = BlobAssetStore.GetClip(weapon.Animation);
+                    DstEntityManager.AddComponentData(weaponEntity, new ChangeAttackAnimation { Animation = blobAsset });
+                }
+#endif
+
+            });
+        }
+        private FixedList32<float> CreateHitEvent(WeaponAsset weapon)
+        {
+            var hitEvents = new FixedList32<float>
+            {
+                Length = weapon.HitEvents.Count
+            };
+            for (int i = 0; i < weapon.HitEvents.Count; i++)
+            {
+                hitEvents[i] = weapon.HitEvents[i];
+            }
+            return hitEvents;
+        }
+    }
+
     public class ProjectileConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()
@@ -52,7 +97,7 @@ namespace RPG.Combat
                     RightHandSocket = TryGetPrimaryEntity(fighter.RightHandSocket)
                 };
                 DstEntityManager.AddComponentData(entity, equipableSockets);
-                foreach (var socket in equipableSockets)
+                foreach (var socket in equipableSockets.All())
                 {
                     DstEntityManager.AddComponentData(socket, new EquipedBy { Entity = entity });
                 }
@@ -137,44 +182,5 @@ namespace RPG.Combat
         }
 
     }
-#if UNITY_EDITOR
-    public class WeaponConversionSystem : GameObjectConversionSystem
-    {
-        protected override void OnUpdate()
-        {
-            Entities.ForEach((WeaponAsset weapon) =>
-            {
-                var weaponEntity = GetPrimaryEntity(weapon);
-                var weaponPrefab = GetPrimaryEntity(weapon.WeaponPrefab);
-                DstEntityManager.AddComponentData(weaponEntity, new EquippedPrefab { Value = weaponPrefab });
-                DstEntityManager.AddComponentData(weaponEntity, new Weapon
-                {
-                    AttackDuration = weapon.AttackDuration,
-                    Cooldown = weapon.Cooldown,
-                    Damage = weapon.Damage,
-                    Range = weapon.Range,
-                    SocketType = weapon.SocketType,
-                    HitEvents = CreateHitEvent(weapon)
-                });
-                var projectileEntity = TryGetPrimaryEntity(weapon.Projectile);
-                DstEntityManager.AddComponentData(weaponEntity, new ShootProjectile() { Prefab = projectileEntity });
-                if (weapon.Animation != null)
-                {
-                    var blobAsset = BlobAssetStore.GetClip(weapon.Animation);
-                    DstEntityManager.AddComponentData(weaponEntity, new ChangeAttackAnimation { Animation = blobAsset });
-                }
-            });
-        }
-        private FixedList32<float> CreateHitEvent(WeaponAsset weapon)
-        {
-            var hitEvents = new FixedList32<float>();
-            hitEvents.Length = weapon.HitEvents.Count;
-            for (int i = 0; i < weapon.HitEvents.Count; i++)
-            {
-                hitEvents[i] = weapon.HitEvents[i];
-            }
-            return hitEvents;
-        }
-    }
-#endif
+
 }

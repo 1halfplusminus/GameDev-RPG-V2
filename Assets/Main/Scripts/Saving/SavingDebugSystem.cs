@@ -12,7 +12,7 @@ namespace RPG.Saving
 
         SaveSystemBase saveSystem;
         EntityQuery requestForUpdateQuery;
-
+        EntityQuery gameSettingQuery;
         string savePath;
         protected override void OnCreate()
         {
@@ -28,6 +28,8 @@ namespace RPG.Saving
                     typeof(AnySceneLoading)
                 }
             });
+
+            gameSettingQuery = GetEntityQuery(ComponentType.ReadOnly<GameSettings>());
             savePath = SaveSystem.GetPathFromSaveFile("test.save");
 
             RequireForUpdate(requestForUpdateQuery);
@@ -46,8 +48,8 @@ namespace RPG.Saving
         {
 
             SceneLoadingSystem.UnloadAllCurrentlyLoadedScene(EntityManager);
-            var gameSettingsEntity = GetSingletonEntity<GameSettings>();
-            var gameSettings = GetSingleton<GameSettings>();
+            var gameSettingsEntity = EntityManager.CreateEntityQuery(ComponentType.ReadOnly<GameSettings>()).GetSingletonEntity();
+            var gameSettings = gameSettingQuery.GetSingleton<GameSettings>();
             EntityManager.AddComponentData(gameSettingsEntity, new TriggerSceneLoad() { SceneGUID = gameSettings.NewGameScene });
         }
         protected override void OnUpdate()

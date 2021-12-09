@@ -27,13 +27,14 @@ namespace RPG.Combat
         {
             var cbp = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             var canShootProjectiles = GetComponentDataFromEntity<ShootProjectile>(true);
-            var translations = GetComponentDataFromEntity<Translation>(true);
+            var localToWorlds = GetComponentDataFromEntity<LocalToWorld>(true);
             var projectiles = GetComponentDataFromEntity<Projectile>(true);
             Entities
             .WithStoreEntityQueryInField(ref hitQuery)
             .WithNone<IsProjectile>()
+            .WithReadOnly(localToWorlds)
             .WithReadOnly(projectiles)
-            .WithReadOnly(translations)
+
             .WithReadOnly(canShootProjectiles).ForEach((int entityInQueryIndex, Entity e, ref Hit hit) =>
             {
                 if (canShootProjectiles.HasComponent(hit.Hitter))
@@ -41,8 +42,9 @@ namespace RPG.Combat
                     Debug.Log($"{hit.Hitter} shoot a projectile at {hit.Hitted}");
                     var prefabEntity = canShootProjectiles[hit.Hitter].Prefab;
                     var projectile = projectiles[prefabEntity];
+                    var translation = new Translation { Value = localToWorlds[canShootProjectiles[hit.Hitter].Socket].Position };
                     var projectileEntity = cbp.Instantiate(entityInQueryIndex, canShootProjectiles[hit.Hitter].Prefab);
-                    cbp.AddComponent(entityInQueryIndex, projectileEntity, translations[hit.Hitter]);
+                    cbp.AddComponent(entityInQueryIndex, projectileEntity, translation);
                     cbp.AddComponent(entityInQueryIndex, projectileEntity, new Projectile { Target = hit.Hitted, Speed = projectile.Speed, ShootBy = hit.Hitter });
                     hit.Damage = 0;
                 }

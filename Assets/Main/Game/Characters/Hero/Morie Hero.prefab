@@ -1664,8 +1664,14 @@ MonoBehaviour:
   TranslationChannels:
   - Id: MainH
     DefaultValue: {x: 0, y: 0, z: 0}
+  - Id: Hand.L
+    DefaultValue: {x: 0, y: 0, z: 0}
+  - Id: Hand.R
+    DefaultValue: {x: 0, y: 0, z: 0}
   RotationChannels:
   - Id: MainH
+    DefaultValue: {x: 0, y: 0, z: 0, w: 0}
+  - Id: Hand.L
     DefaultValue: {x: 0, y: 0, z: 0, w: 0}
   ScaleChannels: []
   FloatChannels: []

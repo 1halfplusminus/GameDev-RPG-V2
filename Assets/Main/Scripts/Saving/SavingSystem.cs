@@ -9,6 +9,7 @@ using RPG.Core;
 
 namespace RPG.Saving
 {
+    [UpdateInGroup(typeof(SavingSystemGroup))]
     public abstract class SaveSystemBase : SystemBase
     {
         public abstract void Save(string saveFile);

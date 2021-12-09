@@ -3,6 +3,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Collections;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace RPG.Combat
 {
@@ -22,6 +23,8 @@ namespace RPG.Combat
     {
         public Entity Prefab;
         public float Speed;
+
+        public Entity Socket;
 
     }
     public struct Projectile : IComponentData
@@ -49,11 +52,24 @@ namespace RPG.Combat
                 _ => Entity.Null,
             };
         }
-
-        public IEnumerator<Entity> GetEnumerator()
+        public FixedList32<Entity> ToList()
+        {
+            var fixedlist = new FixedList32<Entity>
+            {
+                LeftHandSocket,
+                RightHandSocket
+            };
+            return fixedlist;
+        }
+        public IEnumerable<Entity> All()
         {
             yield return LeftHandSocket;
             yield return RightHandSocket;
+        }
+
+        public IEnumerable<Entity> GetEnumerator()
+        {
+            return All();
         }
     }
     public struct PickableWeapon : IComponentData
@@ -101,6 +117,7 @@ namespace RPG.Combat
     {
         public Entity Socket;
     }
+
     public enum SocketType
     {
         LeftHand, RightHand
