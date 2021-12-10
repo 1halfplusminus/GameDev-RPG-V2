@@ -15,6 +15,8 @@ namespace RPG.Combat
         public WeaponAsset Weapon;
         public Transform LeftHandSocket;
         public Transform RightHandSocket;
+
+        public Transform HitPoint;
     }
 
 }

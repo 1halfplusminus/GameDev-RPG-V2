@@ -64,10 +64,13 @@ namespace RPG.Combat
             {
                 var target = GetPrimaryEntity(p.Target);
                 var entity = GetPrimaryEntity(p);
-                DstEntityManager.AddComponentData(entity, new Projectile { Target = target, Speed = p.Speed });
+                if (p.IsHoming)
+                {
+                    DstEntityManager.AddComponent<IsHomingProjectile>(entity);
+                }
+                DstEntityManager.AddComponent<StatefulTriggerEvent>(entity);
+                DstEntityManager.AddComponentData(entity, new Projectile { Target = target, Speed = p.Speed, IsHoming = p.IsHoming });
                 DstEntityManager.AddComponent<Spawned>(entity);
-                DstEntityManager.AddComponentData(entity, new MoveTo(float3.zero) { Stopped = true });
-                DstEntityManager.AddComponent<LookAt>(entity);
                 DstEntityManager.AddComponent<DeltaTime>(entity);
             });
         }
@@ -107,6 +110,10 @@ namespace RPG.Combat
                 {
                     DstEntityManager.AddComponentData(weaponEntity, new EquipInSocket { Socket = socketEntity });
                 }
+                //FIXME: Make a system that calcule hit point from physics collider if no hit point
+                var hitPointEntity = TryGetPrimaryEntity(fighter.HitPoint);
+                hitPointEntity = hitPointEntity == Entity.Null ? entity : hitPointEntity;
+                DstEntityManager.AddComponentData(hitPointEntity, new HitPoint { Entity = entity });
             });
         }
         //FIXME: Weapon value change be assigned when weapon is equiped

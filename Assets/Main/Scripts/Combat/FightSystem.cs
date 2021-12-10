@@ -6,6 +6,8 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
 using Unity.Collections;
+using Unity.Physics;
+using Unity.Entities.UniversalDelegates;
 
 namespace RPG.Combat
 {
@@ -18,10 +20,12 @@ namespace RPG.Combat
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery hitQuery;
+        EntityQuery hitPoinQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+
         }
         protected override void OnUpdate()
         {
@@ -29,12 +33,15 @@ namespace RPG.Combat
             var canShootProjectiles = GetComponentDataFromEntity<ShootProjectile>(true);
             var localToWorlds = GetComponentDataFromEntity<LocalToWorld>(true);
             var projectiles = GetComponentDataFromEntity<Projectile>(true);
+            var hitableLocalToWorld = QueryHitPoint();
+
             Entities
             .WithStoreEntityQueryInField(ref hitQuery)
             .WithNone<IsProjectile>()
             .WithReadOnly(localToWorlds)
             .WithReadOnly(projectiles)
-
+            .WithReadOnly(hitableLocalToWorld)
+            .WithDisposeOnCompletion(hitableLocalToWorld)
             .WithReadOnly(canShootProjectiles).ForEach((int entityInQueryIndex, Entity e, ref Hit hit) =>
             {
                 if (canShootProjectiles.HasComponent(hit.Hitter))
@@ -42,10 +49,14 @@ namespace RPG.Combat
                     Debug.Log($"{hit.Hitter} shoot a projectile at {hit.Hitted}");
                     var prefabEntity = canShootProjectiles[hit.Hitter].Prefab;
                     var projectile = projectiles[prefabEntity];
+                    var targetPosition = hitableLocalToWorld[hit.Hitted].Position;
+                    var position = localToWorlds[canShootProjectiles[hit.Hitter].Socket].Position;
                     var translation = new Translation { Value = localToWorlds[canShootProjectiles[hit.Hitter].Socket].Position };
                     var projectileEntity = cbp.Instantiate(entityInQueryIndex, canShootProjectiles[hit.Hitter].Prefab);
+                    var lookRotation = quaternion.LookRotation(targetPosition - position, math.up());
                     cbp.AddComponent(entityInQueryIndex, projectileEntity, translation);
                     cbp.AddComponent(entityInQueryIndex, projectileEntity, new Projectile { Target = hit.Hitted, Speed = projectile.Speed, ShootBy = hit.Hitter });
+                    cbp.AddComponent(entityInQueryIndex, projectileEntity, new Rotation { Value = lookRotation });
                     hit.Damage = 0;
                 }
 
@@ -53,60 +64,119 @@ namespace RPG.Combat
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
 
         }
+
+        private NativeHashMap<Entity, LocalToWorld> QueryHitPoint()
+        {
+            var hitableLocalToWorld = new NativeHashMap<Entity, LocalToWorld>(hitPoinQuery.CalculateEntityCount(), Allocator.TempJob);
+            var hitableLocalToWorldWriter = hitableLocalToWorld.AsParallelWriter();
+            Entities.WithStoreEntityQueryInField(ref hitPoinQuery)
+            .ForEach((Entity e, int entityInQueryIndex, in LocalToWorld localToWorld, in HitPoint hitPoint) =>
+            {
+                hitableLocalToWorldWriter.TryAdd(hitPoint.Entity, localToWorld);
+            }).ScheduleParallel();
+            return hitableLocalToWorld;
+        }
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
     [UpdateBefore(typeof(HitSystem))]
     public class ProjectileSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
+        EntityQuery hitableQuery;
+
         protected override void OnCreate()
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+
         }
         protected override void OnUpdate()
         {
             var cbp = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-            Entities.WithNone<TargetLook, ProjectileHitted>().ForEach((int entityInQueryIndex, Entity e, ref LookAt lookAt, ref MoveTo moveTo, in Projectile p) =>
+            var isDead = GetComponentDataFromEntity<IsDeadTag>(true);
+            NativeHashMap<Entity, LocalToWorld> hitableLocalToWorld = QueryHitPoint();
+            /*  Entities
+             .WithReadOnly(isDead)
+             .WithReadOnly(hitableLocalToWorld)
+             .WithNone<TargetLook>()
+             .ForEach((int entityInQueryIndex, Entity e, ref Rotation r, in Projectile p, in LocalToWorld localToWorld) =>
              {
-                 Debug.Log($"Projectile {e} targetting {p.Target.Index}  ");
-                 cbp.AddComponent(entityInQueryIndex, p.Target, new TargetBy { Entity = e });
-                 lookAt.Entity = p.Target;
-             }).ScheduleParallel();
+                 var direction = LookTarget(e, p, localToWorld, isDead, hitableLocalToWorld);
+                 r.Value = quaternion.LookRotation(direction, math.up());
+                 if (!direction.Equals(float3.zero))
+                 {
+                     cbp.AddComponent(entityInQueryIndex, e, new TargetLook { TargetDirection = direction });
+                 }
 
+             }).ScheduleParallel(); */
             Entities
-            .ForEach((int entityInQueryIndex, Entity e, in LocalToWorld localToWorld, in TargetBy targetBy) =>
+            .WithReadOnly(isDead)
+            .WithReadOnly(hitableLocalToWorld)
+            .WithDisposeOnCompletion(hitableLocalToWorld)
+            .WithAny<IsHomingProjectile>()
+            .ForEach((int entityInQueryIndex, Entity e, ref TargetLook targetLook, ref Rotation r, in Projectile p, in LocalToWorld localToWorld) =>
             {
-                Debug.Log($"Projectile {targetBy.Entity} look target position {localToWorld.Position}  ");
-                cbp.AddComponent(entityInQueryIndex, targetBy.Entity, new TargetLook { Position = localToWorld.Position });
+                targetLook.TargetDirection = LookTarget(e, p, localToWorld, isDead, hitableLocalToWorld);
+                r.Value = quaternion.LookRotation(targetLook.TargetDirection, math.up());
             }).ScheduleParallel();
 
             Entities
             .WithNone<ProjectileHitted>()
-            .ForEach((int entityInQueryIndex, Entity e, ref MoveTo moveTo, ref Translation t, in TargetLook targetLook, in LocalToWorld localToWorld, in Projectile p, in DeltaTime dt) =>
+            .ForEach((int entityInQueryIndex, Entity e, ref Translation t, in LocalToWorld localToWorld, in Projectile p, in DeltaTime dt) =>
             {
-                Debug.Log($"Projectile {e} moving to position {targetLook.Position}  ");
-                moveTo.Position = targetLook.Position;
-                if (!moveTo.IsAtStoppingDistance)
-                {
-                    moveTo.Stopped = false;
-                    var direction = targetLook.Position - localToWorld.Position;
-                    t.Value += math.normalize(direction) * p.Speed * dt.Value;
-                }
-                if (moveTo.IsAtStoppingDistance && moveTo.Distance != Mathf.Infinity)
-                {
-                    Debug.Log($"Projectile {e} at stopping distance {targetLook.Position}  ");
-                    var hitEntity = cbp.CreateEntity(entityInQueryIndex);
-                    cbp.AddComponent(entityInQueryIndex, hitEntity, new Hit() { Hitter = p.ShootBy, Hitted = p.Target });
-                    cbp.RemoveComponent<TargetBy>(entityInQueryIndex, p.Target);
-                    cbp.AddComponent<IsProjectile>(entityInQueryIndex, hitEntity);
-                    cbp.AddComponent<ProjectileHitted>(entityInQueryIndex, e);
-                    cbp.DestroyEntity(entityInQueryIndex, e);
-                }
+                Debug.Log($"Projectile {e} moving to position {localToWorld.Forward}  ");
+                t.Value += math.normalize(localToWorld.Forward) * p.Speed * dt.Value;
             }).ScheduleParallel();
 
+            Entities
+            .WithReadOnly(isDead)
+            .WithNone<ProjectileHitted>()
+            .ForEach((int entityInQueryIndex, Entity e, in Projectile p, in DynamicBuffer<StatefulTriggerEvent> ste) =>
+            {
+                for (int i = 0; i < ste.Length; i++)
+                {
+                    var other = ste[i].GetOtherEntity(e);
+                    if (other != p.ShootBy)
+                    {
+                        Debug.Log($"Projectile {e} collid with {other.Index}  ");
+                        var hitEntity = cbp.CreateEntity(entityInQueryIndex);
+                        cbp.AddComponent(entityInQueryIndex, hitEntity, new Hit() { Hitter = p.ShootBy, Hitted = other });
+                        cbp.AddComponent<IsProjectile>(entityInQueryIndex, hitEntity);
+                        if (!isDead.HasComponent(other))
+                        {
+                            Debug.Log($"Projectile {e} destroyed by {other.Index}  ");
+                            cbp.AddComponent<ProjectileHitted>(entityInQueryIndex, e);
+                            cbp.DestroyEntity(entityInQueryIndex, e);
+                        }
+                    }
 
+                }
+
+            }).ScheduleParallel();
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+        }
+
+        private static float3 LookTarget(Entity e, in Projectile p, in LocalToWorld localToWorld, ComponentDataFromEntity<IsDeadTag> isDead, NativeHashMap<Entity, LocalToWorld> hitableLocalToWorld)
+        {
+
+            if (hitableLocalToWorld.ContainsKey(p.Target) && !isDead.HasComponent(p.Target))
+            {
+                Debug.Log($"Projectile {e} targetting {p.Target.Index}  ");
+                return hitableLocalToWorld[p.Target].Position - localToWorld.Position;
+            }
+            return float3.zero;
+        }
+
+        private NativeHashMap<Entity, LocalToWorld> QueryHitPoint()
+        {
+            var hitableLocalToWorld = new NativeHashMap<Entity, LocalToWorld>(hitableQuery.CalculateEntityCount(), Allocator.TempJob);
+            var hitableLocalToWorldWriter = hitableLocalToWorld.AsParallelWriter();
+            Entities.WithStoreEntityQueryInField(ref hitableQuery)
+            .ForEach((Entity e, int entityInQueryIndex, in LocalToWorld localToWorld, in HitPoint hitPoint) =>
+            {
+                hitableLocalToWorldWriter.TryAdd(hitPoint.Entity, localToWorld);
+            }).ScheduleParallel();
+            return hitableLocalToWorld;
         }
     }
     [UpdateAfter(typeof(CombatTargettingSystem))]

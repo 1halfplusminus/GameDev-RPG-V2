@@ -9,16 +9,23 @@ namespace RPG.Combat
 {
 
     public struct ProjectileHitted : IComponentData { }
+
+    public struct IsHomingProjectile : IComponentData
+    {
+
+    }
     public struct IsProjectile : IComponentData { }
     public struct NoDamage : IComponentData { }
+    public struct TargetLooked : IComponentData
+    {
+
+    }
     public struct TargetLook : IComponentData
     {
-        public float3 Position;
+        public float3 TargetDirection;
+
     }
-    public struct TargetBy : IComponentData
-    {
-        public Entity Entity;
-    }
+
     public struct ShootProjectile : IComponentData
     {
         public Entity Prefab;
@@ -31,7 +38,7 @@ namespace RPG.Combat
     {
         public Entity Target;
         public float Speed;
-
+        public bool IsHoming;
         public Entity ShootBy;
     }
     public struct EquipableSockets : IComponentData

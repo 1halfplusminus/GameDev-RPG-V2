@@ -2871,12 +2871,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3414239112952108567, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: m_Name
-      value: Enemy Guard Variant
+      value: Enemy Guard Archer Variant
       objectReference: {fileID: 0}
     - target: {fileID: 4064622068438567071, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: Weapon
       value: 
       objectReference: {fileID: 11400000, guid: 90c60bf82c18e3cdeb2674c6b9f0ad0b, type: 2}
+    - target: {fileID: 4064622068438567071, guid: e7fb41679a215d7e08412569104fc661, type: 3}
+      propertyPath: HitPoint
+      value: 
+      objectReference: {fileID: 3838645579856403629}
     - target: {fileID: 4064622068438567071, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: LeftHandSocket
       value: 

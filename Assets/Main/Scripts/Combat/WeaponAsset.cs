@@ -7,6 +7,7 @@ namespace RPG.Combat
     public class WeaponAsset : ScriptableObject
     {
         public GameObject WeaponPrefab;
+
         public AnimationClip Animation;
 
         public GameObject Projectile;

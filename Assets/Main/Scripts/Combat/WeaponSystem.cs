@@ -5,6 +5,7 @@ using Unity.Jobs;
 using UnityEngine;
 using RPG.Animation;
 using Unity.Rendering;
+using UnityEngine.VFX;
 
 namespace RPG.Combat
 {
@@ -114,6 +115,10 @@ namespace RPG.Combat
                 Debug.Log($"Equip {e.Index} in socket : ${equipWeapon.Socket.Index}");
                 cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new SpawnWeapon { Prefab = prefab.Value, Animation = changeAttackAnimation.Animation, Weapon = e, Projectile = shootProjectile.Prefab });
                 cbp.RemoveComponent<EquipInSocket>(entityInQueryIndex, e);
+                if (shootProjectile.Prefab == Entity.Null)
+                {
+                    cbp.RemoveComponent<ShootProjectile>(entityInQueryIndex, e);
+                }
             }).ScheduleParallel();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
@@ -151,13 +156,19 @@ namespace RPG.Combat
 
             Entities
             .WithAll<Picked, RenderMesh, StatefulTriggerEvent>()
-            .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer player, in PickableWeapon picked) =>
+            .ForEach((int entityInQueryIndex, Entity e) =>
             {
                 Debug.Log($"{e.Index} was picked");
                 cbp.RemoveComponent<RenderMesh>(entityInQueryIndex, e);
                 cbp.RemoveComponent<StatefulTriggerEvent>(entityInQueryIndex, e);
-            }).ScheduleParallel();
 
+            }).ScheduleParallel();
+            Entities
+            .WithAll<Picked>()
+            .ForEach((int entityInQueryIndex, Entity e, VisualEffect visualEffect) =>
+            {
+                visualEffect.Stop();
+            }).WithoutBurst().Run();
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 
@@ -192,7 +203,6 @@ namespace RPG.Combat
                 }
                 var socket = sockets.GetSocketForType(picked.SocketType);
                 Debug.Log($"Player {e.Index} equip pickup Weapon: ${picked.Equipable.Index} in socket: {socket.Index}");
-
                 cbp.AddComponent(entityInQueryIndex, picked.Equipable, new EquipInSocket { Socket = socket });
                 cbp.RemoveComponent<Equip>(entityInQueryIndex, e);
             }).ScheduleParallel();

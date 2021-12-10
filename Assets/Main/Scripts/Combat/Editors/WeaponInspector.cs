@@ -40,7 +40,6 @@ namespace RPG.Combat
         private void UpdateAnimationData()
         {
             var animationProperty = serializedObject.FindProperty(nameof(WeaponAsset.Animation));
-            Debug.Log($"Animation field changed target {animationProperty.objectReferenceValue.GetType()}");
             if (animationProperty.objectReferenceValue is AnimationClip clip)
             {
                 serializedObject.FindProperty(nameof(WeaponAsset.AttackDuration)).floatValue = clip.averageDuration;
@@ -54,6 +53,7 @@ namespace RPG.Combat
                 }
                 serializedObject.ApplyModifiedProperties();
             }
+
         }
     }
 #endif

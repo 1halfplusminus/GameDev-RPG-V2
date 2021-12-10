@@ -1,6 +1,4 @@
 using Unity.Entities;
-using Unity.Mathematics;
-using UnityEngine;
 
 namespace RPG.Combat
 {
@@ -8,5 +6,10 @@ namespace RPG.Combat
     public struct Hittable : IComponentData
     {
 
+    }
+
+    public struct HitPoint : IComponentData
+    {
+        public Entity Entity;
     }
 }

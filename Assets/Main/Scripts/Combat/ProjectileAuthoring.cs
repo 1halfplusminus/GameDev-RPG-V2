@@ -7,6 +7,8 @@ namespace RPG.Combat
     {
         public Transform Target;
         public float Speed;
+
+        public bool IsHoming;
     }
 
 }
