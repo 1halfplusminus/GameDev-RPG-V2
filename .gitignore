@@ -72,4 +72,5 @@ crashlytics-build.properties
 /Recordings
 .secrets/
 /UIElementsSchema
+/Packages
 /SceneDependencyCache

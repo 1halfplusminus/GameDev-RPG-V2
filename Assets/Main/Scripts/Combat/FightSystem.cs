@@ -8,6 +8,7 @@ using UnityEngine;
 using Unity.Collections;
 using Unity.Physics;
 using Unity.Entities.UniversalDelegates;
+using UnityEngine.VFX;
 
 namespace RPG.Combat
 {
@@ -54,6 +55,7 @@ namespace RPG.Combat
                     var translation = new Translation { Value = localToWorlds[canShootProjectiles[hit.Hitter].Socket].Position };
                     var projectileEntity = cbp.Instantiate(entityInQueryIndex, canShootProjectiles[hit.Hitter].Prefab);
                     var lookRotation = quaternion.LookRotation(targetPosition - position, math.up());
+
                     cbp.AddComponent(entityInQueryIndex, projectileEntity, translation);
                     cbp.AddComponent(entityInQueryIndex, projectileEntity, new Projectile { Target = hit.Hitted, Speed = projectile.Speed, ShootBy = hit.Hitter });
                     cbp.AddComponent(entityInQueryIndex, projectileEntity, new Rotation { Value = lookRotation });
@@ -95,20 +97,7 @@ namespace RPG.Combat
             var cbp = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             var isDead = GetComponentDataFromEntity<IsDeadTag>(true);
             NativeHashMap<Entity, LocalToWorld> hitableLocalToWorld = QueryHitPoint();
-            /*  Entities
-             .WithReadOnly(isDead)
-             .WithReadOnly(hitableLocalToWorld)
-             .WithNone<TargetLook>()
-             .ForEach((int entityInQueryIndex, Entity e, ref Rotation r, in Projectile p, in LocalToWorld localToWorld) =>
-             {
-                 var direction = LookTarget(e, p, localToWorld, isDead, hitableLocalToWorld);
-                 r.Value = quaternion.LookRotation(direction, math.up());
-                 if (!direction.Equals(float3.zero))
-                 {
-                     cbp.AddComponent(entityInQueryIndex, e, new TargetLook { TargetDirection = direction });
-                 }
 
-             }).ScheduleParallel(); */
             Entities
             .WithReadOnly(isDead)
             .WithReadOnly(hitableLocalToWorld)
@@ -127,7 +116,12 @@ namespace RPG.Combat
                 Debug.Log($"Projectile {e} moving to position {localToWorld.Forward}  ");
                 t.Value += math.normalize(localToWorld.Forward) * p.Speed * dt.Value;
             }).ScheduleParallel();
-
+            /*    Entities
+               .WithNone<ProjectileHitted>()
+               .ForEach((int entityInQueryIndex, Entity e, in LocalToWorld localToWorld, in Projectile p, in VisualEffect effect) =>
+               {
+                   effect.SetVector3("Position", localToWorld.Position);
+               }).WithoutBurst().Run(); */
             Entities
             .WithReadOnly(isDead)
             .WithNone<ProjectileHitted>()
