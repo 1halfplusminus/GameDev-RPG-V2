@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5475211252939139583}
   - component: {fileID: 8316335778128769561}
   - component: {fileID: 5353056389601081519}
+  - component: {fileID: 3997125487437074502}
   m_Layer: 0
   m_Name: Blue Arrow
   m_TagString: Untagged
@@ -243,6 +244,18 @@ MonoBehaviour:
     Tag05: 0
     Tag06: 0
     Tag07: 0
+--- !u!114 &3997125487437074502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5475211252939139569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28020a94de263f7cd8d4c9e6723a5dd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8675395970164099353
 GameObject:
   m_ObjectHideFlags: 0

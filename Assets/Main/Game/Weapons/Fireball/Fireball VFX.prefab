@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3757928532938865135}
   - component: {fileID: 5420526285080572287}
   - component: {fileID: 2316782277357014004}
+  - component: {fileID: -4626264793563252268}
   m_Layer: 0
   m_Name: Fireball VFX
   m_TagString: Untagged
@@ -307,9 +308,9 @@ VisualEffect:
       m_Array: []
     m_Vector3f:
       m_Array:
-      - m_Value: {x: 0.36, y: 0.81, z: 11.91}
+      - m_Value: {x: 0, y: 0, z: 0}
         m_Name: Position
-        m_Overridden: 1
+        m_Overridden: 0
     m_Vector4f:
       m_Array: []
     m_Uint:
@@ -325,7 +326,10 @@ VisualEffect:
     m_NamedObject:
       m_Array: []
     m_Bool:
-      m_Array: []
+      m_Array:
+      - m_Value: 0
+        m_Name: Destroy
+        m_Overridden: 0
 --- !u!114 &2316782277357014004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,5 +340,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9f922032aad1e4f109e892944af196e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-4626264793563252268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6303497545802866673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fb8f19121f4cae1c95493afb04f2ffa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
