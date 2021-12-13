@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -6580991060470503487, guid: ed505d5f1f47b3ecb8b3e4f7a25cb59f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 36483231843471378, guid: ed505d5f1f47b3ecb8b3e4f7a25cb59f, type: 3}
       propertyPath: DrawContacts
       value: 1
@@ -85,6 +89,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5475211252939139583, guid: ed505d5f1f47b3ecb8b3e4f7a25cb59f, type: 3}
       propertyPath: IsHoming
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8600020062236232422, guid: ed505d5f1f47b3ecb8b3e4f7a25cb59f, type: 3}
+      propertyPath: m_InitialEventNameOverriden
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

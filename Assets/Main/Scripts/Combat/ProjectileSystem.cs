@@ -6,13 +6,19 @@ using UnityEngine;
 using Unity.Collections;
 using RPG.Core;
 using UnityEngine.VFX;
+using RPG.Gameplay;
+using Unity.Rendering;
 
 namespace RPG.Combat
 {
-    public struct IsDestroying : IComponentData
+    public struct DestroyIfNoParticule : IComponentData
     {
 
     }
+    /*   public struct IsDestroying : IComponentData
+      {
+
+      } */
     public class DestroyVisualEffect : SystemBase
     {
 
@@ -25,20 +31,67 @@ namespace RPG.Combat
         }
         protected override void OnUpdate()
         {
-            var cbp = entityCommandBufferSystem.CreateCommandBuffer();
+            var cb = entityCommandBufferSystem.CreateCommandBuffer();
+            var cbp = cb.AsParallelWriter();
             Entities
-            .WithAll<Projectile, ProjectileHitted, VisuableAttributeDestroyOnHit>()
+            .WithAll<Projectile, ProjectileHitted, SetAttributeDestroyOnHit>()
+            .WithNone<Playing>()
             .ForEach((int entityInQueryIndex, Entity e, VisualEffect effect) =>
             {
                 if (effect.HasBool("Destroy"))
                 {
                     effect.SetBool("Destroy", true);
-                }
-                if (effect.aliveParticleCount == 0)
-                {
-                    cbp.DestroyEntity(e);
+                    cb.AddComponent<DestroyIfNoParticule>(e);
+                    cb.AddComponent<Playing>(e);
                 }
             }).WithoutBurst().Run();
+
+
+            Entities
+           .WithAll<Projectile, ProjectileHitted, OnDestroyOnHit>()
+           .WithNone<Playing>()
+           .ForEach((int entityInQueryIndex, Entity e, VisualEffect effect) =>
+           {
+               Debug.Log($"Send Destroy Event");
+               effect.SendEvent("OnDestroy");
+               cb.AddComponent<Playing>(e);
+               cb.RemoveComponent<RenderMesh>(e);
+           }).WithoutBurst().Run();
+
+            Entities
+           .WithAll<Projectile, ProjectileHitted, OnDestroyOnHit>()
+           .WithNone<Playing>()
+           .ForEach((int entityInQueryIndex, Entity e, in DynamicBuffer<Child> childs) =>
+           {
+               for (int i = 0; i < childs.Length; i++)
+               {
+                   cbp.RemoveComponent<RenderMesh>(entityInQueryIndex, childs[i].Value);
+               }
+           }).ScheduleParallel();
+
+            Entities
+            .WithAll<Projectile, ProjectileHitted, OnDestroyOnHit>()
+            .WithAll<Playing>()
+            .WithNone<DestroyIfNoParticule>()
+            .ForEach((int entityInQueryIndex, Entity e, VisualEffect effect) =>
+            {
+                if (effect.aliveParticleCount > 0)
+                {
+                    cb.AddComponent<DestroyIfNoParticule>(e);
+                }
+            }).WithoutBurst().Run();
+
+            Entities
+            .WithAll<Projectile, ProjectileHitted, DestroyIfNoParticule>()
+            .WithAll<Playing>()
+            .ForEach((int entityInQueryIndex, Entity e, VisualEffect effect) =>
+            {
+                if (effect.aliveParticleCount == 0)
+                {
+                    cb.DestroyEntity(e);
+                }
+            }).WithoutBurst().Run();
+
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
@@ -189,21 +242,26 @@ namespace RPG.Combat
             .WithDisposeOnCompletion(hitableLocalToWorld)
             .WithReadOnly(canShootProjectiles).ForEach((int entityInQueryIndex, Entity e, ref Hit hit) =>
             {
-                if (canShootProjectiles.HasComponent(hit.Hitter))
+                if (canShootProjectiles.HasComponent(hit.Hitter) && hitableLocalToWorld.ContainsKey(hit.Hitted))
                 {
                     Debug.Log($"{hit.Hitter} shoot a projectile at {hit.Hitted}");
+                    var socket = canShootProjectiles[hit.Hitter].Socket;
                     var prefabEntity = canShootProjectiles[hit.Hitter].Prefab;
                     var projectile = projectiles[prefabEntity];
                     var targetPosition = hitableLocalToWorld[hit.Hitted].Position;
-                    var position = localToWorlds[canShootProjectiles[hit.Hitter].Socket].Position;
-                    var translation = new Translation { Value = localToWorlds[canShootProjectiles[hit.Hitter].Socket].Position };
-                    var projectileEntity = cbp.Instantiate(entityInQueryIndex, canShootProjectiles[hit.Hitter].Prefab);
-                    var lookRotation = quaternion.LookRotation(targetPosition - position, math.up());
+                    if (localToWorlds.HasComponent(socket))
+                    {
+                        var position = localToWorlds[socket].Position;
+                        var translation = new Translation { Value = position };
+                        var projectileEntity = cbp.Instantiate(entityInQueryIndex, prefabEntity);
+                        var lookRotation = quaternion.LookRotation(targetPosition - position, math.up());
 
-                    cbp.AddComponent(entityInQueryIndex, projectileEntity, translation);
-                    cbp.AddComponent(entityInQueryIndex, projectileEntity, new Projectile { Target = hit.Hitted, Speed = projectile.Speed, ShootBy = hit.Hitter });
-                    cbp.AddComponent(entityInQueryIndex, projectileEntity, new Rotation { Value = lookRotation });
-                    hit.Damage = 0;
+                        cbp.AddComponent(entityInQueryIndex, projectileEntity, translation);
+                        cbp.AddComponent(entityInQueryIndex, projectileEntity, new Projectile { Target = hit.Hitted, Speed = projectile.Speed, ShootBy = hit.Hitter });
+                        cbp.AddComponent(entityInQueryIndex, projectileEntity, new Rotation { Value = lookRotation });
+                        hit.Damage = 0;
+                    }
+
                 }
 
             }).ScheduleParallel();

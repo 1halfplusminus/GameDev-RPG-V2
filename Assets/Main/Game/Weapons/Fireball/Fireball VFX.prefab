@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 5420526285080572287}
   - component: {fileID: 2316782277357014004}
   - component: {fileID: -4626264793563252268}
+  - component: {fileID: -8268618679329319979}
   m_Layer: 0
   m_Name: Fireball VFX
   m_TagString: Untagged
@@ -351,6 +352,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 6303497545802866673}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9fb8f19121f4cae1c95493afb04f2ffa, type: 3}
+  m_Script: {fileID: 11500000, guid: f706c7367f8fd474293f435516ac1905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-8268618679329319979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6303497545802866673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38a6a75eb8685bcefaca5fad42b61cd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Value: 10
