@@ -2998,6 +2998,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 27504c5bb737e86b9bea38ef1fbc9c3d, type: 2}
     - target: {fileID: 731676622901207857, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: HitPoint
+      value: 
+      objectReference: {fileID: 6159231599376232452}
+    - target: {fileID: 731676622901207857, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: WeaponRange
       value: 0.5
       objectReference: {fileID: 0}

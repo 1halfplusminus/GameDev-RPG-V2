@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Weapons
+  m_EditorClassIdentifier: 
+  m_GroupName: Weapons
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 9acdaebfd749671cab82f3ab52fd0d17
+  m_SerializeEntries:
+  - m_GUID: e0920a9e507411df4b007d6b2443ecbd
+    m_Address: Fireball
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Weapon
+  - m_GUID: 15095ef48d7c0185baaa99991293c2af
+    m_Address: Unarmed
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Weapon
+  - m_GUID: 90c60bf82c18e3cdeb2674c6b9f0ad0b
+    m_Address: Bow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Weapon
+  - m_GUID: 34f568bb0a11f4465bbab12cbf085563
+    m_Address: Sword
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Weapon
+  - m_GUID: 05f68aec6972d1e5f995e03bfed1d50d
+    m_Address: Bow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Weapon
+  - m_GUID: 23e3f37b60b5aa3fba4c8fa507021ac7
+    m_Address: Assets/Main/Game/Characters/Knight/Enemy Knight Sword.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Weapon
+  - m_GUID: e5bdbb26dea7dc3969e80624aa816d28
+    m_Address: Assets/Main/Game/Characters/Knight/Unarmed.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Weapon
+  - m_GUID: de6c4134880831bdc805dc5a5e2a8e7b
+    m_Address: Assets/Main/Game/Characters/Placeholder Enemy/Sword.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Weapon
+  - m_GUID: 27504c5bb737e86b9bea38ef1fbc9c3d
+    m_Address: Assets/Main/Game/Characters/Placeholder Enemy/Unarmed.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Weapon
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 789d5733da6e0ca849db077a8751b187, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 15ed7b07530fa7dc4aa5e55bc28c8146, type: 2}
+    - {fileID: 11400000, guid: 751db51c02af6e6a881820e030dc8533, type: 2}

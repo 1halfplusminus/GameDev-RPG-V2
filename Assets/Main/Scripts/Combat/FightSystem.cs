@@ -4,11 +4,6 @@ using Unity.Transforms;
 using RPG.Mouvement;
 using Unity.Jobs;
 using Unity.Mathematics;
-using UnityEngine;
-using Unity.Collections;
-using Unity.Physics;
-using Unity.Entities.UniversalDelegates;
-using UnityEngine.VFX;
 
 namespace RPG.Combat
 {

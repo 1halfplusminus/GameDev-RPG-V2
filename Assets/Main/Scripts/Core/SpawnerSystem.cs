@@ -2,6 +2,7 @@ using Unity.Entities;
 using UnityEngine;
 using Unity.Transforms;
 using System.Collections.Generic;
+using Unity.Collections;
 
 namespace RPG.Core
 {
@@ -150,10 +151,17 @@ namespace RPG.Core
     public class SpawnSystem : SystemBase
     {
 
+        struct SceneInfo
+        {
+            public Unity.Entities.Hash128 SceneGUID;
+            public int Section;
+            public Entity SceneEntity;
+        }
         EntityCommandBufferSystem entityCommandBufferSystem;
 
         GameObject rootGameObjectSpawner;
 
+        EntityQuery spawnerSceneTagQuery;
 
         protected override void OnDestroy()
         {
@@ -162,6 +170,7 @@ namespace RPG.Core
             {
                 Object.DestroyImmediate(rootGameObjectSpawner);
             }
+
         }
         protected override void OnCreate()
         {
@@ -186,6 +195,17 @@ namespace RPG.Core
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
             var commandBufferP = commandBuffer.AsParallelWriter();
             var em = EntityManager;
+            var sceneComponents = new NativeHashMap<Entity, SceneInfo>(spawnerSceneTagQuery.CalculateEntityCount(), Allocator.TempJob);
+
+            Entities
+            .WithAll<Spawn>()
+            .WithNone<HasSpawn>()
+            .WithStoreEntityQueryInField(ref spawnerSceneTagQuery).ForEach((Entity e, SceneTag sceneTag, SceneSection section) =>
+            {
+                sceneComponents.Add(e, new SceneInfo() { SceneEntity = sceneTag.SceneEntity, SceneGUID = section.SceneGUID, Section = section.Section });
+            })
+            .WithoutBurst().Run();
+            sceneComponents.Dispose();
             Entities
             .WithNone<DestroySpawn>()
             .WithNone<HasHybridComponent, GameObject, GameObjectSpawner>().ForEach((int entityInQueryIndex, Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
@@ -207,9 +227,24 @@ namespace RPG.Core
 
                       commandBufferP.AddComponent(entityInQueryIndex, e, new HasSpawn { Entity = instance });
                       commandBufferP.RemoveComponent<Spawn>(entityInQueryIndex, e);
+
                   }
             ).ScheduleParallel();
+            /*  Entities
+             .WithNone<DestroySpawn>()
+             .WithReadOnly(sceneComponents)
+             .WithDisposeOnCompletion(sceneComponents)
+             .WithNone<HasHybridComponent, GameObject, GameObjectSpawner>().ForEach((int entityInQueryIndex, Entity e, in HasSpawn hasSpawn) =>
+                  {
 
+                      if (sceneComponents.ContainsKey(e))
+                      {
+                          commandBuffer.AddSharedComponent(hasSpawn.Entity, new SceneTag() { SceneEntity = sceneComponents[e].SceneEntity });
+                          commandBuffer.AddSharedComponent(hasSpawn.Entity, new SceneSection() { SceneGUID = sceneComponents[e].SceneGUID, Section = sceneComponents[e].Section });
+                      }
+
+                  }
+             ).WithStructuralChanges().Run(); */
             Entities
             .WithNone<GameObject, GameObjectSpawner, DestroySpawn>()
             .WithAny<HasHybridComponent>()
@@ -217,7 +252,10 @@ namespace RPG.Core
             .ForEach((Entity e, in Spawn toSpawn, in LocalToWorld localToWorld) =>
                 {
                     var instance = em.Instantiate(toSpawn.Prefab);
-                    commandBuffer.AddComponent(instance, new Translation { Value = localToWorld.Position });
+                    commandBuffer.AddComponent(instance, new Translation
+                    {
+                        Value = localToWorld.Position
+                    });
                     commandBuffer.AddComponent(instance, new Rotation { Value = localToWorld.Rotation });
                     commandBuffer.AddComponent<Spawned>(instance);
 
@@ -225,6 +263,7 @@ namespace RPG.Core
                     commandBuffer.RemoveComponent<Spawn>(e);
                 }
             ).Run();
+
             Entities
             .WithNone<DestroySpawn>()
             .WithChangeFilter<Spawn>()
@@ -237,13 +276,7 @@ namespace RPG.Core
                 {
                     var instance = Object.Instantiate(prefab);
                     AddSceneGUIDRecurse(instance, sceneTag.SceneEntity, e, section.SceneGUID, section.Section);
-                    /* var instancedEntity = em.CreateEntity();
-                    em.AddSharedComponentData(instancedEntity, sceneTag);
-                    em.AddSharedComponentData(instancedEntity, section);
-                    em.AddComponentObject(instancedEntity, instance); */
-                    // commandBuffer.RemoveComponent<Spawn>(e);
                 }
-
             }).Run();
             Entities.
              WithAny<Spawned>()
@@ -265,7 +298,7 @@ namespace RPG.Core
                     commandBufferP.RemoveComponent<Spawned>(entityInQueryIndex, e);
                 }
             ).ScheduleParallel();
-            Entities.WithAny<DestroySpawn>().ForEach((int entityInQueryIndex, Entity e, HasSpawn spawn) =>
+            Entities.WithAny<DestroySpawn>().ForEach((int entityInQueryIndex, Entity e, in HasSpawn spawn) =>
                 {
                     commandBufferP.DestroyEntity(entityInQueryIndex, spawn.Entity);
                 }
@@ -274,7 +307,7 @@ namespace RPG.Core
               {
                   commandBufferP.RemoveComponent<DestroySpawn>(entityInQueryIndex, e);
               }
-          ).ScheduleParallel();
+            ).ScheduleParallel();
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }

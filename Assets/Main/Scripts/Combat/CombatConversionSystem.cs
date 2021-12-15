@@ -1,37 +1,145 @@
 
 using Unity.Entities;
 using RPG.Core;
-using Unity.Animation.Hybrid;
 using RPG.Animation;
 using Unity.Collections;
-using RPG.Mouvement;
-using Unity.Mathematics;
+using System;
 
 namespace RPG.Combat
 {
+    using Unity.Animation;
+
+
 #if UNITY_EDITOR
     using Unity.Animation.Hybrid;
+    using UnityEngine;
+    using UnityEngine.AddressableAssets;
+
 #endif
+    public struct Equipable : IComponentData
+    {
+        public FixedString64 GUID;
+    }
+    [Serializable]
+    public struct Addressable : ISharedComponentData
+    {
+        public Hash128 Value;
+    }
+    public struct WeaponBlobAsset
+    {
+        public Weapon Weapon;
+        public Entity Entity;
+    }
+    public struct WeaponAssetData : IComponentData
+    {
+        public BlobAssetReference<WeaponBlobAsset> Weapon;
+        public BlobAssetReference<Clip> Clip;
+    }
+    /*     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
+        public class AddressableWeaponConversionSystem : GameObjectConversionSystem
+        {
+
+            protected override void OnCreate()
+            {
+                base.OnCreate();
+            }
+            protected override void OnUpdate()
+            {
+                var resourceLocations = Addressables.LoadResourceLocationsAsync("Weapon", typeof(WeaponAsset));
+                resourceLocations.WaitForCompletion();
+                for (int i = 0; i < resourceLocations.Result.Count; i++)
+                {
+                    var resourceLocation = resourceLocations.Result[i];
+                    var handle = Addressables.LoadAssetAsync<WeaponAsset>(resourceLocations.Result[i]);
+                    handle.WaitForCompletion();
+                    var r = handle.Result;
+                    if (r != null)
+                    {
+                        using (BlobBuilder blobBuilder = new BlobBuilder(Allocator.Temp))
+                        {
+
+                            // Take note of the "ref" keywords. Unity will throw an error without them, since we're working with structs.
+                            ref WeaponBlobAsset weaponBlobAsset = ref blobBuilder.ConstructRoot<WeaponBlobAsset>();
+                            // Copy data. We'll work with lists/arrays later.
+                            weaponBlobAsset.Value = WeaponConversionSystem.Convert(r);
+                            // Store the created reference to the memory location of the blob asset
+                            BlobAssetReference<WeaponBlobAsset> blobRef = blobBuilder.CreateBlobAssetReference<WeaponBlobAsset>(Allocator.Persistent);
+                            Hash128 hash = new Hash128();
+                            hash.Append(resourceLocation.PrimaryKey);
+                            BlobAssetStore.TryAdd(hash, blobRef);
+                        }
+                        UnityEngine.Debug.Log($"Declare Weapon {r.name} {resourceLocation.PrimaryKey}");
+                    }
+                }
+            }
+
+        } */
     public class WeaponConversionSystem : GameObjectConversionSystem
     {
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+
+        }
+        public BlobAssetReference<WeaponBlobAsset> GetWeapon(WeaponAsset r)
+        {
+
+            Hash128 hash = new Hash128();
+            hash.Append(r.GUID);
+            if (!BlobAssetStore.TryGet(hash, out BlobAssetReference<WeaponBlobAsset> weaponBlobAssetRef))
+            {
+                using (BlobBuilder blobBuilder = new BlobBuilder(Allocator.Temp))
+                {
+
+                    // Take note of the "ref" keywords. Unity will throw an error without them, since we're working with structs.
+                    ref var weaponBlobAsset = ref blobBuilder.ConstructRoot<WeaponBlobAsset>();
+                    // Copy data. We'll work with lists/arrays later.
+                    weaponBlobAsset.Weapon = Convert(r);
+                    // Store the created reference to the memory location of the blob asset
+                    weaponBlobAssetRef = blobBuilder.CreateBlobAssetReference<WeaponBlobAsset>(Allocator.Persistent);
+                    BlobAssetStore.TryAdd(hash, weaponBlobAssetRef);
+                    UnityEngine.Debug.Log($"Declare Weapon {r.name} {r.GUID}");
+                    return weaponBlobAssetRef;
+                }
+            }
+            return weaponBlobAssetRef;
+        }
+        public static Weapon Convert(WeaponAsset weapon)
+        {
+            return new Weapon
+            {
+                AttackDuration = weapon.AttackDuration,
+                Cooldown = weapon.Cooldown,
+                Damage = weapon.Damage,
+                Range = weapon.Range,
+                SocketType = weapon.SocketType,
+                HitEvents = CreateHitEvent(weapon),
+                GUID = weapon.GUID
+            };
+        }
         protected override void OnUpdate()
         {
             Entities.ForEach((WeaponAsset weapon) =>
             {
+
                 var weaponEntity = GetPrimaryEntity(weapon);
                 var weaponPrefab = GetPrimaryEntity(weapon.WeaponPrefab);
-                DstEntityManager.AddComponentData(weaponEntity, new EquippedPrefab { Value = weaponPrefab });
-                DstEntityManager.AddComponentData(weaponEntity, new Weapon
+                var hash = new Hash128();
+                if (!string.IsNullOrEmpty(weapon.GUID))
                 {
-                    AttackDuration = weapon.AttackDuration,
-                    Cooldown = weapon.Cooldown,
-                    Damage = weapon.Damage,
-                    Range = weapon.Range,
-                    SocketType = weapon.SocketType,
-                    HitEvents = CreateHitEvent(weapon)
-                });
+
+                    hash.Append(weapon.GUID);
+                    /*   DstEntityManager.AddSharedComponentData(weaponEntity, new Addressable { Value = hash }); */
+                }
+                DstEntityManager.AddComponentData(weaponEntity, new EquippedPrefab { Value = weaponPrefab });
+                DstEntityManager.AddComponentData(weaponEntity, Convert(weapon));
+                DstEntityManager.AddComponentData(weaponEntity, new Equipable { GUID = weapon.GUID });
                 var projectileEntity = TryGetPrimaryEntity(weapon.Projectile);
                 DstEntityManager.AddComponentData(weaponEntity, new ShootProjectile() { Prefab = projectileEntity });
+                BlobAssetReference<WeaponBlobAsset> weaponBlobAssetRef = GetWeapon(weapon);
+                DstEntityManager.AddComponentData(weaponEntity, new WeaponAssetData() { Weapon = weaponBlobAssetRef });
+                weaponBlobAssetRef.Value.Entity = weaponEntity;
 #if UNITY_EDITOR
                 if (weapon.Animation != null)
                 {
@@ -42,7 +150,7 @@ namespace RPG.Combat
 
             });
         }
-        private FixedList32<float> CreateHitEvent(WeaponAsset weapon)
+        private static FixedList32<float> CreateHitEvent(WeaponAsset weapon)
         {
             var hitEvents = new FixedList32<float>
             {
@@ -102,10 +210,11 @@ namespace RPG.Combat
                 DstEntityManager.AddComponentData(entity, equipableSockets);
                 foreach (var socket in equipableSockets.All())
                 {
-                    DstEntityManager.AddComponentData(socket, new EquipedBy { Entity = entity });
+                    DstEntityManager.AddComponentData(socket, new EquippedBy { Entity = entity });
                 }
-                var weaponEntity = GetPrimaryEntity(fighter.Weapon);
-                var socketEntity = equipableSockets.GetSocketForType(fighter.Weapon.SocketType);
+                var weapon = fighter.Weapon;
+                var weaponEntity = GetPrimaryEntity(weapon);
+                var socketEntity = equipableSockets.GetSocketForType(weapon.SocketType);
                 if (socketEntity != Entity.Null)
                 {
                     DstEntityManager.AddComponentData(weaponEntity, new EquipInSocket { Socket = socketEntity });
@@ -116,7 +225,7 @@ namespace RPG.Combat
                 DstEntityManager.AddComponentData(hitPointEntity, new HitPoint { Entity = entity });
             });
         }
-        //FIXME: Weapon value change be assigned when weapon is equiped
+
 
     }
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
@@ -161,6 +270,30 @@ namespace RPG.Combat
 
     }
 
+    public class WeaponAuthoringConversionSystem : GameObjectConversionSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach((WeaponAuthoring weaponAuthoring) =>
+            {
+                var weaponAuthoringEntity = GetPrimaryEntity(weaponAuthoring);
+
+            });
+        }
+
+    }
+    [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
+    public class WeaponAuthoringDeclareReferencedObjectsConversionSystem : GameObjectConversionSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach((WeaponAuthoring weaponAuthoring) =>
+            {
+                DeclareReferencedAsset(weaponAuthoring.WeaponAsset);
+            });
+        }
+
+    }
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
     public class WeaponPickupDeclareReferencedObjectsConversionSystem : GameObjectConversionSystem
     {

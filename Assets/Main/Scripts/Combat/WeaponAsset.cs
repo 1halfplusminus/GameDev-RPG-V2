@@ -1,13 +1,16 @@
+using System.Collections.Generic;
+using UnityEngine;
 namespace RPG.Combat
 {
-    using System.Collections.Generic;
-    using UnityEngine;
+
 
     [CreateAssetMenu(fileName = "WeaponAsset", menuName = "RPG/Make Weapon", order = 0)]
     public class WeaponAsset : ScriptableObject
     {
+
         public GameObject WeaponPrefab;
 
+        // FIXME: SHOULD BE IN WEAPON AUTHORING
         public AnimationClip Animation;
 
         public GameObject Projectile;
@@ -24,6 +27,8 @@ namespace RPG.Combat
 
         // Should be set with custom editor
         public List<float> HitEvents;
+
+        public string GUID;
 
     }
 

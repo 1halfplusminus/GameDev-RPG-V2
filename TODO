@@ -1,14 +1,15 @@
 Fighter System:
-  ☐ Get Animation Event From Animation Clip Data
+  ✔ Get Animation Event From Animation Clip Data @done(21-12-15 11:37)
   ✔ Remove hit information from fighter and put it on a weapon component because attack animation is depending on weapon @done(21-12-04 22:15)
 Simple Weapon System:@high 
   ✔ Add Weapon Socket In Rig @done(21-12-03 16:08)
   ✔ Character should change attack animation depending of weapon @done(21-12-04 22:16)
   ✔ Unarmed as Weapon @done(21-12-07 17:21)
-  ☐ Trails & Prefabs Variant
-  ☐ Make projectile weapon
-  ☐ Damage on hit should depends of weapon
+  ✔ Trails & Prefabs Variant @done(21-12-15 11:37)
+  ✔ Make projectile weapon @done(21-12-15 11:37)
+  ✔ Damage on hit should depends of weapon @done(21-12-15 11:38)
   ✔ Character should be able to pick weapon on floor @done(21-12-07 17:21)
+  ☐ Save Weapon
   ☐ Weapon should play vfx on hit / attack
   
 Fight System:

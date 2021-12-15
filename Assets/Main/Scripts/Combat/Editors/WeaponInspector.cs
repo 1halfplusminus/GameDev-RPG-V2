@@ -3,13 +3,17 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-
+using UnityEngine.AddressableAssets;
+using UnityEditor.AddressableAssets;
+using UnityEditor.AddressableAssets.Settings;
+using static RPG.Core.AddressableExtensions;
 namespace RPG.Combat
 {
 #if UNITY_EDITOR
     [CustomEditor(typeof(WeaponAsset))]
     public class WeaponInspector : Editor
     {
+        public const string GROUP = "Weapons";
         public VisualTreeAsset m_InspectorXML;
         public override VisualElement CreateInspectorGUI()
         {
@@ -18,8 +22,14 @@ namespace RPG.Combat
             var myInspector = new VisualElement();
             if (m_InspectorXML != null)
             {
+                var settings = AddressableAssetSettingsDefaultObject.Settings;
+                var entry = serializedObject.targetObject.SetAddressableGroup(GROUP);
+                serializedObject.FindProperty(nameof(WeaponAsset.GUID)).stringValue = entry.address;
+                serializedObject.ApplyModifiedProperties();
                 // Load from default reference
                 m_InspectorXML.CloneTree(myInspector);
+                var guid = myInspector.Q<PropertyField>("GUID");
+                guid.SetEnabled(false);
                 myInspector.Q<PropertyField>("HitEvents").SetEnabled(false);
                 myInspector.Q<PropertyField>("AttackDuration").SetEnabled(false);
                 var animationSelector = myInspector.Q<PropertyField>("Animation");

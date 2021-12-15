@@ -105,7 +105,7 @@ namespace RPG.Saving
             Entities
             .WithStoreEntityQueryInField(ref sceneLoadedQuery)
             .WithChangeFilter<SceneLoaded>()
-            .ForEach((SceneLoaded sceneLoaded) =>
+            .ForEach((in SceneLoaded sceneLoaded) =>
             {
                 lastSceneBuildBuffer.Add(new LastScene { SceneGUID = sceneLoaded.SceneGUID });
             }).Schedule();

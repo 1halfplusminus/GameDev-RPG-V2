@@ -14,12 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WeaponPrefab: {fileID: 0}
   Animation: {fileID: 7549088838577149333, guid: cf01705cf812ba709a666a496a48cb6c, type: 3}
+  Projectile: {fileID: 0}
   Damage: 1.66
   Range: 0.5
   Cooldown: 0.8
   AttackDuration: 2.4666667
+  SocketType: 0
   HitEvents:
   - 0.64069265
   - 0.8903193
   - 1.203734
   - 1.3855448
+  GUID: Assets/Main/Game/Characters/Placeholder Enemy/Unarmed.asset

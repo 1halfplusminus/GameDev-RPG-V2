@@ -81,7 +81,7 @@ namespace RPG.Saving
             {
 
                 var identifier = new Identifier { Id = hash };
-                DstEntityManager.AddComponentData<Identifier>(entity, identifier);
+                DstEntityManager.AddComponentData(entity, identifier);
             }
         }
     }

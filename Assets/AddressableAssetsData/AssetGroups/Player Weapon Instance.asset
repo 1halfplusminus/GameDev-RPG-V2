@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Player Weapon Instance
+  m_EditorClassIdentifier: 
+  m_GroupName: Player Weapon Instance
+  m_Data:
+    m_SerializedData: []
+  m_GUID: f11819057e7bbc74db9eac894c344762
+  m_SerializeEntries:
+  - m_GUID: 119bdfc092696fa73bdf07c7f35a73c1
+    m_Address: Hero/Sword
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Weapon Instance
+  - m_GUID: 145b5a93f1e6151b1afb0129083e7ea7
+    m_Address: Hero/Fireball
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Weapon Instance
+  - m_GUID: 86645b7615d58430ba7f1d48e295c68b
+    m_Address: Hero/Bow
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Weapon Instance
+  - m_GUID: 91a2bca7b1cf09a5983fa4fa884ac72e
+    m_Address: Hero/Unarmed
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Weapon Instance
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 789d5733da6e0ca849db077a8751b187, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: dccab5ec3737830c394d49d991d94fe9, type: 2}
+    - {fileID: 11400000, guid: 06846e5d22ff82859903f3e5ef6c72a5, type: 2}

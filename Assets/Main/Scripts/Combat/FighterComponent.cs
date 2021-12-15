@@ -95,19 +95,24 @@ namespace RPG.Combat
         public Entity Entity;
     }
 
-    public struct Equipped : IComponentData
+    public struct FighterEquipped : IComponentData
+    {
+
+        public BlobAssetReference<WeaponBlobAsset> Weapon;
+    }
+    public struct EquippedBy : IComponentData
     {
         public Entity Entity;
     }
-    public struct EquipedBy : IComponentData
+    public struct Equipped : IComponentData
     {
-        public Entity Entity;
+        public BlobAssetReference<WeaponBlobAsset> Equipable;
     }
     public struct SpawnWeapon : IComponentData
     {
         public BlobAssetReference<Clip> Animation;
         public Entity Prefab;
-        public Entity Weapon;
+        public BlobAssetReference<WeaponBlobAsset> Weapon;
         public Entity Projectile;
     }
     public struct EquippedPrefab : IComponentData
@@ -135,6 +140,7 @@ namespace RPG.Combat
         public float Range;
         public float Cooldown;
         public float AttackDuration;
+        public FixedString64 GUID;
         public FixedList32<float> HitEvents;
 
         public SocketType SocketType;
