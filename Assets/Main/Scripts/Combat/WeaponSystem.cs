@@ -108,7 +108,7 @@ namespace RPG.Combat
             .WithChangeFilter<EquipInSocket>()
             .ForEach((int entityInQueryIndex, Entity e, in WeaponAssetData weaponAssetData, in EquipInSocket equipWeapon, in EquippedPrefab prefab, in ChangeAttackAnimation changeAttackAnimation, in ShootProjectile shootProjectile) =>
             {
-                Debug.Log($"Equip {e.Index} in socket : ${equipWeapon.Socket.Index}");
+                Debug.Log($"Equip {weaponAssetData.Weapon.Value.Weapon.GUID} in socket : ${equipWeapon.Socket.Index}");
                 cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new SpawnWeapon { Prefab = prefab.Value, Animation = changeAttackAnimation.Animation, Weapon = weaponAssetData.Weapon, Projectile = shootProjectile.Prefab });
                 cbp.RemoveComponent<EquipInSocket>(entityInQueryIndex, e);
                 cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new Equipped { Equipable = weaponAssetData.Weapon });
@@ -196,6 +196,7 @@ namespace RPG.Combat
                 for (int i = 0; i < listSockets.Length; i++)
                 {
                     // Remove currently equiped weapon
+                    cbp.RemoveComponent<Equipped>(entityInQueryIndex, listSockets[i]);
                     cbp.AddComponent<DestroySpawn>(entityInQueryIndex, listSockets[i]);
                 }
                 var socket = sockets.GetSocketForType(picked.SocketType);

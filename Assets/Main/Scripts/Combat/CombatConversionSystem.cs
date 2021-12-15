@@ -213,16 +213,20 @@ namespace RPG.Combat
                     DstEntityManager.AddComponentData(socket, new EquippedBy { Entity = entity });
                 }
                 var weapon = fighter.Weapon;
-                var weaponEntity = GetPrimaryEntity(weapon);
-                var socketEntity = equipableSockets.GetSocketForType(weapon.SocketType);
-                if (socketEntity != Entity.Null)
+                if (weapon != null)
                 {
-                    DstEntityManager.AddComponentData(weaponEntity, new EquipInSocket { Socket = socketEntity });
+                    var weaponEntity = GetPrimaryEntity(weapon);
+                    var socketEntity = equipableSockets.GetSocketForType(weapon.SocketType);
+                    if (socketEntity != Entity.Null)
+                    {
+                        DstEntityManager.AddComponentData(weaponEntity, new EquipInSocket { Socket = socketEntity });
+                    }
+                    //FIXME: Make a system that calcule hit point from physics collider if no hit point
+                    var hitPointEntity = TryGetPrimaryEntity(fighter.HitPoint);
+                    hitPointEntity = hitPointEntity == Entity.Null ? entity : hitPointEntity;
+                    DstEntityManager.AddComponentData(hitPointEntity, new HitPoint { Entity = entity });
                 }
-                //FIXME: Make a system that calcule hit point from physics collider if no hit point
-                var hitPointEntity = TryGetPrimaryEntity(fighter.HitPoint);
-                hitPointEntity = hitPointEntity == Entity.Null ? entity : hitPointEntity;
-                DstEntityManager.AddComponentData(hitPointEntity, new HitPoint { Entity = entity });
+
             });
         }
 
