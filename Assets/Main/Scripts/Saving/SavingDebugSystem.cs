@@ -35,14 +35,6 @@ namespace RPG.Saving
             RequireForUpdate(requestForUpdateQuery);
 
         }
-        protected override void OnStartRunning()
-        {
-            base.OnStartRunning();
-            if (!saveSystem.LoadLastScene(savePath))
-            {
-                NewGame();
-            }
-        }
 
         protected void NewGame()
         {
@@ -59,6 +51,7 @@ namespace RPG.Saving
             {
                 if (keyboard.altKey.isPressed && keyboard.nKey.wasPressedThisFrame)
                 {
+                    NewGame();
                     // NewGame();
                 }
                 if (keyboard.altKey.isPressed && keyboard.sKey.wasPressedThisFrame)

@@ -112,16 +112,19 @@ namespace RPG.Saving
 
             Entities.ForEach((in TriggeredSceneLoaded sceneLoaded) =>
             {
+                //FIXME: Shouldn't know the default file path
                 Load(SaveSystem.GetPathFromSaveFile("test.save"));
 
             }).WithStructuralChanges().WithoutBurst().Run();
             Entities.ForEach((Entity e, in SceneSaveCheckpoint sceneLoaded) =>
            {
+               //FIXME: Shouldn't know the default file path
                Save(SaveSystem.GetPathFromSaveFile("test.save"));
                EntityManager.RemoveComponent<SceneSaveCheckpoint>(e);
            }).WithStructuralChanges().WithoutBurst().Run();
             Entities.ForEach((in TriggerUnloadScene sceneUnLoad) =>
             {
+                //FIXME: Shouldn't know the default file path
                 Save(SaveSystem.GetPathFromSaveFile("test.save"));
             }).WithStructuralChanges().WithoutBurst().Run();
 
