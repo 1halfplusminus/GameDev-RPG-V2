@@ -22,3 +22,4 @@ MonoBehaviour:
   SocketType: 1
   HitEvents: []
   GUID: Assets/Main/Game/Characters/Knight/Unarmed.asset
+  Clip: {fileID: 11400000, guid: b6bba5d5aa4d37d30942a16c075253ab, type: 2}

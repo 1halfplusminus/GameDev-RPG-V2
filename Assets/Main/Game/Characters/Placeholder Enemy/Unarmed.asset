@@ -26,3 +26,4 @@ MonoBehaviour:
   - 1.203734
   - 1.3855448
   GUID: Assets/Main/Game/Characters/Placeholder Enemy/Unarmed.asset
+  Clip: {fileID: 11400000, guid: aa16bd9561d4bb65bbc43badb3de0243, type: 2}

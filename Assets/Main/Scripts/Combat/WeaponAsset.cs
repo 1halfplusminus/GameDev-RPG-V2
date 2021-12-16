@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using RPG.Animation;
 using UnityEngine;
 namespace RPG.Combat
 {
@@ -29,6 +30,8 @@ namespace RPG.Combat
         public List<float> HitEvents;
 
         public string GUID;
+
+        public ClipAsset Clip;
 
     }
 

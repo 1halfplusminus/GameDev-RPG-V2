@@ -4,18 +4,13 @@ using RPG.Core;
 using RPG.Animation;
 using Unity.Collections;
 using System;
+using Unity.Animation;
+using Unity.Animation.Hybrid;
 
 namespace RPG.Combat
 {
-    using Unity.Animation;
 
 
-#if UNITY_EDITOR
-    using Unity.Animation.Hybrid;
-    using UnityEngine;
-    using UnityEngine.AddressableAssets;
-
-#endif
     public struct Equipable : IComponentData
     {
         public FixedString64 GUID;
@@ -85,7 +80,7 @@ namespace RPG.Combat
         public BlobAssetReference<WeaponBlobAsset> GetWeapon(WeaponAsset r)
         {
 
-            Hash128 hash = new Hash128();
+            UnityEngine.Hash128 hash = new Hash128();
             hash.Append(r.GUID);
             if (!BlobAssetStore.TryGet(hash, out BlobAssetReference<WeaponBlobAsset> weaponBlobAssetRef))
             {
@@ -94,7 +89,6 @@ namespace RPG.Combat
 
                     // Take note of the "ref" keywords. Unity will throw an error without them, since we're working with structs.
                     ref var weaponBlobAsset = ref blobBuilder.ConstructRoot<WeaponBlobAsset>();
-                    // Copy data. We'll work with lists/arrays later.
                     weaponBlobAsset.Weapon = Convert(r);
                     // Store the created reference to the memory location of the blob asset
                     weaponBlobAssetRef = blobBuilder.CreateBlobAssetReference<WeaponBlobAsset>(Allocator.Persistent);
@@ -125,12 +119,10 @@ namespace RPG.Combat
 
                 var weaponEntity = GetPrimaryEntity(weapon);
                 var weaponPrefab = GetPrimaryEntity(weapon.WeaponPrefab);
-                var hash = new Hash128();
+                var hash = new UnityEngine.Hash128();
                 if (!string.IsNullOrEmpty(weapon.GUID))
                 {
-
                     hash.Append(weapon.GUID);
-                    /*   DstEntityManager.AddSharedComponentData(weaponEntity, new Addressable { Value = hash }); */
                 }
                 DstEntityManager.AddComponentData(weaponEntity, new EquippedPrefab { Value = weaponPrefab });
                 DstEntityManager.AddComponentData(weaponEntity, Convert(weapon));
@@ -140,14 +132,12 @@ namespace RPG.Combat
                 BlobAssetReference<WeaponBlobAsset> weaponBlobAssetRef = GetWeapon(weapon);
                 DstEntityManager.AddComponentData(weaponEntity, new WeaponAssetData() { Weapon = weaponBlobAssetRef });
                 weaponBlobAssetRef.Value.Entity = weaponEntity;
-#if UNITY_EDITOR
                 if (weapon.Animation != null)
                 {
-                    var blobAsset = BlobAssetStore.GetClip(weapon.Animation);
-                    DstEntityManager.AddComponentData(weaponEntity, new ChangeAttackAnimation { Animation = blobAsset });
+                    var clip = weapon.Clip.GetClip();
+                    BlobAssetStore.TryAdd(hash, clip);
+                    DstEntityManager.AddComponentData(weaponEntity, new ChangeAttackAnimation { Animation = clip });
                 }
-#endif
-
             });
         }
         private static FixedList32<float> CreateHitEvent(WeaponAsset weapon)
@@ -191,7 +181,7 @@ namespace RPG.Combat
             Entities.ForEach((FighterAuthoring fighter) =>
             {
                 var entity = GetPrimaryEntity(fighter);
-                /*    CreateHitEvent(fighter, entity); */
+
                 DstEntityManager.AddComponent<HittedByRaycast>(entity);
 
                 //FIXME: Weapon value change be assigned when weapon is equiped

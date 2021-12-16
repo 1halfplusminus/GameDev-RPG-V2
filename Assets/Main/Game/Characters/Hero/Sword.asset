@@ -23,3 +23,4 @@ MonoBehaviour:
   HitEvents:
   - 0.6363636
   GUID: Sword
+  Clip: {fileID: 11400000, guid: 9ad51fb2a095629b7a2b61e2eb3aa97a, type: 2}

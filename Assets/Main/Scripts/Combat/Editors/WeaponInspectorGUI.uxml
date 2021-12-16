@@ -9,4 +9,5 @@
     <uie:PropertyField name="Range" binding-path="Range" />
     <uie:PropertyField name="AttackDuration" binding-path="AttackDuration" readonly="false" />
     <uie:PropertyField name="HitEvents" binding-path="HitEvents" />
+    <uie:PropertyField name="Clip" binding-path="Clip" />
 </ui:UXML>

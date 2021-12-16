@@ -298,9 +298,13 @@ namespace RPG.Core
                     commandBufferP.RemoveComponent<Spawned>(entityInQueryIndex, e);
                 }
             ).ScheduleParallel();
-            Entities.WithAny<DestroySpawn>().ForEach((int entityInQueryIndex, Entity e, in HasSpawn spawn) =>
+            Entities.WithAny<DestroySpawn>().ForEach((int entityInQueryIndex, Entity e, ref HasSpawn spawn) =>
                 {
-                    commandBufferP.DestroyEntity(entityInQueryIndex, spawn.Entity);
+                    if (spawn.Entity != Entity.Null)
+                    {
+                        commandBufferP.DestroyEntity(entityInQueryIndex, spawn.Entity);
+                        spawn.Entity = Entity.Null;
+                    }
                 }
             ).ScheduleParallel();
             Entities.WithAny<DestroySpawn>().ForEach((int entityInQueryIndex, Entity e) =>

@@ -23,3 +23,4 @@ MonoBehaviour:
   HitEvents:
   - 0.9274796
   GUID: Bow
+  Clip: {fileID: 11400000, guid: 8b4837eb53aed3e799fa441bece9cd5b, type: 2}

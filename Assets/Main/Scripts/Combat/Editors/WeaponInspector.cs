@@ -1,25 +1,31 @@
-using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using UnityEngine.AddressableAssets;
 using UnityEditor.AddressableAssets;
-using UnityEditor.AddressableAssets.Settings;
 using static RPG.Core.AddressableExtensions;
+using Unity.Entities;
+using Unity.Animation.Hybrid;
+using Unity.Animation;
+using RPG.Animation;
+using Unity.Entities.Serialization;
+
 namespace RPG.Combat
 {
-#if UNITY_EDITOR
     [CustomEditor(typeof(WeaponAsset))]
     public class WeaponInspector : Editor
     {
         public const string GROUP = "Weapons";
         public VisualTreeAsset m_InspectorXML;
+
+
         public override VisualElement CreateInspectorGUI()
         {
 
             // Create a new VisualElement to be the root of our inspector UI
             var myInspector = new VisualElement();
+
             if (m_InspectorXML != null)
             {
                 var settings = AddressableAssetSettingsDefaultObject.Settings;
@@ -36,19 +42,36 @@ namespace RPG.Combat
                 var updateHitEvents = myInspector.Q<Button>("UpdateEvent");
                 animationSelector.RegisterValueChangeCallback(OnAnimationChange);
                 updateHitEvents.clicked += UpdateAnimationData;
+
+                ConvertClip();
                 // Return the finished inspector UI
             }
 
             return myInspector;
         }
+        private void ConvertClip()
+        {
+            var animationClip = GetAnimationClip();
+            var clipProperty = GetClipProperty();
+            var clipAsset = CreateInstance<Animation.ClipAsset>();
+            clipAsset.SetClip(animationClip);
+            AssetDatabase.CreateAsset(clipAsset, $"Assets/Clip/{animationClip.GetInstanceID()}.clip");
+            clipProperty.objectReferenceValue = clipAsset;
+            clipProperty.serializedObject.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedPropertiesWithoutUndo();
+
+        }
+
         private void OnAnimationChange(SerializedPropertyChangeEvent evt)
         {
 
             UpdateAnimationData();
+            ConvertClip();
         }
 
         private void UpdateAnimationData()
         {
+
             var animationProperty = serializedObject.FindProperty(nameof(WeaponAsset.Animation));
             if (animationProperty.objectReferenceValue is AnimationClip clip)
             {
@@ -65,8 +88,26 @@ namespace RPG.Combat
             }
 
         }
-    }
-#endif
 
+        private AnimationClip GetAnimationClip()
+        {
+            SerializedProperty animationProperty = GetAnimationClipProperty();
+            if (animationProperty.objectReferenceValue is AnimationClip clip)
+            {
+                return clip;
+            }
+            return null;
+        }
+
+        private SerializedProperty GetAnimationClipProperty()
+        {
+            return serializedObject.FindProperty(nameof(WeaponAsset.Animation));
+        }
+        private SerializedProperty GetClipProperty()
+        {
+            return serializedObject.FindProperty(nameof(WeaponAsset.Clip));
+        }
+    }
 
 }
+#endif

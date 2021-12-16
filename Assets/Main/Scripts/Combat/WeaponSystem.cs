@@ -204,6 +204,7 @@ namespace RPG.Combat
                 // FIXME: Weapon can only be equipped by one entity per frame EquipInSocket should be removed
                 cbp.AddComponent(entityInQueryIndex, picked.Equipable, new EquipInSocket { Socket = socket });
                 cbp.RemoveComponent<Equip>(entityInQueryIndex, e);
+                cbp.RemoveComponent<ShootProjectile>(entityInQueryIndex, e);
             }).ScheduleParallel();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
