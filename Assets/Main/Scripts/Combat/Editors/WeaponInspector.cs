@@ -5,11 +5,8 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.AddressableAssets;
 using static RPG.Core.AddressableExtensions;
-using Unity.Entities;
-using Unity.Animation.Hybrid;
-using Unity.Animation;
 using RPG.Animation;
-using Unity.Entities.Serialization;
+
 
 namespace RPG.Combat
 {
@@ -53,7 +50,7 @@ namespace RPG.Combat
         {
             var animationClip = GetAnimationClip();
             var clipProperty = GetClipProperty();
-            var clipAsset = CreateInstance<Animation.ClipAsset>();
+            var clipAsset = CreateInstance<ClipAsset>();
             clipAsset.SetClip(animationClip);
             AssetDatabase.CreateAsset(clipAsset, $"Assets/Clip/{animationClip.GetInstanceID()}.clip");
             clipProperty.objectReferenceValue = clipAsset;

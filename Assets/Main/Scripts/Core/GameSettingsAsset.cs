@@ -9,6 +9,8 @@ namespace RPG.Core
     {
         [SerializeField]
         public SceneAsset NewGameScene;
+        [SerializeField]
+        public SceneAsset PlayerScene;
     }
 
 

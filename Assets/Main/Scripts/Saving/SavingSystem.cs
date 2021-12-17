@@ -16,6 +16,7 @@ namespace RPG.Saving
         public abstract void Load(string saveFile);
 
         public abstract bool LoadLastScene(string saveFile);
+        public abstract bool LoadLastScene(Entity trigger, string saveFile);
     }
     public struct IsLoadingSave : IComponentData
     {
@@ -314,6 +315,11 @@ namespace RPG.Saving
         }
 
         public override bool LoadLastScene(string saveFile)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override bool LoadLastScene(Entity trigger, string saveFile)
         {
             throw new System.NotImplementedException();
         }

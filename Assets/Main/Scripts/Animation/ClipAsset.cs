@@ -51,7 +51,7 @@ namespace RPG.Animation
 
         public BlobAssetReference<Clip> GetClip()
         {
-            DisposeWorld();
+
             RebuildNativeData(Data);
             var clipRef = BuildClip(NativeData, out world);
             return clipRef;

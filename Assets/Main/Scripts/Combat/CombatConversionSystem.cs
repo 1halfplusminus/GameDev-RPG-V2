@@ -93,7 +93,8 @@ namespace RPG.Combat
                     // Store the created reference to the memory location of the blob asset
                     weaponBlobAssetRef = blobBuilder.CreateBlobAssetReference<WeaponBlobAsset>(Allocator.Persistent);
                     BlobAssetStore.TryAdd(hash, weaponBlobAssetRef);
-                    UnityEngine.Debug.Log($"Declare Weapon {r.name} {r.GUID}");
+                    //FIXME: REMOVE
+                    /*            UnityEngine.Debug.Log($"Declare Weapon {r.name} {r.GUID}"); */
                     return weaponBlobAssetRef;
                 }
             }
@@ -132,9 +133,10 @@ namespace RPG.Combat
                 BlobAssetReference<WeaponBlobAsset> weaponBlobAssetRef = GetWeapon(weapon);
                 DstEntityManager.AddComponentData(weaponEntity, new WeaponAssetData() { Weapon = weaponBlobAssetRef });
                 weaponBlobAssetRef.Value.Entity = weaponEntity;
-                if (weapon.Animation != null)
+                var clip = weapon.Clip.GetClip();
+                if (clip.IsCreated)
                 {
-                    var clip = weapon.Clip.GetClip();
+
                     BlobAssetStore.TryAdd(hash, clip);
                     DstEntityManager.AddComponentData(weaponEntity, new ChangeAttackAnimation { Animation = clip });
                 }

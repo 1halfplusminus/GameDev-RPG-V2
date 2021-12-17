@@ -44,6 +44,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: de1c079317e3b6badb644371608e0a42, type: 2}
   - {fileID: 11400000, guid: 2e1957b2db3ec479aa977d60856c7c87, type: 2}
   - {fileID: 11400000, guid: 4ab028cd5260dd6ccb184976d6ab5a23, type: 2}
+  - {fileID: 11400000, guid: 584637ba2ecae237490fd7be0470e2cc, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -87,6 +88,7 @@ MonoBehaviour:
     - default
     - Weapon
     - Weapon Instance
+    - GameUI
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 068d72f1a64c8f4bbabbf8b00b2ca1cd, type: 2}

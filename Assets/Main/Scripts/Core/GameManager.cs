@@ -51,9 +51,15 @@ namespace RPG.Core
                 Debug.Log($"find game setting");
                 DstEntityManager.AddComponentData(entity, new GameSettings
                 {
-                    NewGameScene = new GUID(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(setting.NewGameScene)))
+                    NewGameScene = GetSceneGUID(setting.NewGameScene),
+                    PlayerScene = GetSceneGUID(setting.PlayerScene),
                 });
             });
+        }
+
+        private static GUID GetSceneGUID(SceneAsset scene)
+        {
+            return new GUID(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(scene)));
         }
     }
 
@@ -61,5 +67,7 @@ namespace RPG.Core
     public struct GameSettings : IComponentData
     {
         public Unity.Entities.Hash128 NewGameScene;
+
+        public Unity.Entities.Hash128 PlayerScene;
     }
 }

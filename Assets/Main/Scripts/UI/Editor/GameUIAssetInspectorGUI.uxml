@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <uie:PropertyField binding-path="VisualTreeAsset" name="VisualTreeAsset" />
+    <uie:PropertyField binding-path="GameUIType" name="GameUIType" />
+</ui:UXML>

@@ -72,27 +72,21 @@ namespace RPG.Gameplay
     public class PlayableDirectorConversionSystem : GameObjectConversionSystem
     {
         HashSet<PlayableAsset> dones;
+        EntityQuery query;
         protected override void OnCreate()
         {
             base.OnCreate();
             dones = new HashSet<PlayableAsset>();
+            query = EntityManager.CreateEntityQuery(typeof(CinemachineBrain));
         }
         protected override void OnUpdate()
         {
             dones.Clear();
             CinemachineBrain brain = null;
-            for (int i = 0; i < World.All.Count; i++)
+            if (query.CalculateEntityCount() > 0)
             {
-                var world = World.All[i];
-                var em = world.EntityManager;
-                var query = em.CreateEntityQuery(typeof(CinemachineBrain));
-                if (query.CalculateEntityCount() == 1)
-                {
-                    Entity brainEntity = query.GetSingletonEntity();
-                    brain = em.GetComponentObject<CinemachineBrain>(brainEntity);
-                    // Debug.Log($"Brain found");
-                    break;
-                }
+                Entity brainEntity = query.GetSingletonEntity();
+                brain = EntityManager.GetComponentObject<CinemachineBrain>(brainEntity);
             }
 
             Entities.ForEach((PlayableDirector playableDirector) =>

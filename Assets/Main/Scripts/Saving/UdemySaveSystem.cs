@@ -38,18 +38,21 @@ namespace RPG.Saving
                 if (lastScenes.Length >= 1)
                 {
                     Debug.Log($"Unserializing LastScene {lastScene.SceneGUID}");
-                    em.AddComponentData(e, new TriggerSceneLoad { SceneGUID = lastScene.SceneGUID });
+                    var hasTrigger = em.HasComponent<LoadSceneTrigger>(e);
+                    var trigger = hasTrigger ? em.GetComponentData<LoadSceneTrigger>(e).Entity : e;
+                    em.AddComponentData(trigger, new TriggerSceneLoad { SceneGUID = lastScene.SceneGUID });
                 }
 
             }
 
         }
     }
-
-    public struct SceneSaveCheckpoint : IComponentData
+    public struct LoadSceneTrigger : IComponentData
     {
-
+        public Entity Entity;
     }
+    public struct DontLoadSave : IComponentData { }
+    public struct SceneSaveCheckpoint : IComponentData { }
     [Serializable]
     public struct LastScene : IBufferElementData
     {
@@ -110,7 +113,9 @@ namespace RPG.Saving
                 lastSceneBuildBuffer.Add(new LastScene { SceneGUID = sceneLoaded.SceneGUID });
             }).Schedule();
 
-            Entities.ForEach((in TriggeredSceneLoaded sceneLoaded) =>
+            Entities
+            .WithNone<DontLoadSave>()
+            .ForEach((in TriggeredSceneLoaded sceneLoaded) =>
             {
                 //FIXME: Shouldn't know the default file path
                 Load(SaveSystem.GetPathFromSaveFile("test.save"));
@@ -142,6 +147,13 @@ namespace RPG.Saving
                 return true;
             }
             return false;
+        }
+
+        public override bool LoadLastScene(Entity trigger, string saveFile)
+        {
+            var lastSceneEntity = lastSceneBuildQuery.GetSingletonEntity();
+            EntityManager.AddComponentData(lastSceneEntity, new LoadSceneTrigger { Entity = trigger });
+            return LoadLastScene(saveFile);
         }
         public override void Load(string savePath)
         {

@@ -2,7 +2,9 @@ using Unity.Entities;
 
 namespace RPG.UI
 {
+
+
     [GenerateAuthoringComponent]
-    public class LoadingUI : IComponentData { }
+    public struct LoadingUI : IComponentData { }
 
 }

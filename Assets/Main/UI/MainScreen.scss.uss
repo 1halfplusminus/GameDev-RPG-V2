@@ -1,0 +1,23 @@
+Button {
+    margin-top: 0;
+    flex-grow: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+.Button {
+    flex-grow: 1;
+}
+
+.Row {
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
