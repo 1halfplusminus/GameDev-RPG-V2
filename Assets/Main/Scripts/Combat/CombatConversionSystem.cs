@@ -120,11 +120,6 @@ namespace RPG.Combat
 
                 var weaponEntity = GetPrimaryEntity(weapon);
                 var weaponPrefab = GetPrimaryEntity(weapon.WeaponPrefab);
-                var hash = new UnityEngine.Hash128();
-                if (!string.IsNullOrEmpty(weapon.GUID))
-                {
-                    hash.Append(weapon.GUID);
-                }
                 DstEntityManager.AddComponentData(weaponEntity, new EquippedPrefab { Value = weaponPrefab });
                 DstEntityManager.AddComponentData(weaponEntity, Convert(weapon));
                 DstEntityManager.AddComponentData(weaponEntity, new Equipable { GUID = weapon.GUID });
@@ -133,13 +128,23 @@ namespace RPG.Combat
                 BlobAssetReference<WeaponBlobAsset> weaponBlobAssetRef = GetWeapon(weapon);
                 DstEntityManager.AddComponentData(weaponEntity, new WeaponAssetData() { Weapon = weaponBlobAssetRef });
                 weaponBlobAssetRef.Value.Entity = weaponEntity;
-                var clip = weapon.Clip.GetClip();
-                if (clip.IsCreated)
+                var hash = new UnityEngine.Hash128();
+                if (!string.IsNullOrEmpty(weapon.GUID))
+                {
+                    hash.Append(weapon.GUID);
+                }
+                hash.Append(weapon.Animation.name);
+                if (!BlobAssetStore.TryGet(hash, out BlobAssetReference<Clip> blobAssetReferenceClip))
                 {
 
-                    BlobAssetStore.TryAdd(hash, clip);
-                    DstEntityManager.AddComponentData(weaponEntity, new ChangeAttackAnimation { Animation = clip });
+                    blobAssetReferenceClip = weapon.Clip.GetClip();
                 }
+                if (blobAssetReferenceClip.IsCreated)
+                {
+
+                    DstEntityManager.AddComponentData(weaponEntity, new ChangeAttackAnimation { Animation = blobAssetReferenceClip });
+                }
+
             });
         }
         private static FixedList32<float> CreateHitEvent(WeaponAsset weapon)

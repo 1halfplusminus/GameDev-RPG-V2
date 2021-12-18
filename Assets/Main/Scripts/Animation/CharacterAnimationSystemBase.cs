@@ -149,22 +149,24 @@ namespace RPG.Animation
         protected override void DestroyGraph(Entity e, ProcessDefaultAnimationGraph graphSystem, ref CharacterAnimationData data)
         {
             var set = graphSystem.Set;
-            set.Destroy(data.DeltaTimeNode);
-            set.Destroy(data.EntityNode);
+            if (set.IsCreated)
+            {
+                set.Destroy(data.DeltaTimeNode);
+                set.Destroy(data.EntityNode);
 
-            set.Destroy(data.IdleClipPlayerNode);
-            set.Destroy(data.WalkClipPlayerNode);
-            set.Destroy(data.RunClipPlayerNode);
-            set.Destroy(data.AttackClipPlayerNode);
-            set.Destroy(data.DeadClipPlayerNode);
+                set.Destroy(data.IdleClipPlayerNode);
+                set.Destroy(data.WalkClipPlayerNode);
+                set.Destroy(data.RunClipPlayerNode);
+                set.Destroy(data.AttackClipPlayerNode);
+                set.Destroy(data.DeadClipPlayerNode);
 
-            set.Destroy(data.MoveMixerNode);
-            set.Destroy(data.RunMixerNode);
-            set.Destroy(data.AttackMixerNode);
-            set.Destroy(data.DeadMixerNode);
+                set.Destroy(data.MoveMixerNode);
+                set.Destroy(data.RunMixerNode);
+                set.Destroy(data.AttackMixerNode);
+                set.Destroy(data.DeadMixerNode);
 
-            set.Destroy(data.ExtractCharacterAnimationParametersNode);
-
+                set.Destroy(data.ExtractCharacterAnimationParametersNode);
+            }
 
         }
     }
@@ -207,16 +209,27 @@ namespace RPG.Animation
     [UpdateAfter(typeof(CharacterAnimationSystemBase))]
     public class ChangeAttackAnimationSystem : SystemBase
     {
+        private ProcessDefaultAnimationGraph animationSystem;
+        private EntityCommandBufferSystem entityCommandBufferSystem;
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            animationSystem = World.GetOrCreateSystem<ProcessDefaultAnimationGraph>();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        }
         protected override void OnUpdate()
         {
-            var animationSystem = World.GetOrCreateSystem<ProcessDefaultAnimationGraph>();
             var set = animationSystem.Set;
-            Entities.WithChangeFilter<ChangeAttackAnimation>().ForEach((ref ChangeAttackAnimation attackAnimation, ref CharacterAnimationData characterAnimation) =>
+            var cb = entityCommandBufferSystem.CreateCommandBuffer();
+            Entities.WithChangeFilter<ChangeAttackAnimation>().ForEach((Entity e, in ChangeAttackAnimation attackAnimation, in CharacterAnimationData characterAnimation) =>
             {
 
                 Debug.Log($"Change attack animation");
                 set.SendMessage(characterAnimation.AttackClipPlayerNode, ClipPlayerNode.SimulationPorts.Clip, attackAnimation.Animation);
+                cb.RemoveComponent<ChangeAttackAnimation>(e);
             }).WithoutBurst().Run();
+
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
 }

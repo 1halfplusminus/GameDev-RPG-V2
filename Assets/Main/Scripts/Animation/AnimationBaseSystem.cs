@@ -57,8 +57,8 @@ namespace RPG.Animation
 
             cmdBuffer.Playback(EntityManager);
             cmdBuffer.Dispose();
-
-            animationSystem.RemoveRef();
+            /*          
+                     animationSystem.RemoveRef(); */
 
             base.OnDestroy();
         }

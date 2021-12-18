@@ -103,9 +103,16 @@ namespace RPG.Combat
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
+            Entities.WithAny<RemoveEquipedInSocket>().ForEach((int entityInQueryIndex, Entity e) =>
+            {
+                cbp.RemoveComponent<Equipped>(entityInQueryIndex, e);
+                cbp.AddComponent<DestroySpawn>(entityInQueryIndex, e);
+                cbp.RemoveComponent<RemoveEquipedInSocket>(entityInQueryIndex, e);
+            }).ScheduleParallel();
+
             Entities
+            .WithNone<Equipped>()
             .WithStoreEntityQueryInField(ref equipPrefabInSocketQuery)
-            .WithChangeFilter<EquipInSocket>()
             .ForEach((int entityInQueryIndex, Entity e, in WeaponAssetData weaponAssetData, in EquipInSocket equipWeapon, in EquippedPrefab prefab, in ChangeAttackAnimation changeAttackAnimation, in ShootProjectile shootProjectile) =>
             {
                 Debug.Log($"Equip {weaponAssetData.Weapon.Value.Weapon.GUID} in socket : ${equipWeapon.Socket.Index}");
@@ -195,6 +202,7 @@ namespace RPG.Combat
                 var listSockets = sockets.ToList();
                 for (int i = 0; i < listSockets.Length; i++)
                 {
+                    Debug.Log($"Remove weapons {listSockets[i].Index}");
                     // Remove currently equiped weapon
                     cbp.RemoveComponent<Equipped>(entityInQueryIndex, listSockets[i]);
                     cbp.AddComponent<DestroySpawn>(entityInQueryIndex, listSockets[i]);

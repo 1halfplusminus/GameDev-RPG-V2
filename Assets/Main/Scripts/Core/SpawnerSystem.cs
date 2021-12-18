@@ -302,6 +302,7 @@ namespace RPG.Core
                 {
                     if (spawn.Entity != Entity.Null)
                     {
+                        Debug.Log($"Destroy Spawn for {spawn.Entity}");
                         commandBufferP.DestroyEntity(entityInQueryIndex, spawn.Entity);
                         spawn.Entity = Entity.Null;
                     }

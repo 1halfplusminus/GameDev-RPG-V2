@@ -125,6 +125,10 @@ namespace RPG.Combat
 
         public SocketType SocketType;
     }
+    public struct RemoveEquipedInSocket : IComponentData
+    {
+
+    }
     public struct EquipInSocket : IComponentData
     {
         public Entity Socket;

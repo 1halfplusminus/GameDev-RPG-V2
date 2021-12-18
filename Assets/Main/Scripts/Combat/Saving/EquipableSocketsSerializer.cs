@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using RPG.Control;
+using RPG.Core;
 using RPG.Saving;
 using Unity.Entities;
 using UnityEngine;
@@ -43,6 +44,11 @@ namespace RPG.Combat
             var equipableSockets = em.GetComponentData<EquipableSockets>(e);
             var convertToEntitySystem = em.World.GetExistingSystem<ConvertToEntitySystem>();
             var conversionSetting = GameObjectConversionSettings.FromWorld(em.World, convertToEntitySystem.BlobAssetStore);
+            foreach (var socket in equipableSockets.ToList())
+            {
+                em.RemoveComponent<Equipped>(socket);
+                em.AddComponent<DestroySpawn>(socket);
+            }
             if (state is List<string> weapons)
             {
                 Debug.Log($"State is list of weapon {weapons.Count}");
