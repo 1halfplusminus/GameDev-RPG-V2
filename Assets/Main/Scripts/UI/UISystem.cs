@@ -39,8 +39,15 @@ namespace RPG.UI
         private void InitGUI(VisualElement ui)
         {
             ui.Q<Button>("Save").clicked += Save;
+            ui.Q<Button>("Exit").clicked += QuitGame;
         }
-
+        private void QuitGame()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            Application.Quit();
+        }
         private void Save()
         {
             Debug.Log("Saving game");
@@ -72,9 +79,9 @@ namespace RPG.UI
 
         private void SetPause(bool paused)
         {
-            World.GetExistingSystem<MouvementSystemGroup>().Enabled = paused;
-            World.GetExistingSystem<Unity.Animation.ProcessDefaultAnimationGraph>().Enabled = paused;
-            World.GetExistingSystem<CombatSystemGroup>().Enabled = paused;
+            World.GetExistingSystem<MouvementSystemGroup>().Enabled = !paused;
+            World.GetExistingSystem<Unity.Animation.ProcessDefaultAnimationGraph>().Enabled = !paused;
+            World.GetExistingSystem<CombatSystemGroup>().Enabled = !paused;
         }
     }
     [UpdateInGroup(typeof(UISystemGroup))]

@@ -22,6 +22,7 @@ namespace RPG.Saving
         SavingDebugSystem savingDebugSystem;
         EntityQuery triggerNewGameQuery;
         EntityQuery triggerLoadQuery;
+        EntityQuery triggerSaveQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
@@ -40,6 +41,7 @@ namespace RPG.Saving
             .Run();
             Entities
             .WithAll<TriggerLoad>()
+            .WithNone<LoadingScene>()
             .WithStoreEntityQueryInField(ref triggerLoadQuery)
             .ForEach((Entity e) =>
             {
@@ -50,7 +52,7 @@ namespace RPG.Saving
 
             Entities
             .WithAll<TriggerSave>()
-            .WithStoreEntityQueryInField(ref triggerLoadQuery)
+            .WithStoreEntityQueryInField(ref triggerSaveQuery)
             .ForEach((Entity e) =>
             {
                 savingDebugSystem.Save();
@@ -59,7 +61,9 @@ namespace RPG.Saving
             .Run();
             EntityManager.RemoveComponent<TriggerNewGame>(triggerNewGameQuery);
             EntityManager.RemoveComponent<TriggerLoad>(triggerLoadQuery);
+            EntityManager.RemoveComponent<TriggerSave>(triggerSaveQuery);
         }
+
     }
 
     [UpdateInGroup(typeof(SavingSystemGroup))]
@@ -107,8 +111,6 @@ namespace RPG.Saving
             var gameSettings = gameSettingQuery.GetSingleton<GameSettings>();
             var gameSettingsEntity = gameSettingQuery.GetSingletonEntity();
             TriggerSceneLoad(gameSettingsEntity, gameSettings.PlayerScene);
-            //FIXME: Load should not be called directly the save system should react to a component that request a Load
-            // saveSystem.Load();
             saveSystem.LoadLastScene(triggerEntity, savePath);
         }
         public void NewGame(Entity triggerEntity)
@@ -148,8 +150,9 @@ namespace RPG.Saving
                 }
                 if (keyboard.altKey.isPressed && keyboard.lKey.wasPressedThisFrame)
                 {
-                    var gameSettingsEntity = gameSettingQuery.GetSingletonEntity();
-                    LoadDefaultSave(gameSettingsEntity);
+                    //FIXME: Save should not be called directly the save system should react to a component that request a load
+                    var triggerEntity = EntityManager.CreateEntity();
+                    LoadDefaultSave(triggerEntity);
                 }
             }
 

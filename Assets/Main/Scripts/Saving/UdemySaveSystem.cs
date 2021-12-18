@@ -153,7 +153,9 @@ namespace RPG.Saving
         {
             var lastSceneEntity = lastSceneBuildQuery.GetSingletonEntity();
             EntityManager.AddComponentData(lastSceneEntity, new LoadSceneTrigger { Entity = trigger });
-            return LoadLastScene(saveFile);
+            var result = LoadLastScene(saveFile);
+            EntityManager.RemoveComponent<LoadSceneTrigger>(lastSceneEntity);
+            return result;
         }
         public override void Load(string savePath)
         {
