@@ -32,6 +32,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - GameUI
+  - m_GUID: f5f0ce349a314aa6d9c0eb6f11b11511
+    m_Address: Assets/Main/UI/Prefabs/Pause Menu Variant.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - GameUI
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 789d5733da6e0ca849db077a8751b187, type: 2}
   m_SchemaSet:

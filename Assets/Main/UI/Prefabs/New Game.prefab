@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f44b2b7cd1a81ce4f8439c9de24f8c99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VisualTreeAsset: {fileID: 0}
+  VisualTreeAsset: {fileID: 9197481963319205126, guid: e54d690b070b0fc8b95b9c310a0fa5d0, type: 3}
 --- !u!114 &-8159778360951435245
 MonoBehaviour:
   m_ObjectHideFlags: 0

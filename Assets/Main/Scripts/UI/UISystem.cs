@@ -1,4 +1,7 @@
+using RPG.Combat;
+using RPG.Control;
 using RPG.Core;
+using RPG.Mouvement;
 using RPG.Saving;
 using Unity.Entities;
 using UnityEngine;
@@ -11,17 +14,96 @@ namespace RPG.UI
 
     }
     [UpdateInGroup(typeof(UISystemGroup))]
-    public class MainGameUISystem : SystemBase
+    public class InPauseUISystem : SystemBase
     {
-        EntityQuery newGameQuery;
-        EntityCommandBufferSystem entityCommandBufferSystem;
+        InputSystem inputSystem;
+        SavingDebugSystem saveSystem;
+        EntityQuery instantiatingPauseUIQuery;
+        EntityQuery pauseUIQuery;
 
-        EntityQuery uiDocumentQuery;
+
         protected override void OnCreate()
         {
             base.OnCreate();
-            newGameQuery = GetEntityQuery(ComponentType.ReadOnly<NewGame>());
+            inputSystem = World.GetOrCreateSystem<InputSystem>();
+            saveSystem = World.GetOrCreateSystem<SavingDebugSystem>();
+            instantiatingPauseUIQuery = GetEntityQuery(ComponentType.ReadOnly<PauseUI>(), ComponentType.ReadOnly<Prefab>());
+            pauseUIQuery = GetEntityQuery(ComponentType.ReadOnly<PauseUI>());
+            RequireForUpdate(GetEntityQuery(new EntityQueryDesc()
+            {
+                Any = new ComponentType[] {
+                    ComponentType.ReadOnly<SceneLoaded>()
+                }
+            }));
+        }
+        private void InitGUI(VisualElement ui)
+        {
+            ui.Q<Button>("Save").clicked += Save;
+        }
+
+        private void Save()
+        {
+            Debug.Log("Saving game");
+            saveSystem.Save();
+        }
+        protected override void OnUpdate()
+        {
+            Debug.Log($"In Pause UI SYSTEM");
+            var input = inputSystem.Input;
+            if (input.UI.TogglePauseMenu.WasPressedThisFrame())
+            {
+                if (pauseUIQuery.CalculateEntityCount() == 0)
+                {
+                    var toInstanciate = instantiatingPauseUIQuery.GetSingletonEntity();
+                    var uiEntity = EntityManager.Instantiate(toInstanciate);
+                    SetPause(true);
+                    var uiDocument = EntityManager.GetComponentObject<UIDocument>(uiEntity);
+                    /*   EntityManager.AddComponent<Disabled>(toDisableQuery); */
+                }
+                else
+                {
+                    EntityManager.DestroyEntity(pauseUIQuery.GetSingletonEntity());
+                    SetPause(false);
+                }
+                Debug.Log($"Toggle Pause Menu Pressed");
+            }
+            Entities.WithAll<PauseUI, UIReady>().ForEach((UIDocument document) => InitGUI(document.rootVisualElement)).WithoutBurst().Run();
+        }
+
+        private void SetPause(bool paused)
+        {
+            World.GetExistingSystem<MouvementSystemGroup>().Enabled = paused;
+            World.GetExistingSystem<Unity.Animation.ProcessDefaultAnimationGraph>().Enabled = paused;
+            World.GetExistingSystem<CombatSystemGroup>().Enabled = paused;
+        }
+    }
+    [UpdateInGroup(typeof(UISystemGroup))]
+    public class MainGameUISystem : SystemBase
+    {
+
+        EntityCommandBufferSystem entityCommandBufferSystem;
+
+        EntityQuery uiDocumentQuery;
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            uiDocumentQuery = EntityManager.CreateEntityQuery(new EntityQueryDesc()
+            {
+                None = new ComponentType[] {
+                    ComponentType.ReadOnly<Initialized>()
+                },
+                All = new ComponentType[]{
+                    ComponentType.ReadOnly<UIReady>(), ComponentType.ReadOnly<NewGameUI>(),typeof(UIDocument)
+                }
+            });
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            RequireForUpdate(GetEntityQuery(new EntityQueryDesc()
+            {
+                All = new ComponentType[]{
+                    ComponentType.ReadOnly<UIReady>(), ComponentType.ReadOnly<NewGameUI>(),typeof(UIDocument)
+                }
+            }));
         }
         protected void NewGame(Entity e)
         {
@@ -38,37 +120,14 @@ namespace RPG.UI
             var em = EntityManager;
             var ec = entityCommandBufferSystem.CreateCommandBuffer();
             var ecp = ec.AsParallelWriter();
-            if (newGameQuery.CalculateEntityCount() > 0)
-            {
-
-                /*   Entities
-                  .WithAll<UIReady>()
-                  .WithAny<NewGame>()
-                  .ForEach((int entityInQueryIndex, Entity e, UIDocument uiDocument) =>
-                  {
-                      Debug.Log($"Hide main UI");
-                      ec.DestroyEntity(e);
-
-                  }).WithoutBurst().Run(); */
-            }
             Entities
             .WithAll<UIReady>()
             .WithAny<TriggeredSceneLoaded>()
             .ForEach((int entityInQueryIndex, Entity e, UIDocument uiDocument) =>
             {
-                Debug.Log($"Hide main UI");
                 ec.DestroyEntity(e);
             }).WithoutBurst().Run();
-            Entities
-            .WithStoreEntityQueryInField(ref uiDocumentQuery)
-            .WithNone<Initialized>()
-            .WithAll<UIReady, NewGameUI>()
-            .ForEach((Entity e, UIDocument uiDocument) =>
-            {
 
-                ec.AddComponent<Initialized>(e);
-            })
-            .WithoutBurst().Run();
             if (uiDocumentQuery.CalculateEntityCount() > 0)
             {
                 InitNewGameUI();
@@ -83,6 +142,12 @@ namespace RPG.UI
             Debug.Log($"Set up main game ui");
             var visualElement = uiDocument.rootVisualElement;
             InitNewGameButton(uiDocumentEntity, visualElement);
+            InitLoadButton(uiDocumentEntity, visualElement);
+            EntityManager.AddComponent<Initialized>(uiDocumentEntity);
+        }
+
+        private void InitLoadButton(Entity uiDocumentEntity, VisualElement visualElement)
+        {
             visualElement
             .Q<Button>("Load")
             .clicked += () => { LoadSave(uiDocumentEntity); };

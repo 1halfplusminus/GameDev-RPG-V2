@@ -41,6 +41,7 @@ namespace RPG.UI
                 {
                     if (r.GetComponent<GameUIAuthoring>() != null)
                     {
+                        Debug.Log($"Declare UI For {r.name}");
                         DeclareReferencedPrefab(r);
                     }
                 });

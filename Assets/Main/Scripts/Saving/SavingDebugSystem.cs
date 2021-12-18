@@ -11,6 +11,8 @@ namespace RPG.Saving
     {
 
     }
+    public struct TriggerSave : IComponentData { }
+
     public struct TriggerLoad : IComponentData
     {
 
@@ -42,6 +44,16 @@ namespace RPG.Saving
             .ForEach((Entity e) =>
             {
                 savingDebugSystem.LoadDefaultSave(e);
+            })
+            .WithStructuralChanges()
+            .Run();
+
+            Entities
+            .WithAll<TriggerSave>()
+            .WithStoreEntityQueryInField(ref triggerLoadQuery)
+            .ForEach((Entity e) =>
+            {
+                savingDebugSystem.Save();
             })
             .WithStructuralChanges()
             .Run();
@@ -83,6 +95,12 @@ namespace RPG.Saving
             RequireForUpdate(requestForUpdateQuery);
 
         }
+        public void Save()
+        {
+            Debug.Log("Saving in file");
+
+            saveSystem.Save(savePath);
+        }
         public void LoadDefaultSave(Entity triggerEntity)
         {
             SceneLoadingSystem.UnloadAllCurrentlyLoadedScene(EntityManager);
@@ -121,14 +139,12 @@ namespace RPG.Saving
                 {
                     var gameSettingsEntity = gameSettingQuery.GetSingletonEntity();
                     NewGame(gameSettingsEntity);
-                    // NewGame();
                 }
                 if (keyboard.altKey.isPressed && keyboard.sKey.wasPressedThisFrame)
                 {
-                    Debug.Log("Saving in file");
                     //FIXME: Save should not be called directly the save system should react to a component that request a save
                     // saveSystem.Save();
-                    saveSystem.Save(savePath);
+                    Save();
                 }
                 if (keyboard.altKey.isPressed && keyboard.lKey.wasPressedThisFrame)
                 {

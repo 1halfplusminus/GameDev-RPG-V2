@@ -12,6 +12,15 @@ namespace RPG.UI
     public class GameUIAuthoringInspector : Editor
     {
         public VisualTreeAsset VisualTreeAsset;
+        public void OnUpdate()
+        {
+            if (target is GameUIAuthoring go)
+            {
+                var uiDocument = go.GetComponent<UIDocument>();
+                serializedObject.FindProperty(nameof(go.VisualTreeAsset)).objectReferenceValue = uiDocument.visualTreeAsset;
+                serializedObject.ApplyModifiedProperties();
+            }
+        }
         public override VisualElement CreateInspectorGUI()
         {
             if (VisualTreeAsset == null) { return null; }
@@ -22,6 +31,7 @@ namespace RPG.UI
             {
                 var uiDocument = go.GetComponent<UIDocument>();
                 serializedObject.FindProperty(nameof(go.VisualTreeAsset)).objectReferenceValue = uiDocument.visualTreeAsset;
+                serializedObject.ApplyModifiedProperties();
                 if (uiDocument.visualTreeAsset != null)
                 {
                     var entry = target.SetAddressableGroup(UIDeclareReferencedObjectsConversionSystem.UI_GROUP_LABEL);

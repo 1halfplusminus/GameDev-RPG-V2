@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="Col" style="flex-wrap: nowrap; justify-content: flex-start; align-items: flex-end; flex-grow: 1; flex-direction: column;">
+        <ui:VisualElement name="Box" style="padding-left: 25px; padding-right: 25px; padding-top: 10px; padding-bottom: 10px; flex-grow: 1; flex-shrink: initial; flex-basis: auto; flex-direction: column; align-items: stretch; justify-content: center; min-width: 100%;">
+            <ui:VisualElement name="TitleWrapper" style="flex-direction: row; flex-grow: 0; width: 100%; justify-content: center; align-items: center; flex-basis: auto; height: 199px;">
+                <ui:Label text="Mon Super RPG " display-tooltip-when-elided="true" style="justify-content: flex-start; align-items: auto; -unity-font: url(&apos;/Assets/Packages/Quixel/Scripts/Fonts/SourceSansPro-Black.ttf&apos;); font-size: 50px; -unity-text-align: lower-center; letter-spacing: 2px; -unity-font-style: bold; color: rgba(190, 35, 35, 255);" />
+            </ui:VisualElement>
+            <ui:VisualElement name="Box" style="flex-grow: 0.5;">
+                <ui:VisualElement name="Row" class="Row" style="justify-content: center; flex-direction: row;">
+                    <ui:Button text="New Game" display-tooltip-when-elided="true" name="NewGame" class="Button" style="align-items: auto; flex-grow: 0; flex-direction: row; flex-shrink: 1; justify-content: flex-start; -unity-text-align: upper-center; min-width: 20%;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="Row" class="Row" style="flex-direction: row; justify-content: center; align-items: center; max-width: none;">
+                    <ui:Button text="Load" display-tooltip-when-elided="true" name="Load" class="Button" style="flex-grow: 0; max-width: none; min-width: 20%; align-items: stretch; justify-content: center; flex-direction: column; flex-shrink: 1; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; -unity-text-align: upper-center;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

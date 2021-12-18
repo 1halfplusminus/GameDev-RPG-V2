@@ -6,7 +6,6 @@ using Unity.Transforms;
 using UnityEngine.AI;
 using Unity.Mathematics;
 using RPG.Core;
-using Unity.AI.Navigation;
 using UnityEngine;
 
 namespace RPG.Mouvement
@@ -164,7 +163,6 @@ namespace RPG.Mouvement
                         rotation.Value = agent.transform.rotation;
                     }
                 }
-
             }).WithoutBurst().Run();
 
         }

@@ -23,4 +23,4 @@ MonoBehaviour:
   HitEvents:
   - 0.6415584
   GUID: Assets/Main/Game/Characters/Placeholder Enemy/Sword.asset
-  Clip: {fileID: 11400000, guid: 665747b10c141d40faec481f1772e7b9, type: 2}
+  Clip: {fileID: 11400000, guid: 0ada9d68bd523ffd6bf01d532da3cff6, type: 2}
