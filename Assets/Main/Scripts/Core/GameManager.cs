@@ -1,16 +1,10 @@
 using Unity.Entities;
-
+using UnityEngine;
+using UnityEditor;
+using Hash128 = Unity.Entities.Hash128;
 
 namespace RPG.Core
 {
-#if UNITY_EDITOR
-    using UnityEditor;
-    using UnityEngine;
-    class GameManager : MonoBehaviour
-    {
-        public GameSettingsAsset Settings;
-
-    }
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
     public class GameManagerDeclareReferenceConversionSystem : GameObjectConversionSystem
     {
@@ -19,28 +13,10 @@ namespace RPG.Core
             Entities.ForEach((GameManager gm) =>
             {
                 DeclareReferencedAsset(gm.Settings);
-                DeclareAssetDependency(gm.gameObject, gm.Settings);
             });
 
         }
     }
-    /*   [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
-      public class GameSettingsDeclareReferenceConversionSystem : GameObjectConversionSystem
-      {
-          protected override void OnUpdate()
-          {
-
-              var guids = AssetDatabase.FindAssets($"t:{typeof(GameSettingsAsset).Name}");
-              foreach (string guid in guids)
-              {
-                  var path = AssetDatabase.GUIDToAssetPath(guid);
-                  var gameSetting = AssetDatabase.LoadAssetAtPath<GameSettingsAsset>(path);
-                  Debug.Log($"declare referenced asset find game setting {guid} {path}");
-                  DeclareReferencedAsset(gameSetting);
-                  break;
-              }
-          }
-      } */
     public class GameSettingsConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()
@@ -48,26 +24,27 @@ namespace RPG.Core
             Entities.ForEach((GameSettingsAsset setting) =>
             {
                 var entity = GetPrimaryEntity(setting);
-                Debug.Log($"find game setting");
+                Debug.Log($"find game setting  {setting.NewGameScene} and {setting.PlayerScene}");
                 DstEntityManager.AddComponentData(entity, new GameSettings
                 {
-                    NewGameScene = GetSceneGUID(setting.NewGameScene),
-                    PlayerScene = GetSceneGUID(setting.PlayerScene),
+                    NewGameScene = ToHash(setting.NewGameScene),
+                    PlayerScene = ToHash(setting.PlayerScene),
                 });
             });
         }
-
-        private static GUID GetSceneGUID(SceneAsset scene)
+        private Hash128 ToHash(string value)
         {
-            return new GUID(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(scene)));
+            return new Hash128(value);
         }
+
     }
 
-#endif
-    public struct GameSettings : IComponentData
+
+    class GameManager : MonoBehaviour
     {
-        public Unity.Entities.Hash128 NewGameScene;
+        public GameSettingsAsset Settings;
 
-        public Unity.Entities.Hash128 PlayerScene;
     }
+
+
 }

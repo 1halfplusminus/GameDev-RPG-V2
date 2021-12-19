@@ -10,17 +10,6 @@ namespace RPG.UI
     public struct GameUI : IComponentData
     {
     }
-    [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
-    public class GameUIAssetDeclareReferencedObjectsConversionSystem : GameObjectConversionSystem
-    {
-        protected override void OnUpdate()
-        {
-            Entities.ForEach((GameUIAsset gameUIAsset) =>
-            {
-                DeclareReferencedAsset(gameUIAsset.VisualTreeAsset);
-            });
-        }
-    }
 
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
     public class UIDeclareReferencedObjectsConversionSystem : GameObjectConversionSystem
@@ -50,6 +39,19 @@ namespace RPG.UI
             });
         }
     }
+    [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
+    public class GameUIAssetDeclareReferencedObjectsConversionSystem : GameObjectConversionSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach((GameUIAsset gameUIAsset) =>
+            {
+                DeclareReferencedAsset(gameUIAsset.VisualTreeAsset);
+            });
+        }
+    }
+
+
     public class GameUIAuthoringConversionSystem : GameObjectConversionSystem
     {
 
