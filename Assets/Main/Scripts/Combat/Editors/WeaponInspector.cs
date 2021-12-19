@@ -40,7 +40,7 @@ namespace RPG.Combat
                 animationSelector.RegisterValueChangeCallback(OnAnimationChange);
                 updateHitEvents.clicked += UpdateAnimationData;
 
-                ConvertClip();
+                /*           ConvertClip(); */
                 // Return the finished inspector UI
             }
 
@@ -52,17 +52,21 @@ namespace RPG.Combat
             var clipProperty = GetClipProperty();
             var assetPath = AssetDatabase.GetAssetPath(target);
             var clipAsset = AssetDatabase.LoadAssetAtPath<ClipAsset>(assetPath);
+            while (clipAsset != null)
+            {
+                AssetDatabase.RemoveObjectFromAsset(clipAsset);
+                clipAsset = AssetDatabase.LoadAssetAtPath<ClipAsset>(assetPath);
+            }
             if (clipAsset == null)
             {
+                Debug.Log("Create Clip Asset");
                 clipAsset = CreateInstance<ClipAsset>();
                 clipAsset.name = animationClip.name;
                 AssetDatabase.AddObjectToAsset(clipAsset, assetPath);
             }
             clipAsset.SetClip(animationClip);
-            /*             AssetDatabase.CreateAsset(clipAsset, $"Assets/Clip/{animationClip.GetInstanceID()}.clip"); */
             clipProperty.objectReferenceValue = clipAsset;
-            clipProperty.serializedObject.ApplyModifiedProperties();
-            serializedObject.ApplyModifiedPropertiesWithoutUndo();
+            serializedObject.ApplyModifiedProperties();
 
         }
 
@@ -70,7 +74,6 @@ namespace RPG.Combat
         {
 
             UpdateAnimationData();
-            ConvertClip();
         }
 
         private void UpdateAnimationData()
@@ -90,7 +93,7 @@ namespace RPG.Combat
                 }
                 serializedObject.ApplyModifiedProperties();
             }
-
+            ConvertClip();
         }
 
         private AnimationClip GetAnimationClip()
