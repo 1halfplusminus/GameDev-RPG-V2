@@ -50,9 +50,16 @@ namespace RPG.Combat
         {
             var animationClip = GetAnimationClip();
             var clipProperty = GetClipProperty();
-            var clipAsset = CreateInstance<ClipAsset>();
+            var assetPath = AssetDatabase.GetAssetPath(target);
+            var clipAsset = AssetDatabase.LoadAssetAtPath<ClipAsset>(assetPath);
+            if (clipAsset == null)
+            {
+                clipAsset = CreateInstance<ClipAsset>();
+                clipAsset.name = animationClip.name;
+                AssetDatabase.AddObjectToAsset(clipAsset, assetPath);
+            }
             clipAsset.SetClip(animationClip);
-            AssetDatabase.CreateAsset(clipAsset, $"Assets/Clip/{animationClip.GetInstanceID()}.clip");
+            /*             AssetDatabase.CreateAsset(clipAsset, $"Assets/Clip/{animationClip.GetInstanceID()}.clip"); */
             clipProperty.objectReferenceValue = clipAsset;
             clipProperty.serializedObject.ApplyModifiedProperties();
             serializedObject.ApplyModifiedPropertiesWithoutUndo();

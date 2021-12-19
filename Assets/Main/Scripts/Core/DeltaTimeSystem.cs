@@ -1,6 +1,3 @@
-
-
-using Unity.Animation;
 using Unity.Entities;
 
 namespace RPG.Core
@@ -22,4 +19,6 @@ namespace RPG.Core
             }).ScheduleParallel();
         }
     }
+
+
 }

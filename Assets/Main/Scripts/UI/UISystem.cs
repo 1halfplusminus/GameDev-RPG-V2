@@ -18,6 +18,8 @@ namespace RPG.UI
     {
         InputSystem inputSystem;
         SavingDebugSystem saveSystem;
+
+        PauseSystem pauseSystem;
         EntityQuery instantiatingPauseUIQuery;
         EntityQuery pauseUIQuery;
 
@@ -27,6 +29,7 @@ namespace RPG.UI
             base.OnCreate();
             inputSystem = World.GetOrCreateSystem<InputSystem>();
             saveSystem = World.GetOrCreateSystem<SavingDebugSystem>();
+            pauseSystem = World.GetOrCreateSystem<PauseSystem>();
             instantiatingPauseUIQuery = GetEntityQuery(ComponentType.ReadOnly<PauseUI>(), ComponentType.ReadOnly<Prefab>());
             pauseUIQuery = GetEntityQuery(ComponentType.ReadOnly<PauseUI>());
             RequireForUpdate(GetEntityQuery(new EntityQueryDesc()
@@ -65,7 +68,6 @@ namespace RPG.UI
                     var uiEntity = EntityManager.Instantiate(toInstanciate);
                     SetPause(true);
                     var uiDocument = EntityManager.GetComponentObject<UIDocument>(uiEntity);
-                    /*   EntityManager.AddComponent<Disabled>(toDisableQuery); */
                 }
                 else
                 {
@@ -79,9 +81,7 @@ namespace RPG.UI
 
         private void SetPause(bool paused)
         {
-            World.GetExistingSystem<MouvementSystemGroup>().Enabled = !paused;
-            World.GetExistingSystem<Unity.Animation.ProcessDefaultAnimationGraph>().Enabled = !paused;
-            World.GetExistingSystem<CombatSystemGroup>().Enabled = !paused;
+            pauseSystem.Pause(paused);
         }
     }
     [UpdateInGroup(typeof(UISystemGroup))]
