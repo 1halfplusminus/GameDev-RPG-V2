@@ -9,7 +9,8 @@ Simple Weapon System:@high
   ✔ Make projectile weapon @done(21-12-15 11:37)
   ✔ Damage on hit should depends of weapon @done(21-12-15 11:38)
   ✔ Character should be able to pick weapon on floor @done(21-12-07 17:21)
-  ☐ Save Weapon
+  ✔ Save Weapon @done(21-12-20 13:17)
+  ☐ Weapon should respawn after sometime
   ☐ Weapon should play vfx on hit / attack
   
 Fight System:
@@ -42,7 +43,7 @@ Saving System:
     ✔ Test on Build Game @done(21-12-02 23:10)
 Animation System:@high @today
   ✘ Fix crash with AnimationNode @cancelled(21-12-01 19:39)
-  ☐ Add a socket to character animation for hand
+  ✔ Add a socket to character animation for hand @done(21-12-20 13:17)
   ☐ Optimaze animation system with UberClip
   ✔ Create a custom animation system @started(21-12-01 19:39) @done(21-12-04 08:15) @lasted(2d12h36m44s)
     ✔ Create a animation system that have the same setup as character animation graph @high @done(21-12-04 08:15)

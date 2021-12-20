@@ -1452,7 +1452,6 @@ GameObject:
   - component: {fileID: 6222254650908708417}
   - component: {fileID: 6302724733382121449}
   - component: {fileID: 809469740015579474}
-  - component: {fileID: 2464562307063255977}
   - component: {fileID: 1123742229230621250}
   - component: {fileID: 3142420853972500397}
   - component: {fileID: 8632880847188824218}
@@ -1462,6 +1461,7 @@ GameObject:
   - component: {fileID: 3165293975074451672}
   - component: {fileID: 7979986417888468897}
   - component: {fileID: -5488440909320222580}
+  - component: {fileID: 3233999551531206025}
   m_Layer: 0
   m_Name: Morie Hero
   m_TagString: Untagged
@@ -1522,19 +1522,7 @@ MonoBehaviour:
   Weapon: {fileID: 11400000, guid: 15095ef48d7c0185baaa99991293c2af, type: 2}
   LeftHandSocket: {fileID: 2010851700558888039}
   RightHandSocket: {fileID: 3769601644115343787}
---- !u!114 &2464562307063255977
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3809403721112327955}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 114f51e9af3ac2dfaaf745980c822de3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Value: 200
+  HitPoint: {fileID: 0}
 --- !u!114 &1123742229230621250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1938,6 +1926,21 @@ MonoBehaviour:
   Run: {fileID: -9121621101649706817, guid: ef9bb8bd57f094583858804f4afea027, type: 3}
   Attack: {fileID: 4574554471517728084, guid: ef9bb8bd57f094583858804f4afea027, type: 3}
   Dead: {fileID: 4348485665485846014, guid: ef9bb8bd57f094583858804f4afea027, type: 3}
+--- !u!114 &3233999551531206025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3809403721112327955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a307d7cb3886a3c6b933cfdb2ba72b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StartLevel: 2
+  CharacterClass: 1
+  Progression: {fileID: 11400000, guid: c70abee69b993c2ff87217e728a83375, type: 2}
 --- !u!1 &3867810557671781752
 GameObject:
   m_ObjectHideFlags: 0

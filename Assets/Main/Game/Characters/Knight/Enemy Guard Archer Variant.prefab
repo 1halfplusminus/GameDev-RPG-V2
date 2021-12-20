@@ -3036,3 +3036,18 @@ MonoBehaviour:
   ScaleChannels: []
   FloatChannels: []
   IntChannels: []
+--- !u!114 &945427143196821154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3921083346983676379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a307d7cb3886a3c6b933cfdb2ba72b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StartLevel: 1
+  CharacterClass: 4
+  Progression: {fileID: 11400000, guid: c70abee69b993c2ff87217e728a83375, type: 2}

@@ -1,4 +1,5 @@
 using Unity.Entities;
+using Unity.Rendering;
 
 namespace RPG.Core
 {
@@ -8,7 +9,7 @@ namespace RPG.Core
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
 
-    public class UpdateAnimationDeltaTime : SystemBase
+    public class DeltaTimeSystem : SystemBase
     {
         protected override void OnUpdate()
         {

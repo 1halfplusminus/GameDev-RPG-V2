@@ -109,21 +109,28 @@ namespace RPG.Combat
                 cbp.AddComponent<DestroySpawn>(entityInQueryIndex, e);
                 cbp.RemoveComponent<RemoveEquipedInSocket>(entityInQueryIndex, e);
             }).ScheduleParallel();
-
             Entities
             .WithNone<Equipped>()
-            .WithStoreEntityQueryInField(ref equipPrefabInSocketQuery)
-            .ForEach((int entityInQueryIndex, Entity e, in WeaponAssetData weaponAssetData, in EquipInSocket equipWeapon, in EquippedPrefab prefab, in ChangeAttackAnimation changeAttackAnimation, in ShootProjectile shootProjectile) =>
+            .ForEach((int entityInQueryIndex, Entity e, in ShootProjectile shootProjectile, in WeaponAssetData weaponAssetData) =>
             {
-                Debug.Log($"Equip {weaponAssetData.Weapon.Value.Weapon.GUID} in socket : ${equipWeapon.Socket.Index}");
-                cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new SpawnWeapon { Prefab = prefab.Value, Animation = changeAttackAnimation.Animation, Weapon = weaponAssetData.Weapon, Projectile = shootProjectile.Prefab });
-                cbp.RemoveComponent<EquipInSocket>(entityInQueryIndex, e);
-                cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new Equipped { Equipable = weaponAssetData.Weapon });
+                weaponAssetData.Weapon.Value.ProjectileEntity = shootProjectile.Prefab;
                 if (shootProjectile.Prefab == Entity.Null)
                 {
                     cbp.RemoveComponent<ShootProjectile>(entityInQueryIndex, e);
                 }
             }).ScheduleParallel();
+            Entities
+            .WithNone<Equipped>()
+            .WithStoreEntityQueryInField(ref equipPrefabInSocketQuery)
+            .ForEach((int entityInQueryIndex, Entity e, in WeaponAssetData weaponAssetData, in EquipInSocket equipWeapon, in EquippedPrefab prefab, in ChangeAttackAnimation changeAttackAnimation) =>
+            {
+                Debug.Log($"Equip {weaponAssetData.Weapon.Value.Weapon.GUID} in socket : ${equipWeapon.Socket.Index}");
+                cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new SpawnWeapon { Prefab = prefab.Value, Animation = changeAttackAnimation.Animation, Weapon = weaponAssetData.Weapon, Projectile = weaponAssetData.Weapon.Value.ProjectileEntity });
+                cbp.RemoveComponent<EquipInSocket>(entityInQueryIndex, e);
+                cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new Equipped { Equipable = weaponAssetData.Weapon });
+
+            }).ScheduleParallel();
+
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
@@ -156,23 +163,45 @@ namespace RPG.Combat
                 Debug.Log($" {e.Index} collid with player {collidWithPlayer.Entity.Index} and pickup Weapon: ${picked.Entity.Index}");
                 cbp.AddComponent(entityInQueryIndex, collidWithPlayer.Entity, new Equip { Equipable = picked.Entity, SocketType = picked.SocketType });
                 cbp.AddComponent<Picked>(entityInQueryIndex, e);
+                cbp.AddComponent(entityInQueryIndex, e, new HideForSecond { Time = 5f });
             }).ScheduleParallel();
 
             Entities
-            .WithAll<Picked, RenderMesh, StatefulTriggerEvent>()
-            .ForEach((int entityInQueryIndex, Entity e) =>
+            .WithAll<Picked, StatefulTriggerEvent>()
+            .ForEach((int entityInQueryIndex, Entity e, in LocalToWorld localToWorld) =>
             {
                 Debug.Log($"{e.Index} was picked");
-                cbp.RemoveComponent<RenderMesh>(entityInQueryIndex, e);
+                cbp.AddComponent(entityInQueryIndex, e, new HideMesh { LocalToWorld = localToWorld.Value });
+                cbp.RemoveComponent<LocalToWorld>(entityInQueryIndex, e);
                 cbp.RemoveComponent<StatefulTriggerEvent>(entityInQueryIndex, e);
 
             }).ScheduleParallel();
+
             Entities
-            .WithAll<Picked>()
+            .WithAll<Picked, UnHide>()
+            .ForEach((int entityInQueryIndex, Entity e, in HideMesh hideMesh) =>
+            {
+                Debug.Log($"{e.Index} pick up respawn");
+                cbp.AddComponent(entityInQueryIndex, e, new LocalToWorld { Value = hideMesh.LocalToWorld });
+                cbp.AddBuffer<StatefulTriggerEvent>(entityInQueryIndex, e);
+                cbp.RemoveComponent<Picked>(entityInQueryIndex, e);
+                cbp.RemoveComponent<HideMesh>(entityInQueryIndex, e);
+            }).ScheduleParallel();
+
+            Entities
+            .WithAll<Picked, LocalToWorld>()
             .ForEach((int entityInQueryIndex, Entity e, VisualEffect visualEffect) =>
             {
                 visualEffect.Stop();
             }).WithoutBurst().Run();
+
+            Entities
+            .WithAll<Picked, UnHide>()
+            .ForEach((int entityInQueryIndex, Entity e, VisualEffect visualEffect) =>
+            {
+                visualEffect.Play();
+            }).WithoutBurst().Run();
+
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 

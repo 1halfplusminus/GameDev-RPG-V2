@@ -1,6 +1,5 @@
-using Unity.Collections;
+using RPG.Core;
 using Unity.Entities;
-using Unity.Jobs;
 using UnityEngine;
 
 namespace RPG.Saving

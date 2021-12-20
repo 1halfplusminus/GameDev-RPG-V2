@@ -1,6 +1,6 @@
 using Unity.Entities;
 using Unity.Mathematics;
-
+using RPG.Core;
 namespace RPG.Combat
 {
 

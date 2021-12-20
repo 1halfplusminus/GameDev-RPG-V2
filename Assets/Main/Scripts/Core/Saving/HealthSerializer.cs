@@ -1,6 +1,6 @@
 using Unity.Entities;
 using UnityEngine;
-
+using RPG.Core;
 namespace RPG.Saving
 {
     public struct HealthSerializer : ISerializer

@@ -24,6 +24,8 @@ namespace RPG.Combat
     {
         public Weapon Weapon;
         public Entity Entity;
+
+        public Entity ProjectileEntity;
     }
     public struct WeaponAssetData : IComponentData
     {
@@ -93,8 +95,6 @@ namespace RPG.Combat
                     // Store the created reference to the memory location of the blob asset
                     weaponBlobAssetRef = blobBuilder.CreateBlobAssetReference<WeaponBlobAsset>(Allocator.Persistent);
                     BlobAssetStore.TryAdd(hash, weaponBlobAssetRef);
-                    //FIXME: REMOVE
-                    /*            UnityEngine.Debug.Log($"Declare Weapon {r.name} {r.GUID}"); */
                     return weaponBlobAssetRef;
                 }
             }
@@ -126,8 +126,9 @@ namespace RPG.Combat
                 var projectileEntity = TryGetPrimaryEntity(weapon.Projectile);
                 DstEntityManager.AddComponentData(weaponEntity, new ShootProjectile() { Prefab = projectileEntity });
                 BlobAssetReference<WeaponBlobAsset> weaponBlobAssetRef = GetWeapon(weapon);
-                DstEntityManager.AddComponentData(weaponEntity, new WeaponAssetData() { Weapon = weaponBlobAssetRef });
                 weaponBlobAssetRef.Value.Entity = weaponEntity;
+                weaponBlobAssetRef.Value.ProjectileEntity = projectileEntity;
+                DstEntityManager.AddComponentData(weaponEntity, new WeaponAssetData() { Weapon = weaponBlobAssetRef });
                 var hash = new UnityEngine.Hash128();
                 if (!string.IsNullOrEmpty(weapon.GUID))
                 {
