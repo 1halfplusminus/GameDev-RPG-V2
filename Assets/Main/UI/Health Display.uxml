@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="GameHUH.uss" />
+    <ui:VisualElement style="flex-direction: row;">
+        <ui:Label text="Health:" display-tooltip-when-elided="true" class="Text" />
+        <ui:Label text="100%" display-tooltip-when-elided="true" name="Health" class="Text" style="-unity-font-style: bold; color: rgba(207, 40, 40, 255);" />
+    </ui:VisualElement>
+</ui:UXML>

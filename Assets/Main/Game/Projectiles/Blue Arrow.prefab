@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -6580991060470503487}
   - component: {fileID: -2970462503517743282}
   - component: {fileID: -3461999690680459563}
+  - component: {fileID: -9131065053627960656}
   m_Layer: 0
   m_Name: Blue Arrow
   m_TagString: Untagged
@@ -157,7 +158,7 @@ MonoBehaviour:
         Category02: 1
         Category03: 0
         Category04: 0
-        Category05: 1
+        Category05: 0
         Category06: 0
         Category07: 0
         Category08: 0
@@ -210,7 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MotionType: 0
-  m_Smoothing: 1
+  m_Smoothing: 0
   m_Mass: 1
   m_LinearDamping: 0.01
   m_AngularDamping: 0.05
@@ -222,7 +223,7 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
-  m_GravityFactor: 1
+  m_GravityFactor: 0
   m_OverrideDefaultMassDistribution: 0
   m_CenterOfMass:
     x: 0
@@ -355,6 +356,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f922032aad1e4f109e892944af196e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-9131065053627960656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5475211252939139569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38a6a75eb8685bcefaca5fad42b61cd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Value: 10
 --- !u!1 &8675395970164099353
 GameObject:
   m_ObjectHideFlags: 0

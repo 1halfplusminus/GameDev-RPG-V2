@@ -8,7 +8,13 @@ namespace RPG.Core
     [Serializable]
     public struct Health : IComponentData
     {
+        public float MaxHealth;
         public float Value;
+
+        public int GetPercent()
+        {
+            return (int)(Value * 100 / MaxHealth);
+        }
     }
 
 
@@ -25,7 +31,7 @@ namespace RPG.Core
             Entities.ForEach((HealthAuthoring healthAuthoring) =>
             {
                 var entity = GetPrimaryEntity(healthAuthoring);
-                DstEntityManager.AddComponentData(entity, new Health { Value = healthAuthoring.Value });
+                DstEntityManager.AddComponentData(entity, new Health { Value = healthAuthoring.Value, MaxHealth = healthAuthoring.Value });
             });
         }
     }

@@ -61,7 +61,8 @@ namespace RPG.Stats
                 DstEntityManager.AddComponentData(entity, new BaseStats { CharacterClass = baseStatsAuthoring.CharacterClass, Level = baseStatsAuthoring.StartLevel });
                 DstEntityManager.AddComponentData(entity, new Health
                 {
-                    Value = progressionRef.Value.GetHealth(baseStatsAuthoring.StartLevel)
+                    Value = health,
+                    MaxHealth = health
                 });
             });
         }

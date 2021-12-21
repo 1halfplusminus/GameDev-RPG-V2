@@ -37,6 +37,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - GameUI
+  - m_GUID: f2790dbf1a7e7e578b82b394847d0c56
+    m_Address: Assets/Main/UI/Prefabs/InGameHUD Variant.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - GameUI
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 789d5733da6e0ca849db077a8751b187, type: 2}
   m_SchemaSet:

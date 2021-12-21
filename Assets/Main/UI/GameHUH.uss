@@ -1,0 +1,4 @@
+.Text {
+    -unity-font: url('/Assets/Packages/Quixel/Scripts/Fonts/SourceSansPro-Black 1.ttf');
+    font-size: 40px;
+}

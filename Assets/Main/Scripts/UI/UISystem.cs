@@ -1,16 +1,104 @@
-using RPG.Combat;
 using RPG.Control;
 using RPG.Core;
-using RPG.Mouvement;
 using RPG.Saving;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.UIElements;
-
+using static Unity.Entities.ComponentType;
 namespace RPG.UI
 {
+    public struct InGame : IComponentData
+    {
+
+    }
+    public struct InPause : IComponentData
+    {
+
+    }
     public struct Initialized : IComponentData
     {
+
+    }
+    public class InGameUISystem : SystemBase
+    {
+        EntityQuery displayInGameUIQuery;
+
+        EntityQuery inGameUIQuery;
+
+        EntityQuery playerHealthQuery;
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+
+            playerHealthQuery = GetEntityQuery(new EntityQueryDesc()
+            {
+                All = new ComponentType[]{
+                    ReadOnly<PlayerControlled>(),
+                    ReadOnly<Health>()
+                }
+            });
+
+            playerHealthQuery.SetChangedVersionFilter(ReadOnly<Health>());
+
+            displayInGameUIQuery = GetEntityQuery(new EntityQueryDesc()
+            {
+                Any = new ComponentType[] {
+                    ReadOnly<PlayerControlled>(),
+                    ReadOnly<SceneLoaded>()
+                }
+            });
+
+            displayInGameUIQuery = GetEntityQuery(new EntityQueryDesc()
+            {
+                Any = new ComponentType[] {
+                    ReadOnly<InGameUI>()
+                }
+            });
+            // RequireForUpdate(displayInGameUIQuery);
+        }
+        protected override void OnUpdate()
+        {
+            if (playerHealthQuery.CalculateEntityCount() == 1)
+            {
+                var playerHealth = playerHealthQuery.GetSingleton<Health>();
+                Entities
+                .ForEach((InGameUIController c) =>
+                {
+                    c.SetHealth(playerHealth);
+                })
+                .WithoutBurst().Run();
+            };
+
+            Entities
+            .WithAll<UIReady, InGameUI>()
+            .WithNone<InGameUIController>()
+            .ForEach((Entity e, UIDocument uiDocument) =>
+            {
+                var controller = new InGameUIController();
+                controller.Init(uiDocument.rootVisualElement);
+                EntityManager.AddComponentObject(e, controller);
+            })
+            .WithStructuralChanges()
+            .WithoutBurst()
+            .Run();
+
+            if (displayInGameUIQuery.CalculateEntityCount() == 0)
+            {
+                Entities
+                .WithAll<InGameUI, Prefab, InGame>()
+                .WithNone<InGameUIController>()
+                .ForEach((Entity e) =>
+                {
+                    EntityManager.Instantiate(e);
+                })
+                .WithStructuralChanges()
+                .WithoutBurst()
+                .Run();
+            }
+
+        }
+
 
     }
     [UpdateInGroup(typeof(UISystemGroup))]
@@ -30,12 +118,12 @@ namespace RPG.UI
             inputSystem = World.GetOrCreateSystem<InputSystem>();
             saveSystem = World.GetOrCreateSystem<SavingDebugSystem>();
             pauseSystem = World.GetOrCreateSystem<PauseSystem>();
-            instantiatingPauseUIQuery = GetEntityQuery(ComponentType.ReadOnly<PauseUI>(), ComponentType.ReadOnly<Prefab>());
-            pauseUIQuery = GetEntityQuery(ComponentType.ReadOnly<PauseUI>());
+            instantiatingPauseUIQuery = GetEntityQuery(ReadOnly<PauseUI>(), ReadOnly<Prefab>());
+            pauseUIQuery = GetEntityQuery(ReadOnly<PauseUI>());
             RequireForUpdate(GetEntityQuery(new EntityQueryDesc()
             {
                 Any = new ComponentType[] {
-                    ComponentType.ReadOnly<SceneLoaded>()
+                    ReadOnly<SceneLoaded>()
                 }
             }));
         }
@@ -58,7 +146,6 @@ namespace RPG.UI
         }
         protected override void OnUpdate()
         {
-            Debug.Log($"In Pause UI SYSTEM");
             var input = inputSystem.Input;
             if (input.UI.TogglePauseMenu.WasPressedThisFrame())
             {
@@ -92,34 +179,47 @@ namespace RPG.UI
 
         EntityQuery uiDocumentQuery;
 
+        EntityQuery gameEventListener;
+
         protected override void OnCreate()
         {
             base.OnCreate();
             uiDocumentQuery = EntityManager.CreateEntityQuery(new EntityQueryDesc()
             {
                 None = new ComponentType[] {
-                    ComponentType.ReadOnly<Initialized>()
+                    ReadOnly<Initialized>()
                 },
                 All = new ComponentType[]{
-                    ComponentType.ReadOnly<UIReady>(), ComponentType.ReadOnly<NewGameUI>(),typeof(UIDocument)
+                    ReadOnly<UIReady>(), ReadOnly<NewGameUI>(),typeof(UIDocument)
                 }
+            });
+            gameEventListener = GetEntityQuery(new EntityQueryDesc()
+            {
+                All = new ComponentType[] {
+                  ReadOnly<GameEventListener>(),     ReadOnly<Prefab>()
+                },
+                // Any = new ComponentType[] {
+                //   ReadOnly<Prefab>()
+                // },
             });
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
             RequireForUpdate(GetEntityQuery(new EntityQueryDesc()
             {
                 All = new ComponentType[]{
-                    ComponentType.ReadOnly<UIReady>(), ComponentType.ReadOnly<NewGameUI>(),typeof(UIDocument)
+                    ReadOnly<UIReady>(), ReadOnly<NewGameUI>(),typeof(UIDocument)
                 }
             }));
         }
         protected void NewGame(Entity e)
         {
             EntityManager.AddComponent<TriggerNewGame>(e);
-            Debug.Log($"Click on new game");
+            EntityManager.AddComponent<InGame>(gameEventListener);
+            Debug.Log($"Click on new game listener {gameEventListener.CalculateEntityCount()}");
         }
         protected void LoadSave(Entity e)
         {
             EntityManager.AddComponent<TriggerLoad>(e);
+            EntityManager.AddComponent<InGame>(gameEventListener);
             Debug.Log($"Click on load save");
         }
         protected override void OnUpdate()
@@ -139,6 +239,7 @@ namespace RPG.UI
             {
                 InitNewGameUI();
             }
+            em.RemoveComponent<InGame>(gameEventListener);
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 
@@ -146,7 +247,6 @@ namespace RPG.UI
         {
             var uiDocumentEntity = uiDocumentQuery.GetSingletonEntity();
             var uiDocument = EntityManager.GetComponentObject<UIDocument>(uiDocumentEntity);
-            Debug.Log($"Set up main game ui");
             var visualElement = uiDocument.rootVisualElement;
             InitNewGameButton(uiDocumentEntity, visualElement);
             InitLoadButton(uiDocumentEntity, visualElement);
@@ -174,6 +274,7 @@ namespace RPG.UI
             var em = EntityManager;
             Entities.WithAll<GameUI, Prefab, AutoInstantiateUI>().ForEach((Entity e) =>
             {
+                Debug.Log($"Instanciate {e.Index}");
                 em.Instantiate(e);
                 em.RemoveComponent<AutoInstantiateUI>(e);
             }).WithStructuralChanges().WithoutBurst().Run();
