@@ -1,12 +1,10 @@
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace RPG.Core
 {
-    public struct HideMesh : IComponentData
-    {
-        public Unity.Mathematics.float4x4 LocalToWorld;
-    }
+
     public struct UnHide : IComponentData
     {
 

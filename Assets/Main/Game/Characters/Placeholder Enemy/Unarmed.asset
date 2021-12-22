@@ -15,8 +15,8 @@ MonoBehaviour:
   WeaponPrefab: {fileID: 0}
   Animation: {fileID: 7549088838577149333, guid: cf01705cf812ba709a666a496a48cb6c, type: 3}
   Projectile: {fileID: 0}
-  Damage: 1.66
-  Range: 0.5
+  Damage: 2
+  Range: 1
   Cooldown: 0.8
   AttackDuration: 2.4666667
   SocketType: 0
@@ -26,8 +26,8 @@ MonoBehaviour:
   - 1.203734
   - 1.3855448
   GUID: Assets/Main/Game/Characters/Placeholder Enemy/Unarmed.asset
-  Clip: {fileID: 458669824315323155}
---- !u!114 &458669824315323155
+  Clip: {fileID: 1584212301384062855}
+--- !u!114 &1584212301384062855
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

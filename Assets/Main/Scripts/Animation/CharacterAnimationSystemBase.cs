@@ -225,7 +225,10 @@ namespace RPG.Animation
             {
 
                 Debug.Log($"Change attack animation");
-                set.SendMessage(characterAnimation.AttackClipPlayerNode, ClipPlayerNode.SimulationPorts.Clip, attackAnimation.Animation);
+                if (attackAnimation.Animation.IsCreated)
+                {
+                    set.SendMessage(characterAnimation.AttackClipPlayerNode, ClipPlayerNode.SimulationPorts.Clip, attackAnimation.Animation);
+                }
                 cb.RemoveComponent<ChangeAttackAnimation>(e);
             }).WithoutBurst().Run();
 

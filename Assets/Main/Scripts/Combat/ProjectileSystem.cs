@@ -15,10 +15,7 @@ namespace RPG.Combat
     {
 
     }
-    /*   public struct IsDestroying : IComponentData
-      {
-
-      } */
+    [UpdateInGroup(typeof(CombatSystemGroup))]
     public class DestroyVisualEffect : SystemBase
     {
 
@@ -176,7 +173,6 @@ namespace RPG.Combat
                         {
                             Debug.Log($"Projectile {e} destroyed by {other.Index}  ");
                             cbp.AddComponent<ProjectileHitted>(entityInQueryIndex, e);
-                            /*  cbp.DestroyEntity(entityInQueryIndex, e); */
                         }
                     }
 

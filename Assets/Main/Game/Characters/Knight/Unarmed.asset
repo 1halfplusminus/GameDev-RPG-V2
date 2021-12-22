@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-3119977550976670441
+--- !u!114 &-4456596027819776116
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -33,6 +33,10 @@ MonoBehaviour:
   Cooldown: 0.8
   AttackDuration: 2.2
   SocketType: 1
-  HitEvents: []
+  HitEvents:
+  - 0.65503764
+  - 0.8866166
+  - 1.0983459
+  - 1.3762406
   GUID: Assets/Main/Game/Characters/Knight/Unarmed.asset
-  Clip: {fileID: -3119977550976670441}
+  Clip: {fileID: -4456596027819776116}

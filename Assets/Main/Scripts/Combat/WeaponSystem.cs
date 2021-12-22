@@ -29,7 +29,7 @@ namespace RPG.Combat
             .WithStoreEntityQueryInField(ref fighterEquipWeaponQuery)
             .ForEach((Entity e, ref Fighter fighter, ref DynamicBuffer<HitEvent> hitEvents, in FighterEquipped equiped) =>
             {
-                var weaponRef = equiped.Weapon.Value;
+                ref var weaponRef = ref equiped.Weapon.Value;
                 var weapon = weaponRef.Weapon;
                 Debug.Log($"Fighter {e.Index} equip weapon {weapon.GUID}");
                 var weaponHitEvents = weapon.HitEvents;
@@ -73,12 +73,12 @@ namespace RPG.Combat
                 {
                     cbp.AddComponent(entityInQueryIndex, e, new Spawn() { Prefab = spawn.Prefab, Parent = e });
                 }
-                cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new FighterEquipped { Weapon = spawn.Weapon });
-                cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new ChangeAttackAnimation() { Animation = spawn.Animation });
                 if (spawn.Projectile != Entity.Null)
                 {
                     cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new ShootProjectile() { Prefab = spawn.Projectile, Socket = e });
                 }
+                cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new FighterEquipped { Weapon = spawn.Weapon });
+                cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new ChangeAttackAnimation() { Animation = spawn.Animation });
                 cbp.RemoveComponent<SpawnWeapon>(entityInQueryIndex, e);
             }).ScheduleParallel();
 
@@ -119,15 +119,28 @@ namespace RPG.Combat
                     cbp.RemoveComponent<ShootProjectile>(entityInQueryIndex, e);
                 }
             }).ScheduleParallel();
+
             Entities
             .WithNone<Equipped>()
             .WithStoreEntityQueryInField(ref equipPrefabInSocketQuery)
-            .ForEach((int entityInQueryIndex, Entity e, in WeaponAssetData weaponAssetData, in EquipInSocket equipWeapon, in EquippedPrefab prefab, in ChangeAttackAnimation changeAttackAnimation) =>
+            .ForEach((int entityInQueryIndex, Entity e, in EquipInSocket equipWeapon) =>
             {
-                Debug.Log($"Equip {weaponAssetData.Weapon.Value.Weapon.GUID} in socket : ${equipWeapon.Socket.Index}");
-                cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new SpawnWeapon { Prefab = prefab.Value, Animation = changeAttackAnimation.Animation, Weapon = weaponAssetData.Weapon, Projectile = weaponAssetData.Weapon.Value.ProjectileEntity });
-                cbp.RemoveComponent<EquipInSocket>(entityInQueryIndex, e);
-                cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new Equipped { Equipable = weaponAssetData.Weapon });
+                if (HasComponent<WeaponAssetData>(equipWeapon.Weapon) && HasComponent<ChangeAttackAnimation>(equipWeapon.Weapon))
+                {
+                    var weaponData = GetComponent<WeaponAssetData>(equipWeapon.Weapon);
+                    var changeAttackAnimation = GetComponent<ChangeAttackAnimation>(equipWeapon.Weapon);
+                    var equippedPrefab = GetComponent<EquippedPrefab>(equipWeapon.Weapon);
+                    Debug.Log($"Equip {weaponData.Weapon.Value.Weapon.GUID} in socket : ${equipWeapon.Socket.Index}");
+                    cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new SpawnWeapon
+                    {
+                        Prefab = equippedPrefab.Value,
+                        Animation = changeAttackAnimation.Animation,
+                        Weapon = weaponData.Weapon,
+                        Projectile = weaponData.Weapon.Value.ProjectileEntity
+                    });
+                    cbp.RemoveComponent<EquipInSocket>(entityInQueryIndex, e);
+                    cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new Equipped { Equipable = weaponData.Weapon });
+                }
 
             }).ScheduleParallel();
 
@@ -171,21 +184,19 @@ namespace RPG.Combat
             .ForEach((int entityInQueryIndex, Entity e, in LocalToWorld localToWorld) =>
             {
                 Debug.Log($"{e.Index} was picked");
-                cbp.AddComponent(entityInQueryIndex, e, new HideMesh { LocalToWorld = localToWorld.Value });
-                cbp.RemoveComponent<LocalToWorld>(entityInQueryIndex, e);
+                cbp.AddComponent<DisableRendering>(entityInQueryIndex, e);
                 cbp.RemoveComponent<StatefulTriggerEvent>(entityInQueryIndex, e);
 
             }).ScheduleParallel();
 
             Entities
             .WithAll<Picked, UnHide>()
-            .ForEach((int entityInQueryIndex, Entity e, in HideMesh hideMesh) =>
+            .ForEach((int entityInQueryIndex, Entity e) =>
             {
                 Debug.Log($"{e.Index} pick up respawn");
-                cbp.AddComponent(entityInQueryIndex, e, new LocalToWorld { Value = hideMesh.LocalToWorld });
+                cbp.RemoveComponent<DisableRendering>(entityInQueryIndex, e);
                 cbp.AddBuffer<StatefulTriggerEvent>(entityInQueryIndex, e);
                 cbp.RemoveComponent<Picked>(entityInQueryIndex, e);
-                cbp.RemoveComponent<HideMesh>(entityInQueryIndex, e);
             }).ScheduleParallel();
 
             Entities
@@ -238,8 +249,8 @@ namespace RPG.Combat
                 }
                 var socket = sockets.GetSocketForType(picked.SocketType);
                 Debug.Log($"Player {e.Index} equip pickup Weapon: ${picked.Equipable.Index} in socket: {socket.Index}");
-                // FIXME: Weapon can only be equipped by one entity per frame EquipInSocket should be removed
-                cbp.AddComponent(entityInQueryIndex, picked.Equipable, new EquipInSocket { Socket = socket });
+                cbp.AddComponent(entityInQueryIndex, socket, new EquipInSocket { Socket = socket, Weapon = picked.Equipable });
+
                 cbp.RemoveComponent<Equip>(entityInQueryIndex, e);
                 cbp.RemoveComponent<ShootProjectile>(entityInQueryIndex, e);
             }).ScheduleParallel();

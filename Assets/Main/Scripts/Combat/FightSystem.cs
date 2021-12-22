@@ -4,6 +4,7 @@ using Unity.Transforms;
 using RPG.Mouvement;
 using Unity.Jobs;
 using Unity.Mathematics;
+using UnityEngine;
 
 namespace RPG.Combat
 {
@@ -56,6 +57,7 @@ namespace RPG.Combat
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
+    //TODO: Move to control
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class CombatTargettingSystem : SystemBase
     {
@@ -63,12 +65,12 @@ namespace RPG.Combat
 
         protected override void OnUpdate()
         {
-
+            //FIXME: Should be in another system
             UnTargetNoHittableTarget();
             var hittables = GetComponentDataFromEntity<Hittable>(true);
             Entities
             .WithReadOnly(hittables)
-            .ForEach((Entity e, ref Fighter fighter, in DynamicBuffer<HittedByRaycast> rayHits) =>
+            .ForEach((Entity e, ref Fighter fighter, in DynamicBuffer<HittedByRaycast> rayHits, in MouseClick mouseClick) =>
             {
                 fighter.TargetFoundThisFrame = 0;
                 foreach (var rayHit in rayHits)
@@ -77,7 +79,10 @@ namespace RPG.Combat
                     {
                         if (rayHit.Hitted != e)
                         {
-                            fighter.Target = rayHit.Hitted;
+                            if (mouseClick.CapturedThisFrame)
+                            {
+                                fighter.Target = rayHit.Hitted;
+                            }
                             fighter.TargetFoundThisFrame += 1;
                         }
 
@@ -101,29 +106,29 @@ namespace RPG.Combat
             }).ScheduleParallel();
         }
     }
+
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    [UpdateAfter(typeof(FightSystem))]
-    public class HitSystem : SystemBase
+    [UpdateBefore(typeof(HitSystem))]
+    public class CleanUpHitEventSystem : SystemBase
     {
-        EntityCommandBufferSystem beginSimulationEntityCommandBufferSystem;
-
-        EntityCommandBufferSystem endSimulationEntityCommandBufferSystem;
-
+        EntityCommandBufferSystem commandBufferSystem;
+        EntityQuery hittedEntity;
         protected override void OnCreate()
         {
             base.OnCreate();
-            beginSimulationEntityCommandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
-            endSimulationEntityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            commandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            hittedEntity = GetEntityQuery(new EntityQueryDesc()
+            {
+                All = new ComponentType[]{
+                    typeof(Hit)
+                }
+            });
         }
         protected override void OnUpdate()
         {
-            FireEvent();
-            CleanUp();
-        }
-        public void CleanUp()
-        {
-
-            var commandBuffer = endSimulationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            var cb = commandBufferSystem.CreateCommandBuffer();
+            var cbp = cb.AsParallelWriter();
+            commandBufferSystem.AddJobHandleForProducer(Dependency);
             // Pass hit event as not fired
             Entities
             .WithChangeFilter<HitEvent>()
@@ -140,18 +145,27 @@ namespace RPG.Combat
                 }
             }).ScheduleParallel();
             // Clean up hit event 
-            Entities.WithAll<Hit>().ForEach((Entity e, int entityInQueryIndex) =>
-            {
-                commandBuffer.DestroyEntity(entityInQueryIndex, e);
-            }).ScheduleParallel();
-            endSimulationEntityCommandBufferSystem.AddJobHandleForProducer(this.Dependency);
+            cb.DestroyEntitiesForEntityQuery(hittedEntity);
         }
-        public void FireEvent()
+    }
+    [UpdateInGroup(typeof(CombatSystemGroup))]
+    [UpdateAfter(typeof(FightSystem))]
+    public class HitSystem : SystemBase
+    {
+        EntityCommandBufferSystem commandBufferSystem;
+
+        protected override void OnCreate()
         {
-            var commandBuffer = beginSimulationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            base.OnCreate();
+            commandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
+        }
+        protected override void OnUpdate()
+        {
+            var cb = commandBufferSystem.CreateCommandBuffer();
+            var cbp = cb.AsParallelWriter();
             // Create hit event
             Entities
-            .WithChangeFilter<Fighter>()
+            .WithAny<IsFighting>()
             .ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
             {
                 if (fighter.CurrentAttack.TimeElapsedSinceAttack >= 0)
@@ -159,19 +173,20 @@ namespace RPG.Combat
                     for (int i = 0; i < hitEvents.Length; i++)
                     {
                         var hitEvent = hitEvents[i];
+                        Debug.Log($"Create Hit {fighter.CurrentAttack.TimeElapsedSinceAttack} {hitEvent.Time}");
                         if (hitEvent.Fired == false && fighter.CurrentAttack.TimeElapsedSinceAttack >= hitEvent.Time)
                         {
                             hitEvent.Fired = true;
                             hitEvents[i] = hitEvent;
-                            var eventEntity = commandBuffer.CreateEntity(entityInQueryIndex);
-                            commandBuffer.AddComponent(entityInQueryIndex, eventEntity, new Hit { Hitted = fighter.Target, Hitter = e });
+                            var eventEntity = cbp.CreateEntity(entityInQueryIndex);
+                            cbp.AddComponent(entityInQueryIndex, eventEntity, new Hit { Hitted = fighter.Target, Hitter = e });
                         }
                     }
                 }
             }).ScheduleParallel();
-
-            beginSimulationEntityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+            commandBufferSystem.AddJobHandleForProducer(Dependency);
         }
+
     }
     [UpdateAfter(typeof(MoveTowardTargetSystem))]
     [UpdateAfter(typeof(CombatTargettingSystem))]

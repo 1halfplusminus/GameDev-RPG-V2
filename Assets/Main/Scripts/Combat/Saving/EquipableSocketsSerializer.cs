@@ -60,15 +60,14 @@ namespace RPG.Combat
                     Debug.Log($"Unserialize weapon at address {weaponAddress} , prefab {weaponPrefab.Index}");
                     var hash = new UnityEngine.Hash128();
                     hash.Append(weaponAddress);
-                    BlobAssetReference<WeaponBlobAsset> weaponBlobAsset;
-                    var hasWeaponAsset = convertToEntitySystem.BlobAssetStore.TryGet(hash, out weaponBlobAsset);
+                    var hasWeaponAsset = convertToEntitySystem.BlobAssetStore.TryGet(hash, out BlobAssetReference<WeaponBlobAsset> weaponBlobAsset);
                     if (hasWeaponAsset)
                     {
-                        Debug.Log($"Unserialize weapon {weaponBlobAsset.Value}");
+                        Debug.Log($"Unserialize weapon {weaponBlobAsset.Value.Weapon.GUID}");
                         var weaponEntity = weaponBlobAsset.Value.Entity;
                         var weapon = weaponBlobAsset.Value.Weapon;
                         var socket = equipableSockets.GetSocketForWeapon(weapon);
-                        em.AddComponentData(weaponEntity, new EquipInSocket { Socket = socket });
+                        em.AddComponentData(socket, new EquipInSocket { Socket = socket, Weapon = weaponEntity });
                     }
 
                 }

@@ -132,6 +132,11 @@ namespace RPG.Combat
     public struct EquipInSocket : IComponentData
     {
         public Entity Socket;
+
+        public Entity Weapon;
+
+
+
     }
 
     public enum SocketType

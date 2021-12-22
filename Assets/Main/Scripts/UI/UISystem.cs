@@ -1,3 +1,4 @@
+using RPG.Combat;
 using RPG.Control;
 using RPG.Core;
 using RPG.Saving;
@@ -18,36 +19,30 @@ namespace RPG.UI
     public struct Initialized : IComponentData
     {
 
+
     }
+    [UpdateInGroup(typeof(UISystemGroup))]
     public class InGameUISystem : SystemBase
     {
         EntityQuery displayInGameUIQuery;
 
-        EntityQuery inGameUIQuery;
-
-        EntityQuery playerHealthQuery;
+        EntityQuery playerQuery;
 
         protected override void OnCreate()
         {
             base.OnCreate();
 
-            playerHealthQuery = GetEntityQuery(new EntityQueryDesc()
+            playerQuery = GetEntityQuery(new EntityQueryDesc()
             {
                 All = new ComponentType[]{
                     ReadOnly<PlayerControlled>(),
-                    ReadOnly<Health>()
+                    ReadOnly<Health>(),
+                    ReadOnly<Fighter>()
                 }
             });
 
-            playerHealthQuery.SetChangedVersionFilter(ReadOnly<Health>());
-
-            displayInGameUIQuery = GetEntityQuery(new EntityQueryDesc()
-            {
-                Any = new ComponentType[] {
-                    ReadOnly<PlayerControlled>(),
-                    ReadOnly<SceneLoaded>()
-                }
-            });
+            playerQuery.SetChangedVersionFilter(ReadOnly<Health>());
+            playerQuery.SetChangedVersionFilter(ReadOnly<Fighter>());
 
             displayInGameUIQuery = GetEntityQuery(new EntityQueryDesc()
             {
@@ -55,20 +50,22 @@ namespace RPG.UI
                     ReadOnly<InGameUI>()
                 }
             });
-            // RequireForUpdate(displayInGameUIQuery);
+
         }
         protected override void OnUpdate()
         {
-            if (playerHealthQuery.CalculateEntityCount() == 1)
+            if (playerQuery.CalculateEntityCount() == 1)
             {
-                var playerHealth = playerHealthQuery.GetSingleton<Health>();
+                var playerHealth = playerQuery.GetSingleton<Health>();
+                var fighter = playerQuery.GetSingleton<Fighter>();
                 Entities
                 .ForEach((InGameUIController c) =>
                 {
-                    c.SetHealth(playerHealth);
+                    c.SetPlayerHealth(playerHealth);
+                    c.SetEnemyHealth(fighter.Target, EntityManager);
                 })
                 .WithoutBurst().Run();
-            };
+            }
 
             Entities
             .WithAll<UIReady, InGameUI>()
