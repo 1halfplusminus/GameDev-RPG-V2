@@ -21,6 +21,10 @@ MonoBehaviour:
     m_Address: SaveEditorWindow
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 5f4dab76ee7cd920f870453053239395
+    m_Address: ClassPregressionDrawer.uxml
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 789d5733da6e0ca849db077a8751b187, type: 2}
   m_SchemaSet:

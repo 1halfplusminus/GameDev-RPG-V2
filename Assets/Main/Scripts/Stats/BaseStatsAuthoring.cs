@@ -1,24 +1,10 @@
 
-using System.Linq;
-
 namespace RPG.Stats
 {
     using RPG.Core;
     using Unity.Entities;
     using UnityEngine;
 
-    public struct BaseStats : IComponentData
-    {
-        public int Level;
-        public CharacterClass CharacterClass;
-    }
-    public enum CharacterClass : byte
-    {
-        Novice = 0x1,
-        Mage = 0x2,
-        Archer = 0x3,
-        Warrior = 0x4
-    }
     public class BaseStatsAuthoring : MonoBehaviour
     {
         [Range(1, 99)]
@@ -57,13 +43,13 @@ namespace RPG.Stats
                 var progressionRef = progressionBlobAssetSystem.GetProgression(baseStatsAuthoring.CharacterClass);
                 var entity = GetPrimaryEntity(baseStatsAuthoring);
                 var health = progressionRef.Value.GetHealth(baseStatsAuthoring.StartLevel);
-                Debug.Log($"Health {health}");
                 DstEntityManager.AddComponentData(entity, new BaseStats { CharacterClass = baseStatsAuthoring.CharacterClass, Level = baseStatsAuthoring.StartLevel });
                 DstEntityManager.AddComponentData(entity, new Health
                 {
                     Value = health,
                     MaxHealth = health
                 });
+                DstEntityManager.AddComponentData(entity, new GiveExperiencePoint { Value = progressionRef.Value.GetRewardExperience(baseStatsAuthoring.StartLevel) });
             });
         }
     }

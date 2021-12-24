@@ -4,22 +4,30 @@ namespace RPG.Stats
 {
     using UnityEngine;
     using System;
+    using System.Linq;
     using System.Collections.Generic;
     using Unity.Entities;
     using Unity.Collections;
     using static RPG.Stats.ProgressionAsset;
-
     [CreateAssetMenu(fileName = "ProgressionAsset", menuName = "RPG/Stats/New Progression", order = 0)]
     public class ProgressionAsset : ScriptableObject
     {
         [Serializable]
+        public class ProgressionCurve
+        {
+            public AnimationCurve Curve;
+            public float MinValue;
+            public float MaxValue;
+        }
+        [Serializable]
         public class ClassProgression
         {
+            public int MaxLevel;
             public CharacterClass CharacterClass;
 
-            public List<float> Health;
+            public ProgressionCurve Health;
 
-            public List<float> Damage;
+            public ProgressionCurve RewardExperience;
         }
         public List<ClassProgression> ProgressionByClass;
 
@@ -30,7 +38,7 @@ namespace RPG.Stats
     {
         public BlobArray<float> Health;
 
-        public BlobArray<float> Damage;
+        public BlobArray<float> RewardExperiencePoint;
 
         public float GetHealth(int level)
         {
@@ -38,6 +46,15 @@ namespace RPG.Stats
             if (Health.Length >= index)
             {
                 return Health[index];
+            }
+            return 0;
+        }
+        public float GetRewardExperience(int level)
+        {
+            var index = level - 1;
+            if (RewardExperiencePoint.Length >= index)
+            {
+                return RewardExperiencePoint[index];
             }
             return 0;
         }
@@ -55,12 +72,22 @@ namespace RPG.Stats
         {
 
         }
+        private static float[] CurveToArray(AnimationCurve curve)
+        {
+            var lastKey = curve.keys.LastOrDefault();
+            var results = new float[(int)lastKey.time];
+            for (int i = 0; i < lastKey.time; i++)
+            {
+                results[i] = curve.Evaluate(i);
+            }
+            return results;
+        }
         public static BlobAssetReference<Progression> GetProgression(ClassProgression asset)
         {
             using var builder = new BlobBuilder(Allocator.Temp);
             ref var root = ref builder.ConstructRoot<Progression>();
-            builder.Construct(ref root.Health, asset.Health.ToArray());
-            builder.Construct(ref root.Damage, asset.Damage.ToArray());
+            builder.Construct(ref root.Health, CurveToArray(asset.Health.Curve));
+            builder.Construct(ref root.RewardExperiencePoint, CurveToArray(asset.RewardExperience.Curve));
             var rootRef = builder.CreateBlobAssetReference<Progression>(Allocator.Persistent);
             return rootRef;
         }

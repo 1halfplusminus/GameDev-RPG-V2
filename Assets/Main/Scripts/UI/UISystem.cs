@@ -2,6 +2,7 @@ using RPG.Combat;
 using RPG.Control;
 using RPG.Core;
 using RPG.Saving;
+using RPG.Stats;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -37,13 +38,13 @@ namespace RPG.UI
                 All = new ComponentType[]{
                     ReadOnly<PlayerControlled>(),
                     ReadOnly<Health>(),
-                    ReadOnly<Fighter>()
+                    ReadOnly<Fighter>(),
+                    ReadOnly<ExperiencePoint>()
                 }
             });
-
             playerQuery.SetChangedVersionFilter(ReadOnly<Health>());
             playerQuery.SetChangedVersionFilter(ReadOnly<Fighter>());
-
+            // playerQuery.SetChangedVersionFilter(ReadOnly<ExperiencePoint>());
             displayInGameUIQuery = GetEntityQuery(new EntityQueryDesc()
             {
                 Any = new ComponentType[] {
@@ -58,11 +59,13 @@ namespace RPG.UI
             {
                 var playerHealth = playerQuery.GetSingleton<Health>();
                 var fighter = playerQuery.GetSingleton<Fighter>();
+                var experience = playerQuery.GetSingleton<ExperiencePoint>();
                 Entities
                 .ForEach((InGameUIController c) =>
                 {
                     c.SetPlayerHealth(playerHealth);
                     c.SetEnemyHealth(fighter.Target, EntityManager);
+                    c.SetExperiencePoint(experience.Value);
                 })
                 .WithoutBurst().Run();
             }

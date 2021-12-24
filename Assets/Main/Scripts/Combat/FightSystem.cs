@@ -106,7 +106,50 @@ namespace RPG.Combat
             }).ScheduleParallel();
         }
     }
+    [UpdateInGroup(typeof(CombatSystemGroup))]
+    [UpdateAfter(typeof(HitSystem))]
+    public class WasHittedSystem : SystemBase
+    {
+        EntityCommandBufferSystem commandBufferSystem;
 
+        EntityQuery hitQuery;
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            commandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
+        }
+        protected override void OnUpdate()
+        {
+            var cb = commandBufferSystem.CreateCommandBuffer();
+            var cbp = cb.AsParallelWriter();
+            if (hitQuery.CalculateEntityCount() > 0)
+            {
+                var wasHittedByEntities = GetBufferFromEntity<WasHitted>(false);
+                // Create hit event
+                Entities
+                .WithReadOnly(wasHittedByEntities)
+                .WithStoreEntityQueryInField(ref hitQuery)
+                .ForEach((Entity e, int entityInQueryIndex, in Hit hit) =>
+                {
+                    if (wasHittedByEntities.HasComponent(hit.Hitted))
+                    {
+                        var buffer = cbp.SetBuffer<WasHitted>(entityInQueryIndex, hit.Hitted);
+                        buffer.Capacity = 10;
+                        buffer.Add(new WasHitted { Hitter = hit.Hitter });
+                        if (buffer.Length == 10)
+                        {
+                            buffer.RemoveAt(0);
+                        }
+                    }
+
+                }).ScheduleParallel();
+
+            }
+            commandBufferSystem.AddJobHandleForProducer(Dependency);
+        }
+
+    }
     [UpdateInGroup(typeof(CombatSystemGroup))]
     [UpdateBefore(typeof(HitSystem))]
     public class CleanUpHitEventSystem : SystemBase
@@ -180,6 +223,7 @@ namespace RPG.Combat
                             hitEvents[i] = hitEvent;
                             var eventEntity = cbp.CreateEntity(entityInQueryIndex);
                             cbp.AddComponent(entityInQueryIndex, eventEntity, new Hit { Hitted = fighter.Target, Hitter = e });
+
                         }
                     }
                 }

@@ -36,13 +36,7 @@ namespace RPG.Combat
                 commandBuffer.RemoveComponent<Hittable>(entityInQueryIndex, e);
             })
             .ScheduleParallel();
-            /*  Entities.WithAll<IsDeadTag, PhysicsShape>()
-             .ForEach((Entity e, int entityInQueryIndex) =>
-             {
 
-                 commandBuffer.RemoveComponent<Hittable>(entityInQueryIndex, e);
-             })
-             .ScheduleParallel(); */
             commandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }

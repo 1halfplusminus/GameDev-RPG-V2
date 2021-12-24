@@ -1,3 +1,7 @@
+Resource System:
+  ✔ Kill Enemy Should reward experience point @done(21-12-24 13:43)
+  ✔ Debug display experience point @done(21-12-24 13:44)
+  ✔ Serialize experience point @done(21-12-24 13:44)
 Fighter System:
   ✔ Get Animation Event From Animation Clip Data @done(21-12-15 11:37)
   ✔ Remove hit information from fighter and put it on a weapon component because attack animation is depending on weapon @done(21-12-04 22:15)
@@ -10,7 +14,7 @@ Simple Weapon System:@high
   ✔ Damage on hit should depends of weapon @done(21-12-15 11:38)
   ✔ Character should be able to pick weapon on floor @done(21-12-07 17:21)
   ✔ Save Weapon @done(21-12-20 13:17)
-  ☐ Weapon should respawn after sometime
+  ✔ Weapon should respawn after sometime @done(21-12-24 13:43)
   ☐ Weapon should play vfx on hit / attack
   
 Fight System:

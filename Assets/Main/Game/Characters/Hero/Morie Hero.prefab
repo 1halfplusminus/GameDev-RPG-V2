@@ -1462,6 +1462,7 @@ GameObject:
   - component: {fileID: 7979986417888468897}
   - component: {fileID: -5488440909320222580}
   - component: {fileID: 3233999551531206025}
+  - component: {fileID: 3348868849712857546}
   m_Layer: 0
   m_Name: Morie Hero
   m_TagString: Untagged
@@ -1941,6 +1942,19 @@ MonoBehaviour:
   StartLevel: 2
   CharacterClass: 1
   Progression: {fileID: 11400000, guid: c70abee69b993c2ff87217e728a83375, type: 2}
+--- !u!114 &3348868849712857546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3809403721112327955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ac83b37cf5f5a410ae940b6c16fbe0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Value: 0
 --- !u!1 &3867810557671781752
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,13 +13,20 @@ namespace RPG.UI
     public class InGameUIController : Object, IComponentData
     {
         private Label PlayerHealth;
+        private Label PlayerExperiencePoint;
         private Label EnemyHealth;
         public void Init(VisualElement root)
         {
             PlayerHealth = root.Q<Label>("Health");
             EnemyHealth = root.Q<Label>("EnemyHealth");
+            PlayerExperiencePoint = root.Q<Label>("Experience");
         }
 
+        public void SetExperiencePoint(float value)
+        {
+            PlayerExperiencePoint.Clear();
+            PlayerExperiencePoint.text = value.ToString();
+        }
         public void SetPlayerHealth(Health health)
         {
             SetHealth(PlayerHealth, health);
@@ -27,7 +34,6 @@ namespace RPG.UI
 
         private void SetHealth(Label label, Health health)
         {
-            Debug.Log($"Set Health {health.Value} {health.MaxHealth} {health.GetPercent()}");
             label.Clear();
             label.text = (health.Value / health.MaxHealth).ToString("P0");
         }
