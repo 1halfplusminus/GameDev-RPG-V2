@@ -9,53 +9,32 @@ namespace RPG.Stats
     using UnityEngine.AddressableAssets;
     using UnityEngine.UIElements;
     using static RPG.Stats.ProgressionAsset;
-
-    [CustomPropertyDrawer(typeof(ClassProgression))]
-    public class ClassProgressionDrawer : PropertyDrawer
+    using RPG.Core;
+    [CustomPropertyDrawer(typeof(ProgressionCurve))]
+    public class ProgressionCurveDrawer : PropertyDrawer
     {
-
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            var handle = Addressables.LoadAssetAsync<VisualTreeAsset>("ClassPregressionDrawer.uxml");
-            handle.WaitForCompletion();
-            var visualTreeAsset = handle.Result;
-            var root = visualTreeAsset.Instantiate();
+            var mainTemplateHandle = Addressables.LoadAssetAsync<VisualTreeAsset>("ProgressionCurveDrawer");
+            mainTemplateHandle.WaitForCompletion();
+            var mainTemplateTreeAsset = mainTemplateHandle.Result;
+            var root = mainTemplateTreeAsset.Instantiate();
 
-            var maxLevelProperty = property.FindPropertyRelative(nameof(ClassProgression.MaxLevel));
-            var maxLevelField = root.Q<SliderInt>(nameof(ClassProgression.MaxLevel));
-            var progressionCurveProperties = GetProgressionCurveProperties(property);
-            maxLevelField.RegisterValueChangedCallback((e) =>
-            {
-                foreach (var progressionProperty in progressionCurveProperties)
-                {
-                    UpdateAnimationCurveMaxValue(progressionProperty, maxLevelProperty.intValue);
-                    property.serializedObject.ApplyModifiedProperties();
-                }
-            });
-            foreach (var progressionProperty in progressionCurveProperties)
-            {
-                DefaultAnimationCurve(progressionProperty, maxLevelProperty.intValue);
-                InitProgressionCurveField(root, property, progressionProperty);
-            }
+            var maxLevelProperty = property.FindParentProperty().FindParentProperty().FindPropertyRelative(nameof(ClassProgression.MaxLevel));
+            DefaultAnimationCurve(property, maxLevelProperty.intValue);
+            InitProgressionCurveField(root, maxLevelProperty, property);
+
 
             return root;
         }
-        private List<SerializedProperty> GetProgressionCurveProperties(SerializedProperty property)
-        {
-            var list = new List<SerializedProperty>();
-            list.Add(property.FindPropertyRelative(nameof(ClassProgression.Health)));
-            list.Add(property.FindPropertyRelative(nameof(ClassProgression.RewardExperience)));
-            return list;
-        }
-        private void InitProgressionCurveField(VisualElement root, SerializedProperty property, SerializedProperty progressionProperty)
+
+        private static void InitProgressionCurveField(VisualElement root, SerializedProperty maxLevelProperty, SerializedProperty progressionProperty)
         {
 
-            var maxLevelProperty = property.FindPropertyRelative(nameof(ClassProgression.MaxLevel));
             Debug.Log(progressionProperty.name);
-            var progressionField = root.Q<VisualElement>(progressionProperty.name);
-            var progressionMaxValueField = progressionField.Q<FloatField>("MaxValue");
-            var progressionMinValueField = progressionField.Q<FloatField>("MinValue");
-            var curveField = progressionField.Q<CurveField>();
+            var progressionMaxValueField = root.Q<FloatField>("MaxValue");
+            var progressionMinValueField = root.Q<FloatField>("MinValue");
+            var curveField = root.Q<CurveField>();
             progressionMinValueField.RegisterValueChangedCallback((e) =>
             {
                 UpdateAnimationCurveMinValue(progressionProperty);
@@ -67,7 +46,7 @@ namespace RPG.Stats
 
            });
         }
-        private void DefaultAnimationCurve(SerializedProperty property, int maxLevel, float maxValue, float minValue)
+        private static void DefaultAnimationCurve(SerializedProperty property, int maxLevel, float maxValue, float minValue)
         {
             var curveProperty = property.FindPropertyRelative("Curve");
             if (curveProperty.animationCurveValue.keys.Length == 0)
@@ -78,7 +57,7 @@ namespace RPG.Stats
 
             }
         }
-        private void DefaultAnimationCurve(SerializedProperty property, int maxLevel)
+        private static void DefaultAnimationCurve(SerializedProperty property, int maxLevel)
         {
 
             var maxValueProperty = GetMaxValueProperty(property);
@@ -101,7 +80,7 @@ namespace RPG.Stats
         {
             return property.FindPropertyRelative("Curve");
         }
-        private void UpdateAnimationCurveMinValue(SerializedProperty property)
+        public static void UpdateAnimationCurveMinValue(SerializedProperty property)
         {
             var curveProperty = GetCurveProperty(property);
             var minValueProperty = GetMinValueProperty(property);
@@ -115,14 +94,14 @@ namespace RPG.Stats
             curveProperty.serializedObject.ApplyModifiedProperties();
         }
 
-        private void UpdateAnimationCurveMaxValue(SerializedProperty property, int maxLevel)
+        public static void UpdateAnimationCurveMaxValue(SerializedProperty property, int maxLevel)
         {
             var curveProperty = GetCurveProperty(property);
             var maxValueProperty = GetMaxValueProperty(property);
             var curve = UpdateAnimationCurve(curveProperty.animationCurveValue, curveProperty.animationCurveValue.length - 1, maxLevel, maxValueProperty.floatValue);
             SerializeCurveProperty(curveProperty, curve);
         }
-        private AnimationCurve UpdateAnimationCurve(AnimationCurve curve, int index, int time, float value)
+        private static AnimationCurve UpdateAnimationCurve(AnimationCurve curve, int index, int time, float value)
         {
             if (curve.length > 0)
             {
@@ -136,6 +115,53 @@ namespace RPG.Stats
 
             }
             return curve;
+        }
+    }
+    [CustomPropertyDrawer(typeof(ClassProgression))]
+    public class ClassProgressionDrawer : PropertyDrawer
+    {
+
+        public override VisualElement CreatePropertyGUI(SerializedProperty property)
+        {
+            var mainTemplateHandle = Addressables.LoadAssetAsync<VisualTreeAsset>("ClassProgressionDrawer");
+            mainTemplateHandle.WaitForCompletion();
+            var mainTemplateTreeAsset = mainTemplateHandle.Result;
+            var root = mainTemplateTreeAsset.Instantiate();
+            var maxLevelProperty = property.FindPropertyRelative(nameof(ClassProgression.MaxLevel));
+            var maxLevelField = root.Q<SliderInt>(nameof(ClassProgression.MaxLevel));
+            var progressionCurveProperties = GetProgressionCurveProperties(property);
+            maxLevelField.RegisterValueChangedCallback((e) =>
+            {
+                foreach (var progressionProperty in progressionCurveProperties)
+                {
+                    ProgressionCurveDrawer.UpdateAnimationCurveMaxValue(progressionProperty, maxLevelProperty.intValue);
+                    property.serializedObject.ApplyModifiedProperties();
+                }
+            });
+            // foreach (var progressionProperty in progressionCurveProperties)
+            // {
+            //     DefaultAnimationCurve(progressionProperty, maxLevelProperty.intValue);
+            //     InitProgressionCurveField(root, property, progressionProperty);
+            // }
+
+            return root;
+        }
+        // private VisualTreeAsset LoadProgressionCurveTemplate()
+        // {
+        //     var handle = Addressables.LoadAssetAsync<VisualTreeAsset>("");
+        //     handle.WaitForCompletion();
+        //     return handle.Result;
+        // }
+        private List<SerializedProperty> GetProgressionCurveProperties(SerializedProperty property)
+        {
+            var list = new List<SerializedProperty>();
+            var statsProperties = property.FindPropertyRelative(nameof(ClassProgression.Stats));
+            for (int i = 0; i < statsProperties.arraySize; i++)
+            {
+                list.Add(statsProperties.GetArrayElementAtIndex(i));
+            }
+            return list;
+
         }
     }
 }

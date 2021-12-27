@@ -42,14 +42,15 @@ namespace RPG.Stats
             {
                 var progressionRef = progressionBlobAssetSystem.GetProgression(baseStatsAuthoring.CharacterClass);
                 var entity = GetPrimaryEntity(baseStatsAuthoring);
-                var health = progressionRef.Value.GetHealth(baseStatsAuthoring.StartLevel);
+                var health = progressionRef.Value.GetStat(Stats.Health, baseStatsAuthoring.StartLevel);
+                var experience = progressionRef.Value.GetStat(Stats.Health, baseStatsAuthoring.StartLevel);
                 DstEntityManager.AddComponentData(entity, new BaseStats { CharacterClass = baseStatsAuthoring.CharacterClass, Level = baseStatsAuthoring.StartLevel });
                 DstEntityManager.AddComponentData(entity, new Health
                 {
                     Value = health,
                     MaxHealth = health
                 });
-                DstEntityManager.AddComponentData(entity, new GiveExperiencePoint { Value = progressionRef.Value.GetRewardExperience(baseStatsAuthoring.StartLevel) });
+                DstEntityManager.AddComponentData(entity, new GiveExperiencePoint { Value = experience });
             });
         }
     }

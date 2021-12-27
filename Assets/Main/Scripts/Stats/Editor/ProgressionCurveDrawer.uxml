@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="ProgressionCurveDrawer.uss" />
+    <ui:GroupBox text="Stat" name="Label">
+        <uie:PropertyField binding-path="Stats" name="Stats" />
+        <ui:Foldout name="Foldout">
+            <uie:FloatField label="Max Value" value="1000" binding-path="MaxValue" name="MaxValue" />
+            <uie:FloatField label="Min Value" value="100" binding-path="MinValue" name="MinValue" />
+            <uie:CurveField label="Curve" binding-path="Curve" style="flex-direction: column;" />
+        </ui:Foldout>
+    </ui:GroupBox>
+</ui:UXML>

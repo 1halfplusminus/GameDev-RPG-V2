@@ -9,6 +9,8 @@ namespace RPG.Stats
     using Unity.Entities;
     using Unity.Collections;
     using static RPG.Stats.ProgressionAsset;
+
+
     [CreateAssetMenu(fileName = "ProgressionAsset", menuName = "RPG/Stats/New Progression", order = 0)]
     public class ProgressionAsset : ScriptableObject
     {
@@ -16,18 +18,18 @@ namespace RPG.Stats
         public class ProgressionCurve
         {
             public AnimationCurve Curve;
+            public Stats Stats;
             public float MinValue;
             public float MaxValue;
         }
+
         [Serializable]
         public class ClassProgression
         {
             public int MaxLevel;
             public CharacterClass CharacterClass;
 
-            public ProgressionCurve Health;
-
-            public ProgressionCurve RewardExperience;
+            public ProgressionCurve[] Stats;
         }
         public List<ClassProgression> ProgressionByClass;
 
@@ -36,42 +38,42 @@ namespace RPG.Stats
 
     public struct Progression
     {
-        public BlobArray<float> Health;
+        public BlobArray<BlobArray<float>> Stats;
 
-        public BlobArray<float> RewardExperiencePoint;
-
-        public float GetHealth(int level)
+        public float GetStat(Stats stat, int level)
         {
             var index = level - 1;
-            if (Health.Length >= index)
+            ref var array = ref Stats[(int)stat];
+            if (array.Length != 0 && array.Length >= index)
             {
-                return Health[index];
+                return array[index];
             }
             return 0;
         }
-        public float GetRewardExperience(int level)
-        {
-            var index = level - 1;
-            if (RewardExperiencePoint.Length >= index)
-            {
-                return RewardExperiencePoint[index];
-            }
-            return 0;
-        }
+        // public float GetHealth(int level)
+        // {
+
+        //     return GetStat(RPG.Stats.Stats.Health, level);
+        // }
+        // public float GetRewardExperience(int level)
+        // {
+        //     return GetStat(RPG.Stats.Stats.RewardedExperiencePoint, level);
+        // }
     }
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public class ProgressionBlobAssetSystem : SystemBase
     {
-        BlobAssetStore blobAssetStore;
+        public BlobAssetStore BlobAssetStore;
         protected override void OnCreate()
         {
             base.OnCreate();
-            blobAssetStore = new BlobAssetStore();
+            BlobAssetStore = new BlobAssetStore();
         }
         protected override void OnUpdate()
         {
 
         }
+
         private static float[] CurveToArray(AnimationCurve curve)
         {
             var lastKey = curve.keys.LastOrDefault();
@@ -84,11 +86,23 @@ namespace RPG.Stats
         }
         public static BlobAssetReference<Progression> GetProgression(ClassProgression asset)
         {
-            using var builder = new BlobBuilder(Allocator.Temp);
+            var builder = new BlobBuilder(Allocator.Temp);
             ref var root = ref builder.ConstructRoot<Progression>();
-            builder.Construct(ref root.Health, CurveToArray(asset.Health.Curve));
-            builder.Construct(ref root.RewardExperiencePoint, CurveToArray(asset.RewardExperience.Curve));
+            var stats = Enum.GetValues(typeof(Stats));
+            var nestedArrays = builder.Allocate(ref root.Stats, stats.Length);
+            for (int i = 0; i < asset.Stats.Length; i++)
+            {
+                var key = (int)asset.Stats[i].Stats;
+                var statsData = CurveToArray(asset.Stats[i].Curve);
+                var nestedArray = builder.Allocate(ref nestedArrays[key], statsData.Length);
+                for (int j = 0; j < statsData.Length; j++)
+                {
+                    nestedArray[j] = statsData[j];
+                }
+
+            }
             var rootRef = builder.CreateBlobAssetReference<Progression>(Allocator.Persistent);
+            builder.Dispose();
             return rootRef;
         }
         public static Unity.Entities.Hash128 GetHash(ClassProgression asset)
@@ -98,7 +112,7 @@ namespace RPG.Stats
         public static Unity.Entities.Hash128 GetHash(CharacterClass characterClass)
         {
             var hash = new UnityEngine.Hash128();
-            hash.Append(((byte)characterClass));
+            hash.Append((byte)characterClass);
             return hash;
         }
         public void AddProgression(ProgressionAsset progressionAsset)
@@ -109,21 +123,21 @@ namespace RPG.Stats
                 {
                     var progressionRef = GetProgression(progressionByClass);
                     var hash = GetHash(progressionByClass);
-                    blobAssetStore.TryAdd(hash, progressionRef);
+                    BlobAssetStore.TryAdd(hash, progressionRef);
                 }
             }
         }
         public BlobAssetReference<Progression> GetProgression(CharacterClass characterClass)
         {
-            blobAssetStore.TryGet<Progression>(GetHash(characterClass), out var progressionRef);
+            BlobAssetStore.TryGet<Progression>(GetHash(characterClass), out var progressionRef);
             return progressionRef;
         }
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            if (blobAssetStore != null)
+            if (BlobAssetStore != null)
             {
-                blobAssetStore.Dispose();
+                BlobAssetStore.Dispose();
             }
         }
     }

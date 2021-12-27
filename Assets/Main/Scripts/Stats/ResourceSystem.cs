@@ -21,6 +21,11 @@ namespace RPG.Stats
         Archer = 0x3,
         Warrior = 0x4
     }
+    public enum Stats : int
+    {
+        RewardedExperiencePoint = 0,
+        Health = 1
+    }
 
     public struct ExperiencePointRewarded : IComponentData
     {

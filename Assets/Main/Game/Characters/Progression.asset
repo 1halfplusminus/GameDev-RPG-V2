@@ -15,28 +15,19 @@ MonoBehaviour:
   ProgressionByClass:
   - MaxLevel: 100
     CharacterClass: 1
-    Health:
-      Curve:
+    Stats:
+    - Curve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
           time: 0
           value: 200
-          inSlope: 2
-          outSlope: 2
+          inSlope: 0
+          outSlope: 0
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
           outWeight: 0
-        - serializedVersion: 3
-          time: 78.64789
-          value: 9747.098
-          inSlope: 66.61738
-          outSlope: 66.61738
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.33333334
         - serializedVersion: 3
           time: 100
           value: 10000
@@ -49,53 +40,27 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+      Stats: 1
       MinValue: 200
       MaxValue: 10000
-    RewardExperience:
-      Curve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 100
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 100
-          value: 1000
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      MinValue: 100
-      MaxValue: 1000
   - MaxLevel: 100
     CharacterClass: 2
-    Health:
-      Curve:
+    Stats:
+    - Curve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 50
-          inSlope: 2
-          outSlope: 2
+          value: 20
+          inSlope: 0
+          outSlope: 0
           tangentMode: 0
           weightedMode: 0
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
           time: 100
-          value: 4000
+          value: 500
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -105,15 +70,15 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      MinValue: 50
-      MaxValue: 4000
-    RewardExperience:
-      Curve:
+      Stats: 1
+      MinValue: 20
+      MaxValue: 500
+    - Curve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 100
+          value: 20
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -122,7 +87,7 @@ MonoBehaviour:
           outWeight: 0
         - serializedVersion: 3
           time: 100
-          value: 1000
+          value: 500
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -132,44 +97,18 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      MinValue: 100
-      MaxValue: 1000
+      Stats: 0
+      MinValue: 20
+      MaxValue: 500
   - MaxLevel: 100
     CharacterClass: 3
-    Health:
-      Curve:
+    Stats:
+    - Curve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 76
-          inSlope: 2
-          outSlope: 2
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 100
-          value: 4000
-          inSlope: 122.96703
-          outSlope: 122.96703
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.33333334
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      MinValue: 76
-      MaxValue: 4000
-    RewardExperience:
-      Curve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 100
+          value: 15
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -178,7 +117,7 @@ MonoBehaviour:
           outWeight: 0
         - serializedVersion: 3
           time: 100
-          value: 1000
+          value: 200
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -188,44 +127,45 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      MinValue: 100
-      MaxValue: 1000
+      Stats: 1
+      MinValue: 15
+      MaxValue: 200
+    - Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 15
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 100
+          value: 200
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      Stats: 0
+      MinValue: 15
+      MaxValue: 200
   - MaxLevel: 100
     CharacterClass: 4
-    Health:
-      Curve:
+    Stats:
+    - Curve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 100
-          inSlope: 2
-          outSlope: 2
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 100
-          value: 8000
-          inSlope: 79
-          outSlope: 79
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.33333334
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      MinValue: 100
-      MaxValue: 8000
-    RewardExperience:
-      Curve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 100
+          value: 25
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -234,7 +174,7 @@ MonoBehaviour:
           outWeight: 0
         - serializedVersion: 3
           time: 100
-          value: 1000
+          value: 200
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -244,6 +184,34 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      MinValue: 100
-      MaxValue: 1000
+      Stats: 1
+      MinValue: 25
+      MaxValue: 200
+    - Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 25
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 100
+          value: 200
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      Stats: 0
+      MinValue: 25
+      MaxValue: 200
   GUID: c70abee69b993c2ff87217e728a83375

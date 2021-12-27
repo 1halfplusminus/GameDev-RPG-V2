@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:GroupBox>
+        <ui:SliderInt picking-mode="Ignore" label="Max Level" value="100" high-value="100" name="MaxLevel" binding-path="MaxLevel" show-input-field="true" />
+        <uie:PropertyField binding-path="CharacterClass" name="CharacterClass" />
+        <uie:PropertyField binding-path="Stats" name="Stats" />
+    </ui:GroupBox>
+</ui:UXML>

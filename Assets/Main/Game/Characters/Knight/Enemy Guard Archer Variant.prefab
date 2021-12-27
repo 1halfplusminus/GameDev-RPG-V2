@@ -2893,6 +2893,10 @@ PrefabInstance:
       propertyPath: ChaseDistance
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 6077700054562711984, guid: e7fb41679a215d7e08412569104fc661, type: 3}
+      propertyPath: m_ShapeType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7069064092954979727, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: Run
       value: 
@@ -2913,7 +2917,8 @@ PrefabInstance:
       propertyPath: Attack
       value: 
       objectReference: {fileID: 2353680664591731088, guid: 8bf28d004a8653905909dcd6314d79ef, type: 3}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3414239112952108554, guid: e7fb41679a215d7e08412569104fc661, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e7fb41679a215d7e08412569104fc661, type: 3}
 --- !u!4 &4404991215072260961 stripped
 Transform:
