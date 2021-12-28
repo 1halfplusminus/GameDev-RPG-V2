@@ -43,6 +43,60 @@ MonoBehaviour:
       Stats: 1
       MinValue: 200
       MaxValue: 10000
+    - Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 20
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 100
+          value: 100000
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      Stats: 2
+      MinValue: 20
+      MaxValue: 100000
+    - Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 20
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 100
+          value: 200
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      Stats: 0
+      MinValue: 20
+      MaxValue: 200
   - MaxLevel: 100
     CharacterClass: 2
     Stats:
@@ -108,7 +162,7 @@ MonoBehaviour:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 15
+          value: 20
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -128,14 +182,14 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       Stats: 1
-      MinValue: 15
+      MinValue: 20
       MaxValue: 200
     - Curve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 15
+          value: 20
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -155,7 +209,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       Stats: 0
-      MinValue: 15
+      MinValue: 20
       MaxValue: 200
   - MaxLevel: 100
     CharacterClass: 4

@@ -1,4 +1,5 @@
 using System;
+using RPG.Stats;
 using Unity.Entities;
 using UnityEngine;
 
@@ -11,9 +12,9 @@ namespace RPG.Core
         public float MaxHealth;
         public float Value;
 
-        public int GetPercent()
+        public float GetPercent(int level, BlobAssetReference<Progression> progressionAsset)
         {
-            return (int)(Value * 100 / MaxHealth);
+            return Value / progressionAsset.Value.GetStat(Stats.Stats.Health, level);
         }
     }
 

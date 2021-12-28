@@ -39,7 +39,8 @@ namespace RPG.UI
                     ReadOnly<PlayerControlled>(),
                     ReadOnly<Health>(),
                     ReadOnly<Fighter>(),
-                    ReadOnly<ExperiencePoint>()
+                    ReadOnly<ExperiencePoint>(),
+                    ReadOnly<BaseStats>()
                 }
             });
             playerQuery.SetChangedVersionFilter(ReadOnly<Health>());
@@ -60,12 +61,14 @@ namespace RPG.UI
                 var playerHealth = playerQuery.GetSingleton<Health>();
                 var fighter = playerQuery.GetSingleton<Fighter>();
                 var experience = playerQuery.GetSingleton<ExperiencePoint>();
+                var baseStats = playerQuery.GetSingleton<BaseStats>();
                 Entities
                 .ForEach((InGameUIController c) =>
                 {
-                    c.SetPlayerHealth(playerHealth);
+                    c.SetPlayerHealth(playerHealth, experience.GetLevel(baseStats.ProgressionAsset), baseStats.ProgressionAsset);
                     c.SetEnemyHealth(fighter.Target, EntityManager);
                     c.SetExperiencePoint(experience.Value);
+                    c.SetLevel(experience, baseStats.ProgressionAsset);
                 })
                 .WithoutBurst().Run();
             }

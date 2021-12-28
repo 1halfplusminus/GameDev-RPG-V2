@@ -43,15 +43,22 @@ namespace RPG.Stats
                 var progressionRef = progressionBlobAssetSystem.GetProgression(baseStatsAuthoring.CharacterClass);
                 var entity = GetPrimaryEntity(baseStatsAuthoring);
                 var health = progressionRef.Value.GetStat(Stats.Health, baseStatsAuthoring.StartLevel);
-                var experience = progressionRef.Value.GetStat(Stats.Health, baseStatsAuthoring.StartLevel);
-                DstEntityManager.AddComponentData(entity, new BaseStats { CharacterClass = baseStatsAuthoring.CharacterClass, Level = baseStatsAuthoring.StartLevel });
+                var experience = progressionRef.Value.GetStat(Stats.RewardedExperiencePoint, baseStatsAuthoring.StartLevel);
+                DstEntityManager.AddComponentData(entity, new BaseStats
+                {
+                    CharacterClass = baseStatsAuthoring.CharacterClass,
+                    Level = baseStatsAuthoring.StartLevel,
+                    ProgressionAsset = progressionRef
+                });
                 DstEntityManager.AddComponentData(entity, new Health
                 {
                     Value = health,
                     MaxHealth = health
                 });
                 DstEntityManager.AddComponentData(entity, new GiveExperiencePoint { Value = experience });
+
             });
+
         }
     }
 }

@@ -3113,6 +3113,14 @@ PrefabInstance:
       propertyPath: Value
       value: 40
       objectReference: {fileID: 0}
+    - target: {fileID: 6390919348871334499, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: StartLevel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6390919348871334499, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: CharacterClass
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 8167571134889102839, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: Bones.Array.size
       value: 73

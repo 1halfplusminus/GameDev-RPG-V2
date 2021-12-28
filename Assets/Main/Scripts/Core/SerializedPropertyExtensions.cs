@@ -1,4 +1,4 @@
-
+#if UNITY_EDITOR
 
 namespace RPG.Core
 {
@@ -44,3 +44,5 @@ namespace RPG.Core
         }
     }
 }
+
+#endif

@@ -1677,28 +1677,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b275e5f92732148048d7b77e264ac30e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShapeType: 1
+  m_ShapeType: 3
   m_PrimitiveCenter:
     x: -0.014471412
     y: 0.66405785
     z: 0.07264651
   m_PrimitiveSize:
-    x: 1.3463509
-    y: 1.3463509
-    z: 1.6517851
+    x: 1.6517851
+    y: 1.6517851
+    z: 0.4690603
   m_PrimitiveOrientation:
     Value:
       x: -0
-      y: 90
-      z: 90
+      y: 0
+      z: 0
     RotationOrder: 4
   m_Capsule:
-    Height: 1.6517851
-    Radius: 0.67317545
+    Height: 0.4690603
+    Radius: 0.82589257
     Axis: 2
   m_Cylinder:
-    Height: 1.6517851
-    Radius: 0.67317545
+    Height: 0.4690603
+    Radius: 0.82589257
     Axis: 2
   m_CylinderSideCount: 20
   m_SphereRadius: 0.82589257
@@ -1939,7 +1939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a307d7cb3886a3c6b933cfdb2ba72b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartLevel: 2
+  StartLevel: 1
   CharacterClass: 1
   Progression: {fileID: 11400000, guid: c70abee69b993c2ff87217e728a83375, type: 2}
 --- !u!114 &3348868849712857546
@@ -1951,7 +1951,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3809403721112327955}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ac83b37cf5f5a410ae940b6c16fbe0d, type: 3}
+  m_Script: {fileID: 11500000, guid: 384372d977267599cadf81657c1db418, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Value: 0

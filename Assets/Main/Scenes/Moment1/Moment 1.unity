@@ -4620,7 +4620,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 675814750}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.06, y: -1.301, z: -0.243}
+  m_LocalPosition: {x: 3.06, y: -0.635, z: -0.243}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1517198350}
@@ -19302,6 +19302,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1443369351}
     m_Modifications:
+    - target: {fileID: 2360921255032835532, guid: da02590c99afd30bf8e8dd93205e103e, type: 3}
+      propertyPath: CharacterClass
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7303825171444890134, guid: da02590c99afd30bf8e8dd93205e103e, type: 3}
       propertyPath: m_Name
       value: Enemy Guard Warior Variant
@@ -19350,7 +19354,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6784899574074725743, guid: da02590c99afd30bf8e8dd93205e103e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: da02590c99afd30bf8e8dd93205e103e, type: 3}
 --- !u!4 &5996009421252388164 stripped
 Transform:

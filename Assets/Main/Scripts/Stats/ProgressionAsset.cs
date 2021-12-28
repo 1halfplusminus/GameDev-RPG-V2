@@ -44,11 +44,15 @@ namespace RPG.Stats
         {
             var index = level - 1;
             ref var array = ref Stats[(int)stat];
-            if (array.Length != 0 && array.Length >= index)
+            if (array.Length != 0 && array.Length > index)
             {
                 return array[index];
             }
             return 0;
+        }
+        public float[] GetStats(Stats stat)
+        {
+            return Stats[(int)stat].ToArray();
         }
         // public float GetHealth(int level)
         // {

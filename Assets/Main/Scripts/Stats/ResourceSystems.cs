@@ -13,21 +13,16 @@ namespace RPG.Stats
     {
         public int Level;
         public CharacterClass CharacterClass;
-    }
-    public enum CharacterClass : byte
-    {
-        Novice = 0x1,
-        Mage = 0x2,
-        Archer = 0x3,
-        Warrior = 0x4
-    }
-    public enum Stats : int
-    {
-        RewardedExperiencePoint = 0,
-        Health = 1
+
+        public BlobAssetReference<Progression> ProgressionAsset;
     }
 
     public struct ExperiencePointRewarded : IComponentData
+    {
+
+    }
+
+    public struct LevelUp : IComponentData
     {
 
     }
@@ -57,6 +52,7 @@ namespace RPG.Stats
                         var exp = GetComponent<ExperiencePoint>(hitter);
                         exp.Value += experiencePoint.Value;
                         cbp.AddComponent(entityInQueryIndex, hitter, exp);
+
                         break;
                     }
                 }
