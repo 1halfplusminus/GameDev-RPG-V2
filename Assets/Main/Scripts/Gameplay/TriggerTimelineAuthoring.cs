@@ -8,6 +8,7 @@ using Cinemachine;
 using UnityEngine;
 using RPG.Hybrid;
 using System.Collections.Generic;
+
 namespace RPG.Gameplay
 {
     public struct LinkCinemachineBrain : IComponentData { }
@@ -192,7 +193,7 @@ namespace RPG.Gameplay
                     typeof(PlayableDirector),
                 },
                 Any = new ComponentType[] {
-                    typeof(Core.CollidWithPlayer),
+                    typeof(CollidWithPlayer),
                     typeof(Playing),
                     typeof(TriggeredBy)
                 },

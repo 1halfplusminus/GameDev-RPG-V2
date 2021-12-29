@@ -65,6 +65,14 @@ MonoBehaviour:
     m_Address: Assets/Main/Game/Characters/Progression.asset
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 7dedbc0c49825813faf0c611e86f81f3
+    m_Address: Assets/Main/Game/Characters/Leveling Up Effect.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 6829574416f51bd88a47746ca9c82e9b
+    m_Address: Assets/Main/Game/Characters/Hero/LevelUpEffect.vfx
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 789d5733da6e0ca849db077a8751b187, type: 2}
   m_SchemaSet:

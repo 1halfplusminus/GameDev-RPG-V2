@@ -110,7 +110,8 @@ namespace RPG.Combat
         protected override void OnUpdate()
         {
             var cbp = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-            Entities.WithAll<Projectile, ProjectileHitted, DestroyProjectileOnHit>().ForEach((int entityInQueryIndex, Entity e) =>
+            Entities.WithAll<Projectile, ProjectileHitted, DestroyProjectileOnHit>()
+            .ForEach((int entityInQueryIndex, Entity e) =>
             {
                 cbp.DestroyEntity(entityInQueryIndex, e);
             }).ScheduleParallel();

@@ -1,15 +1,14 @@
 using Unity.Entities;
-using RPG.Core;
-using RPG.Control;
 using UnityEngine;
+using RPG.Core;
 
-namespace RPG.Core
+namespace RPG.Control
 {
     public struct CollidWithPlayer : IComponentData
     {
         public Entity Entity;
     }
-    [UpdateInGroup(typeof(CoreSystemGroup))]
+    [UpdateInGroup(typeof(ControlSystemGroup))]
 
     public class CollidWithPlayerSystem : SystemBase
     {

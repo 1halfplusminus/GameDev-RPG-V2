@@ -7,11 +7,11 @@ using RPG.Mouvement;
 using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Transforms;
+using RPG.Control;
 
 namespace RPG.Gameplay
 {
     using RPG.Saving;
-
 #if UNITY_EDITOR
     using UnityEditor;
     public class PortalAuthoring : MonoBehaviour
@@ -29,12 +29,9 @@ namespace RPG.Gameplay
 
     public class PortalConversionSystem : GameObjectConversionSystem
     {
-        SceneSystem sceneSystem;
         protected override void OnCreate()
         {
             base.OnCreate();
-            sceneSystem = DstEntityManager.World.GetOrCreateSystem<SceneSystem>();
-
         }
         protected override void OnUpdate()
         {
@@ -50,9 +47,8 @@ namespace RPG.Gameplay
             });
         }
     }
+
 #endif
-
-
     public struct Portal : IComponentData
     {
         public int Index;

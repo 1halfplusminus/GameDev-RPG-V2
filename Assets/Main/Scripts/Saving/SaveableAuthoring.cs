@@ -96,6 +96,10 @@ namespace RPG.Saving
 
         private bool IsUnique(string id)
         {
+            if (World.DefaultGameObjectInjectionWorld == null)
+            {
+                return true;
+            }
             var em = World.DefaultGameObjectInjectionWorld.EntityManager;
             var query = em.CreateEntityQuery(typeof(SharedIdentifier));
             var filter = new SharedIdentifier { Id = GetHashFromId(id) };

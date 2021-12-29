@@ -211,19 +211,21 @@ namespace RPG.Combat
             .WithAny<IsFighting>()
             .ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter, in DeltaTime time) =>
             {
-                if (fighter.CurrentAttack.TimeElapsedSinceAttack >= 0)
+                if (fighter.CurrentAttack.TimeElapsedSinceAttack >= 0 && fighter.Attacking)
                 {
                     for (int i = 0; i < hitEvents.Length; i++)
                     {
                         var hitEvent = hitEvents[i];
                         Debug.Log($"Create Hit {fighter.CurrentAttack.TimeElapsedSinceAttack} {hitEvent.Time}");
-                        var shouldFire = math.distance(hitEvent.Time, fighter.CurrentAttack.TimeElapsedSinceAttack) <= time.Value;
+                        var distance = math.distance(fighter.CurrentAttack.TimeElapsedSinceAttack, hitEvent.Time);
+                        var shouldFire = distance <= time.Value && distance >= 0;
                         if (shouldFire)
                         {
                             // hitEvent.Fired = true;
                             // hitEvents[i] = hitEvent;
                             var eventEntity = cbp.CreateEntity(entityInQueryIndex);
                             cbp.AddComponent(entityInQueryIndex, eventEntity, new Hit { Hitted = fighter.Target, Hitter = e });
+                            break;
 
                         }
                     }

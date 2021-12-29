@@ -19,14 +19,14 @@ namespace RPG.Saving
     }
     public class TriggerSavingSystem : SystemBase
     {
-        SavingDebugSystem savingDebugSystem;
+        SavingWrapperSystem savingDebugSystem;
         EntityQuery triggerNewGameQuery;
         EntityQuery triggerLoadQuery;
         EntityQuery triggerSaveQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
-            savingDebugSystem = World.GetOrCreateSystem<SavingDebugSystem>();
+            savingDebugSystem = World.GetOrCreateSystem<SavingWrapperSystem>();
         }
         protected override void OnUpdate()
         {
@@ -67,7 +67,7 @@ namespace RPG.Saving
     }
 
     [UpdateInGroup(typeof(SavingSystemGroup))]
-    public class SavingDebugSystem : SystemBase
+    public class SavingWrapperSystem : SystemBase
     {
 
         BeginPresentationEntityCommandBufferSystem entityCommandBufferSystem;

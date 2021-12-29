@@ -108,7 +108,7 @@ namespace RPG.UI
     public class InPauseUISystem : SystemBase
     {
         InputSystem inputSystem;
-        SavingDebugSystem saveSystem;
+        SavingWrapperSystem saveSystem;
 
         PauseSystem pauseSystem;
         EntityQuery instantiatingPauseUIQuery;
@@ -119,7 +119,7 @@ namespace RPG.UI
         {
             base.OnCreate();
             inputSystem = World.GetOrCreateSystem<InputSystem>();
-            saveSystem = World.GetOrCreateSystem<SavingDebugSystem>();
+            saveSystem = World.GetOrCreateSystem<SavingWrapperSystem>();
             pauseSystem = World.GetOrCreateSystem<PauseSystem>();
             instantiatingPauseUIQuery = GetEntityQuery(ReadOnly<PauseUI>(), ReadOnly<Prefab>());
             pauseUIQuery = GetEntityQuery(ReadOnly<PauseUI>());

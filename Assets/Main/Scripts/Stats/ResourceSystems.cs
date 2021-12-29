@@ -36,15 +36,21 @@ namespace RPG.Stats
     public class RewardExperiencePointSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
+        EntityQuery leveledUpEntityQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
+            leveledUpEntityQuery = GetEntityQuery(ComponentType.ReadOnly<LeveledUp>());
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
         {
-            var cbp = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-            Entities.WithAll<IsDeadTag>()
+            var cb = entityCommandBufferSystem.CreateCommandBuffer();
+            var cbp = cb.AsParallelWriter();
+            cb.RemoveComponentForEntityQuery<LeveledUp>(leveledUpEntityQuery);
+
+            Entities
+            .WithAll<IsDeadTag>()
             .WithNone<ExperiencePointRewarded>()
             .ForEach((int entityInQueryIndex, Entity e, in DynamicBuffer<WasHitted> wasHitteds, in GiveExperiencePoint experiencePoint) =>
             {
