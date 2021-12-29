@@ -173,20 +173,20 @@ namespace RPG.Combat
             var cbp = cb.AsParallelWriter();
             commandBufferSystem.AddJobHandleForProducer(Dependency);
             // Pass hit event as not fired
-            Entities
-            .WithChangeFilter<HitEvent>()
-            .ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
-            {
-                if (fighter.CurrentAttack.InCooldown)
-                {
-                    for (int i = 0; i < hitEvents.Length; i++)
-                    {
-                        var hitEvent = hitEvents[i];
-                        hitEvent.Fired = false;
-                        hitEvents[i] = hitEvent;
-                    }
-                }
-            }).ScheduleParallel();
+            // Entities
+            // .WithChangeFilter<HitEvent>()
+            // .ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
+            // {
+            //     if (fighter.CurrentAttack.InCooldown)
+            //     {
+            //         for (int i = 0; i < hitEvents.Length; i++)
+            //         {
+            //             var hitEvent = hitEvents[i];
+            //             hitEvent.Fired = false;
+            //             hitEvents[i] = hitEvent;
+            //         }
+            //     }
+            // }).ScheduleParallel();
             // Clean up hit event 
             cb.DestroyEntitiesForEntityQuery(hittedEntity);
         }
@@ -200,7 +200,7 @@ namespace RPG.Combat
         protected override void OnCreate()
         {
             base.OnCreate();
-            commandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
+            commandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
         {
@@ -209,7 +209,7 @@ namespace RPG.Combat
             // Create hit event
             Entities
             .WithAny<IsFighting>()
-            .ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
+            .ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter, in DeltaTime time) =>
             {
                 if (fighter.CurrentAttack.TimeElapsedSinceAttack >= 0)
                 {
@@ -217,10 +217,11 @@ namespace RPG.Combat
                     {
                         var hitEvent = hitEvents[i];
                         Debug.Log($"Create Hit {fighter.CurrentAttack.TimeElapsedSinceAttack} {hitEvent.Time}");
-                        if (hitEvent.Fired == false && fighter.CurrentAttack.TimeElapsedSinceAttack >= hitEvent.Time)
+                        var shouldFire = math.distance(hitEvent.Time, fighter.CurrentAttack.TimeElapsedSinceAttack) <= time.Value;
+                        if (shouldFire)
                         {
-                            hitEvent.Fired = true;
-                            hitEvents[i] = hitEvent;
+                            // hitEvent.Fired = true;
+                            // hitEvents[i] = hitEvent;
                             var eventEntity = cbp.CreateEntity(entityInQueryIndex);
                             cbp.AddComponent(entityInQueryIndex, eventEntity, new Hit { Hitted = fighter.Target, Hitter = e });
 

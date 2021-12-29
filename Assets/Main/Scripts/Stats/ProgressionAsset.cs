@@ -9,7 +9,7 @@ namespace RPG.Stats
     using Unity.Entities;
     using Unity.Collections;
     using static RPG.Stats.ProgressionAsset;
-
+    using Unity.Burst;
 
     [CreateAssetMenu(fileName = "ProgressionAsset", menuName = "RPG/Stats/New Progression", order = 0)]
     public class ProgressionAsset : ScriptableObject
@@ -36,6 +36,7 @@ namespace RPG.Stats
         public string GUID;
     }
 
+    [Serializable]
     public struct Progression
     {
         public BlobArray<BlobArray<float>> Stats;
@@ -50,7 +51,8 @@ namespace RPG.Stats
             }
             return 0;
         }
-        public float[] GetStats(Stats stat)
+        [BurstCompile]
+        public float[] GetStats(in Stats stat)
         {
             return Stats[(int)stat].ToArray();
         }

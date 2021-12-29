@@ -5,16 +5,16 @@ using UnityEngine;
 namespace RPG.Stats
 {
 
+
     [Serializable]
     public struct ExperiencePoint : IComponentData
     {
         public float Value;
 
-
-
-        public int GetLevel(BlobAssetReference<Progression> ProgressionAsset)
+        public int GetLevel(BlobAssetReference<Progression> progressionAsset)
         {
-            var experiencePointToLevels = ProgressionAsset.Value.GetStats(Stats.ExperiencePointToLevelUp);
+            var index = (int)Stats.ExperiencePointToLevelUp;
+            ref var experiencePointToLevels = ref progressionAsset.Value.Stats[index];
             for (int i = 0; i < experiencePointToLevels.Length; i++)
             {
                 if (experiencePointToLevels[i] > Value)

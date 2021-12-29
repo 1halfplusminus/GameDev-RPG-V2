@@ -23,15 +23,15 @@ namespace RPG.UI
             Level = root.Q<Label>("Level");
             EnemyContainer = root.Q<VisualElement>("EnemyContainer");
         }
-        public void SetLevel(ExperiencePoint experiencePoint, BlobAssetReference<Progression> progressionAsset)
+        public void SetLevel(BaseStats baseStats)
         {
             Level.Clear();
-            Level.text = experiencePoint.GetLevel(progressionAsset).ToString();
+            Level.text = baseStats.Level.ToString();
         }
         public void SetExperiencePoint(float value)
         {
             PlayerExperiencePoint.Clear();
-            PlayerExperiencePoint.text = value.ToString();
+            PlayerExperiencePoint.text = value.ToString("F0");
         }
         public void SetPlayerHealth(Health health, int level, BlobAssetReference<Progression> progressionAsset)
         {

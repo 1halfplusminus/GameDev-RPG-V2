@@ -9,17 +9,14 @@ namespace RPG.Combat
     {
         protected override void OnUpdate()
         {
-            // TODO Refractor: Get that data async
-
-            var fighters = GetComponentDataFromEntity<Fighter>(true);
             Entities
-            .WithReadOnly(fighters)
             .WithNone<NoDamage>()
             .ForEach((ref Hit hit) =>
             {
-                if (fighters.HasComponent(hit.Hitter))
+                if (HasComponent<Fighter>(hit.Hitter))
                 {
-                    hit.Damage = fighters[hit.Hitter].Damage;
+                    var fighter = GetComponent<Fighter>(hit.Hitter);
+                    hit.Damage = fighter.Damage;
                 }
             })
             .ScheduleParallel();

@@ -70,7 +70,7 @@ namespace RPG.Combat
             return new Weapon
             {
                 AttackDuration = weapon.AttackDuration,
-                Cooldown = weapon.Cooldown,
+                Cooldown = 0.0f,
                 Damage = weapon.Damage,
                 Range = weapon.Range,
                 SocketType = weapon.SocketType,
