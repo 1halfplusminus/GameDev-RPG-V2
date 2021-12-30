@@ -1,6 +1,7 @@
 using RPG.Core;
 using RPG.Stats;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -49,6 +50,7 @@ namespace RPG.Gameplay
             });
         }
     }
+
     public class LevelUpEffectConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()
@@ -74,7 +76,8 @@ namespace RPG.Gameplay
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
-            Entities.WithAll<LeveledUp>().ForEach((int entityInQueryIndex, Entity e, in LevelUpEffect effect) =>
+            Entities.WithAll<LeveledUp>()
+            .ForEach((int entityInQueryIndex, Entity e, in LevelUpEffect effect) =>
             {
                 var instance = cbp.Instantiate(entityInQueryIndex, effect.Prefab);
                 cbp.AddComponent<LocalToParent>(entityInQueryIndex, instance);
@@ -86,15 +89,32 @@ namespace RPG.Gameplay
             Entities
             .WithNone<Spawned>()
             .WithAll<Playing>()
-            .ForEach((int entityInQueryIndex, Entity e, VisualEffect effect, DeltaTime deltaTime) =>
+            .ForEach((int entityInQueryIndex, Entity e, VisualEffect effect, in DeltaTime deltaTime) =>
             {
                 effect.Simulate(deltaTime.Value);
                 if (effect.aliveParticleCount == 0)
                 {
+                    Debug.Log($"Destroy level up visual effect");
                     cb.DestroyEntity(e);
                 }
             }).WithoutBurst().Run();
+
+            RestoreHealthOnLevelUp();
+
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
+
+        private void RestoreHealthOnLevelUp()
+        {
+            Entities
+            .WithAll<LeveledUp>()
+            .ForEach((ref Health health, in BaseStats baseStats, in RestaureHealthPercent restaureHealthPercent) =>
+            {
+                var newHealth = restaureHealthPercent.GetNewHealth(health, baseStats);
+                Debug.Log($"Restaure health on level up new health: {newHealth} old health {health.Value}");
+                health.Value = newHealth;
+            }).ScheduleParallel();
+        }
     }
+
 }

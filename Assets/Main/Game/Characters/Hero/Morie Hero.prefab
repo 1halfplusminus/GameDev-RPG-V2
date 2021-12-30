@@ -1463,6 +1463,8 @@ GameObject:
   - component: {fileID: -5488440909320222580}
   - component: {fileID: 3233999551531206025}
   - component: {fileID: 3348868849712857546}
+  - component: {fileID: -2085742078518067147}
+  - component: {fileID: -461697480233262073}
   m_Layer: 0
   m_Name: Morie Hero
   m_TagString: Untagged
@@ -1955,6 +1957,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Value: 0
+--- !u!114 &-2085742078518067147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3809403721112327955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9330687606541216bacc46fbfbd2512c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Effect:
+    m_AssetGUID: 7dedbc0c49825813faf0c611e86f81f3
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+--- !u!114 &-461697480233262073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3809403721112327955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb9c330c2ff74a0da927d3203f177cba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Value: 70
 --- !u!1 &3867810557671781752
 GameObject:
   m_ObjectHideFlags: 0

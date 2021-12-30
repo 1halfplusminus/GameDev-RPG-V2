@@ -17,50 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 4207c5e75b2b61cb492674a0773dfe21
   m_SerializeEntries:
-  - m_GUID: 1e5f18a346ed454418f93aa7eaf55791
-    m_Address: Packages/com.unity.ui/Shaders/UIE-Runtime.shader
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 7082954141e3ccc43bc3b217cf12e2e0
-    m_Address: Packages/com.unity.ui/Shaders/UIE-RuntimeWorld.shader
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 662b00f569c02f84bbc426d4c41ceb5e
-    m_Address: Packages/com.unity.ui/Shaders/UIE-AtlasBlit.shader
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 6edc7205011273e828e12b6403751d08
-    m_Address: Assets/Main/UI/Panel Setting.asset
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 719aacf4669964cbe869d697a2f191f6
-    m_Address: Packages/com.unity.ui/Shaders/TextCore-SDF-SSD.shader
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 7705bb69aa9ee4143a102125cebcdbba
-    m_Address: Packages/com.unity.ui/Shaders/UIE-Runtime.cginc
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: d2d1bb4c04aa17d4a896936b74b42fc9
-    m_Address: Packages/com.unity.ui/Shaders/UIE-GraphView.shader
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 82114988b4af86a418f1de785fd82f99
-    m_Address: Packages/com.unity.ui/Shaders/UIE-Editor.shader
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 98af3591cf8d040968effb8d3e0762fb
-    m_Address: Packages/com.unity.ui/Shaders/UIE-ColorConversionBlitShader.shader
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: b791cefbd34da3a4cb92fd9cb0ed8a06
-    m_Address: Packages/com.unity.ui/Shaders/UIE-Editor.cginc
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 40ceca24d9fe690f68a85ca267046197
-    m_Address: Assets/Settings/UI Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: c70abee69b993c2ff87217e728a83375
     m_Address: Assets/Main/Game/Characters/Progression.asset
     m_ReadOnly: 0

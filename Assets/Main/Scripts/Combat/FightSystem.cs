@@ -216,7 +216,7 @@ namespace RPG.Combat
                     for (int i = 0; i < hitEvents.Length; i++)
                     {
                         var hitEvent = hitEvents[i];
-                        Debug.Log($"Create Hit {fighter.CurrentAttack.TimeElapsedSinceAttack} {hitEvent.Time}");
+                        // Debug.Log($"Create Hit {fighter.CurrentAttack.TimeElapsedSinceAttack} {hitEvent.Time}");
                         var distance = math.distance(fighter.CurrentAttack.TimeElapsedSinceAttack, hitEvent.Time);
                         var shouldFire = distance <= time.Value && distance >= 0;
                         if (shouldFire)

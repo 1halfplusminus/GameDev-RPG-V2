@@ -517,7 +517,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1279134151}
   - component: {fileID: 1279134152}
-  - component: {fileID: 1279134153}
+  - component: {fileID: 1279134154}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -555,7 +555,7 @@ MonoBehaviour:
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 0}
   m_SortingOrder: 0
---- !u!114 &1279134153
+--- !u!114 &1279134154
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -564,10 +564,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1279134150}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
+  m_Script: {fileID: 11500000, guid: c62b946cf86d11615a1a423b87d1a1c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ConversionMode: 0
 --- !u!1 &1327317184 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8949126279174711208, guid: a5b32b84d9195eaa9afecbdd65b8158a, type: 3}

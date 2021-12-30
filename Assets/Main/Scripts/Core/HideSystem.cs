@@ -59,13 +59,12 @@ namespace RPG.Core
 
             Entities
             .WithAll<Hidden>()
-            .WithAll<HideForSecond>().ForEach((int entityInQueryIndex, Entity e, ref HideForSecond hideForSecond, in DeltaTime dt) =>
+            .WithAll<HideForSecond>()
+            .ForEach((int entityInQueryIndex, Entity e, ref HideForSecond hideForSecond, in DeltaTime dt) =>
             {
-                Debug.Log($"{e.Index} hide for {hideForSecond.Time}");
                 hideForSecond.Time -= dt.Value;
                 if (hideForSecond.Time < 0)
                 {
-                    Debug.Log($"Unhide {e.Index}");
                     cbp.AddComponent<UnHide>(entityInQueryIndex, e);
                 }
             }).ScheduleParallel();
