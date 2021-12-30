@@ -50,7 +50,6 @@ namespace RPG.UI
             }
             var step = math.smoothstep(Current, Duration, _timeElapsed);
             Current = math.lerp(From, To, _timeElapsed / Duration);
-            Debug.Log($"current opacity: {Current} ,  step: {step}");
         }
 
     }

@@ -1,3 +1,4 @@
+using System.IO;
 using RPG.Core;
 using Unity.Entities;
 using UnityEngine;
@@ -99,6 +100,11 @@ namespace RPG.Saving
             RequireForUpdate(requestForUpdateQuery);
 
         }
+
+        public bool HasSave()
+        {
+            return File.Exists(savePath);
+        }
         public void Save()
         {
             Debug.Log("Saving in file");
@@ -116,6 +122,10 @@ namespace RPG.Saving
         public void NewGame(Entity triggerEntity)
         {
 
+            if (HasSave())
+            {
+                File.Delete(savePath);
+            }
             SceneLoadingSystem.UnloadAllCurrentlyLoadedScene(EntityManager);
             var gameSettings = gameSettingQuery.GetSingleton<GameSettings>();
             var gameSettingsEntity = gameSettingQuery.GetSingletonEntity();

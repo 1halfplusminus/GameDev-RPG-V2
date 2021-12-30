@@ -15,7 +15,7 @@ MonoBehaviour:
   WeaponPrefab: {fileID: 0}
   Animation: {fileID: 4574554471517728084, guid: ef9bb8bd57f094583858804f4afea027, type: 3}
   Projectile: {fileID: 0}
-  Damage: 2
+  Damage: 0.5
   Range: 0.1
   Cooldown: 0.8
   AttackDuration: 2.4166667

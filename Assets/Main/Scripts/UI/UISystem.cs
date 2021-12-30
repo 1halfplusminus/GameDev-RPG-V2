@@ -178,6 +178,8 @@ namespace RPG.UI
     public class MainGameUISystem : SystemBase
     {
 
+        SavingWrapperSystem savingWrapperSystem;
+
         EntityCommandBufferSystem entityCommandBufferSystem;
 
         EntityQuery uiDocumentQuery;
@@ -187,6 +189,7 @@ namespace RPG.UI
         protected override void OnCreate()
         {
             base.OnCreate();
+            savingWrapperSystem = World.GetOrCreateSystem<SavingWrapperSystem>();
             uiDocumentQuery = EntityManager.CreateEntityQuery(new EntityQueryDesc()
             {
                 None = new ComponentType[] {
@@ -258,9 +261,14 @@ namespace RPG.UI
 
         private void InitLoadButton(Entity uiDocumentEntity, VisualElement visualElement)
         {
-            visualElement
-            .Q<Button>("Load")
+            var loadButton = visualElement
+            .Q<Button>("Load");
+            loadButton
             .clicked += () => { LoadSave(uiDocumentEntity); };
+            if (!savingWrapperSystem.HasSave())
+            {
+                loadButton.SetEnabled(false);
+            }
         }
 
         private void InitNewGameButton(Entity uiDocumentEntity, VisualElement visualElement)

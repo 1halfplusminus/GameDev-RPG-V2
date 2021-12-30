@@ -758,6 +758,7 @@ GameObject:
   - component: {fileID: 99620254}
   - component: {fileID: 99620256}
   - component: {fileID: 99620255}
+  - component: {fileID: 99620257}
   m_Layer: 0
   m_Name: Montain.001 (3)
   m_TagString: Untagged
@@ -829,6 +830,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 99620253}
   m_Mesh: {fileID: 106649727460109520, guid: 490e8eb70d3d3e7ac91a5363e1615617, type: 3}
+--- !u!114 &99620257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 99620253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &111604460 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6174453374964196374, guid: 9889c606a18374949b9fc899ee3e5728, type: 3}
@@ -1964,6 +1977,7 @@ GameObject:
   - component: {fileID: 215858578}
   - component: {fileID: 215858580}
   - component: {fileID: 215858579}
+  - component: {fileID: 215858581}
   m_Layer: 0
   m_Name: Montain.001 (2)
   m_TagString: Untagged
@@ -2035,6 +2049,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 215858577}
   m_Mesh: {fileID: 106649727460109520, guid: 490e8eb70d3d3e7ac91a5363e1615617, type: 3}
+--- !u!114 &215858581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 215858577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &220999514 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6174453374964196374, guid: 9889c606a18374949b9fc899ee3e5728, type: 3}
@@ -3967,6 +3993,7 @@ GameObject:
   - component: {fileID: 517332960}
   - component: {fileID: 517332962}
   - component: {fileID: 517332961}
+  - component: {fileID: 517332963}
   m_Layer: 0
   m_Name: Montain.001 (1)
   m_TagString: Untagged
@@ -4038,6 +4065,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 517332959}
   m_Mesh: {fileID: 106649727460109520, guid: 490e8eb70d3d3e7ac91a5363e1615617, type: 3}
+--- !u!114 &517332963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 517332959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &528204757
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4208,6 +4247,7 @@ GameObject:
   - component: {fileID: 595631167}
   - component: {fileID: 595631169}
   - component: {fileID: 595631168}
+  - component: {fileID: 595631170}
   m_Layer: 0
   m_Name: Rock
   m_TagString: Untagged
@@ -4279,6 +4319,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 595631166}
   m_Mesh: {fileID: -4409389809901307226, guid: 490e8eb70d3d3e7ac91a5363e1615617, type: 3}
+--- !u!114 &595631170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595631166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &598105723
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14659,6 +14711,7 @@ GameObject:
   - component: {fileID: 2089428589}
   - component: {fileID: 2089428591}
   - component: {fileID: 2089428590}
+  - component: {fileID: 2089428592}
   m_Layer: 0
   m_Name: Rock
   m_TagString: Untagged
@@ -14730,6 +14783,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2089428588}
   m_Mesh: {fileID: 3707393989712682981, guid: 490e8eb70d3d3e7ac91a5363e1615617, type: 3}
+--- !u!114 &2089428592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089428588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &2101065570 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6174453374964196374, guid: 9889c606a18374949b9fc899ee3e5728, type: 3}
@@ -16664,6 +16729,7 @@ GameObject:
   - component: {fileID: 96496321092068687}
   - component: {fileID: 7176363328142089519}
   - component: {fileID: 4117169766271490367}
+  - component: {fileID: 818961911708775216}
   m_Layer: 0
   m_Name: Montain.016
   m_TagString: Untagged
@@ -16671,6 +16737,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &818961911708775216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818961911708775215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &832880502601846429
 GameObject:
   m_ObjectHideFlags: 0
@@ -16682,6 +16760,7 @@ GameObject:
   - component: {fileID: 3554727778994428793}
   - component: {fileID: 1998254182585219600}
   - component: {fileID: 144436328277317875}
+  - component: {fileID: 832880502601846430}
   m_Layer: 0
   m_Name: Montain
   m_TagString: Untagged
@@ -16689,6 +16768,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &832880502601846430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 832880502601846429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &842561169930418555
 GameObject:
   m_ObjectHideFlags: 0
@@ -16700,6 +16791,7 @@ GameObject:
   - component: {fileID: 5872702308055164787}
   - component: {fileID: 7606255122516214338}
   - component: {fileID: 7712471542006975300}
+  - component: {fileID: 842561169930418556}
   m_Layer: 0
   m_Name: Montain.011
   m_TagString: Untagged
@@ -16707,6 +16799,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &842561169930418556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842561169930418555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &858234646307633545
 GameObject:
   m_ObjectHideFlags: 0
@@ -16718,6 +16822,7 @@ GameObject:
   - component: {fileID: 1453867404916860369}
   - component: {fileID: 487142792809838833}
   - component: {fileID: 4306057209057050822}
+  - component: {fileID: 858234646307633546}
   m_Layer: 0
   m_Name: Montain.005
   m_TagString: Untagged
@@ -16725,6 +16830,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &858234646307633546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 858234646307633545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1092602161044434253
 GameObject:
   m_ObjectHideFlags: 0
@@ -17452,6 +17569,7 @@ GameObject:
   - component: {fileID: 2489277387905850573}
   - component: {fileID: 6146516179938581243}
   - component: {fileID: 5696504272848227081}
+  - component: {fileID: 1945477351340680112}
   m_Layer: 0
   m_Name: Montain.018
   m_TagString: Untagged
@@ -17459,6 +17577,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &1945477351340680112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945477351340680111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!23 &1998229396849093685
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -17535,6 +17665,7 @@ GameObject:
   - component: {fileID: 3930021182089385555}
   - component: {fileID: 774157722874115476}
   - component: {fileID: 8980875501306895041}
+  - component: {fileID: 2239419856154322251}
   m_Layer: 0
   m_Name: Montain.007
   m_TagString: Untagged
@@ -17542,6 +17673,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &2239419856154322251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2239419856154322250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &2489277387905850573
 Transform:
   m_ObjectHideFlags: 0
@@ -17617,6 +17760,7 @@ GameObject:
   - component: {fileID: 513873028053145031}
   - component: {fileID: 7486907529946689341}
   - component: {fileID: 2785903063549840025}
+  - component: {fileID: 2627285336007674972}
   m_Layer: 0
   m_Name: Montain.020
   m_TagString: Untagged
@@ -17624,6 +17768,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &2627285336007674972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2627285336007674971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!33 &2726963242115827823
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -17946,6 +18102,7 @@ GameObject:
   - component: {fileID: 7580135726236469162}
   - component: {fileID: 8687588295460676269}
   - component: {fileID: 9113411600457700498}
+  - component: {fileID: 3565538507145899034}
   m_Layer: 0
   m_Name: Montain.017
   m_TagString: Untagged
@@ -17953,6 +18110,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &3565538507145899034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3565538507145899033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3636683561262284669
 GameObject:
   m_ObjectHideFlags: 0
@@ -17968,6 +18137,7 @@ GameObject:
   - component: {fileID: 3636683561262284672}
   - component: {fileID: 3636683561262284673}
   - component: {fileID: 3636683561262284670}
+  - component: {fileID: 3636683561262284674}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -18193,6 +18363,18 @@ MonoBehaviour:
     Tag05: 0
     Tag06: 0
     Tag07: 0
+--- !u!114 &3636683561262284674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3636683561262284669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3675743661627970717
 GameObject:
   m_ObjectHideFlags: 0
@@ -18204,6 +18386,7 @@ GameObject:
   - component: {fileID: 9059812602028249587}
   - component: {fileID: 1330207947484264327}
   - component: {fileID: 7270545813188745973}
+  - component: {fileID: 3675743661627970718}
   m_Layer: 0
   m_Name: Montain.013
   m_TagString: Untagged
@@ -18211,6 +18394,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &3675743661627970718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3675743661627970717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3770565932148965370
 GameObject:
   m_ObjectHideFlags: 0
@@ -18222,6 +18417,7 @@ GameObject:
   - component: {fileID: 8857326275599497876}
   - component: {fileID: 1523546854755949792}
   - component: {fileID: 7185293348444746130}
+  - component: {fileID: 3770565932148965371}
   m_Layer: 0
   m_Name: Montain.013
   m_TagString: Untagged
@@ -18229,6 +18425,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &3770565932148965371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3770565932148965370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &3930021182089385555
 Transform:
   m_ObjectHideFlags: 0
@@ -18310,6 +18518,7 @@ GameObject:
   - component: {fileID: 1745600894398515088}
   - component: {fileID: 6559984159617229809}
   - component: {fileID: 772481201767750986}
+  - component: {fileID: 4083018015479458081}
   m_Layer: 0
   m_Name: Montain.014
   m_TagString: Untagged
@@ -18317,6 +18526,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &4083018015479458081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4083018015479458080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!23 &4117169766271490367
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -18427,6 +18648,7 @@ GameObject:
   - component: {fileID: 2772097061791305337}
   - component: {fileID: 1554494427700543145}
   - component: {fileID: 3934556438653107678}
+  - component: {fileID: 4206419302689805907}
   m_Layer: 0
   m_Name: Montain.015
   m_TagString: Untagged
@@ -18434,6 +18656,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &4206419302689805907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4206419302689805906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4265155576211253209
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18561,6 +18795,7 @@ GameObject:
   - component: {fileID: 6280020279778672746}
   - component: {fileID: 152840703741229051}
   - component: {fileID: 8116811641967948775}
+  - component: {fileID: 4388013142549641137}
   m_Layer: 0
   m_Name: Montain.004
   m_TagString: Untagged
@@ -18568,6 +18803,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &4388013142549641137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4388013142549641136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4486324106568832365
 GameObject:
   m_ObjectHideFlags: 0
@@ -18579,6 +18826,7 @@ GameObject:
   - component: {fileID: 5730364167810583788}
   - component: {fileID: 5037782198219663955}
   - component: {fileID: 8949709546106105787}
+  - component: {fileID: 4486324106568832366}
   m_Layer: 0
   m_Name: Montain.010
   m_TagString: Untagged
@@ -18586,6 +18834,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &4486324106568832366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4486324106568832365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4574948519166488454
 GameObject:
   m_ObjectHideFlags: 0
@@ -18597,6 +18857,7 @@ GameObject:
   - component: {fileID: 5792149288831568322}
   - component: {fileID: 2726963242115827823}
   - component: {fileID: 4601780048274220639}
+  - component: {fileID: 4574948519166488455}
   m_Layer: 0
   m_Name: Montain.002
   m_TagString: Untagged
@@ -18604,6 +18865,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &4574948519166488455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4574948519166488454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!23 &4601780048274220639
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -18847,6 +19120,7 @@ GameObject:
   - component: {fileID: 9222888192169542731}
   - component: {fileID: 2560719287810445792}
   - component: {fileID: 3121617293167206544}
+  - component: {fileID: 5477053610818561588}
   m_Layer: 0
   m_Name: Montain.003
   m_TagString: Untagged
@@ -18854,6 +19128,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &5477053610818561588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5477053610818561587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!33 &5489315142822391165
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -19316,15 +19602,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7933010373353349292, guid: da02590c99afd30bf8e8dd93205e103e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -67.80002
+      value: -63.14
       objectReference: {fileID: 0}
     - target: {fileID: 7933010373353349292, guid: da02590c99afd30bf8e8dd93205e103e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.02
+      value: 0.91
       objectReference: {fileID: 0}
     - target: {fileID: 7933010373353349292, guid: da02590c99afd30bf8e8dd93205e103e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 40.410004
+      value: 40.72
       objectReference: {fileID: 0}
     - target: {fileID: 7933010373353349292, guid: da02590c99afd30bf8e8dd93205e103e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -19432,6 +19718,7 @@ GameObject:
   - component: {fileID: 355850955803523967}
   - component: {fileID: 4771203506241205089}
   - component: {fileID: 1542977979922034060}
+  - component: {fileID: 6233503110510074534}
   m_Layer: 0
   m_Name: Montain.001
   m_TagString: Untagged
@@ -19439,6 +19726,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &6233503110510074534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6233503110510074533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &6271535726896126001
 Transform:
   m_ObjectHideFlags: 0
@@ -19496,6 +19795,7 @@ GameObject:
   - component: {fileID: 1161260417157244810}
   - component: {fileID: 6515331315777153814}
   - component: {fileID: 449635481471647495}
+  - component: {fileID: 6385592837746845846}
   m_Layer: 0
   m_Name: Montain.012
   m_TagString: Untagged
@@ -19503,6 +19803,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &6385592837746845846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6385592837746845845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!33 &6515331315777153814
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -19640,6 +19952,7 @@ GameObject:
   - component: {fileID: 4134023043918442324}
   - component: {fileID: 7129725840669667226}
   - component: {fileID: 5190802553569148327}
+  - component: {fileID: 7061366781948109384}
   m_Layer: 0
   m_Name: Montain.006
   m_TagString: Untagged
@@ -19647,6 +19960,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &7061366781948109384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7061366781948109383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!23 &7091961946544433984
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -19950,6 +20275,7 @@ GameObject:
   - component: {fileID: 8316028452633534102}
   - component: {fileID: 388217692532280178}
   - component: {fileID: 7091961946544433984}
+  - component: {fileID: 7769457630108363569}
   m_Layer: 0
   m_Name: Montain.019
   m_TagString: Untagged
@@ -19957,6 +20283,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &7769457630108363569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7769457630108363568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!23 &7812815051146027476
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -20010,6 +20348,7 @@ GameObject:
   - component: {fileID: 117787324319129492}
   - component: {fileID: 5489315142822391165}
   - component: {fileID: 7812815051146027476}
+  - component: {fileID: 7853690243922033502}
   m_Layer: 0
   m_Name: Montain.009
   m_TagString: Untagged
@@ -20017,6 +20356,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &7853690243922033502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7853690243922033501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!33 &7871764103121759214
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -20314,6 +20665,7 @@ GameObject:
   - component: {fileID: 6697199902465759747}
   - component: {fileID: 7871764103121759214}
   - component: {fileID: 2982429358603954201}
+  - component: {fileID: 8597219241563684889}
   m_Layer: 0
   m_Name: Montain.008
   m_TagString: Untagged
@@ -20321,6 +20673,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 123
   m_IsActive: 1
+--- !u!114 &8597219241563684889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8597219241563684888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!33 &8687588295460676269
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -1465,6 +1465,8 @@ GameObject:
   - component: {fileID: 3348868849712857546}
   - component: {fileID: -2085742078518067147}
   - component: {fileID: -461697480233262073}
+  - component: {fileID: -7026909531443289389}
+  - component: {fileID: 6661122025290933818}
   m_Layer: 0
   m_Name: Morie Hero
   m_TagString: Untagged
@@ -1987,6 +1989,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Value: 70
+--- !u!114 &-7026909531443289389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3809403721112327955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6661122025290933818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3809403721112327955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c66d943f01e53542add2ad628dc91ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Mesh: {fileID: 0}
+  relativePosition: {x: 0, y: 0, z: 0}
+  relativeRotation: {x: 0, y: 0, z: 0, w: 1}
+  relativeScale: {x: 1, y: 1, z: 1}
+  Type: 0
 --- !u!1 &3867810557671781752
 GameObject:
   m_ObjectHideFlags: 0
