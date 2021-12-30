@@ -1,3 +1,9 @@
+Modifier System:
+  ☐ Damage Progression
+  ☐ Percentage Modifiers
+LevelUp System:
+  ✔ Restaure Health on Leveling up @done(21-12-30 17:36)
+  ✔ Play effect on leveling up @done(21-12-30 17:36)
 Resource System:
   ✔ Kill Enemy Should reward experience point @done(21-12-24 13:43)
   ✔ Debug display experience point @done(21-12-24 13:44)
