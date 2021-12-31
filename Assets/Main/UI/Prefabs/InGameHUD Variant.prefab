@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 344553632007835714, guid: 47721a801e01d5579b0a5cf6d3470ebc, type: 3}
       propertyPath: VisualTreeAsset
       value: 
-      objectReference: {fileID: 9197481963319205126, guid: 9844d5f5293d7dae99cf78f3d5e74c15, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 2413908622281862106, guid: 47721a801e01d5579b0a5cf6d3470ebc, type: 3}
       propertyPath: m_RootOrder
       value: 0

@@ -4,7 +4,7 @@ using Unity.Entities;
 using Unity.Transforms;
 using UnityEditor;
 using System.IO;
-using UnityEditor.Experimental.SceneManagement;
+
 
 namespace RPG.Core
 {
@@ -35,7 +35,7 @@ namespace RPG.Core
         public void Update()
         {
             if (Application.IsPlaying(gameObject)) { return; }
-            if (PrefabStageUtility.GetPrefabStage(gameObject) != null)
+            if (UnityEditor.SceneManagement.PrefabStageUtility.GetPrefabStage(gameObject) != null)
             {
                 return;
             }

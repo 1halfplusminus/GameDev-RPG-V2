@@ -5,7 +5,7 @@ using Unity.Collections;
 using Unity.Entities;
 #if UNITY_EDITOR
 using UnityEditor;
-using UnityEditor.Experimental.SceneManagement;
+
 #endif
 using UnityEngine;
 
@@ -64,7 +64,7 @@ namespace RPG.Saving
         private void Update()
         {
             if (Application.IsPlaying(gameObject)) { return; }
-            if (PrefabStageUtility.GetPrefabStage(gameObject) != null)
+            if (UnityEditor.SceneManagement.PrefabStageUtility.GetPrefabStage(gameObject) != null)
             {
                 Debug.Log("In prefab");
                 return;

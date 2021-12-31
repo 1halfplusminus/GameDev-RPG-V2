@@ -24,7 +24,10 @@ namespace RPG.Gameplay
         {
             Entities.ForEach((LevelUpEffectAuthoring levelEffectAuthoring) =>
             {
+                if (levelEffectAuthoring.Effect.IsValid())
+                {
 
+                }
                 levelEffectAuthoring.Effect.ReleaseAsset();
                 var handle = levelEffectAuthoring.Effect.LoadAssetAsync<GameObject>();
                 levelEffectAuthoring.Effect.OperationHandle.Completed += (r) =>
