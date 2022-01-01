@@ -41,7 +41,7 @@ namespace RPG.UI
         private void SetHealth(Label label, Health health, int level, BlobAssetReference<Progression> progressionAsset)
         {
             label.Clear();
-            label.text = health.GetPercent(level, progressionAsset).ToString("P0");
+            label.text = $"{health.Value:PO} / {progressionAsset.Value.GetStat(Stats.Stats.Health, level):PO}";
         }
 
         public void SetEnemyHealth(Entity e, EntityManager em)
