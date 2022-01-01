@@ -10,21 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: VFX
+  m_Name: Content Update
   m_EditorClassIdentifier: 
-  m_GroupName: VFX
+  m_GroupName: Content Update
   m_Data:
     m_SerializedData: []
-  m_GUID: ecb26b363f278ce089caf0696a12858b
+  m_GUID: 4245785176f1132d784ec5f29571d358
   m_SerializeEntries:
-  - m_GUID: 7dedbc0c49825813faf0c611e86f81f3
-    m_Address: Assets/Main/Game/Characters/Leveling Up Effect.prefab
+  - m_GUID: c70abee69b993c2ff87217e728a83375
+    m_Address: Assets/Main/Game/Characters/Progression.asset
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - VFX
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 789d5733da6e0ca849db077a8751b187, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 12f68e4cf3eb96431ab6204563264427, type: 2}
-    - {fileID: 11400000, guid: b4fb8cde9497ed27b995077abcda2ec8, type: 2}
+    - {fileID: 11400000, guid: 62d8020e4abc5965887f0d713e53a0ed, type: 2}
+    - {fileID: 11400000, guid: eb7f0ba0d33516be1a9c86905086ad89, type: 2}

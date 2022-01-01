@@ -10,47 +10,33 @@ namespace RPG.UI
     public struct GameUI : IComponentData
     {
     }
-
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
     public class UIDeclareReferencedObjectsConversionSystem : GameObjectConversionSystem
     {
-        public const string UI_ADDRESSABLE_LABEL = "GameUI";
-        public const string UI_GROUP_LABEL = "GameUI";
+        public const string UI_ADDRESSABLE_LABEL = "InGameUI";
+        public const string UI_GROUP_LABEL = "Game UI";
 
 
         protected override void OnUpdate()
         {
             Entities.ForEach((GameManager gm) =>
             {
-                var handle = Addressables.LoadAssetsAsync<GameUIAsset>(UI_ADDRESSABLE_LABEL, (r) =>
+                var handle = Addressables.LoadAssetsAsync<GameObject>(UI_ADDRESSABLE_LABEL, (r) =>
                 {
-                    DeclareReferencedAsset(r);
                 });
-                var handle2 = Addressables.LoadAssetsAsync<GameObject>(UI_ADDRESSABLE_LABEL, (r) =>
+                handle.WaitForCompletion();
+                foreach (var r in handle.Result)
                 {
-                    if (r.GetComponent<GameUIAuthoring>() != null)
+                    if (r && r.GetComponent<GameUIAuthoring>() != null)
                     {
                         Debug.Log($"Declare UI For {r.name}");
                         DeclareReferencedPrefab(r);
                     }
-                });
-                handle.WaitForCompletion();
-                handle2.WaitForCompletion();
-            });
-        }
-    }
-    [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
-    public class GameUIAssetDeclareReferencedObjectsConversionSystem : GameObjectConversionSystem
-    {
-        protected override void OnUpdate()
-        {
-            Entities.ForEach((GameUIAsset gameUIAsset) =>
-            {
-                DeclareReferencedAsset(gameUIAsset.VisualTreeAsset);
-            });
-        }
-    }
+                }
 
+            });
+        }
+    }
 
     public class GameUIAuthoringConversionSystem : GameObjectConversionSystem
     {

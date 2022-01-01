@@ -9,12 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83423c6821253f946aa2dd9db23584ed, type: 3}
-  m_Name: GlobalLiveLinkAssetDependency
+  m_Script: {fileID: 11500000, guid: 5834b5087d578d24c926ce20cd31e6d6, type: 3}
+  m_Name: Content Update_ContentUpdateGroupSchema
   m_EditorClassIdentifier: 
-  cacheGUID:
-    Value:
-      x: 3688675676
-      y: 2202493892
-      z: 4111715514
-      w: 3379618747
+  m_Group: {fileID: 11400000, guid: 7dafb6d5f35d7788db4644032cbae57b, type: 2}
+  m_StaticContent: 0

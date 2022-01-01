@@ -17,26 +17,28 @@ MonoBehaviour:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
   m_IgnoreUnsupportedFilesInBuild: 1
   m_UniqueBundleIds: 0
   m_NonRecursiveBuilding: 1
+  m_CCDEnabled: 0
   m_maxConcurrentWebRequests: 500
   m_ContiguousBundles: 1
   m_StripUnityVersionFromBundleBuild: 0
   m_DisableVisibleSubAssetRepresentations: 0
-  m_ShaderBundleNaming: 0
+  m_ShaderBundleNaming: 1
   m_ShaderBundleCustomNaming: 
   m_MonoScriptBundleNaming: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: 59104795bd0095aa79bf69e49750d528
   m_RemoteCatalogLoadPath:
-    m_Id: 
+    m_Id: e04ccdb767c41e91e924650e0a5ea4a8
   m_ContentStateBuildPath: 
+  m_BuildAddressablesWithPlayerBuild: 1
   m_overridePlayerVersion: 
   m_GroupAssets:
   - {fileID: 11400000, guid: d4d476a1641df5d6c862baed2490da48, type: 2}
@@ -44,8 +46,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: de1c079317e3b6badb644371608e0a42, type: 2}
   - {fileID: 11400000, guid: 2e1957b2db3ec479aa977d60856c7c87, type: 2}
   - {fileID: 11400000, guid: 4ab028cd5260dd6ccb184976d6ab5a23, type: 2}
-  - {fileID: 11400000, guid: 584637ba2ecae237490fd7be0470e2cc, type: 2}
   - {fileID: 11400000, guid: 81f7debcd58a0dd62940e9008c57e067, type: 2}
+  - {fileID: 11400000, guid: 7dafb6d5f35d7788db4644032cbae57b, type: 2}
+  - {fileID: 11400000, guid: 2d2633cb2d7b1730d961a51c8a22f28f, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -89,8 +92,8 @@ MonoBehaviour:
     - default
     - Weapon
     - Weapon Instance
-    - GameUI
     - VFX
+    - InGameUI
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 068d72f1a64c8f4bbabbf8b00b2ca1cd, type: 2}
@@ -110,3 +113,14 @@ MonoBehaviour:
     m_Settings: {fileID: 11400000}
     m_NextInstanceId: 0
     m_RegisteredServiceTypeRefs: []
+    m_GlobalProfileVariablesInfos:
+    - key: PrivateIpAddress
+      value: 192.168.1.26
+    - key: PrivateIpAddress_1
+      value: 192.168.1.23
+    - key: PrivateIpAddress_2
+      value: 172.28.0.1
+    - key: PrivateIpAddress_3
+      value: 172.19.0.1
+    - key: PrivateIpAddress_4
+      value: 172.18.0.1

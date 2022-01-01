@@ -10,45 +10,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: GameUI
+  m_Name: Game UI
   m_EditorClassIdentifier: 
-  m_GroupName: GameUI
+  m_GroupName: Game UI
   m_Data:
     m_SerializedData: []
-  m_GUID: 1c702ca97b22edab8a3bf6d0cf361f72
+  m_GUID: 761d4604f2b87f828b0a5870a30a3fa4
   m_SerializeEntries:
-  - m_GUID: 640bc02f3bc81dfa6bf46cad5949c2fb
-    m_Address: Assets/Main/UI/MainScreen.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - GameUI
-  - m_GUID: 99418f751d68d077fba3f04964dcb77c
-    m_Address: Assets/Main/UI/Prefabs/New Game.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - GameUI
-  - m_GUID: 1b3f558571559853abc29d70934bd838
-    m_Address: Assets/Main/UI/Prefabs/Loading UI Variant.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - GameUI
   - m_GUID: f5f0ce349a314aa6d9c0eb6f11b11511
     m_Address: Assets/Main/UI/Prefabs/Pause Menu Variant.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
-    - GameUI
+    - InGameUI
+  - m_GUID: 1b3f558571559853abc29d70934bd838
+    m_Address: Assets/Main/UI/Prefabs/Loading UI Variant.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - InGameUI
   - m_GUID: f2790dbf1a7e7e578b82b394847d0c56
     m_Address: Assets/Main/UI/Prefabs/InGameHUD Variant.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
-    - GameUI
-  - m_GUID: d337463dc0df7fbe3b8a9edd5971530f
-    m_Address: Assets/Main/UI/GameHUH.uss
+    - InGameUI
+  - m_GUID: 99418f751d68d077fba3f04964dcb77c
+    m_Address: Assets/Main/UI/Prefabs/New Game.prefab
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - InGameUI
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 789d5733da6e0ca849db077a8751b187, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 60e71297add82800088a375c4b89487b, type: 2}
-    - {fileID: 11400000, guid: c74d6db287e43f737a39549174689b60, type: 2}
+    - {fileID: 11400000, guid: 8cd5d3dd02bc40b84b66a7863127436a, type: 2}
+    - {fileID: 11400000, guid: 5836022da0b5cc282b89ec028c7bfb09, type: 2}
