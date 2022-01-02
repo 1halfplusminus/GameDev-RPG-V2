@@ -63,7 +63,7 @@ namespace RPG.Core
                 commandBuffer.RemoveComponent<WorldClick>(entityInQueryIndex, e);
             }).ScheduleParallel();
 
-            commandBufferSystem.AddJobHandleForProducer(this.Dependency);
+            commandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
 

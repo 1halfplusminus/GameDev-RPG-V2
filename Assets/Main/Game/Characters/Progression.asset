@@ -97,6 +97,33 @@ MonoBehaviour:
       Stats: 0
       MinValue: 20
       MaxValue: 200
+    - Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 2
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 100
+          value: 2000
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      Stats: 3
+      MinValue: 2
+      MaxValue: 2000
   - MaxLevel: 100
     CharacterClass: 2
     Stats:
@@ -154,6 +181,33 @@ MonoBehaviour:
       Stats: 0
       MinValue: 20
       MaxValue: 500
+    - Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 4
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 100
+          value: 2000
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      Stats: 3
+      MinValue: 4
+      MaxValue: 2000
   - MaxLevel: 100
     CharacterClass: 3
     Stats:
@@ -211,6 +265,33 @@ MonoBehaviour:
       Stats: 0
       MinValue: 20
       MaxValue: 200
+    - Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 4
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 100
+          value: 2000
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      Stats: 3
+      MinValue: 4
+      MaxValue: 2000
   - MaxLevel: 100
     CharacterClass: 4
     Stats:
@@ -228,7 +309,7 @@ MonoBehaviour:
           outWeight: 0
         - serializedVersion: 3
           time: 100
-          value: 200
+          value: 10000
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -240,7 +321,7 @@ MonoBehaviour:
         m_RotationOrder: 4
       Stats: 1
       MinValue: 25
-      MaxValue: 200
+      MaxValue: 10000
     - Curve:
         serializedVersion: 2
         m_Curve:
@@ -268,4 +349,31 @@ MonoBehaviour:
       Stats: 0
       MinValue: 25
       MaxValue: 200
+    - Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 2
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 100
+          value: 2000
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      Stats: 3
+      MinValue: 2
+      MaxValue: 2000
   GUID: c70abee69b993c2ff87217e728a83375

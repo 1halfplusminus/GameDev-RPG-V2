@@ -56,7 +56,8 @@ namespace RPG.Stats
                     MaxHealth = health
                 });
                 DstEntityManager.AddComponentData(entity, new GiveExperiencePoint { Value = experience });
-
+                DstEntityManager.AddComponentData(entity, new AdditiveStatsModifier { });
+                DstEntityManager.AddComponentData(entity, new CalculedStat { });
             });
 
         }

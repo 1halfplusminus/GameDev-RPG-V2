@@ -1,10 +1,11 @@
 
-using RPG.Gameplay;
+
+using RPG.Core;
 using Unity.Entities;
 
 namespace RPG.Stats
 {
-    [UpdateAfter(typeof(GameplaySystemGroup))]
+    [UpdateAfter(typeof(CoreSystemGroup))]
     public class ResourceSystemGroup : ComponentSystemGroup
     {
 

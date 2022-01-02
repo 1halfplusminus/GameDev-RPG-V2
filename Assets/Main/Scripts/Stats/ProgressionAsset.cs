@@ -41,30 +41,33 @@ namespace RPG.Stats
     {
         public BlobArray<BlobArray<float>> Stats;
 
+
+        public float GetStat(Stats stat)
+        {
+            return GetStat(stat, 1);
+        }
         public float GetStat(Stats stat, int level)
         {
-            var index = level - 1;
-            ref var array = ref Stats[(int)stat];
-            if (array.Length != 0 && array.Length > index)
+            return GetStat((int)stat, level);
+        }
+        public float GetStat(int stat, int level)
+        {
+            if (Stats.Length > stat)
             {
-                return array[index];
+                var index = level - 1;
+                ref var array = ref Stats[stat];
+                if (array.Length != 0 && array.Length > index)
+                {
+                    return array[index];
+                }
             }
             return 0;
         }
-        [BurstCompile]
         public float[] GetStats(in Stats stat)
         {
             return Stats[(int)stat].ToArray();
         }
-        // public float GetHealth(int level)
-        // {
 
-        //     return GetStat(RPG.Stats.Stats.Health, level);
-        // }
-        // public float GetRewardExperience(int level)
-        // {
-        //     return GetStat(RPG.Stats.Stats.RewardedExperiencePoint, level);
-        // }
     }
     [UpdateInGroup(typeof(InitializationSystemGroup))]
     public class ProgressionBlobAssetSystem : SystemBase

@@ -6,5 +6,6 @@ namespace RPG.Stats
         RewardedExperiencePoint = 0,
         Health = 1,
         ExperiencePointToLevelUp = 2,
+        Damage = 3
     }
 }

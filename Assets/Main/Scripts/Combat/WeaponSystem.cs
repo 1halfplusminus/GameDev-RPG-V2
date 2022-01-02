@@ -7,6 +7,7 @@ using RPG.Animation;
 using Unity.Rendering;
 using UnityEngine.VFX;
 using RPG.Control;
+using RPG.Stats;
 
 namespace RPG.Combat
 {
@@ -124,7 +125,7 @@ namespace RPG.Combat
             Entities
             .WithNone<Equipped>()
             .WithStoreEntityQueryInField(ref equipPrefabInSocketQuery)
-            .ForEach((int entityInQueryIndex, Entity e, in EquipInSocket equipWeapon) =>
+            .ForEach((int entityInQueryIndex, Entity e, in EquipInSocket equipWeapon, in EquippedBy equipedBy) =>
             {
                 if (HasComponent<WeaponAssetData>(equipWeapon.Weapon) && HasComponent<ChangeAttackAnimation>(equipWeapon.Weapon))
                 {
@@ -141,6 +142,9 @@ namespace RPG.Combat
                     });
                     cbp.RemoveComponent<EquipInSocket>(entityInQueryIndex, e);
                     cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new Equipped { Equipable = weaponData.Weapon });
+                    //FIXME: BAD
+                    var buffer = cbp.AddBuffer<StatsModifier>(entityInQueryIndex, e);
+                    buffer.Add(new StatsModifier { Entity = equipedBy.Entity, Stats = Stats.Stats.Damage, Value = weaponData.Weapon.Value.Weapon.Damage });
                 }
 
             }).ScheduleParallel();

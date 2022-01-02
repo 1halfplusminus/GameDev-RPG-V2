@@ -1,5 +1,7 @@
+
+using RPG.Stats;
 using Unity.Entities;
-using Unity.Mathematics;
+using UnityEngine;
 
 namespace RPG.Combat
 {
@@ -13,10 +15,12 @@ namespace RPG.Combat
             .WithNone<NoDamage>()
             .ForEach((ref Hit hit) =>
             {
-                if (HasComponent<Fighter>(hit.Hitter))
+                if (HasComponent<CalculedStat>(hit.Hitter))
                 {
-                    var fighter = GetComponent<Fighter>(hit.Hitter);
-                    hit.Damage = fighter.Damage;
+                    var calculedStat = GetComponent<CalculedStat>(hit.Hitter);
+                    var damage = calculedStat.GetStat(Stats.Stats.Damage);
+                    // Debug.Log($"Hit for {(int)damage}");
+                    hit.Damage = damage;
                 }
             })
             .ScheduleParallel();
