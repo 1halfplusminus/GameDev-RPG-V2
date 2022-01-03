@@ -375,6 +375,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy Placeholder Guard
       objectReference: {fileID: 0}
+    - target: {fileID: 1299507469631316153, guid: b08820441c10e32508157dba7a7a7f9f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1818726652568574995, guid: b08820441c10e32508157dba7a7a7f9f, type: 3}
       propertyPath: UniqueIdentifier
       value: 443617c2-d277-4022-a636-99586b2dbfe7
@@ -427,7 +431,8 @@ PrefabInstance:
       propertyPath: CharacterClass
       value: 4
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -9084455711176402429, guid: b08820441c10e32508157dba7a7a7f9f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b08820441c10e32508157dba7a7a7f9f, type: 3}
 --- !u!4 &221386104 stripped
 Transform:
@@ -1176,14 +1181,14 @@ PrefabInstance:
     - target: {fileID: 2406009452006651731, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
       propertyPath: Weapon
       value: 
-      objectReference: {fileID: 11400000, guid: e5bdbb26dea7dc3969e80624aa816d28, type: 2}
+      objectReference: {fileID: 11400000, guid: 90c60bf82c18e3cdeb2674c6b9f0ad0b, type: 2}
     - target: {fileID: 3921083346983676379, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
       propertyPath: m_Name
       value: Enemy Guard
       objectReference: {fileID: 0}
     - target: {fileID: 3921083346983676379, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4404991215072260961, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
       propertyPath: m_RootOrder
@@ -1233,8 +1238,13 @@ PrefabInstance:
       propertyPath: UniqueIdentifier
       value: 539ed426-5fcc-4fe8-a797-39c64eef15f0
       objectReference: {fileID: 0}
+    - target: {fileID: 8355786529381604865, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
+      propertyPath: StartLevel
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7076517801919089369, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
+    - {fileID: -667852067089167817, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
 --- !u!33 &4817347790130656532
 MeshFilter:

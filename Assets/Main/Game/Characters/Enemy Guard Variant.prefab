@@ -127,6 +127,58 @@ PrefabInstance:
       propertyPath: Value
       value: 80
       objectReference: {fileID: 0}
+    - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_SphereRadius
+      value: 0.91536534
+      objectReference: {fileID: 0}
+    - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_Capsule.Height
+      value: 1.8307307
+      objectReference: {fileID: 0}
+    - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_Capsule.Radius
+      value: 0.9153651
+      objectReference: {fileID: 0}
+    - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_Cylinder.Height
+      value: 1.8307307
+      objectReference: {fileID: 0}
+    - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_Cylinder.Radius
+      value: 0.9153651
+      objectReference: {fileID: 0}
+    - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_PrimitiveSize.x
+      value: 1.8307302
+      objectReference: {fileID: 0}
+    - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_PrimitiveSize.y
+      value: 1.8307302
+      objectReference: {fileID: 0}
+    - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_PrimitiveSize.z
+      value: 1.8307307
+      objectReference: {fileID: 0}
+    - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_PrimitiveCenter.x
+      value: -0.000000059604645
+      objectReference: {fileID: 0}
+    - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_PrimitiveCenter.y
+      value: 0.8008385
+      objectReference: {fileID: 0}
+    - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_PrimitiveCenter.z
+      value: 0.030325249
+      objectReference: {fileID: 0}
+    - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_PrimitiveOrientation.Value.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: m_PrimitiveOrientation.Value.z
+      value: -90
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
 --- !u!1 &3414239112952108567 stripped

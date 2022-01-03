@@ -143,7 +143,7 @@ namespace RPG.Combat
                     cbp.RemoveComponent<EquipInSocket>(entityInQueryIndex, e);
                     cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new Equipped { Equipable = weaponData.Weapon });
                     //FIXME: BAD
-                    var buffer = cbp.AddBuffer<StatsModifier>(entityInQueryIndex, e);
+                    var buffer = cbp.AddBuffer<StatsModifier>(entityInQueryIndex, equipWeapon.Socket);
                     buffer.Clear();
                     buffer.Add(new StatsModifier { Entity = equipedBy.Entity, Stats = Stats.Stats.Damage, Value = weaponData.Weapon.Value.Weapon.Damage });
                 }

@@ -38,7 +38,7 @@ MonoBehaviour:
     m_SerializedLabels:
     - Weapon
   - m_GUID: 05f68aec6972d1e5f995e03bfed1d50d
-    m_Address: Bow
+    m_Address: Hero/Bow
     m_ReadOnly: 0
     m_SerializedLabels:
     - Weapon
