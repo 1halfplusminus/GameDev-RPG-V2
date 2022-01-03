@@ -16,6 +16,7 @@ MonoBehaviour:
   Animation: {fileID: -7239389561719114947, guid: ef9bb8bd57f094583858804f4afea027, type: 3}
   Projectile: {fileID: 0}
   Damage: 4.25
+  BonusDamagePercent: 20
   Range: 0.1
   Cooldown: 1.1
   AttackDuration: 0.875

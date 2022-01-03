@@ -86,8 +86,8 @@ namespace RPG.Stats
         private static float[] CurveToArray(AnimationCurve curve)
         {
             var lastKey = curve.keys.LastOrDefault();
-            var results = new float[(int)lastKey.time];
-            for (int i = 0; i < lastKey.time; i++)
+            var results = new float[(int)lastKey.time + 1];
+            for (int i = 0; i < results.Length; i++)
             {
                 results[i] = curve.Evaluate(i);
             }
