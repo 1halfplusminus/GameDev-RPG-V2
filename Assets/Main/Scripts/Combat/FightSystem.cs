@@ -67,15 +67,13 @@ namespace RPG.Combat
         {
             //FIXME: Should be in another system
             UnTargetNoHittableTarget();
-            var hittables = GetComponentDataFromEntity<Hittable>(true);
             Entities
-            .WithReadOnly(hittables)
             .ForEach((Entity e, ref Fighter fighter, in DynamicBuffer<HittedByRaycast> rayHits, in MouseClick mouseClick) =>
             {
                 fighter.TargetFoundThisFrame = 0;
                 foreach (var rayHit in rayHits)
                 {
-                    if (hittables.HasComponent(rayHit.Hitted))
+                    if (HasComponent<Hittable>(rayHit.Hitted))
                     {
                         if (rayHit.Hitted != e)
                         {
@@ -89,7 +87,6 @@ namespace RPG.Combat
                     }
 
                 }
-
             }).ScheduleParallel();
         }
         private void UnTargetNoHittableTarget()
@@ -106,8 +103,10 @@ namespace RPG.Combat
             }).ScheduleParallel();
         }
     }
+
+    //FIXME: More receive damage system
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    [UpdateAfter(typeof(HitSystem))]
+    [UpdateAfter(typeof(ShootProjectileSystem))]
     public class WasHittedSystem : SystemBase
     {
         EntityCommandBufferSystem commandBufferSystem;
@@ -132,14 +131,18 @@ namespace RPG.Combat
             .WithStoreEntityQueryInField(ref hitQuery)
             .ForEach((Entity e, int entityInQueryIndex, in Hit hit) =>
             {
-                var buffer = cbp.AddBuffer<WasHitteds>(entityInQueryIndex, hit.Hitted);
-                buffer.Capacity = 10;
-                buffer.Add(new WasHitteds { Hitter = hit.Hitter });
-                if (buffer.Length == 10)
+                if (hit.Damage > 0)
                 {
-                    buffer.RemoveAt(0);
+                    var buffer = cbp.AddBuffer<WasHitteds>(entityInQueryIndex, hit.Hitted);
+                    buffer.Capacity = 10;
+                    buffer.Add(new WasHitteds { Hitter = hit.Hitter });
+                    if (buffer.Length == 10)
+                    {
+                        buffer.RemoveAt(0);
+                    }
+                    cbp.AddComponent<WasHitted>(entityInQueryIndex, hit.Hitted);
                 }
-                cbp.AddComponent<WasHitted>(entityInQueryIndex, hit.Hitted);
+
             }).ScheduleParallel();
 
             Entities
@@ -183,6 +186,7 @@ namespace RPG.Combat
             // Create hit event
             Entities
             .WithAny<IsFighting>()
+            .WithNone<IsDeadTag>()
             .ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter, in DeltaTime time) =>
             {
                 if (fighter.CurrentAttack.TimeElapsedSinceAttack >= 0 && fighter.Attacking)
