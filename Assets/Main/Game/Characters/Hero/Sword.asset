@@ -23,8 +23,8 @@ MonoBehaviour:
   HitEvents:
   - 0.6363636
   GUID: Sword
-  Clip: {fileID: 616749816296189784}
---- !u!114 &616749816296189784
+  Clip: {fileID: 1145616285544119088}
+--- !u!114 &1145616285544119088
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

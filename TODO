@@ -1,6 +1,7 @@
 Modifier System:
   ☐ Damage Progression
   ☐ Percentage Modifiers
+  ☐ Extensible Modifier System
 LevelUp System:
   ✔ Restaure Health on Leveling up @done(21-12-30 17:36)
   ✔ Play effect on leveling up @done(21-12-30 17:36)

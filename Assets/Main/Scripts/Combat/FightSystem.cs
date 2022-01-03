@@ -151,8 +151,8 @@ namespace RPG.Combat
 
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    [UpdateBefore(typeof(HitSystem))]
-    public class CleanUpHitEventSystem : SystemBase
+    [UpdateAfter(typeof(FightSystem))]
+    public class HitSystem : SystemBase
     {
         EntityCommandBufferSystem commandBufferSystem;
         EntityQuery hittedEntity;
@@ -171,41 +171,7 @@ namespace RPG.Combat
         {
             var cb = commandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
-            commandBufferSystem.AddJobHandleForProducer(Dependency);
-            // Pass hit event as not fired
-            // Entities
-            // .WithChangeFilter<HitEvent>()
-            // .ForEach((Entity e, int entityInQueryIndex, ref DynamicBuffer<HitEvent> hitEvents, in Fighter fighter) =>
-            // {
-            //     if (fighter.CurrentAttack.InCooldown)
-            //     {
-            //         for (int i = 0; i < hitEvents.Length; i++)
-            //         {
-            //             var hitEvent = hitEvents[i];
-            //             hitEvent.Fired = false;
-            //             hitEvents[i] = hitEvent;
-            //         }
-            //     }
-            // }).ScheduleParallel();
-            // Clean up hit event 
             cb.DestroyEntitiesForEntityQuery(hittedEntity);
-        }
-    }
-    [UpdateInGroup(typeof(CombatSystemGroup))]
-    [UpdateAfter(typeof(FightSystem))]
-    public class HitSystem : SystemBase
-    {
-        EntityCommandBufferSystem commandBufferSystem;
-
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            commandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-        }
-        protected override void OnUpdate()
-        {
-            var cb = commandBufferSystem.CreateCommandBuffer();
-            var cbp = cb.AsParallelWriter();
             // Create hit event
             Entities
             .WithAny<IsFighting>()
@@ -216,10 +182,11 @@ namespace RPG.Combat
                     for (int i = 0; i < hitEvents.Length; i++)
                     {
                         var hitEvent = hitEvents[i];
-                        // Debug.Log($"Create Hit {fighter.CurrentAttack.TimeElapsedSinceAttack} {hitEvent.Time}");
                         var distance = math.distance(fighter.CurrentAttack.TimeElapsedSinceAttack, hitEvent.Time);
                         var shouldFire = distance <= time.Value && distance >= 0;
-                        if (shouldFire)
+                        var upperBound = hitEvent.Time + 0.1;
+                        var lowerBound = hitEvent.Time - 0.1;
+                        if (fighter.CurrentAttack.TimeElapsedSinceAttack - time.Value <= hitEvent.Time && fighter.CurrentAttack.TimeElapsedSinceAttack > hitEvent.Time)
                         {
                             // hitEvent.Fired = true;
                             // hitEvents[i] = hitEvent;
@@ -232,6 +199,7 @@ namespace RPG.Combat
                 }
             }).ScheduleParallel();
             commandBufferSystem.AddJobHandleForProducer(Dependency);
+
         }
 
     }

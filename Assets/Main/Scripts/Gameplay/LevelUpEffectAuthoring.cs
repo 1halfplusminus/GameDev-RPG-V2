@@ -1,3 +1,4 @@
+using RPG.Combat;
 using RPG.Core;
 using RPG.Stats;
 using Unity.Entities;
@@ -87,17 +88,19 @@ namespace RPG.Gameplay
                 cbp.AddComponent(entityInQueryIndex, instance, new Parent { Value = e });
                 cbp.AddComponent<Playing>(entityInQueryIndex, e);
                 cbp.AddComponent<Spawned>(entityInQueryIndex, instance);
+                cbp.AddComponent<DestroyIfNoParticule>(entityInQueryIndex, instance);
             }).ScheduleParallel();
 
             Entities
+            .WithAll<DestroyIfNoParticule>()
             .WithNone<Spawned>()
             .WithAll<Playing>()
             .ForEach((int entityInQueryIndex, Entity e, VisualEffect effect, in DeltaTime deltaTime) =>
             {
-                effect.Simulate(deltaTime.Value);
+                effect.AdvanceOneFrame();
                 if (effect.aliveParticleCount == 0)
                 {
-                    Debug.Log($"Destroy level up visual effect");
+                    Debug.Log($"Destroying visual effect");
                     cb.DestroyEntity(e);
                 }
             }).WithoutBurst().Run();

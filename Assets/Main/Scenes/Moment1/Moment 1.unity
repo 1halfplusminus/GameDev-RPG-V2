@@ -18167,7 +18167,7 @@ GameObject:
   - component: {fileID: 3636683561262284672}
   - component: {fileID: 3636683561262284673}
   - component: {fileID: 3636683561262284670}
-  - component: {fileID: 3636683561262284674}
+  - component: {fileID: 8785648644046802914}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -18187,7 +18187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b275e5f92732148048d7b77e264ac30e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShapeType: 31
+  m_ShapeType: 30
   m_PrimitiveCenter:
     x: -0.10499494
     y: -0.033969335
@@ -18224,7 +18224,7 @@ MonoBehaviour:
     m_Template: {fileID: 0}
     m_CollisionResponse:
       m_Override: 0
-      m_Value: 0
+      m_Value: 1
     m_Friction:
       m_Override: 0
       m_Value:
@@ -18393,18 +18393,6 @@ MonoBehaviour:
     Tag05: 0
     Tag06: 0
     Tag07: 0
---- !u!114 &3636683561262284674
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3636683561262284669}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3675743661627970717
 GameObject:
   m_ObjectHideFlags: 0
@@ -20786,6 +20774,18 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &8785648644046802914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3636683561262284669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd82948c3151c24d8a1745d8b356cc0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8857326275599497876
 Transform:
   m_ObjectHideFlags: 0

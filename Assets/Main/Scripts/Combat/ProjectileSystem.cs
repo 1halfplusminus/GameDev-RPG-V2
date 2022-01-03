@@ -47,77 +47,49 @@ namespace RPG.Combat
             Entities
            .WithAll<Projectile, ProjectileHitted, OnDestroyOnHit>()
            .WithNone<Playing>()
-           .ForEach((int entityInQueryIndex, Entity e, VisualEffect effect) =>
+           .ForEach((int entityInQueryIndex, Entity e, VisualEffect effect, DynamicBuffer<Child> children) =>
            {
                Debug.Log($"Send Destroy Event");
                effect.SendEvent("OnDestroy");
+               cb.AddComponent<DisableRendering>(e);
                cb.AddComponent<Playing>(e);
-               cb.RemoveComponent<RenderMesh>(e);
+               foreach (var child in children)
+               {
+                   cb.AddComponent<DisableRendering>(child.Value);
+               }
            }).WithoutBurst().Run();
 
-            Entities
-           .WithAll<Projectile, ProjectileHitted, OnDestroyOnHit>()
-           .WithNone<Playing>()
-           .ForEach((int entityInQueryIndex, Entity e, in DynamicBuffer<Child> childs) =>
-           {
-               for (int i = 0; i < childs.Length; i++)
-               {
-                   cbp.RemoveComponent<RenderMesh>(entityInQueryIndex, childs[i].Value);
-               }
-           }).ScheduleParallel();
 
-            Entities
-            .WithAll<Projectile, ProjectileHitted, OnDestroyOnHit>()
-            .WithAll<Playing>()
-            .WithNone<DestroyIfNoParticule>()
-            .ForEach((int entityInQueryIndex, Entity e, VisualEffect effect) =>
-            {
-                if (effect.aliveParticleCount > 0)
-                {
-                    cb.AddComponent<DestroyIfNoParticule>(e);
-                }
-            }).WithoutBurst().Run();
-
-            Entities
-            .WithAll<Projectile, ProjectileHitted, DestroyIfNoParticule>()
-            .WithAll<Playing>()
-            .ForEach((int entityInQueryIndex, Entity e, VisualEffect effect) =>
-            {
-                if (effect.aliveParticleCount == 0)
-                {
-                    cb.DestroyEntity(e);
-                }
-            }).WithoutBurst().Run();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
 
-    [UpdateInGroup(typeof(CombatSystemGroup))]
-    [UpdateBefore(typeof(HitSystem))]
-    public class DestroyProjectileOnHitSystem : SystemBase
-    {
+    // [UpdateInGroup(typeof(CombatSystemGroup))]
+    // [UpdateBefore(typeof(HitSystem))]
+    // public class DestroyProjectileOnHitSystem : SystemBase
+    // {
 
-        EntityQuery queryToDestroy;
-        EntityCommandBufferSystem entityCommandBufferSystem;
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            queryToDestroy = GetEntityQuery(ComponentType.ReadOnly<Projectile>(), ComponentType.ReadOnly<ProjectileHitted>(), ComponentType.ReadOnly<DestroyProjectileOnHit>());
-            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-            RequireForUpdate(queryToDestroy);
-        }
-        protected override void OnUpdate()
-        {
-            var cbp = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-            Entities.WithAll<Projectile, ProjectileHitted, DestroyProjectileOnHit>()
-            .ForEach((int entityInQueryIndex, Entity e) =>
-            {
-                cbp.DestroyEntity(entityInQueryIndex, e);
-            }).ScheduleParallel();
-            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
-        }
-    }
+    //     EntityQuery queryToDestroy;
+    //     EntityCommandBufferSystem entityCommandBufferSystem;
+    //     protected override void OnCreate()
+    //     {
+    //         base.OnCreate();
+    //         queryToDestroy = GetEntityQuery(ComponentType.ReadOnly<Projectile>(), ComponentType.ReadOnly<ProjectileHitted>(), ComponentType.ReadOnly<DestroyProjectileOnHit>());
+    //         entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+    //         RequireForUpdate(queryToDestroy);
+    //     }
+    //     protected override void OnUpdate()
+    //     {
+    //         var cbp = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+    //         Entities.WithAll<Projectile, ProjectileHitted, DestroyProjectileOnHit>()
+    //         .ForEach((int entityInQueryIndex, Entity e) =>
+    //         {
+    //             // cbp.DestroyEntity(entityInQueryIndex, e);
+    //         }).ScheduleParallel();
+    //         entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+    //     }
+    // }
     [UpdateInGroup(typeof(CombatSystemGroup))]
     [UpdateBefore(typeof(HitSystem))]
     public class ProjectileSystem : SystemBase
@@ -237,7 +209,8 @@ namespace RPG.Combat
             .WithReadOnly(projectiles)
             .WithReadOnly(hitableLocalToWorld)
             .WithDisposeOnCompletion(hitableLocalToWorld)
-            .WithReadOnly(canShootProjectiles).ForEach((int entityInQueryIndex, Entity e, ref Hit hit) =>
+            .WithReadOnly(canShootProjectiles)
+            .ForEach((int entityInQueryIndex, Entity e, ref Hit hit) =>
             {
                 if (canShootProjectiles.HasComponent(hit.Hitter) && hitableLocalToWorld.ContainsKey(hit.Hitted))
                 {

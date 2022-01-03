@@ -144,6 +144,7 @@ namespace RPG.Combat
                     cbp.AddComponent(entityInQueryIndex, equipWeapon.Socket, new Equipped { Equipable = weaponData.Weapon });
                     //FIXME: BAD
                     var buffer = cbp.AddBuffer<StatsModifier>(entityInQueryIndex, e);
+                    buffer.Clear();
                     buffer.Add(new StatsModifier { Entity = equipedBy.Entity, Stats = Stats.Stats.Damage, Value = weaponData.Weapon.Value.Weapon.Damage });
                 }
 
@@ -245,12 +246,15 @@ namespace RPG.Combat
             .ForEach((int entityInQueryIndex, Entity e, in Equip picked, in EquipableSockets sockets) =>
             {
                 var listSockets = sockets.ToList();
+                //TODO: Should only unequip left hand weapon if equip a weapon in right hand
                 for (int i = 0; i < listSockets.Length; i++)
                 {
                     Debug.Log($"Remove weapons {listSockets[i].Index}");
                     // Remove currently equiped weapon
                     cbp.RemoveComponent<Equipped>(entityInQueryIndex, listSockets[i]);
                     cbp.AddComponent<DestroySpawn>(entityInQueryIndex, listSockets[i]);
+                    var buffer = cbp.AddBuffer<StatsModifier>(entityInQueryIndex, listSockets[i]);
+                    buffer.Clear();
                 }
                 var socket = sockets.GetSocketForType(picked.SocketType);
                 Debug.Log($"Player {e.Index} equip pickup Weapon: ${picked.Equipable.Index} in socket: {socket.Index}");
