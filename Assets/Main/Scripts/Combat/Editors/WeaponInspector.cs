@@ -15,7 +15,7 @@ namespace RPG.Combat
     {
         public const string GROUP = "Weapons";
         public VisualTreeAsset m_InspectorXML;
-
+        private VisualElement root;
 
         public override VisualElement CreateInspectorGUI()
         {
@@ -39,35 +39,38 @@ namespace RPG.Combat
                 var updateHitEvents = myInspector.Q<Button>("UpdateEvent");
                 animationSelector.RegisterValueChangeCallback(OnAnimationChange);
                 updateHitEvents.clicked += UpdateAnimationData;
-
-                /*           ConvertClip(); */
-                // Return the finished inspector UI
+                myInspector.Q<Button>("ConvertEvent").clicked += ConvertClip;
+                root = myInspector;
             }
 
             return myInspector;
         }
         private void ConvertClip()
         {
+            root.Q<Button>("ConvertEvent").SetEnabled(false);
             var animationClip = GetAnimationClip();
             var clipProperty = GetClipProperty();
             var assetPath = AssetDatabase.GetAssetPath(target);
             var clipAsset = AssetDatabase.LoadAssetAtPath<ClipAsset>(assetPath);
-            while (clipAsset != null)
-            {
-                AssetDatabase.RemoveObjectFromAsset(clipAsset);
-                clipAsset = AssetDatabase.LoadAssetAtPath<ClipAsset>(assetPath);
-            }
+            // while (clipAsset != null)
+            // {
+            //     Debug.Log("Remove object from asset");
+            //     AssetDatabase.RemoveObjectFromAsset(clipAsset);
+            //     AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(clipAsset));
+            //     clipAsset = AssetDatabase.LoadAssetAtPath<ClipAsset>(assetPath);
+            // }
             if (clipAsset == null)
             {
                 Debug.Log("Create Clip Asset");
                 clipAsset = CreateInstance<ClipAsset>();
-                clipAsset.name = animationClip.name;
                 AssetDatabase.AddObjectToAsset(clipAsset, assetPath);
             }
+            clipAsset.name = animationClip.name;
             clipAsset.SetClip(animationClip);
             clipProperty.objectReferenceValue = clipAsset;
             serializedObject.ApplyModifiedProperties();
-
+            AssetDatabase.SaveAssets();
+            // root.Q<Button>("ConvertEvent").SetEnabled(true);
         }
 
         private void OnAnimationChange(SerializedPropertyChangeEvent evt)
@@ -91,9 +94,9 @@ namespace RPG.Combat
                     var animationEvent = clip.events[i];
                     hitEventsProperty.GetArrayElementAtIndex(i).floatValue = animationEvent.time;
                 }
-                serializedObject.ApplyModifiedProperties();
+                // serializedObject.ApplyModifiedProperties();
             }
-            ConvertClip();
+
         }
 
         private AnimationClip GetAnimationClip()

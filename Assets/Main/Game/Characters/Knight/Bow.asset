@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2441341056571972457
+--- !u!114 &-759029143599149048
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -37,4 +37,4 @@ MonoBehaviour:
   HitEvents:
   - 0.9274796
   GUID: Assets/Main/Game/Characters/Knight/Bow.asset
-  Clip: {fileID: -2441341056571972457}
+  Clip: {fileID: -759029143599149048}
