@@ -6,8 +6,9 @@
     <uie:PropertyField name="Animation" binding-path="Animation" style="visibility: visible;" />
     <ui:Button text="Update  Animation Data" display-tooltip-when-elided="true" name="UpdateEvent" />
     <uie:PropertyField name="Damage" binding-path="Damage" style="visibility: visible;" />
+    <ui:Slider picking-mode="Ignore" label="Damage Modifier Percent" value="0" high-value="100" name="BonusDamagePercent" show-input-field="true" low-value="-100" binding-path="BonusDamagePercent" />
     <uie:PropertyField name="Range" binding-path="Range" />
     <uie:PropertyField name="AttackDuration" binding-path="AttackDuration" readonly="false" />
     <uie:PropertyField name="HitEvents" binding-path="HitEvents" />
-    <uie:PropertyField name="Clip" binding-path="Clip" />
+    <uie:PropertyField name="Clip" binding-path="BonusDamagePercent" />
 </ui:UXML>

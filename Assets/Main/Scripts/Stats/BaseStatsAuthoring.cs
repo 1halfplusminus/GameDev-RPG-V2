@@ -57,6 +57,7 @@ namespace RPG.Stats
                 });
                 DstEntityManager.AddComponentData(entity, new GiveExperiencePoint { Value = experience });
                 DstEntityManager.AddComponentData(entity, new AdditiveStatsModifier { });
+                DstEntityManager.AddComponentData(entity, new PercentStatsModifier { });
                 DstEntityManager.AddComponentData(entity, new CalculedStat { });
             });
 

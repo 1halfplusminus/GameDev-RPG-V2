@@ -28,7 +28,7 @@ MonoBehaviour:
     m_SerializedLabels:
     - Weapon
   - m_GUID: 90c60bf82c18e3cdeb2674c6b9f0ad0b
-    m_Address: Bow
+    m_Address: Assets/Main/Game/Characters/Knight/Bow.asset
     m_ReadOnly: 0
     m_SerializedLabels:
     - Weapon
@@ -38,7 +38,7 @@ MonoBehaviour:
     m_SerializedLabels:
     - Weapon
   - m_GUID: 05f68aec6972d1e5f995e03bfed1d50d
-    m_Address: Hero/Bow
+    m_Address: Bow
     m_ReadOnly: 0
     m_SerializedLabels:
     - Weapon

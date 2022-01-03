@@ -148,6 +148,7 @@ namespace RPG.Combat
         public float Damage;
         public float Range;
         public float Cooldown;
+        public float BonusDamagePercent;
         public float AttackDuration;
         public FixedString64 GUID;
         public FixedList32<float> HitEvents;

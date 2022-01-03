@@ -145,7 +145,8 @@ namespace RPG.Combat
                     //FIXME: BAD
                     var buffer = cbp.AddBuffer<StatsModifier>(entityInQueryIndex, equipWeapon.Socket);
                     buffer.Clear();
-                    buffer.Add(new StatsModifier { Entity = equipedBy.Entity, Stats = Stats.Stats.Damage, Value = weaponData.Weapon.Value.Weapon.Damage });
+                    buffer.Add(new StatsModifier { Type = StatModifierType.Additive, Entity = equipedBy.Entity, Stats = Stats.Stats.Damage, Value = weaponData.Weapon.Value.Weapon.Damage });
+                    buffer.Add(new StatsModifier { Type = StatModifierType.Percent, Entity = equipedBy.Entity, Stats = Stats.Stats.Damage, Value = weaponData.Weapon.Value.Weapon.BonusDamagePercent });
                 }
 
             }).ScheduleParallel();

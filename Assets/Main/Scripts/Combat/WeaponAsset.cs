@@ -18,6 +18,8 @@ namespace RPG.Combat
 
         public float Damage;
 
+        public float BonusDamagePercent;        
+        
         public float Range;
 
         public float Cooldown;

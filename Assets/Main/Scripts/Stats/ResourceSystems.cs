@@ -70,13 +70,26 @@ namespace RPG.Stats
             return Stats.GetStat(stat);
         }
     }
+    public struct PercentStatsModifier : IComponentData
+    {
+        public FixedListStat Stats;
+
+        public float GetStat(Stats stat)
+        {
+            return Stats.GetStat(stat);
+        }
+    }
+    public enum StatModifierType
+    {
+        Additive, Percent
+    }
     [Serializable]
     public struct StatsModifier : IBufferElementData
     {
 
         public Stats Stats;
         public float Value;
-
+        public StatModifierType Type;
         public Entity Entity;
     }
     public struct GiveExperiencePoint : IComponentData
@@ -113,7 +126,7 @@ namespace RPG.Stats
         protected override void OnUpdate()
         {
             var statsCount = Enum.GetNames(typeof(Stats)).Length;
-            var modifiersByEntities = new NativeMultiHashMap<Entity, StatsModifier>(modifiersQuery.CalculateEntityCount(), Allocator.TempJob);
+            var modifiersByEntities = new NativeMultiHashMap<Entity, StatsModifier>(modifiersQuery.CalculateEntityCount() * 10, Allocator.TempJob);
             var pw = modifiersByEntities.AsParallelWriter();
             Entities
             .WithStoreEntityQueryInField(ref modifiersQuery)
@@ -129,19 +142,26 @@ namespace RPG.Stats
             Entities
             .WithReadOnly(modifiersByEntities)
             .WithDisposeOnCompletion(modifiersByEntities)
-            .ForEach((Entity e, ref AdditiveStatsModifier modifier) =>
+            .ForEach((Entity e, ref AdditiveStatsModifier additiveModifier, ref PercentStatsModifier percentModifier) =>
             {
-                modifier.Stats.Resize(statsCount);
+                additiveModifier.Stats.Resize(statsCount);
                 for (int i = 0; i < statsCount; i++)
                 {
-                    modifier.Stats.SetStat(i, 0);
+                    additiveModifier.Stats.SetStat(i, 0);
+                    percentModifier.Stats.SetStat(i, 0);
                 }
                 if (modifiersByEntities.ContainsKey(e))
                 {
                     foreach (var statModifier in modifiersByEntities.GetValuesForKey(e))
                     {
-                        // Debug.Log($"{e.Index} Add Found modifier {statModifier.Value}");
-                        modifier.Stats.Add(statModifier.Stats, statModifier.Value);
+                        if (statModifier.Type == StatModifierType.Additive)
+                        {
+                            additiveModifier.Stats.Add(statModifier.Stats, statModifier.Value);
+                        }
+                        if (statModifier.Type == StatModifierType.Percent)
+                        {
+                            percentModifier.Stats.Add(statModifier.Stats, statModifier.Value);
+                        }
                     }
                 }
 
@@ -149,16 +169,15 @@ namespace RPG.Stats
 
 
             Entities
-            .ForEach((Entity e, ref CalculedStat calculedStat, in AdditiveStatsModifier modifier, in BaseStats baseStats) =>
+            .ForEach((Entity e, ref CalculedStat calculedStat, in AdditiveStatsModifier additiveModifier, in PercentStatsModifier percentModifier, in BaseStats baseStats) =>
             {
                 calculedStat.Stats.Resize(statsCount);
-                modifier.Stats.Resize(statsCount);
+                additiveModifier.Stats.Resize(statsCount);
                 for (int i = 0; i < statsCount; i++)
                 {
                     var baseStat = baseStats.ProgressionAsset.Value.GetStat(i, baseStats.Level);
-                    var newStat = baseStat + modifier.Stats.GetStat(i);
+                    var newStat = (baseStat + additiveModifier.Stats.GetStat(i)) * (1f + (percentModifier.Stats.GetStat(i) / 100f));
                     calculedStat.Stats.SetStat(i, newStat);
-                    // Debug.Log($"Caculed stat for {baseStat} {modifier.Stats.GetStat(i)}");
                 }
             }).ScheduleParallel();
         }

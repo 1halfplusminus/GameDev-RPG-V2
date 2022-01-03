@@ -70,6 +70,7 @@ namespace RPG.Combat
             return new Weapon
             {
                 AttackDuration = weapon.AttackDuration,
+                BonusDamagePercent = weapon.BonusDamagePercent,
                 Cooldown = 0.1f,
                 Damage = weapon.Damage,
                 Range = weapon.Range,
