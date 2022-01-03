@@ -168,7 +168,7 @@ namespace RPG.Combat
                 DstEntityManager.AddBuffer<HitEvent>(entity);
                 DstEntityManager.AddComponent<LookAt>(entity);
                 DstEntityManager.AddComponent<DeltaTime>(entity);
-                DstEntityManager.AddBuffer<WasHitted>(entity);
+                DstEntityManager.AddBuffer<WasHitteds>(entity);
                 var equipableSockets = new EquipableSockets
                 {
                     LeftHandSocket = TryGetPrimaryEntity(fighter.LeftHandSocket),

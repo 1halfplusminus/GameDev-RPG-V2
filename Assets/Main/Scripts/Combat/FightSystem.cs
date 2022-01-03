@@ -114,38 +114,46 @@ namespace RPG.Combat
 
         EntityQuery hitQuery;
 
+        EntityQuery wasHittedQuery;
+
         protected override void OnCreate()
         {
             base.OnCreate();
             commandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
+            wasHittedQuery = GetEntityQuery(ComponentType.ReadOnly<WasHitted>());
         }
         protected override void OnUpdate()
         {
             var cb = commandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
-            if (hitQuery.CalculateEntityCount() > 0)
+            cb.RemoveComponentForEntityQuery<WasHitted>(wasHittedQuery);
+            // Create hit event
+            Entities
+            .WithStoreEntityQueryInField(ref hitQuery)
+            .ForEach((Entity e, int entityInQueryIndex, in Hit hit) =>
             {
-                var wasHittedByEntities = GetBufferFromEntity<WasHitted>(false);
-                // Create hit event
-                Entities
-                .WithReadOnly(wasHittedByEntities)
-                .WithStoreEntityQueryInField(ref hitQuery)
-                .ForEach((Entity e, int entityInQueryIndex, in Hit hit) =>
+                var buffer = cbp.AddBuffer<WasHitteds>(entityInQueryIndex, hit.Hitted);
+                buffer.Capacity = 10;
+                buffer.Add(new WasHitteds { Hitter = hit.Hitter });
+                if (buffer.Length == 10)
                 {
-                    if (wasHittedByEntities.HasComponent(hit.Hitted))
-                    {
-                        var buffer = cbp.SetBuffer<WasHitted>(entityInQueryIndex, hit.Hitted);
-                        buffer.Capacity = 10;
-                        buffer.Add(new WasHitted { Hitter = hit.Hitter });
-                        if (buffer.Length == 10)
-                        {
-                            buffer.RemoveAt(0);
-                        }
-                    }
+                    buffer.RemoveAt(0);
+                }
+                cbp.AddComponent<WasHitted>(entityInQueryIndex, hit.Hitted);
+            }).ScheduleParallel();
 
-                }).ScheduleParallel();
-
-            }
+            Entities
+            .WithAll<WasHitted>()
+            .WithNone<IsFighting, IsDeadTag>()
+           .ForEach((ref Fighter fighter, in DynamicBuffer<WasHitteds> hitted) =>
+           {
+               Debug.Log("Was Hitted");
+               if (hitted.Length > 0)
+               {
+                   fighter.Target = hitted[0].Hitter;
+                   fighter.MoveTowardTarget = true;
+               }
+           }).ScheduleParallel();
             commandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 
@@ -182,18 +190,11 @@ namespace RPG.Combat
                     for (int i = 0; i < hitEvents.Length; i++)
                     {
                         var hitEvent = hitEvents[i];
-                        var distance = math.distance(fighter.CurrentAttack.TimeElapsedSinceAttack, hitEvent.Time);
-                        var shouldFire = distance <= time.Value && distance >= 0;
-                        var upperBound = hitEvent.Time + 0.1;
-                        var lowerBound = hitEvent.Time - 0.1;
                         if (fighter.CurrentAttack.TimeElapsedSinceAttack - time.Value <= hitEvent.Time && fighter.CurrentAttack.TimeElapsedSinceAttack > hitEvent.Time)
                         {
-                            // hitEvent.Fired = true;
-                            // hitEvents[i] = hitEvent;
                             var eventEntity = cbp.CreateEntity(entityInQueryIndex);
                             cbp.AddComponent(entityInQueryIndex, eventEntity, new Hit { Hitted = fighter.Target, Hitter = e });
                             break;
-
                         }
                     }
                 }

@@ -202,11 +202,11 @@ namespace RPG.Stats
             Entities
             .WithAll<IsDeadTag>()
             .WithNone<ExperiencePointRewarded>()
-            .ForEach((int entityInQueryIndex, Entity e, in DynamicBuffer<WasHitted> wasHitteds, in GiveExperiencePoint experiencePoint) =>
+            .ForEach((int entityInQueryIndex, Entity e, in DynamicBuffer<WasHitteds> wasHitteds, in GiveExperiencePoint experiencePoint) =>
             {
                 for (int i = 0; i < wasHitteds.Length; i++)
                 {
-                    WasHitted wasHitted = wasHitteds[i];
+                    WasHitteds wasHitted = wasHitteds[i];
                     Entity hitter = wasHitted.Hitter;
                     if (HasComponent<ExperiencePoint>(hitter))
                     {

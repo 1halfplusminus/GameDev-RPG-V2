@@ -161,7 +161,12 @@ namespace RPG.Combat
     {
         public Entity Hit;
     }
-    public struct WasHitted : IBufferElementData
+
+    public struct WasHitted : IComponentData
+    {
+
+    }
+    public struct WasHitteds : IBufferElementData
     {
         public Entity Hitter;
     }
