@@ -429,8 +429,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1115021032}
-  m_LocalRotation: {x: -0.027455887, y: 0.9384064, z: -0.33578598, w: -0.076729774}
-  m_LocalPosition: {x: 2.99, y: 7.17, z: 14.36}
+  m_LocalRotation: {x: 0.38202342, y: -0.59502834, z: 0.38202342, w: 0.5950273}
+  m_LocalPosition: {x: 5.37, y: 18.22, z: 1.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -752,7 +752,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8949126279174711208, guid: a5b32b84d9195eaa9afecbdd65b8158a, type: 3}
       propertyPath: m_Name
-      value: Physic World
+      value: Game Manager
       objectReference: {fileID: 0}
     - target: {fileID: 8949126279174711209, guid: a5b32b84d9195eaa9afecbdd65b8158a, type: 3}
       propertyPath: m_RootOrder

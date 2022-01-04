@@ -93,7 +93,7 @@ namespace RPG.Stats
             }
             return results;
         }
-        public static BlobAssetReference<Progression> GetProgression(ClassProgression asset)
+        public static BlobAssetReference<Progression> CreateProgression(ClassProgression asset)
         {
             var builder = new BlobBuilder(Allocator.Temp);
             ref var root = ref builder.ConstructRoot<Progression>();
@@ -130,7 +130,7 @@ namespace RPG.Stats
             {
                 if (!GetProgression(progressionByClass.CharacterClass).IsCreated)
                 {
-                    var progressionRef = GetProgression(progressionByClass);
+                    var progressionRef = CreateProgression(progressionByClass);
                     var hash = GetHash(progressionByClass);
                     BlobAssetStore.TryAdd(hash, progressionRef);
                 }
@@ -138,7 +138,7 @@ namespace RPG.Stats
         }
         public BlobAssetReference<Progression> GetProgression(CharacterClass characterClass)
         {
-            BlobAssetStore.TryGet<Progression>(GetHash(characterClass), out var progressionRef);
+            var result = BlobAssetStore.TryGet<Progression>(GetHash(characterClass), out var progressionRef);
             return progressionRef;
         }
         protected override void OnDestroy()

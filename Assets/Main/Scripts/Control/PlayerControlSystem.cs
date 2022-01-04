@@ -59,6 +59,7 @@ namespace RPG.Control
                     else
                     {
                         fighter.MoveTowardTarget = true;
+
                     }
                 }
 

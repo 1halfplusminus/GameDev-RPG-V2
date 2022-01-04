@@ -1506,7 +1506,6 @@ GameObject:
   - component: {fileID: 3233999551531206025}
   - component: {fileID: 3348868849712857546}
   - component: {fileID: -461697480233262073}
-  - component: {fileID: 142956692}
   - component: {fileID: 142956693}
   m_Layer: 0
   m_Name: Morie Hero
@@ -1867,6 +1866,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RaycastDistance: 10000
+  Cursors: []
 --- !u!114 &390904578215180243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2014,19 +2014,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Value: 70
---- !u!114 &142956692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3809403721112327955}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 114f51e9af3ac2dfaaf745980c822de3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Value: 100
 --- !u!114 &142956693
 MonoBehaviour:
   m_ObjectHideFlags: 0
