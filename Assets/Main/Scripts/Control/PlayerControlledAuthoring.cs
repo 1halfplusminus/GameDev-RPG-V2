@@ -4,12 +4,15 @@ using System;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Collections;
+using System.Linq;
+using Unity.Collections.LowLevel.Unsafe;
 
 namespace RPG.Control
 {
     public struct Texture
     {
-        public BlobArray<byte> Data;
+
+        public BlobArray<Color32> Data;
         public int Height;
 
         public int Width;
@@ -63,26 +66,39 @@ namespace RPG.Control
                 DstEntityManager.AddComponent<PlayerControlled>(entity);
                 DstEntityManager.AddComponentData(entity, new Raycast { Distance = playerControlled.RaycastDistance });
                 DstEntityManager.AddComponent<MouseClick>(entity);
-                var blobBuilder = new BlobBuilder(Allocator.Temp);
-                foreach (var cursor in playerControlled.Cursors)
-                {
 
-                    ref var root = ref blobBuilder.ConstructRoot<GameCursor>();
-                    blobBuilder.Construct(ref root.Texture.Data, cursor.Texture.GetRawTextureData());
-                    root.Texture.MipmapCount = cursor.Texture.mipmapCount;
-                    root.Texture.Height = cursor.Texture.height;
-                    root.Texture.Width = cursor.Texture.width;
-                    root.Texture.Format = cursor.Texture.format;
-                    root.Type = cursor.Type;
-                    root.HotSpot = cursor.HotSpot;
-                    var blobAssetRef = blobBuilder.CreateBlobAssetReference<GameCursor>(Allocator.Persistent);
-                    DstEntityManager.AddComponentData(entity, new VisibleCursor { Cursor = blobAssetRef });
-                }
-                blobBuilder.Dispose();
-                if (playerControlled.Cursors.Length > 0)
-                {
-                    // DstEntityManager.AddSharedComponentData(entity, new RenderCursor { GameCursor = playerControlled.Cursors[0].Cursor });
-                }
+                var cursorBuffer = DstEntityManager.AddBuffer<PlayerCursors>(entity);
+                // var cursors = playerControlled.Cursors.ToDictionary((c) => (int)c.Type);
+                // foreach (var cursorType in Enum.GetValues(typeof(CursorType)).Cast<CursorType>())
+                // {
+                //     var blobBuilder = new BlobBuilder(Allocator.Temp);
+                //     ref var root = ref blobBuilder.ConstructRoot<GameCursor>();
+                //     var index = (int)cursorType;
+                //     root.Type = cursorType;
+                //     if (cursors.ContainsKey(index))
+                //     {
+                //         var cursor = cursors[index];
+                //         var rawData = cursor.Texture.GetPixelData<Color32>(0);
+                //         unsafe
+                //         {
+                //             blobBuilder.Construct(ref root.Texture.Data, rawData.ToArray());
+                //         }
+
+                //         root.Texture.MipmapCount = cursor.Texture.mipmapCount;
+                //         root.Texture.Height = cursor.Texture.height;
+                //         root.Texture.Width = cursor.Texture.width;
+                //         root.Texture.Format = cursor.Texture.format;
+                //         root.HotSpot = cursor.HotSpot;
+                //         Debug.Log($"Find cursor overwrite for {cursorType}");
+                //     }
+                //     var blobAssetRef = blobBuilder.CreateBlobAssetReference<GameCursor>(Allocator.Persistent);
+                //     cursorBuffer.Add(new PlayerCursors { Cursor = blobAssetRef });
+                //     Debug.Log($"Add cursor {cursorType}");
+                //     blobBuilder.Dispose();
+                // }
+                AddHybridComponent(playerControlled);
+                DstEntityManager.AddComponentData(entity, new VisibleCursor { Cursor = CursorType.Movement });
+
             });
         }
     }

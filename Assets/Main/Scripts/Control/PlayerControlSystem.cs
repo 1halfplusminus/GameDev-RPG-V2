@@ -2,6 +2,7 @@ using Unity.Entities;
 using RPG.Core;
 using RPG.Mouvement;
 using RPG.Combat;
+using UnityEngine;
 
 namespace RPG.Control
 {
@@ -29,20 +30,21 @@ namespace RPG.Control
             Entities
             .WithAll<PlayerControlled>()
             .WithNone<DisabledControl>()
-            .ForEach((Entity player, int entityInQueryIndex, ref MoveTo moveTo, in MouseClick mouseClick, in WorldClick worldClick) =>
+            .ForEach((Entity player, int entityInQueryIndex, ref MoveTo moveTo, ref VisibleCursor visibleCursor, in MouseClick mouseClick, in WorldClick worldClick, in DynamicBuffer<PlayerCursors> cursors) =>
             {
                 if (mouseClick.CapturedThisFrame)
                 {
                     moveTo.Stopped = false;
                     moveTo.Position = worldClick.WorldPosition;
-                }
 
+                }
+                visibleCursor.Cursor = CursorType.Movement;
             }).ScheduleParallel();
 
             Entities
             .WithNone<DisabledControl>()
             .WithAll<PlayerControlled>()
-            .ForEach((Entity player, ref Fighter fighter, in MouseClick mouseClick) =>
+            .ForEach((Entity player, ref Fighter fighter, ref VisibleCursor visibleCursor, in MouseClick mouseClick) =>
             {
 
                 if (mouseClick.CapturedThisFrame)
@@ -61,6 +63,10 @@ namespace RPG.Control
                         fighter.MoveTowardTarget = true;
 
                     }
+                }
+                if (fighter.TargetFoundThisFrame > 0)
+                {
+                    visibleCursor.Cursor = CursorType.Combat;
                 }
 
             }).ScheduleParallel();
@@ -98,24 +104,36 @@ namespace RPG.Control
             }).ScheduleParallel();
         }
     }
-    [DisableAutoCreation]
+
 
     [UpdateInGroup(typeof(ControlSystemGroup))]
     public class NoInteractionSystem : SystemBase
     {
+        EntityCommandBufferSystem entityCommandBufferSystem;
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        }
         protected override void OnUpdate()
         {
+            // var cb = entityCommandBufferSystem.CreateCommandBuffer();
+            // var ecb = cb.AsParallelWriter();
             Entities
             .WithNone<DisabledControl>()
             .WithNone<WorldClick>()
             .WithAny<PlayerControlled>()
-            .ForEach((in Fighter f) =>
+            .ForEach((int entityInQueryIndex, Entity e, ref VisibleCursor visibleCursor, in Fighter f, in DynamicBuffer<PlayerCursors> cursors) =>
             {
-                if (f.Target == Entity.Null)
+                if (f.TargetFoundThisFrame == 0)
                 {
 
+                    visibleCursor.Cursor = CursorType.None;
                 }
             }).ScheduleParallel();
+
+            // entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
 }

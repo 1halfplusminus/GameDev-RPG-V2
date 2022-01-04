@@ -180,20 +180,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Cursors.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Cursors.Array.data[0].Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: Cursors.Array.data[1].Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: Cursors.Array.data[2].Type
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Cursors.Array.data[0].Texture
       value: 
-      objectReference: {fileID: 2800000, guid: 44a99ee545fd8ba46a452b12c1f9378b, type: 3}
+      objectReference: {fileID: 2800000, guid: 21628736160fcc9488493401da3ef621, type: 3}
     - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Cursors.Array.data[1].Texture
       value: 
-      objectReference: {fileID: 2800000, guid: 21628736160fcc9488493401da3ef621, type: 3}
+      objectReference: {fileID: 2800000, guid: 45d8aea3ad483cf4fb21e75f90f795d9, type: 3}
+    - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: Cursors.Array.data[2].Texture
+      value: 
+      objectReference: {fileID: 2800000, guid: 44a99ee545fd8ba46a452b12c1f9378b, type: 3}
     - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Cursors.Array.data[0].Cursor.Texture
       value: 

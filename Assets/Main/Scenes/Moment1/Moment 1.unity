@@ -18186,7 +18186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b275e5f92732148048d7b77e264ac30e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShapeType: 30
+  m_ShapeType: 31
   m_PrimitiveCenter:
     x: -0.10499494
     y: -0.033969335
@@ -18216,8 +18216,8 @@ MonoBehaviour:
     m_SimplificationTolerance: 0.01
     m_BevelRadius: 0.05
     m_MinimumAngle: 2.5000002
-  m_CustomMesh: {fileID: 0}
-  m_ForceUnique: 0
+  m_CustomMesh: {fileID: -2441658414131813105, guid: 490e8eb70d3d3e7ac91a5363e1615617, type: 3}
+  m_ForceUnique: 1
   m_Material:
     m_SupportsTemplate: 1
     m_Template: {fileID: 0}
