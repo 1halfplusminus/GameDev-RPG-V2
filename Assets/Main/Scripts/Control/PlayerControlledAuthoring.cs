@@ -8,24 +8,6 @@ namespace RPG.Control
 {
 
 
-    public struct InGameCursor : IComponentData
-    {
-        public float2 HotSpot;
-        public CursorType Type;
-    }
-    public enum CursorType : int
-    {
-        Combat = 1,
-        Movement = 2,
-        None = 0
-    }
-
-    public struct SharedGameCursorType : ISharedComponentData
-    {
-
-        public CursorType Type;
-    }
-
     public class PlayerControlledAuthoring : MonoBehaviour
     {
         [Serializable]

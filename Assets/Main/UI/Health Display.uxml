@@ -1,22 +1,22 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="GameHUH.uss" />
-    <ui:VisualElement style="flex-grow: 0; align-items: flex-start; flex-direction: column; justify-content: flex-start; height: 100%; flex-wrap: nowrap; flex-shrink: 0; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px;">
-        <ui:VisualElement style="flex-grow: 1;">
-            <ui:VisualElement style="flex-direction: row;">
-                <ui:Label text="Level:" display-tooltip-when-elided="true" class="Text" style="font-size: 40%; -unity-text-align: middle-left;" />
+    <Style src="project://database/Assets/Main/UI/GameHUH.uss?fileID=7433441132597879392&amp;guid=d337463dc0df7fbe3b8a9edd5971530f&amp;type=3#GameHUH" />
+    <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; align-items: flex-start; flex-direction: column; justify-content: flex-start; height: 100%; flex-wrap: nowrap; flex-shrink: 0; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px; cursor: initial;">
+        <ui:VisualElement style="flex-grow: 0; cursor: initial; -unity-background-image-tint-color: rgb(0, 0, 0); background-color: rgba(0, 0, 0, 0);">
+            <ui:VisualElement class="Interactive" style="flex-direction: row;">
+                <ui:Label text="Level:" display-tooltip-when-elided="true" class="Text Label" style="font-size: 40%; -unity-text-align: middle-left;" />
                 <ui:Label text="1" display-tooltip-when-elided="true" name="Level" class="Text" style="-unity-font-style: bold; color: rgb(207, 40, 40); font-size: 40%; -unity-text-align: middle-left;" />
             </ui:VisualElement>
-            <ui:VisualElement style="flex-direction: row;">
+            <ui:VisualElement class="Interactive" style="flex-direction: row;">
                 <ui:Label text="Health:" display-tooltip-when-elided="true" class="Text" style="font-size: 40%; -unity-text-align: middle-left;" />
                 <ui:Label text="100%" display-tooltip-when-elided="true" name="Health" class="Text" style="-unity-font-style: bold; color: rgb(207, 40, 40); font-size: 40%; -unity-text-align: middle-left;" />
             </ui:VisualElement>
-            <ui:VisualElement name="EnemyContainer" style="flex-direction: row;">
+            <ui:VisualElement name="EnemyContainer" class="Interactive" style="flex-direction: row;">
                 <ui:Label text="Enemy" display-tooltip-when-elided="true" class="Text" style="font-size: 40%; -unity-text-align: middle-left;" />
                 <ui:Label text="N/A" display-tooltip-when-elided="true" name="EnemyHealth" class="Text" style="-unity-font-style: bold; color: rgb(207, 40, 40); font-size: 40%; -unity-text-align: middle-left;" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement style="flex-direction: column; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-grow: 1; align-items: flex-start; flex-shrink: 1; justify-content: flex-end;">
-            <ui:VisualElement style="flex-direction: row;">
+        <ui:VisualElement picking-mode="Ignore" style="flex-direction: column; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-grow: 1; align-items: flex-start; flex-shrink: 1; justify-content: flex-end;">
+            <ui:VisualElement class="Interactive" style="flex-direction: row;">
                 <ui:Label text="Experience:" display-tooltip-when-elided="true" class="Text" style="font-size: 40%; -unity-text-align: middle-left;" />
                 <ui:Label text="0" display-tooltip-when-elided="true" name="Experience" class="Text" style="-unity-font-style: bold; color: rgb(207, 40, 40); font-size: 40%; -unity-text-align: middle-left;" />
             </ui:VisualElement>

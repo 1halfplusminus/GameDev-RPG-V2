@@ -31,7 +31,7 @@ namespace RPG.Core
             var cb = commandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
             Entities
-            .ForEach((Entity e, int entityInQueryIndex, in DynamicBuffer<HittedByRaycast> rayHits) =>
+            .ForEach((Entity e, int entityInQueryIndex, in DynamicBuffer<HittedByRaycastEvent> rayHits) =>
             {
                 foreach (var rayHit in rayHits)
                 {

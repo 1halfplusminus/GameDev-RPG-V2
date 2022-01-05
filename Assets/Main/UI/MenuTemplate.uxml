@@ -1,5 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement name="Col" style="flex-wrap: nowrap; justify-content: flex-start; align-items: flex-end; flex-grow: 1; flex-direction: column;">
+    <Style src="project://database/Assets/Main/UI/GameHUH.uss?fileID=7433441132597879392&amp;guid=d337463dc0df7fbe3b8a9edd5971530f&amp;type=3#GameHUH" />
+    <ui:VisualElement name="Col" style="flex-wrap: nowrap; justify-content: flex-start; align-items: flex-end; flex-grow: 1; flex-direction: column; cursor: url(&apos;project://database/Assets/Main/Assets%20Packs/Pixel%20Cursors/Cursors/basic_01.png?fileID=2800000&amp;guid=2e71a8202d3b4a3448ec85ced5a40265&amp;type=3#basic_01&apos;);">
         <ui:VisualElement name="Box" style="padding-left: 25px; padding-right: 25px; padding-top: 10px; padding-bottom: 10px; flex-grow: 1; flex-shrink: 1; flex-basis: auto; flex-direction: column; align-items: stretch; justify-content: center; min-width: 100%;">
             <ui:VisualElement style="flex-direction: row; flex-grow: 1; justify-content: center;">
                 <ui:VisualElement style="background-image: url(&apos;project://database/Assets/Main/Assets%20Packs/Textures/New%20Year.png?fileID=2800000&amp;guid=e370faf88bb9fc705b98e542ae09eef4&amp;type=3#New Year&apos;); width: 1200px; height: auto; -unity-background-scale-mode: stretch-to-fill; align-items: flex-end;" />

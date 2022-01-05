@@ -73,7 +73,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_Capsule.Radius
-      value: 0.0473832
+      value: 0.23504843
       objectReference: {fileID: 0}
     - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_Cylinder.Height
@@ -81,15 +81,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_Cylinder.Radius
-      value: 0.0473832
+      value: 0.23504843
       objectReference: {fileID: 0}
     - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_PrimitiveSize.x
-      value: 0
+      value: 0.47009686
       objectReference: {fileID: 0}
     - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_PrimitiveSize.y
-      value: 0.0947664
+      value: 0.17859864
       objectReference: {fileID: 0}
     - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_PrimitiveSize.z

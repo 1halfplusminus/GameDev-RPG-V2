@@ -13,15 +13,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 183760886297298473, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.757
       objectReference: {fileID: 0}
     - target: {fileID: 183760886297298473, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.3
       objectReference: {fileID: 0}
     - target: {fileID: 183760886297298473, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 3.502
       objectReference: {fileID: 0}
     - target: {fileID: 183760886297298473, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_LocalRotation.w
@@ -50,6 +50,18 @@ PrefabInstance:
     - target: {fileID: 183760886297298473, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
+      propertyPath: m_Capsule.Radius
+      value: 0.63287234
+      objectReference: {fileID: 0}
+    - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
+      propertyPath: m_Cylinder.Radius
+      value: 0.63287234
+      objectReference: {fileID: 0}
+    - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
+      propertyPath: m_PrimitiveSize.z
+      value: 1.2657447
       objectReference: {fileID: 0}
     - target: {fileID: 1631718462331212396, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: PickedWeapon
@@ -107,6 +119,7 @@ VisualEffect:
       m_Array: []
 --- !u!73398921 &7699955238984474236
 VFXRenderer:
+  serializedVersion: 1
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -124,8 +137,6 @@ VFXRenderer:
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

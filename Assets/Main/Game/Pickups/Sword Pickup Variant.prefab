@@ -33,7 +33,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 183760886297298473, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.65
+      value: 3.929
       objectReference: {fileID: 0}
     - target: {fileID: 183760886297298473, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_LocalRotation.w
@@ -77,7 +77,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_Capsule.Radius
-      value: 0.011530485
+      value: 0.012004901
       objectReference: {fileID: 0}
     - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_Cylinder.Height
@@ -85,7 +85,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_Cylinder.Radius
-      value: 0.011530485
+      value: 0.012004901
       objectReference: {fileID: 0}
     - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_PrimitiveSize.x
@@ -97,7 +97,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_PrimitiveSize.z
-      value: 0.008132938
+      value: 0.024009801
       objectReference: {fileID: 0}
     - target: {fileID: 1631718462331212395, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_PrimitiveCenter.x
@@ -117,7 +117,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 34f568bb0a11f4465bbab12cbf085563, type: 2}
     - target: {fileID: 6636365402756728216, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
       propertyPath: m_Name
-      value: Sword Pickup Variant
+      value: Sword Pickup
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1631718462331212397, guid: 392b9ce33b14d085589d48952d59e643, type: 3}
@@ -177,3 +177,15 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3316913329566665158}
   m_Mesh: {fileID: 4686849319519084627, guid: 36374b6a99fa2a81c8607987604568f3, type: 3}
+--- !u!114 &7256450731952528955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3316913329566665158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fb7fa5fcfe9943d9a0653ad20e8df3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

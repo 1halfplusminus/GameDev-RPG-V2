@@ -158,7 +158,7 @@ namespace RPG.Combat
             {
                 var entity = GetPrimaryEntity(fighter);
 
-                DstEntityManager.AddComponent<HittedByRaycast>(entity);
+                DstEntityManager.AddComponent<HittedByRaycastEvent>(entity);
 
                 //FIXME: Weapon value change be assigned when weapon is equiped
                 DstEntityManager.AddComponentData(entity, new Fighter

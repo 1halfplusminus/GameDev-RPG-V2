@@ -811,9 +811,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fireball Pickup Variant
       objectReference: {fileID: 0}
-    - target: {fileID: 1912259929260656979, guid: 64f435b2d80ef87ff926cf36c6acb05c, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
+    - target: {fileID: 1483838191851020857, guid: 64f435b2d80ef87ff926cf36c6acb05c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5332935238302392712, guid: 64f435b2d80ef87ff926cf36c6acb05c, type: 3}
       propertyPath: m_RootOrder
@@ -859,9 +859,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6785722454263412171, guid: 64f435b2d80ef87ff926cf36c6acb05c, type: 3}
+      propertyPath: m_CustomTags.Tag00
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7699955238984474236, guid: 64f435b2d80ef87ff926cf36c6acb05c, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64f435b2d80ef87ff926cf36c6acb05c, type: 3}
@@ -992,6 +996,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1870303339}
     m_Modifications:
+    - target: {fileID: 336953469776056140, guid: c0b41546912d6379d93e431630744448, type: 3}
+      propertyPath: m_CustomTags.Tag00
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1190295706711628559, guid: c0b41546912d6379d93e431630744448, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1493,25 +1501,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sword Pickup
       objectReference: {fileID: 0}
-    - target: {fileID: 7256450731952528949, guid: 2f3fbf68fb7d0d305ae2d75ec2df0cd9, type: 3}
-      propertyPath: m_Cylinder.Axis
+    - target: {fileID: 3316913329566665158, guid: 2f3fbf68fb7d0d305ae2d75ec2df0cd9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7256450731952528948, guid: 2f3fbf68fb7d0d305ae2d75ec2df0cd9, type: 3}
+      propertyPath: m_CustomTags.Tag00
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7256450731952528949, guid: 2f3fbf68fb7d0d305ae2d75ec2df0cd9, type: 3}
       propertyPath: m_Capsule.Radius
-      value: 0.012004901
-      objectReference: {fileID: 0}
-    - target: {fileID: 7256450731952528949, guid: 2f3fbf68fb7d0d305ae2d75ec2df0cd9, type: 3}
-      propertyPath: m_Cylinder.Height
-      value: 0.058724135
+      value: 0.011530485
       objectReference: {fileID: 0}
     - target: {fileID: 7256450731952528949, guid: 2f3fbf68fb7d0d305ae2d75ec2df0cd9, type: 3}
       propertyPath: m_Cylinder.Radius
-      value: 0.012004901
+      value: 0.011530485
       objectReference: {fileID: 0}
     - target: {fileID: 7256450731952528949, guid: 2f3fbf68fb7d0d305ae2d75ec2df0cd9, type: 3}
       propertyPath: m_PrimitiveSize.z
-      value: 0.024009801
+      value: 0.0026866784
       objectReference: {fileID: 0}
     - target: {fileID: 8114863896370154103, guid: 2f3fbf68fb7d0d305ae2d75ec2df0cd9, type: 3}
       propertyPath: m_RootOrder
@@ -1559,23 +1567,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f3fbf68fb7d0d305ae2d75ec2df0cd9, type: 3}
---- !u!1 &7256450731952528954 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3316913329566665158, guid: 2f3fbf68fb7d0d305ae2d75ec2df0cd9, type: 3}
-  m_PrefabInstance: {fileID: 7256450731952528953}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7256450731952528955
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7256450731952528954}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fb7fa5fcfe9943d9a0653ad20e8df3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &7839285736296502248
 PrefabInstance:
   m_ObjectHideFlags: 0

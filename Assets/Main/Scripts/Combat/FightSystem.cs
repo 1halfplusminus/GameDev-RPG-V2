@@ -9,7 +9,7 @@ using UnityEngine;
 namespace RPG.Combat
 {
 
-    [UpdateAfter(typeof(CombatTargettingSystem))]
+    // [UpdateAfter(typeof(PlayerControlledCombatTargettingSystem))]
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class MoveTowardTargetSystem : SystemBase
     {
@@ -57,52 +57,7 @@ namespace RPG.Combat
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
-    //TODO: Move to control
-    [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class CombatTargettingSystem : SystemBase
-    {
 
-
-        protected override void OnUpdate()
-        {
-            //FIXME: Should be in another system
-            UnTargetNoHittableTarget();
-            Entities
-            .ForEach((Entity e, ref Fighter fighter, in DynamicBuffer<HittedByRaycast> rayHits, in MouseClick mouseClick) =>
-            {
-                fighter.TargetFoundThisFrame = 0;
-                foreach (var rayHit in rayHits)
-                {
-                    if (HasComponent<Hittable>(rayHit.Hitted))
-                    {
-                        if (rayHit.Hitted != e)
-                        {
-                            if (mouseClick.CapturedThisFrame)
-                            {
-                                fighter.Target = rayHit.Hitted;
-                            }
-                            fighter.TargetFoundThisFrame += 1;
-                        }
-
-                    }
-
-                }
-            }).ScheduleParallel();
-        }
-        private void UnTargetNoHittableTarget()
-        {
-            Entities
-            .WithNone<IsDeadTag>()
-            .ForEach((ref Fighter f) =>
-            {
-                if (!HasComponent<Hittable>(f.Target))
-                {
-                    f.Target = Entity.Null;
-                    f.Attacking = false;
-                }
-            }).ScheduleParallel();
-        }
-    }
 
     //FIXME: More receive damage system
     [UpdateInGroup(typeof(CombatSystemGroup))]
@@ -178,11 +133,29 @@ namespace RPG.Combat
                 }
             });
         }
+
+        private void UnTargetNoHittableTarget()
+        {
+            Entities
+            .WithAny<IsFighting>()
+            .WithNone<IsDeadTag>()
+            .ForEach((ref Fighter f) =>
+            {
+                if (!HasComponent<Hittable>(f.Target))
+                {
+                    f.Target = Entity.Null;
+                    f.Attacking = false;
+                }
+            }).ScheduleParallel();
+        }
         protected override void OnUpdate()
         {
+
             var cb = commandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
             cb.DestroyEntitiesForEntityQuery(hittedEntity);
+
+            UnTargetNoHittableTarget();
             // Create hit event
             Entities
             .WithAny<IsFighting>()
@@ -209,7 +182,7 @@ namespace RPG.Combat
 
     }
     [UpdateAfter(typeof(MoveTowardTargetSystem))]
-    [UpdateAfter(typeof(CombatTargettingSystem))]
+    // [UpdateAfter(typeof(PlayerControlledCombatTargettingSystem))]
     [UpdateInGroup(typeof(CombatSystemGroup))]
 
     public class FightSystem : SystemBase
