@@ -1,8 +1,10 @@
 using RPG.Combat;
 using RPG.Core;
+using RPG.Mouvement;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace RPG.Control
 {
@@ -29,6 +31,7 @@ namespace RPG.Control
         public CursorType Cursor;
         public CursorType CurrentCursor;
     }
+    [UpdateBefore(typeof(PlayersMoveSystem))]
     [UpdateInGroup(typeof(ControlSystemGroup))]
     public class CursorExtensionsSystem : SystemBase
     {
@@ -37,7 +40,20 @@ namespace RPG.Control
         {
 
             Entities
-                .WithNone<InteractWithUI>()
+            .WithNone<InteractWithUI>()
+            .ForEach((Entity e, NavMeshAgent agent, ref VisibleCursor cursor, in WorldClick worldClick) =>
+            {
+                var path = new NavMeshPath();
+                agent.CalculatePath(worldClick.WorldPosition, path);
+                if (path.status != NavMeshPathStatus.PathComplete)
+                {
+                    EntityManager.RemoveComponent<WorldClick>(e);
+                    cursor.Cursor = CursorType.None;
+                }
+
+            }).WithStructuralChanges().WithoutBurst().Run();
+            Entities
+            .WithNone<InteractWithUI>()
             .ForEach((ref VisibleCursor cursor, in DynamicBuffer<HittedByRaycastEvent> rayHits) =>
             {
                 foreach (var rayHit in rayHits)

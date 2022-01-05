@@ -11,6 +11,8 @@ namespace RPG.Core
     {
         public float3 WorldPosition;
         public int Frame;
+
+        public Entity Hitted;
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
     [UpdateAfter(typeof(RaycastSystem))]
@@ -19,7 +21,7 @@ namespace RPG.Core
 
 
         EntityCommandBufferSystem commandBufferSystem;
-        EntityQuery mouseClickQuery;
+
         protected override void OnCreate()
         {
             base.OnCreate();
@@ -37,7 +39,7 @@ namespace RPG.Core
                 {
                     if (HasComponent<Navigable>(rayHit.Hitted))
                     {
-                        cbp.AddComponent(entityInQueryIndex, e, new WorldClick() { WorldPosition = rayHit.Hit.Position, Frame = 0 });
+                        cbp.AddComponent(entityInQueryIndex, e, new WorldClick() { WorldPosition = rayHit.Hit.Position, Frame = 0, Hitted = rayHit.Hitted });
                         return;
                     }
 
@@ -57,28 +59,5 @@ namespace RPG.Core
 
 
     }
-
-    // [UpdateAfter(typeof(ClickOnTerrainSystem))]
-    // [UpdateInGroup(typeof(CoreSystemGroup))]
-    // public class EndSimulationWorldClickSystem : SystemBase
-    // {
-    //     EntityCommandBufferSystem commandBufferSystem;
-    //     protected override void OnCreate()
-    //     {
-    //         base.OnCreate();
-    //         commandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-    //     }
-    //     protected override void OnUpdate()
-    //     {
-    //         var commandBuffer = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-    //         // Destroy worldClick at end of simulation
-    //         Entities.ForEach((Entity e, int entityInQueryIndex, ref MouseClick click) =>
-    //         {
-    //             commandBuffer.RemoveComponent<WorldClick>(entityInQueryIndex, e);
-    //         }).ScheduleParallel();
-
-    //         commandBufferSystem.AddJobHandleForProducer(Dependency);
-    //     }
-    // }
 
 }
