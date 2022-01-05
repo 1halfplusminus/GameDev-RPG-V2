@@ -3,6 +3,7 @@ using RPG.Core;
 using RPG.Mouvement;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -41,17 +42,23 @@ namespace RPG.Control
 
             Entities
             .WithNone<InteractWithUI>()
-            .ForEach((Entity e, NavMeshAgent agent, ref VisibleCursor cursor, in WorldClick worldClick) =>
+            .WithAll<PlayerControlled>()
+            .ForEach((Entity e, ref VisibleCursor cursor, ref WorldClick worldClick) =>
             {
-                var path = new NavMeshPath();
-                agent.CalculatePath(worldClick.WorldPosition, path);
-                if (path.status != NavMeshPathStatus.PathComplete)
+                NavMesh.SamplePosition(worldClick.WorldPosition, out var hit, 1f, NavMesh.AllAreas);
+                if (!hit.hit)
                 {
                     EntityManager.RemoveComponent<WorldClick>(e);
                     cursor.Cursor = CursorType.None;
                 }
-
-            }).WithStructuralChanges().WithoutBurst().Run();
+                else
+                {
+                    worldClick.WorldPosition = hit.position;
+                }
+            })
+            .WithStructuralChanges()
+            .WithoutBurst()
+            .Run();
             Entities
             .WithNone<InteractWithUI>()
             .ForEach((ref VisibleCursor cursor, in DynamicBuffer<HittedByRaycastEvent> rayHits) =>
