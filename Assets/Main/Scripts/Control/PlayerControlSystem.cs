@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace RPG.Control
 {
+    public struct PlayerControlled : IComponentData { }
     public struct DisabledControl : IComponentData { };
     [UpdateInGroup(typeof(ControlSystemGroup))]
     public class PlayersMoveSystem : SystemBase
@@ -30,7 +31,7 @@ namespace RPG.Control
             Entities
             .WithAll<PlayerControlled>()
             .WithNone<DisabledControl>()
-            .ForEach((Entity player, int entityInQueryIndex, ref MoveTo moveTo, ref VisibleCursor visibleCursor, in MouseClick mouseClick, in WorldClick worldClick, in DynamicBuffer<PlayerCursors> cursors) =>
+            .ForEach((Entity player, int entityInQueryIndex, ref MoveTo moveTo, ref VisibleCursor visibleCursor, in MouseClick mouseClick, in WorldClick worldClick) =>
             {
                 if (mouseClick.CapturedThisFrame)
                 {
@@ -109,31 +110,28 @@ namespace RPG.Control
     [UpdateInGroup(typeof(ControlSystemGroup))]
     public class NoInteractionSystem : SystemBase
     {
-        EntityCommandBufferSystem entityCommandBufferSystem;
+
 
         protected override void OnCreate()
         {
             base.OnCreate();
-            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+
         }
         protected override void OnUpdate()
         {
-            // var cb = entityCommandBufferSystem.CreateCommandBuffer();
-            // var ecb = cb.AsParallelWriter();
+
             Entities
             .WithNone<DisabledControl>()
             .WithNone<WorldClick>()
             .WithAny<PlayerControlled>()
-            .ForEach((int entityInQueryIndex, Entity e, ref VisibleCursor visibleCursor, in Fighter f, in DynamicBuffer<PlayerCursors> cursors) =>
+            .ForEach((int entityInQueryIndex, Entity e, ref VisibleCursor visibleCursor, in Fighter f) =>
             {
                 if (f.TargetFoundThisFrame == 0)
                 {
-
                     visibleCursor.Cursor = CursorType.None;
                 }
             }).ScheduleParallel();
 
-            // entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
 }
