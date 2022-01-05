@@ -51,7 +51,6 @@ namespace RPG.Control
             .ForEach((int entityInQueryIndex, Entity e, in InScene inScene) =>
             {
                 commandBuffer.AddComponent(entityInQueryIndex, e, new TriggerSceneLoad { SceneGUID = inScene.SceneGUID });
-                /*       commandBuffer.AddComponent<DontLoadSceneState>(entityInQueryIndex, e); */
             }).ScheduleParallel();
 
             Entities
@@ -60,7 +59,6 @@ namespace RPG.Control
            .ForEach((int entityInQueryIndex, Entity e) =>
            {
                commandBuffer.AddComponent<InSceneLoaded>(entityInQueryIndex, e);
-               /*          commandBuffer.RemoveComponent<DontLoadSceneState>(entityInQueryIndex, e); */
            }).ScheduleParallel();
             commandBufferSystem.AddJobHandleForProducer(Dependency);
         }

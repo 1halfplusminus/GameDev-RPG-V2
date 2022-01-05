@@ -10,6 +10,7 @@ namespace RPG.Core
     public struct WorldClick : IComponentData
     {
         public float3 WorldPosition;
+        public int Frame;
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
     [UpdateAfter(typeof(RaycastSystem))]
@@ -18,53 +19,66 @@ namespace RPG.Core
 
 
         EntityCommandBufferSystem commandBufferSystem;
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            commandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
-        }
-        protected override void OnUpdate()
-        {
-            var commandBuffer = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-            var navigables = GetComponentDataFromEntity<Navigable>(true);
-            Entities
-            .WithReadOnly(navigables)
-            .ForEach((Entity e, int entityInQueryIndex, in DynamicBuffer<HittedByRaycast> rayHits) =>
-            {
-                foreach (var rayHit in rayHits)
-                {
-                    if (navigables.HasComponent(rayHit.Hitted))
-                    {
-                        commandBuffer.AddComponent(entityInQueryIndex, e, new WorldClick() { WorldPosition = rayHit.Hit.Position });
-                        return;
-                    }
-                }
-            }).ScheduleParallel();
-            commandBufferSystem.AddJobHandleForProducer(this.Dependency);
-        }
-    }
-
-    [UpdateAfter(typeof(ClickOnTerrainSystem))]
-    [UpdateInGroup(typeof(CoreSystemGroup))]
-    public class EndSimulationWorldClickSystem : SystemBase
-    {
-        EntityCommandBufferSystem commandBufferSystem;
+        EntityQuery mouseClickQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
             commandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+
         }
         protected override void OnUpdate()
         {
-            var commandBuffer = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-            // Destroy worldClick at end of simulation
-            Entities.ForEach((Entity e, int entityInQueryIndex, ref MouseClick click) =>
+            var cb = commandBufferSystem.CreateCommandBuffer();
+            var cbp = cb.AsParallelWriter();
+            Entities
+            .ForEach((Entity e, int entityInQueryIndex, in DynamicBuffer<HittedByRaycast> rayHits) =>
             {
-                commandBuffer.RemoveComponent<WorldClick>(entityInQueryIndex, e);
-            }).ScheduleParallel();
+                foreach (var rayHit in rayHits)
+                {
+                    if (HasComponent<Navigable>(rayHit.Hitted))
+                    {
+                        cbp.AddComponent(entityInQueryIndex, e, new WorldClick() { WorldPosition = rayHit.Hit.Position, Frame = 0 });
+                        return;
+                    }
 
+                }
+            }).ScheduleParallel();
+            Entities
+            .ForEach((Entity e, int entityInQueryIndex, ref WorldClick worldClick, in MouseClick click) =>
+            {
+                if (worldClick.Frame > 3)
+                {
+                    cbp.RemoveComponent<WorldClick>(entityInQueryIndex, e);
+                }
+                worldClick.Frame += 1;
+            }).ScheduleParallel();
             commandBufferSystem.AddJobHandleForProducer(Dependency);
         }
+
+
     }
+
+    // [UpdateAfter(typeof(ClickOnTerrainSystem))]
+    // [UpdateInGroup(typeof(CoreSystemGroup))]
+    // public class EndSimulationWorldClickSystem : SystemBase
+    // {
+    //     EntityCommandBufferSystem commandBufferSystem;
+    //     protected override void OnCreate()
+    //     {
+    //         base.OnCreate();
+    //         commandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+    //     }
+    //     protected override void OnUpdate()
+    //     {
+    //         var commandBuffer = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+    //         // Destroy worldClick at end of simulation
+    //         Entities.ForEach((Entity e, int entityInQueryIndex, ref MouseClick click) =>
+    //         {
+    //             commandBuffer.RemoveComponent<WorldClick>(entityInQueryIndex, e);
+    //         }).ScheduleParallel();
+
+    //         commandBufferSystem.AddJobHandleForProducer(Dependency);
+    //     }
+    // }
 
 }
