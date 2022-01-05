@@ -16,7 +16,11 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 4207c5e75b2b61cb492674a0773dfe21
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: f8c873f1e53e83f4aabf342d6be1dfc3
+    m_Address: Assets/Main/Assets Packs/Pixel Cursors/Cursors/Bonus_41.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 789d5733da6e0ca849db077a8751b187, type: 2}
   m_SchemaSet:
