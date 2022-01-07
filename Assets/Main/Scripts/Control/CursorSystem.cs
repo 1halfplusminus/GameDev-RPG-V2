@@ -1,12 +1,10 @@
 using RPG.Combat;
 using RPG.Core;
-using RPG.Mouvement;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.AI;
-
 namespace RPG.Control
 {
     public struct InGameCursor : IComponentData
@@ -43,17 +41,25 @@ namespace RPG.Control
             Entities
             .WithNone<InteractWithUI>()
             .WithAll<PlayerControlled>()
-            .ForEach((Entity e, ref VisibleCursor cursor, ref WorldClick worldClick) =>
+            .ForEach((Entity e, ref VisibleCursor cursor, ref WorldClick worldClick, in Raycast raycast, in LocalToWorld localToWorld) =>
             {
-                NavMesh.SamplePosition(worldClick.WorldPosition, out var hit, 1f, NavMesh.AllAreas);
-                if (!hit.hit)
+                NavMesh.SamplePosition(worldClick.WorldPosition, out var hit, raycast.MaxNavMeshProjectionDistance, NavMesh.AllAreas);
+                var shouldMove = false;
+                if (hit.hit)
+                {
+                    var nashMeshPath = new NavMeshPath();
+                    NavMesh.CalculatePath(localToWorld.Position, hit.position, NavMesh.AllAreas, nashMeshPath);
+
+                    if (nashMeshPath.status == NavMeshPathStatus.PathComplete && CalculeDistance(nashMeshPath) <= raycast.MaxNavPathLength)
+                    {
+                        worldClick.WorldPosition = hit.position;
+                        shouldMove = true;
+                    }
+                }
+                if (!shouldMove)
                 {
                     EntityManager.RemoveComponent<WorldClick>(e);
                     cursor.Cursor = CursorType.None;
-                }
-                else
-                {
-                    worldClick.WorldPosition = hit.position;
                 }
             })
             .WithStructuralChanges()
@@ -74,6 +80,17 @@ namespace RPG.Control
                     }
                 }
             }).ScheduleParallel();
+        }
+
+        private static float CalculeDistance(NavMeshPath navMeshPath)
+        {
+            var distance = 0f;
+            if (navMeshPath.corners.Length < 2) return distance;
+            for (int i = 0; i < navMeshPath.corners.Length - 1; i++)
+            {
+                distance += math.abs(math.distance(navMeshPath.corners[i], navMeshPath.corners[i + 1]));
+            }
+            return distance;
         }
     }
     [UpdateInGroup(typeof(ControlSystemGroup))]

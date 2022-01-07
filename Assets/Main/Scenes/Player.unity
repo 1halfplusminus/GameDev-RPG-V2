@@ -187,6 +187,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: MaxNavPathLength
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Cursors.Array.size
       value: 4
       objectReference: {fileID: 0}
@@ -205,6 +209,10 @@ PrefabInstance:
     - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Cursors.Array.data[3].Type
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: MaxNavMeshProjectionDistance
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Cursors.Array.data[0].Texture
@@ -226,8 +234,7 @@ PrefabInstance:
       propertyPath: Cursors.Array.data[0].Cursor.Texture
       value: 
       objectReference: {fileID: 2800000, guid: 44a99ee545fd8ba46a452b12c1f9378b, type: 3}
-    m_RemovedComponents:
-    - {fileID: 3165293975074451672, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
 --- !u!1 &1042025707 stripped
 GameObject:

@@ -30,7 +30,7 @@ MonoBehaviour:
   Projectile: {fileID: 0}
   Damage: 10
   BonusDamagePercent: 0
-  Range: 0.1
+  Range: 0.8
   Cooldown: 1.1
   AttackDuration: 0.875
   SocketType: 1

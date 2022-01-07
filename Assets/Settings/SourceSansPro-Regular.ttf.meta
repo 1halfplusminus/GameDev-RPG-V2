@@ -3,12 +3,11 @@ guid: 961e1c4ccc2c3d94fb0f76fdf4088b88
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
-  fontSize: 16
+  fontSize: 10
   forceTextureCase: -2
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: Source Sans Pro
   fontNames:
   - Source Sans Pro
   fallbackFontReferences:

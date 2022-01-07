@@ -9,3 +9,10 @@
 .Button {
     cursor: url('project://database/Assets/Main/Assets%20Packs/Pixel%20Cursors/Cursors/basic_01%20YELLOW.png?fileID=2800000&guid=6fdfcd4167ed5e7488584241bb671bb2&type=3#basic_01 YELLOW');
 }
+
+Label {
+    color: rgba(255, 255, 255, 255);
+}
+
+.Text {
+}

@@ -9,7 +9,7 @@ public class ReplaceWithPrefab : EditorWindow
     [MenuItem("Tools/Replace With Prefab")]
     static void CreateReplaceWithPrefab()
     {
-        EditorWindow.GetWindow<ReplaceWithPrefab>();
+        GetWindow<ReplaceWithPrefab>();
     }
 
     private void OnGUI()

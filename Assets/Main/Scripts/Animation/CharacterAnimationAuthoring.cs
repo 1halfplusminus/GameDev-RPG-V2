@@ -1,6 +1,4 @@
 using RPG.Core;
-using Unity.Animation;
-using Unity.Entities;
 using UnityEngine;
 namespace RPG.Animation
 {

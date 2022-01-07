@@ -138,12 +138,12 @@ namespace RPG.Combat
                     var other = ste[i].GetOtherEntity(e);
                     if (other != p.ShootBy)
                     {
-                        Debug.Log($"Projectile {e} collid with {other.Index}  ");
-                        var hitEntity = cbp.CreateEntity(entityInQueryIndex);
-                        cbp.AddComponent(entityInQueryIndex, hitEntity, new Hit() { Hitter = p.ShootBy, Hitted = other });
-                        cbp.AddComponent<IsProjectile>(entityInQueryIndex, hitEntity);
                         if (!isDead.HasComponent(other))
                         {
+                            Debug.Log($"Projectile {e} collid with {other.Index}  ");
+                            var hitEntity = cbp.CreateEntity(entityInQueryIndex);
+                            cbp.AddComponent(entityInQueryIndex, hitEntity, new Hit() { Hitter = p.ShootBy, Hitted = other });
+                            cbp.AddComponent<IsProjectile>(entityInQueryIndex, hitEntity);
                             Debug.Log($"Projectile {e} destroyed by {other.Index}  ");
                             cbp.AddComponent<ProjectileHitted>(entityInQueryIndex, e);
                         }

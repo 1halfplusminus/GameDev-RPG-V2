@@ -6,6 +6,8 @@ namespace RPG.Hybrid
 {
 #if UNITY_EDITOR
     using Unity.Animation.Hybrid;
+    using UnityEngine.AddressableAssets;
+
     public struct AnimatorClip : IBufferElementData
     {
         public BlobAssetReference<Clip> Clip;
@@ -29,6 +31,18 @@ namespace RPG.Hybrid
             });
         }
     }
+    // public class AnimationConversionSystem : GameObjectConversionSystem
+    // {
+    //     protected override void OnUpdate()
+    //     {
 
+    //         Entities.ForEach((UnityEngine.Animation animation) =>
+    //         {
+    //             DeclareLinkedEntityGroup(animation.gameObject);
+    //             DeclareLinkedEntityGroup(animation.transform.parent.gameObject);
+    //             AddHybridComponent(animation);
+    //         });
+    //     }
+    // }
 #endif
 }

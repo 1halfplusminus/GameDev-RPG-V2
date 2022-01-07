@@ -1,37 +1,12 @@
 using Unity.Entities;
 using UnityEngine;
-using RPG.Control;
 using Unity.Scenes;
-using RPG.Mouvement;
 using Unity.Collections;
-using Unity.Mathematics;
-using Unity.Transforms;
 using RPG.Gameplay;
 
 namespace RPG.Core
 {
-    public class MaxLifeTimeSystem : SystemBase
-    {
-        EntityCommandBufferSystem entityCommandBufferSystem;
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-        }
-        protected override void OnUpdate()
-        {
 
-            var ecb = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-            Entities.ForEach((int entityInQueryIndex, Entity e, ref MaxLifeTime lifeTime, in DeltaTime delta) =>
-            {
-                lifeTime.Value -= delta.Value;
-                if (lifeTime.Value <= 0)
-                {
-                    ecb.DestroyEntity(entityInQueryIndex, e);
-                }
-            }).ScheduleParallel();
-        }
-    }
     public struct TriggerSceneLoad : IComponentData
     {
         public Unity.Entities.Hash128 SceneGUID;

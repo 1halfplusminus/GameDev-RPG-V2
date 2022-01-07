@@ -13,6 +13,8 @@ namespace RPG.Core
         public Ray Ray;
         public float Distance;
 
+        public float MaxNavPathLength;
+        public float MaxNavMeshProjectionDistance;
         public bool Completed;
     }
     public struct HittedByRaycastEvent : IBufferElementData

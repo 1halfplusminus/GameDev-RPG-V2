@@ -38,7 +38,7 @@ namespace RPG.Hybrid
         {
             Entities.ForEach((CinemachineBrain brain) =>
             {
-                var brainEntity = DstEntityManager.CreateEntity();
+                var brainEntity = TryGetPrimaryEntity(brain);
                 DstEntityManager.AddComponentObject(brainEntity, brain);
                 DstEntityManager.AddComponentData(brainEntity, new CinemachineBrainTag() { });
             });

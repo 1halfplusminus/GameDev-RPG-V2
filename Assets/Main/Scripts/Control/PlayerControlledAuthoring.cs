@@ -21,6 +21,10 @@ namespace RPG.Control
 
         public InGameCursorAuthoring[] Cursors;
 
+
+        public float MaxNavPathLength;
+        public float MaxNavMeshProjectionDistance;
+
     }
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
     public class PlayerControlledConversionSystemDeclareReferencedObjects : GameObjectConversionSystem
@@ -45,7 +49,7 @@ namespace RPG.Control
             {
                 var entity = GetPrimaryEntity(playerControlled);
                 DstEntityManager.AddComponent<PlayerControlled>(entity);
-                DstEntityManager.AddComponentData(entity, new Raycast { Distance = playerControlled.RaycastDistance });
+                DstEntityManager.AddComponentData(entity, new Raycast { Distance = playerControlled.RaycastDistance, MaxNavMeshProjectionDistance = playerControlled.MaxNavMeshProjectionDistance, MaxNavPathLength = playerControlled.MaxNavPathLength });
                 DstEntityManager.AddComponent<MouseClick>(entity);
                 foreach (var cursor in playerControlled.Cursors)
                 {

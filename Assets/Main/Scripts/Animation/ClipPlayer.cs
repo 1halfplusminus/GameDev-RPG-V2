@@ -5,11 +5,6 @@ using UnityEngine;
 using RPG.Core;
 namespace RPG.Animation
 {
-
-#if UNITY_EDITOR
-
-    using Unity.Animation.Hybrid;
-    [DisableAutoCreation]
     public class ClipPlayerConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()
@@ -22,20 +17,16 @@ namespace RPG.Animation
                 }
                 var entity = GetPrimaryEntity(cp);
                 DeclareAssetDependency(cp.gameObject, cp.Clip);
-                DstEntityManager.AddComponentData(entity, new PlayClip() { Clip = BlobAssetStore.GetClip(cp.Clip) });
-
+                DstEntityManager.AddComponentData(entity, new PlayClip() { Clip = cp.Clip.GetClip() });
                 DstEntityManager.AddComponent<DeltaTime>(entity);
             });
         }
     }
 
-
-#endif
-
     public class ClipPlayer : MonoBehaviour
     {
 
-        public AnimationClip Clip;
+        public ClipAsset Clip;
     }
 
     public struct PlayClip : IAnimationSetup
@@ -50,7 +41,7 @@ namespace RPG.Animation
 
 
     }
-    [DisableAutoCreation]
+
     [UpdateBefore(typeof(DefaultAnimationSystemGroup))]
     public class PlayClipSystemBase : AnimationSystemBase<PlayClip, PlayClipStateComponent, ProcessDefaultAnimationGraph>
     {
@@ -87,16 +78,16 @@ namespace RPG.Animation
 
         protected override void DestroyGraph(Entity e, ProcessDefaultAnimationGraph graphSystem, ref PlayClipStateComponent data)
         {
-
+            var set = graphSystem.Set;
+            if (set.IsCreated)
+            {
+                set.Destroy(data.ClipPlayerNode);
+            }
         }
         protected override void OnUpdate()
         {
             base.OnUpdate();
-            Entities
-           .ForEach((Entity e, ref PlayClip playClip, ref PlayClipStateComponent state) =>
-           {
-               animationSystem.Set.SendMessage(state.ClipPlayerNode, ClipPlayerNode.SimulationPorts.Clip, playClip.Clip);
-           });
+
         }
     }
 }
