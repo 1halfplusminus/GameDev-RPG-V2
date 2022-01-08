@@ -2908,6 +2908,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 787394774655856651, guid: e7fb41679a215d7e08412569104fc661, type: 3}
+      propertyPath: Offset.y
+      value: 3.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 787394774655856651, guid: e7fb41679a215d7e08412569104fc661, type: 3}
+      propertyPath: Offset.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1939643721024018097, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: LookingAround
       value: 

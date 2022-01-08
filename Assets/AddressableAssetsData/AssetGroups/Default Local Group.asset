@@ -21,6 +21,10 @@ MonoBehaviour:
     m_Address: Assets/Main/Assets Packs/Pixel Cursors/Cursors/Bonus_41.png
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: c70abee69b993c2ff87217e728a83375
+    m_Address: Assets/Main/Game/Characters/Progression.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 789d5733da6e0ca849db077a8751b187, type: 2}
   m_SchemaSet:

@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Main/UI/In%20Game%20HUD%20Style.uss?fileID=7433441132597879392&amp;guid=d337463dc0df7fbe3b8a9edd5971530f&amp;type=3#In Game HUD Style" />
+    <ui:VisualElement name="Container" style="max-width: none; max-height: 150px; flex-grow: 0; padding-left: 5px; padding-right: 5px; padding-top: 15px; padding-bottom: 15px; width: 450px; height: 100px; visibility: visible; display: flex;">
+        <ui:VisualElement name="Background" style="flex-grow: 1; background-color: rgba(238, 0, 0, 0.33); flex-direction: column; height: 100%; width: 100%;">
+            <ui:VisualElement name="Overlay" style="background-color: rgba(9, 255, 0, 0.48); flex-grow: 1; width: 0;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

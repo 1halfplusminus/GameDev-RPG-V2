@@ -3,8 +3,8 @@
     "Components": [
         {
             "$type": "Unity.Build.Common.GeneralSettings, Unity.Build",
-            "ProductName": "My RPG",
-            "CompanyName": "ZouriteSoft",
+            "ProductName": "Product Name",
+            "CompanyName": "Company Name",
             "Version": "1.0.0"
         },
         {
@@ -26,7 +26,7 @@
         },
         {
             "$type": "Unity.Build.Classic.ClassicCodeStrippingOptions, Unity.Build.Classic",
-            "StripEngineCode": false,
+            "StripEngineCode": true,
             "ManagedStrippingLevel": 0
         },
         {
@@ -34,6 +34,13 @@
             "ScriptingBackend": 0,
             "Il2CppCompilerConfiguration": 1,
             "UseIncrementalGC": false
+        },
+        {
+            "$type": "Unity.Build.Common.PlayerScriptingDefines, Unity.Build",
+            "Defines": [
+                "ENABLE_COMPUTE_DEFORMATIONS",
+                "ENABLE_HYBRID_RENDERER_V2"
+            ]
         }
     ]
 }

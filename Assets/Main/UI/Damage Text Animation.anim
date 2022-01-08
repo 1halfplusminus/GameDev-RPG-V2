@@ -19,7 +19,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Health text fading
+  m_Name: Damage Text Animation
   serializedVersion: 6
   m_Legacy: 1
   m_Compressed: 0

@@ -22,6 +22,9 @@ namespace RPG.UI
 
 
     }
+
+
+
     [UpdateInGroup(typeof(UISystemGroup))]
     public class InGameUISystem : SystemBase
     {
@@ -45,7 +48,6 @@ namespace RPG.UI
             });
             playerQuery.SetChangedVersionFilter(ReadOnly<Health>());
             playerQuery.SetChangedVersionFilter(ReadOnly<Fighter>());
-            // playerQuery.SetChangedVersionFilter(ReadOnly<ExperiencePoint>());
             displayInGameUIQuery = GetEntityQuery(new EntityQueryDesc()
             {
                 Any = new ComponentType[] {

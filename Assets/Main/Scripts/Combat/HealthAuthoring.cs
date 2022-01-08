@@ -12,7 +12,7 @@ namespace RPG.Core
         public float MaxHealth;
         public float Value;
 
-        public float GetPercent(int level, BlobAssetReference<Progression> progressionAsset)
+        public float GetRatio(int level, BlobAssetReference<Progression> progressionAsset)
         {
             return Value / progressionAsset.Value.GetStat(Stats.Stats.Health, level);
         }

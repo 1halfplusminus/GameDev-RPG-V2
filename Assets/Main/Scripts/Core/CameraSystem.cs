@@ -5,6 +5,7 @@ using Unity.Transforms;
 
 namespace RPG.Core
 {
+
     [UpdateInGroup(typeof(CoreSystemGroup))]
     public class CameraFollowSystem : SystemBase
     {
