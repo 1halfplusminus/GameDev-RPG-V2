@@ -3072,6 +3072,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5142438563348407387, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
+      propertyPath: Offset.y
+      value: 2.3
+      objectReference: {fileID: 0}
     - target: {fileID: 731676622901207857, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: Weapon
       value: 

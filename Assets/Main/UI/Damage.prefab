@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1068927576227993625}
   - component: {fileID: 1176817920702335121}
   - component: {fileID: 1176817920702335117}
-  - component: {fileID: 2908439954863486698}
+  - component: {fileID: 5627155502517108033}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -86,14 +86,14 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1068927576227993627}
-  m_Text: 100
+  m_Text: 
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 10
+  m_FontSize: 50
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 12800000, guid: 961e1c4ccc2c3d94fb0f76fdf4088b88, type: 3}
@@ -136,7 +136,7 @@ MonoBehaviour:
   ScaleChannels: []
   FloatChannels: []
   IntChannels: []
---- !u!114 &2908439954863486698
+--- !u!114 &5627155502517108033
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -145,10 +145,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1068927576227993627}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38a6a75eb8685bcefaca5fad42b61cd6, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f45258a2afd45afabd0d78ae4fcf414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Value: 1
 --- !u!1 &1068927576432277031
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,7 +175,7 @@ Transform:
   m_GameObject: {fileID: 1068927576432277031}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1068927576227993626}

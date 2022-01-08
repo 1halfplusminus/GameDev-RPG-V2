@@ -1,3 +1,4 @@
+using RPG.Combat;
 using RPG.Core;
 using RPG.Stats;
 using Unity.Entities;
@@ -22,13 +23,14 @@ namespace RPG.UI
         public void SetHealh(Health health, BaseStats stats)
         {
             var ratio = health.GetRatio(stats.Level, stats.ProgressionAsset);
+            container.style.visibility = Mathf.Approximately(ratio, 0) ? Visibility.Hidden : Visibility.Visible;
             var styleLength = new StyleLength(new Length(ratio * 100, LengthUnit.Percent));
             overlay.style.width = styleLength;
         }
 
         public void SetPosition(Camera camera, Vector3 position)
         {
-            container.style.visibility = Visibility.Visible;
+
             Vector2 newPosition = RuntimePanelUtils.CameraTransformWorldToPanel(
                    container.panel, position, camera);
             newPosition.x = newPosition.x - container.layout.width / 2f;
@@ -106,6 +108,7 @@ namespace RPG.UI
 
             Entities
             .WithNone<HealthBarInstance, IsDeadTag>()
+            .WithAny<WasHitted, IsFighting>()
             .ForEach((Entity e, in Health health, in HealthBar healthBar) =>
             {
                 var instance = cb.Instantiate(healthBar.Prefab);

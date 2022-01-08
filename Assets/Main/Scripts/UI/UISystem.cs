@@ -68,7 +68,7 @@ namespace RPG.UI
                 .ForEach((InGameUIController c) =>
                 {
                     c.SetPlayerHealth(playerHealth, baseStats.Level, baseStats.ProgressionAsset);
-                    c.SetEnemyHealth(fighter.Target, EntityManager);
+                    // c.SetEnemyHealth(fighter.Target, EntityManager);
                     c.SetExperiencePoint(experience.Value);
                     c.SetLevel(baseStats);
                 })
