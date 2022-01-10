@@ -204,11 +204,9 @@ namespace RPG.UI
             gameEventListener = GetEntityQuery(new EntityQueryDesc()
             {
                 All = new ComponentType[] {
-                  ReadOnly<GameEventListener>(),     ReadOnly<Prefab>()
+                  ReadOnly<GameEventListener>(),ReadOnly<Prefab>()
                 },
-                // Any = new ComponentType[] {
-                //   ReadOnly<Prefab>()
-                // },
+
             });
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
             RequireForUpdate(GetEntityQuery(new EntityQueryDesc()
@@ -276,7 +274,11 @@ namespace RPG.UI
         private void InitNewGameButton(Entity uiDocumentEntity, VisualElement visualElement)
         {
             var newGameButton = visualElement.Q<Button>("NewGame");
-            newGameButton.clicked += () => { NewGame(uiDocumentEntity); };
+            newGameButton.clicked += () =>
+            {
+                NewGame(uiDocumentEntity);
+                visualElement.style.visibility = Visibility.Hidden;
+            };
         }
     }
     [UpdateInGroup(typeof(UISystemGroup))]

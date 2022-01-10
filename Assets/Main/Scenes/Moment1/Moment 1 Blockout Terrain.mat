@@ -23,9 +23,9 @@ Material:
   m_Name: Moment 1 Blockout Terrain
   m_Shader: {fileID: -6465566751694194690, guid: 714f5d7f914fc4c28890c7dbfdc449b6, type: 3}
   m_ShaderKeywords: 
-  m_LightmapFlags: 2
+  m_LightmapFlags: 1
   m_EnableInstancingVariants: 1
-  m_DoubleSidedGI: 0
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []

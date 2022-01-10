@@ -1507,6 +1507,7 @@ GameObject:
   - component: {fileID: -461697480233262073}
   - component: {fileID: 142956693}
   - component: {fileID: 7275666525274220750}
+  - component: {fileID: 874206787934160346}
   m_Layer: 0
   m_Name: Morie Hero
   m_TagString: Untagged
@@ -2033,6 +2034,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DamageTextPrefab: {fileID: 1068927576432277031, guid: 6b9bfa31ff376bf23a34c2311d8bd093, type: 3}
+--- !u!114 &874206787934160346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3809403721112327955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ConversionMode: 0
 --- !u!1 &3867810557671781752
 GameObject:
   m_ObjectHideFlags: 0

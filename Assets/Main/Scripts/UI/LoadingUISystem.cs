@@ -50,6 +50,7 @@ namespace RPG.UI
             }
             var step = math.smoothstep(Current, Duration, _timeElapsed);
             Current = math.lerp(From, To, _timeElapsed / Duration);
+
         }
 
     }
@@ -78,7 +79,7 @@ namespace RPG.UI
                 commandBuffer.AddComponent(e, new Fade()
                 {
                     To = 100f,
-                    From = 0.0f,
+                    From = 90f,
                     Duration = 0.1f
                 });
                 commandBuffer.AddComponent<IsLoading>(e);
@@ -102,7 +103,7 @@ namespace RPG.UI
                 {
                     To = 0f,
                     From = 100f,
-                    Duration = 1.5f
+                    Duration = 1f
                 });
                 commandBuffer.AddComponent(e, new EnableControl()
                 {
@@ -126,6 +127,14 @@ namespace RPG.UI
             })
             .ScheduleParallel();
 
+            Entities
+            .WithNone<Fade>()
+            .ForEach((UIDocument uiDocument, in EnableControl enableControl) =>
+            {
+                uiDocument.rootVisualElement.style.visibility = Visibility.Hidden;
+            })
+            .WithoutBurst()
+            .Run();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }

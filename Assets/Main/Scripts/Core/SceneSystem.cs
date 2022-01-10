@@ -61,6 +61,8 @@ namespace RPG.Core
         EntityQuery sceneLoadedQuery;
 
         EntityQuery waitForSpawn;
+
+        EntityQuery anySceneFinishLoadingQuery;
         public static void UnloadAllCurrentlyLoadedScene(EntityManager dstManager)
         {
             if (dstManager.World.Flags == WorldFlags.Game)
@@ -86,7 +88,7 @@ namespace RPG.Core
                 All = new ComponentType[] { typeof(Spawn), typeof(SceneTag) },
                 None = new ComponentType[] { typeof(HasSpawn) }
             });
-
+            anySceneFinishLoadingQuery = GetEntityQuery(typeof(AnySceneFinishLoading));
         }
         protected override void OnUpdate()
         {
@@ -134,12 +136,7 @@ namespace RPG.Core
             .WithoutBurst()
             .Run();
             // Delete scene finish loading notification
-            Entities
-            .WithAny<AnySceneFinishLoading>()
-            .ForEach((int entityInQueryIndex, Entity e) =>
-            {
-                commandBufferP.RemoveComponent<AnySceneFinishLoading>(entityInQueryIndex, e);
-            }).ScheduleParallel();
+            commandBuffer.RemoveComponentForEntityQuery<AnySceneFinishLoading>(anySceneFinishLoadingQuery);
 
             if (sceneLoadingQuery.IsEmpty)
             {
@@ -152,6 +149,7 @@ namespace RPG.Core
             }
             else
             {
+                // Check if any scene is loading
                 var sceneLoadingCount = sceneLoadingQuery.CalculateEntityCount();
                 var nativeListTrigger = new NativeList<Entity>(sceneLoadingCount, Allocator.TempJob);
                 var nativeListTriggerWriter = nativeListTrigger.AsParallelWriter();
@@ -176,52 +174,60 @@ namespace RPG.Core
                     commandBufferP.AddComponent(entityInQueryIndex, e, new AnySceneLoading { Triggers = triggers });
                 })
                 .ScheduleParallel();
-                using var loadingScenes = sceneLoadingQuery.ToEntityArray(Allocator.Temp);
-                using var loadingScenesData = sceneLoadingQuery.ToComponentDataArray<LoadSceneAsync>(Allocator.Temp);
-                using var sceneLoadedList = new NativeHashMap<Entity, TriggeredSceneLoaded>(sceneLoadingCount, Allocator.Temp);
-                for (int i = 0; i < loadingScenes.Length; i++)
-                {
-                    if (sceneSystem.IsSceneLoaded(loadingScenesData[i].SceneEntity))
-                    {
-                        var allSectionLoaded = false;
-                        var resolvedSections = EntityManager.GetBuffer<ResolvedSectionEntity>(loadingScenesData[i].SceneEntity);
-                        for (int j = 0; j < resolvedSections.Length; j++)
-                        {
-                            waitForSpawn.SetSharedComponentFilter(new SceneTag() { SceneEntity = resolvedSections[j].SectionEntity });
-                            var sectionLoaded = sceneSystem.IsSectionLoaded(resolvedSections[j].SectionEntity) && waitForSpawn.CalculateEntityCount() == 0;
-                            allSectionLoaded = j == 0 ? sectionLoaded : allSectionLoaded && sectionLoaded;
-                            waitForSpawn.ResetFilter();
-                            if (sectionLoaded == false)
-                            {
-                                break;
-                            }
-                        }
-                        if (allSectionLoaded)
-                        {
-                            Debug.Log($"Scene {loadingScenesData[i].SceneGUID} is loaded");
-                            EntityManager.AddComponentData(loadingScenesData[i].SceneEntity, new SceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
-                            sceneLoadedList.Add(loadingScenes[i], new TriggeredSceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
-                            EntityManager.AddComponentData(loadingScenes[i], new TriggeredSceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
-                        }
-                        else
-                        {
-                            Debug.Log($"Scene section for {loadingScenesData[i].SceneGUID} is still loading");
-                        }
-
-                    }
-                    else
-                    {
-                        Debug.Log($"Scene {loadingScenesData[i].SceneGUID} is still loading");
-                    }
-                }
-                var sceneLoaded = sceneLoadedList.GetKeyArray(Allocator.Temp);
-                EntityManager.RemoveComponent<LoadSceneAsync>(sceneLoaded);
-                sceneLoaded.Dispose();
+                CheckIfSceneFinisLoading(sceneLoadingCount, out NativeArray<Entity> loadingScenes, out NativeArray<LoadSceneAsync> loadingScenesData, out NativeHashMap<Entity, TriggeredSceneLoaded> sceneLoadedList);
+                loadingScenes.Dispose();
+                loadingScenesData.Dispose();
+                sceneLoadedList.Dispose();
             }
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
 
 
+        }
+
+        private void CheckIfSceneFinisLoading(int sceneLoadingCount, out NativeArray<Entity> loadingScenes, out NativeArray<LoadSceneAsync> loadingScenesData, out NativeHashMap<Entity, TriggeredSceneLoaded> sceneLoadedList)
+        {
+            loadingScenes = sceneLoadingQuery.ToEntityArray(Allocator.Temp);
+            loadingScenesData = sceneLoadingQuery.ToComponentDataArray<LoadSceneAsync>(Allocator.Temp);
+            sceneLoadedList = new NativeHashMap<Entity, TriggeredSceneLoaded>(sceneLoadingCount, Allocator.Temp);
+            for (int i = 0; i < loadingScenes.Length; i++)
+            {
+                if (sceneSystem.IsSceneLoaded(loadingScenesData[i].SceneEntity))
+                {
+                    var allSectionLoaded = false;
+                    var resolvedSections = EntityManager.GetBuffer<ResolvedSectionEntity>(loadingScenesData[i].SceneEntity);
+                    for (int j = 0; j < resolvedSections.Length; j++)
+                    {
+                        waitForSpawn.SetSharedComponentFilter(new SceneTag() { SceneEntity = resolvedSections[j].SectionEntity });
+                        var sectionLoaded = sceneSystem.IsSectionLoaded(resolvedSections[j].SectionEntity) && waitForSpawn.CalculateEntityCount() == 0;
+                        allSectionLoaded = j == 0 ? sectionLoaded : allSectionLoaded && sectionLoaded;
+                        waitForSpawn.ResetFilter();
+                        if (sectionLoaded == false)
+                        {
+                            break;
+                        }
+                    }
+                    if (allSectionLoaded)
+                    {
+                        Debug.Log($"Scene {loadingScenesData[i].SceneGUID} is loaded");
+                        EntityManager.AddComponentData(loadingScenesData[i].SceneEntity, new SceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
+                        sceneLoadedList.Add(loadingScenes[i], new TriggeredSceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
+                        EntityManager.AddComponentData(loadingScenes[i], new TriggeredSceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
+                    }
+                    else
+                    {
+                        Debug.Log($"Scene section for {loadingScenesData[i].SceneGUID} is still loading");
+                    }
+
+                }
+                else
+                {
+                    Debug.Log($"Scene {loadingScenesData[i].SceneGUID} is still loading");
+                }
+            }
+            var sceneLoaded = sceneLoadedList.GetKeyArray(Allocator.Temp);
+            EntityManager.RemoveComponent<LoadSceneAsync>(sceneLoaded);
+            sceneLoaded.Dispose();
         }
     }
 }

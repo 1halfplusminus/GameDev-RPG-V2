@@ -42,7 +42,7 @@ namespace RPG.Animation
 
     }
 
-    [UpdateBefore(typeof(DefaultAnimationSystemGroup))]
+
     public class PlayClipSystemBase : AnimationSystemBase<PlayClip, PlayClipStateComponent, ProcessDefaultAnimationGraph>
     {
 
