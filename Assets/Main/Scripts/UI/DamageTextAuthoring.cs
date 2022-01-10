@@ -91,7 +91,7 @@ namespace RPG.UI
             Entities
             .ForEach((TextMesh text, in DisplayDamage displayDamage) =>
             {
-                Debug.Log($"Display damage {displayDamage.Value}");
+                // Debug.Log($"Display damage {displayDamage.Value}");
                 text.text = $"{displayDamage.Value:F0}";
             })
             .WithoutBurst()
