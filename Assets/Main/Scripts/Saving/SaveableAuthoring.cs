@@ -66,7 +66,6 @@ namespace RPG.Saving
             if (Application.IsPlaying(gameObject)) { return; }
             if (UnityEditor.SceneManagement.PrefabStageUtility.GetPrefabStage(gameObject) != null)
             {
-                Debug.Log("In prefab");
                 return;
             }
             var serializedObject = new SerializedObject(this);

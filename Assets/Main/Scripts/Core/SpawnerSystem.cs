@@ -230,21 +230,7 @@ namespace RPG.Core
 
                   }
             ).ScheduleParallel();
-            /*  Entities
-             .WithNone<DestroySpawn>()
-             .WithReadOnly(sceneComponents)
-             .WithDisposeOnCompletion(sceneComponents)
-             .WithNone<HasHybridComponent, GameObject, GameObjectSpawner>().ForEach((int entityInQueryIndex, Entity e, in HasSpawn hasSpawn) =>
-                  {
 
-                      if (sceneComponents.ContainsKey(e))
-                      {
-                          commandBuffer.AddSharedComponent(hasSpawn.Entity, new SceneTag() { SceneEntity = sceneComponents[e].SceneEntity });
-                          commandBuffer.AddSharedComponent(hasSpawn.Entity, new SceneSection() { SceneGUID = sceneComponents[e].SceneGUID, Section = sceneComponents[e].Section });
-                      }
-
-                  }
-             ).WithStructuralChanges().Run(); */
             Entities
             .WithNone<GameObject, GameObjectSpawner, DestroySpawn>()
             .WithAny<HasHybridComponent>()
@@ -298,7 +284,9 @@ namespace RPG.Core
                     commandBufferP.RemoveComponent<Spawned>(entityInQueryIndex, e);
                 }
             ).ScheduleParallel();
-            Entities.WithAny<DestroySpawn>().ForEach((int entityInQueryIndex, Entity e, ref HasSpawn spawn) =>
+            Entities
+            .WithAny<DestroySpawn>()
+            .ForEach((int entityInQueryIndex, Entity e, ref HasSpawn spawn) =>
                 {
                     if (spawn.Entity != Entity.Null)
                     {
@@ -308,7 +296,8 @@ namespace RPG.Core
                     }
                 }
             ).ScheduleParallel();
-            Entities.WithAny<DestroySpawn>().ForEach((int entityInQueryIndex, Entity e) =>
+            Entities
+            .WithAny<DestroySpawn>().ForEach((int entityInQueryIndex, Entity e) =>
               {
                   commandBufferP.RemoveComponent<DestroySpawn>(entityInQueryIndex, e);
               }

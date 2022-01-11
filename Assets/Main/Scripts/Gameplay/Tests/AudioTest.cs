@@ -7,20 +7,8 @@ using Unity.Entities;
 
 public class AudioTest
 {
-    public class AudioComponent : IComponentData
-    {
-        public AudioSource AudioSource;
-    }
-    public class CharacterAudioSystem : SystemBase
-    {
-        protected override void OnUpdate()
-        {
-            Entities.ForEach((AudioSource source) =>
-            {
-                source.Play();
-            }).WithoutBurst().Run();
-        }
-    }
+
+
     // A Test behaves as an ordinary method
     [Test]
     public void AudioTestSimplePasses()
@@ -28,7 +16,7 @@ public class AudioTest
         World world = World.DefaultGameObjectInjectionWorld;
         Assert.IsTrue(world != null, "World cannot be null");
         var entity = world.EntityManager.CreateEntity();
-        world.EntityManager.AddComponentData(entity, new AudioComponent { });
+
         // Use the Assert class to test conditions
     }
 

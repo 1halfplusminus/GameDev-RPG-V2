@@ -11,6 +11,14 @@ using RPG.Stats;
 
 namespace RPG.Combat
 {
+    public struct WeaponSpawning : IComponentData
+    {
+
+    }
+    public struct WeaponInstance : IComponentData
+    {
+        public Entity Entity;
+    }
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class FighterEquipWeaponSystem : SystemBase
     {
@@ -31,7 +39,7 @@ namespace RPG.Combat
             .WithStoreEntityQueryInField(ref fighterEquipWeaponQuery)
             .ForEach((Entity e, ref Fighter fighter, ref DynamicBuffer<HitEvent> hitEvents, in FighterEquipped equiped) =>
             {
-                ref var weaponRef = ref equiped.Weapon.Value;
+                ref var weaponRef = ref equiped.WeaponAsset.Value;
                 var weapon = weaponRef.Weapon;
                 Debug.Log($"Fighter {e.Index} equip weapon {weapon.GUID}");
                 var weaponHitEvents = weapon.HitEvents;
@@ -43,7 +51,7 @@ namespace RPG.Combat
                 hitEvents.Capacity = weaponHitEvents.Length;
                 for (int i = 0; i < weaponHitEvents.Length; i++)
                 {
-                    hitEvents.Add(new HitEvent { Time = weaponHitEvents[i], Equipped = weaponRef.Entity });
+                    hitEvents.Add(new HitEvent { Time = weaponHitEvents[i], Trigger = equiped.Instance });
                 }
             }).ScheduleParallel();
             EntityManager.RemoveComponent<FighterEquipped>(fighterEquipWeaponQuery);
@@ -60,7 +68,7 @@ namespace RPG.Combat
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-            RequireForUpdate(spawnWeaponQuery);
+            // RequireForUpdate(spawnWeaponQuery);
         }
         protected override void OnUpdate()
         {
@@ -71,18 +79,31 @@ namespace RPG.Combat
             .ForEach((int entityInQueryIndex, Entity e, in SpawnWeapon spawn, in LocalToWorld localToWorld, in EquippedBy equipedBy) =>
             {
                 Debug.Log($"spawn weapon prefab {spawn.Prefab.Index} at : ${localToWorld.Position}");
+                Entity instance = Entity.Null;
                 if (spawn.Prefab != Entity.Null)
                 {
-                    cbp.AddComponent(entityInQueryIndex, e, new Spawn() { Prefab = spawn.Prefab, Parent = e });
+                    instance = cbp.Instantiate(entityInQueryIndex, spawn.Prefab);
+                    cbp.AddComponent(entityInQueryIndex, instance, new Parent { Value = e });
+                    cbp.AddComponent<LocalToParent>(entityInQueryIndex, instance);
+                    cbp.AddComponent(entityInQueryIndex, e, new WeaponInstance { Entity = instance });
                 }
+                cbp.RemoveComponent<SpawnWeapon>(entityInQueryIndex, e);
+                cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new FighterEquipped { WeaponAsset = spawn.Weapon, Instance = instance });
                 if (spawn.Projectile != Entity.Null)
                 {
                     cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new ShootProjectile() { Prefab = spawn.Projectile, Socket = e });
                 }
-                cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new FighterEquipped { Weapon = spawn.Weapon });
                 cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new ChangeAttackAnimation() { Animation = spawn.Animation });
-                cbp.RemoveComponent<SpawnWeapon>(entityInQueryIndex, e);
             }).ScheduleParallel();
+
+            // Entities
+            // .WithAll<WeaponSpawning>()
+            // .ForEach((int entityInQueryIndex, Entity e, in SpawnWeapon spawn, in HasSpawn hasSpawn, in EquippedBy equipedBy) =>
+            // {
+            //     cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new FighterEquipped { WeaponAsset = spawn.Weapon, Instance = hasSpawn.Entity });
+            //     cbp.RemoveComponent<SpawnWeapon>(entityInQueryIndex, e);
+            //     cbp.RemoveComponent<WeaponSpawning>(entityInQueryIndex, e);
+            // }).ScheduleParallel();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
@@ -253,7 +274,12 @@ namespace RPG.Combat
                     Debug.Log($"Remove weapons {listSockets[i].Index}");
                     // Remove currently equiped weapon
                     cbp.RemoveComponent<Equipped>(entityInQueryIndex, listSockets[i]);
-                    cbp.AddComponent<DestroySpawn>(entityInQueryIndex, listSockets[i]);
+                    if (HasComponent<WeaponInstance>(listSockets[i]))
+                    {
+                        var weaponInstance = GetComponent<WeaponInstance>(listSockets[i]);
+                        cbp.DestroyEntity(entityInQueryIndex, weaponInstance.Entity);
+                    }
+                    // cbp.AddComponent<DestroySpawn>(entityInQueryIndex, listSockets[i]);
                     var buffer = cbp.AddBuffer<StatsModifier>(entityInQueryIndex, listSockets[i]);
                     buffer.Clear();
                 }

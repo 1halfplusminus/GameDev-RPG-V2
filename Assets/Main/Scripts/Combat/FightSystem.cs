@@ -170,7 +170,7 @@ namespace RPG.Combat
                         if (fighter.CurrentAttack.TimeElapsedSinceAttack - time.Value <= hitEvent.Time && fighter.CurrentAttack.TimeElapsedSinceAttack > hitEvent.Time)
                         {
                             var eventEntity = cbp.CreateEntity(entityInQueryIndex);
-                            cbp.AddComponent(entityInQueryIndex, eventEntity, new Hit { Hitted = fighter.Target, Hitter = e });
+                            cbp.AddComponent(entityInQueryIndex, eventEntity, new Hit { Hitted = fighter.Target, Hitter = e, Trigger = hitEvent.Trigger });
                             break;
                         }
                     }

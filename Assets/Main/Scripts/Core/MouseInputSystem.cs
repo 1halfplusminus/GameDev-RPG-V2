@@ -89,10 +89,10 @@ namespace RPG.Core
                 }
                 if (CapturedClick.CapturedThisFrame || !m.ScreenCordinate.Equals(CapturedClick.ScreenCordinate))
                 {
-                    commandBuffer.SetComponent(entityInQueryIndex, e, CapturedClick);
+                    commandBuffer.AddComponent(entityInQueryIndex, e, CapturedClick);
                 }
             }).ScheduleParallel();
-            entityCommandBufferSystem.AddJobHandleForProducer(this.Dependency);
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
 
         }
     }

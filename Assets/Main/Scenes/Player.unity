@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_CustomTags.Tag00
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2487674043403013596, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3809403721112327955, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: m_Name
       value: Morie Hero
@@ -186,6 +190,10 @@ PrefabInstance:
       propertyPath: m_StoppingDistance
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7751180224022589907, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: MaxNavPathLength
       value: 25
@@ -236,21 +244,39 @@ PrefabInstance:
       objectReference: {fileID: 2800000, guid: 44a99ee545fd8ba46a452b12c1f9378b, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
---- !u!1 &1042025707 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3809403721112327955, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+--- !u!4 &142956688 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6222254650908708417, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
   m_PrefabInstance: {fileID: 142956687}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1042025724
-MonoBehaviour:
+--- !u!1 &340277813
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1042025707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ConversionMode: 0
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 340277814}
+  m_Layer: 0
+  m_Name: TakeDamageAudioSource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &340277814
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340277813}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 142956688}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

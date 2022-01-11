@@ -137,7 +137,7 @@ namespace RPG.UI
 
             Entities
             .WithAll<HealthBarInstance, IsDeadTag>()
-            .ForEach((Entity e, HealthBarInstance healthBarInstance) =>
+            .ForEach((Entity e, in HealthBarInstance healthBarInstance) =>
             {
                 cb.DestroyEntity(healthBarInstance.Value);
                 cb.RemoveComponent<HealthBarInstance>(e);

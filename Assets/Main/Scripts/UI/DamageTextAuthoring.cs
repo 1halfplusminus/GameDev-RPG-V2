@@ -58,7 +58,7 @@ namespace RPG.UI
             var cbp = cb.AsParallelWriter();
             Entities
             .WithNone<NoDamage>()
-            .ForEach((Hit hit) =>
+            .ForEach((in Hit hit) =>
             {
                 if (hit.Damage > 0)
                 {

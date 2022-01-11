@@ -5,27 +5,34 @@ using Unity.Mathematics;
 
 namespace RPG.Combat
 {
+    public struct Died : IComponentData
+    {
 
+    }
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class KillCharacterSystem : SystemBase
     {
         EntityCommandBufferSystem commandBufferSystem;
+        EntityQuery diedQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
             commandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
+            diedQuery = GetEntityQuery(typeof(Died));
         }
         protected override void OnUpdate()
         {
-            var commandBuffer = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-
+            var cb = commandBufferSystem.CreateCommandBuffer();
+            var cbp = commandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            cb.RemoveComponentForEntityQuery<Died>(diedQuery);
             Entities
             .WithNone<IsDeadTag>()
             .ForEach((Entity e, int entityInQueryIndex, in Health health) =>
             {
                 if (health.Value <= 0)
                 {
-                    commandBuffer.AddComponent<IsDeadTag>(entityInQueryIndex, e);
+                    cbp.AddComponent<IsDeadTag>(entityInQueryIndex, e);
+                    cbp.AddComponent<Died>(entityInQueryIndex, e);
                 }
             }).ScheduleParallel();
 
@@ -33,7 +40,7 @@ namespace RPG.Combat
             .ForEach((Entity e, int entityInQueryIndex) =>
             {
 
-                commandBuffer.RemoveComponent<Hittable>(entityInQueryIndex, e);
+                cbp.RemoveComponent<Hittable>(entityInQueryIndex, e);
             })
             .ScheduleParallel();
 

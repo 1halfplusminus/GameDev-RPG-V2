@@ -98,7 +98,10 @@ namespace RPG.Combat
     public struct FighterEquipped : IComponentData
     {
 
-        public BlobAssetReference<WeaponBlobAsset> Weapon;
+        public BlobAssetReference<WeaponBlobAsset> WeaponAsset;
+
+        public Entity Instance;
+        
     }
     public struct EquippedBy : IComponentData
     {
@@ -155,7 +158,7 @@ namespace RPG.Combat
 
         public SocketType SocketType;
     }
-
+    public struct ProjectileShooted : IComponentData { }
     public struct IsFighting : IComponentData { }
     public struct HasIt : IBufferElementData
     {
@@ -175,13 +178,15 @@ namespace RPG.Combat
         public Entity Hitter;
         public Entity Hitted;
 
+        public Entity Trigger;
+
         public float Damage;
     }
     public struct HitEvent : IBufferElementData
     {
         public float Time;
         public bool Fired;
-        public Entity Equipped;
+        public Entity Trigger;
     }
 
     public struct Attack : IComponentData

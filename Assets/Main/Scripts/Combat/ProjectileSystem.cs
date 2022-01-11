@@ -65,31 +65,7 @@ namespace RPG.Combat
         }
     }
 
-    // [UpdateInGroup(typeof(CombatSystemGroup))]
-    // [UpdateBefore(typeof(HitSystem))]
-    // public class DestroyProjectileOnHitSystem : SystemBase
-    // {
 
-    //     EntityQuery queryToDestroy;
-    //     EntityCommandBufferSystem entityCommandBufferSystem;
-    //     protected override void OnCreate()
-    //     {
-    //         base.OnCreate();
-    //         queryToDestroy = GetEntityQuery(ComponentType.ReadOnly<Projectile>(), ComponentType.ReadOnly<ProjectileHitted>(), ComponentType.ReadOnly<DestroyProjectileOnHit>());
-    //         entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-    //         RequireForUpdate(queryToDestroy);
-    //     }
-    //     protected override void OnUpdate()
-    //     {
-    //         var cbp = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-    //         Entities.WithAll<Projectile, ProjectileHitted, DestroyProjectileOnHit>()
-    //         .ForEach((int entityInQueryIndex, Entity e) =>
-    //         {
-    //             // cbp.DestroyEntity(entityInQueryIndex, e);
-    //         }).ScheduleParallel();
-    //         entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
-    //     }
-    // }
     [UpdateInGroup(typeof(CombatSystemGroup))]
     [UpdateBefore(typeof(HitSystem))]
     public class ProjectileSystem : SystemBase
@@ -188,20 +164,22 @@ namespace RPG.Combat
         EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery hitQuery;
         EntityQuery hitPoinQuery;
+        EntityQuery projectileShootedQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-
+            projectileShootedQuery = GetEntityQuery(typeof(Projectile), typeof(ProjectileShooted));
         }
         protected override void OnUpdate()
         {
-            var cbp = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            var cb = entityCommandBufferSystem.CreateCommandBuffer();
+            var cbp = cb.AsParallelWriter();
             var canShootProjectiles = GetComponentDataFromEntity<ShootProjectile>(true);
             var localToWorlds = GetComponentDataFromEntity<LocalToWorld>(true);
             var projectiles = GetComponentDataFromEntity<Projectile>(true);
             var hitableLocalToWorld = QueryHitPoint();
-
+            cb.RemoveComponentForEntityQuery<ProjectileShooted>(projectileShootedQuery);
             Entities
             .WithStoreEntityQueryInField(ref hitQuery)
             .WithNone<IsProjectile>()
@@ -229,6 +207,7 @@ namespace RPG.Combat
                         cbp.AddComponent(entityInQueryIndex, projectileEntity, translation);
                         cbp.AddComponent(entityInQueryIndex, projectileEntity, new Projectile { Target = hit.Hitted, Speed = projectile.Speed, ShootBy = hit.Hitter });
                         cbp.AddComponent(entityInQueryIndex, projectileEntity, new Rotation { Value = lookRotation });
+                        cbp.AddComponent<ProjectileShooted>(entityInQueryIndex, projectileEntity);
                         hit.Damage = 0;
                     }
 
