@@ -415,7 +415,8 @@ PrefabInstance:
       propertyPath: HitEvents.Array.data[0]
       value: 0.1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8877881128887877656, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
 --- !u!1 &139083684674169524 stripped
 GameObject:
