@@ -2,7 +2,6 @@
 using UnityEngine;
 using Unity.Entities;
 using RPG.Core;
-using Unity.Scenes;
 using RPG.Mouvement;
 using Unity.Collections;
 using Unity.Mathematics;

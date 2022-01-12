@@ -2968,14 +2968,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2617854773674945213, guid: e7fb41679a215d7e08412569104fc661, type: 3}
+      propertyPath: UniqueIdentifier
+      value: 29dcee56-1bcf-4a3a-8b43-29e656fa29d6
+      objectReference: {fileID: 0}
     - target: {fileID: 3414239112952108567, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: m_Name
-      value: Enemy Guard Archer Variant
+      value: Enemy Guard Thug Variant
       objectReference: {fileID: 0}
     - target: {fileID: 4064622068438567071, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: Weapon
       value: 
-      objectReference: {fileID: 11400000, guid: 90c60bf82c18e3cdeb2674c6b9f0ad0b, type: 2}
+      objectReference: {fileID: 11400000, guid: 23e3f37b60b5aa3fba4c8fa507021ac7, type: 2}
     - target: {fileID: 4064622068438567071, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: HitPoint
       value: 
@@ -3278,7 +3282,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7709629809493598669, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: CharacterClass
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7736690160112257167, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: m_RootOrder

@@ -19,9 +19,9 @@ MonoBehaviour:
   - Pickups
   - Terrain
   - Projectile
-  - 
-  - 
-  - 
+  - Projectile Enemies
+  - Projectile Player
+  - Enemies
   - 
   - 
   - 

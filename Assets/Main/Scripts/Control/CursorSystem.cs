@@ -17,7 +17,8 @@ namespace RPG.Control
         Combat = 1,
         Movement = 2,
         None = 0,
-        Pickup = 3
+        Pickup = 3,
+        Health = 4
     }
 
     public struct SharedGameCursorType : ISharedComponentData
@@ -30,8 +31,10 @@ namespace RPG.Control
         public CursorType Cursor;
         public CursorType CurrentCursor;
     }
-    [UpdateBefore(typeof(PlayersMoveSystem))]
+
     [UpdateInGroup(typeof(ControlSystemGroup))]
+    [UpdateBefore(typeof(PlayersMoveSystem))]
+    [UpdateBefore(typeof(CursorSystem))]
     public class CursorExtensionsSystem : SystemBase
     {
 
@@ -65,6 +68,7 @@ namespace RPG.Control
             .WithStructuralChanges()
             .WithoutBurst()
             .Run();
+
             Entities
             .WithNone<InteractWithUI>()
             .ForEach((ref VisibleCursor cursor, in DynamicBuffer<HittedByRaycastEvent> rayHits) =>
@@ -76,10 +80,16 @@ namespace RPG.Control
                         if (HasComponent<PickableWeapon>(rayHit.Hitted))
                         {
                             cursor.Cursor = CursorType.Pickup;
+                            LogPickupWeapon();
                         }
                     }
                 }
             }).ScheduleParallel();
+        }
+
+        private static void LogPickupWeapon()
+        {
+            Debug.Log("Set Cursor Type To Pickup");
         }
 
         private static float CalculeDistance(NavMeshPath navMeshPath)

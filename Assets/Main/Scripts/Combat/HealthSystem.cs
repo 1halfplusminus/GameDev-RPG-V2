@@ -34,4 +34,5 @@ namespace RPG.Combat
             }).ScheduleParallel();
         }
     }
+
 }

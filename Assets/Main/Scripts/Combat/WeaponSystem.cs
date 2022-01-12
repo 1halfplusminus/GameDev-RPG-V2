@@ -96,15 +96,6 @@ namespace RPG.Combat
                 cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new ChangeAttackAnimation() { Animation = spawn.Animation });
             }).ScheduleParallel();
 
-            // Entities
-            // .WithAll<WeaponSpawning>()
-            // .ForEach((int entityInQueryIndex, Entity e, in SpawnWeapon spawn, in HasSpawn hasSpawn, in EquippedBy equipedBy) =>
-            // {
-            //     cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new FighterEquipped { WeaponAsset = spawn.Weapon, Instance = hasSpawn.Entity });
-            //     cbp.RemoveComponent<SpawnWeapon>(entityInQueryIndex, e);
-            //     cbp.RemoveComponent<WeaponSpawning>(entityInQueryIndex, e);
-            // }).ScheduleParallel();
-
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 
