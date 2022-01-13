@@ -2923,7 +2923,7 @@ PrefabInstance:
     - target: {fileID: 1939643721024018097, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: LookingAround
       value: 
-      objectReference: {fileID: -8378538871985206214, guid: 8bf28d004a8653905909dcd6314d79ef, type: 3}
+      objectReference: {fileID: 533210740485299439, guid: 37def431a50ad113e8174de36b046e88, type: 2}
     - target: {fileID: 2605896222832135341, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -3259,23 +3259,23 @@ PrefabInstance:
     - target: {fileID: 7069064092954979727, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: Run
       value: 
-      objectReference: {fileID: -9121621101649706817, guid: 8bf28d004a8653905909dcd6314d79ef, type: 3}
+      objectReference: {fileID: -3689588176458089754, guid: 5585adbae44f3a272b2def86446325c4, type: 2}
     - target: {fileID: 7069064092954979727, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: Dead
       value: 
-      objectReference: {fileID: 4348485665485846014, guid: 8bf28d004a8653905909dcd6314d79ef, type: 3}
+      objectReference: {fileID: -5155267294949651109, guid: aaa2d22e8db426f82b73c0dd8a029c4f, type: 2}
     - target: {fileID: 7069064092954979727, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: IDLE
       value: 
-      objectReference: {fileID: 2126459665172807778, guid: 8bf28d004a8653905909dcd6314d79ef, type: 3}
+      objectReference: {fileID: 5511107694225840078, guid: dcfdd98b9ee5e9f6386c0b341220e264, type: 2}
     - target: {fileID: 7069064092954979727, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: Walk
       value: 
-      objectReference: {fileID: 2667949614841947897, guid: 8bf28d004a8653905909dcd6314d79ef, type: 3}
+      objectReference: {fileID: 4651899004902672763, guid: fb4faec997f07dcabaf50bd27dda1276, type: 2}
     - target: {fileID: 7069064092954979727, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: Attack
       value: 
-      objectReference: {fileID: 2353680664591731088, guid: 8bf28d004a8653905909dcd6314d79ef, type: 3}
+      objectReference: {fileID: -3570180687840326949, guid: 261dffd5478d1a0e0b0129053c116883, type: 2}
     - target: {fileID: 7423660604608296241, guid: e7fb41679a215d7e08412569104fc661, type: 3}
       propertyPath: m_RootOrder
       value: 4

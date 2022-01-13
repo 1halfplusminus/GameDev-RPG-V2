@@ -2,11 +2,10 @@ using RPG.Core;
 using UnityEngine;
 namespace RPG.Animation
 {
-#if UNITY_EDITOR
 
     public class GuardAnimationAuthoring : MonoBehaviour
     {
-        public AnimationClip LookingAround;
+        public ClipAsset LookingAround;
 
     }
     public class GuardAnimationConversionSystem : GameObjectConversionSystem
@@ -27,5 +26,4 @@ namespace RPG.Animation
             });
         }
     }
-#endif
 }

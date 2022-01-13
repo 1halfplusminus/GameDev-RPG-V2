@@ -1,12 +1,15 @@
 using Unity.Animation;
-using Unity.Animation.Hybrid;
 using Unity.Entities;
 using UnityEngine;
+
 namespace RPG.Animation
 {
 #if UNITY_EDITOR
+    using Unity.Animation.Hybrid;
+#endif
     static class AnimationConversionExtensions
     {
+#if UNITY_EDITOR
         public static bool TryGetClipAssetRef(this GameObjectConversionSystem conversionSystem, GameObject obj, AnimationClip clip, out BlobAssetReference<Clip> blobAsset)
         {
             blobAsset = default;
@@ -18,6 +21,18 @@ namespace RPG.Animation
             }
             return false;
         }
-    }
 #endif
+        public static bool TryGetClipAssetRef(this GameObjectConversionSystem conversionSystem, GameObject obj, ClipAsset clip, out BlobAssetReference<Clip> blobAsset)
+        {
+            blobAsset = default;
+            if (clip != null)
+            {
+                conversionSystem.DeclareAssetDependency(obj, clip);
+                blobAsset = clip.GetClip();
+                return true;
+            }
+            return false;
+        }
+    }
+
 }

@@ -2091,11 +2091,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05c45ce61706f8298b512fbf88bc79cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IDLE: {fileID: 2126459665172807778, guid: ef9bb8bd57f094583858804f4afea027, type: 3}
-  Walk: {fileID: 2667949614841947897, guid: ef9bb8bd57f094583858804f4afea027, type: 3}
-  Run: {fileID: -9121621101649706817, guid: ef9bb8bd57f094583858804f4afea027, type: 3}
-  Attack: {fileID: 4574554471517728084, guid: ef9bb8bd57f094583858804f4afea027, type: 3}
-  Dead: {fileID: 4348485665485846014, guid: ef9bb8bd57f094583858804f4afea027, type: 3}
+  IDLE: {fileID: -5838578348965441871, guid: 9b5f6a60a02abbb1497b0a105a40ca24, type: 2}
+  Walk: {fileID: -1022794260367014899, guid: 333a9b3b2131a85888f0932dd3bea1ae, type: 2}
+  Run: {fileID: 1274741399817138034, guid: ad0f753455c55d254806eb75871b3f88, type: 2}
+  Attack: {fileID: 1182678226121665313, guid: fb0b5c0bbfb6cb6829349d6fa21e5b48, type: 2}
+  Dead: {fileID: 3712253862575953246, guid: fe1f3a8a279c8ae0caaa9c7a3ae5682c, type: 2}
 --- !u!114 &3233999551531206025
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,25 +15,28 @@ namespace RPG.Animation
         [MenuItem("Animation/Convert")]
         private static void Convert()
         {
-            var selection = Selection.objects.FirstOrDefault();
-
-            if (selection is AnimationClip ac)
+            var selections = Selection.objects;
+            foreach (var selection in selections)
             {
-
-                var assetPath = AssetDatabase.GetAssetPath(ac);
-                var clipAsset = AssetDatabase.LoadAssetAtPath<ClipAsset>(assetPath);
-                if (clipAsset == null)
+                if (selection is AnimationClip ac)
                 {
-                    Debug.Log("Create Clip Asset");
-                    clipAsset = CreateInstance<ClipAsset>();
-                    AssetDatabase.AddObjectToAsset(clipAsset, assetPath);
+
+                    var assetPath = AssetDatabase.GetAssetPath(ac);
+                    var clipAsset = AssetDatabase.LoadAssetAtPath<ClipAsset>(assetPath);
+                    if (clipAsset == null)
+                    {
+                        Debug.Log("Create Clip Asset");
+                        clipAsset = CreateInstance<ClipAsset>();
+                        AssetDatabase.AddObjectToAsset(clipAsset, assetPath);
+                    }
+                    var serializedObject = new SerializedObject(clipAsset);
+                    clipAsset.SetClip(ac);
+                    clipAsset.name = ac.name;
+                    serializedObject.ApplyModifiedProperties();
+                    AssetDatabase.SaveAssets();
                 }
-                var serializedObject = new SerializedObject(clipAsset);
-                clipAsset.SetClip(ac);
-                clipAsset.name = ac.name;
-                serializedObject.ApplyModifiedProperties();
-                AssetDatabase.SaveAssets();
             }
+
         }
 
     }

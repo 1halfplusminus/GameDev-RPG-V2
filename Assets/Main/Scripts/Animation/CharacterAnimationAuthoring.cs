@@ -3,21 +3,18 @@ using UnityEngine;
 namespace RPG.Animation
 {
 
-#if UNITY_EDITOR
-
-
 
     class CharacterAnimationAuthoring : MonoBehaviour
     {
-        public AnimationClip IDLE;
+        public ClipAsset IDLE;
 
-        public AnimationClip Walk;
+        public ClipAsset Walk;
 
-        public AnimationClip Run;
+        public ClipAsset Run;
 
-        public AnimationClip Attack;
+        public ClipAsset Attack;
 
-        public AnimationClip Dead;
+        public ClipAsset Dead;
     }
 
     public class CharacterAnimationConversionSystem : GameObjectConversionSystem
@@ -55,5 +52,4 @@ namespace RPG.Animation
         }
 
     }
-#endif
 }

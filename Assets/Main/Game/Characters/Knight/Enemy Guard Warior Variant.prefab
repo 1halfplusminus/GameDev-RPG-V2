@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 279596277352376701, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
+      propertyPath: LookingAround
+      value: 
+      objectReference: {fileID: 533210740485299439, guid: 37def431a50ad113e8174de36b046e88, type: 2}
     - target: {fileID: 2406009452006651731, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
       propertyPath: Weapon
       value: 
@@ -383,6 +387,26 @@ PrefabInstance:
       propertyPath: CharacterClass
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 8868133796976054851, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
+      propertyPath: Run
+      value: 
+      objectReference: {fileID: -3689588176458089754, guid: 5585adbae44f3a272b2def86446325c4, type: 2}
+    - target: {fileID: 8868133796976054851, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
+      propertyPath: Dead
+      value: 
+      objectReference: {fileID: -5155267294949651109, guid: aaa2d22e8db426f82b73c0dd8a029c4f, type: 2}
+    - target: {fileID: 8868133796976054851, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
+      propertyPath: IDLE
+      value: 
+      objectReference: {fileID: 5511107694225840078, guid: dcfdd98b9ee5e9f6386c0b341220e264, type: 2}
+    - target: {fileID: 8868133796976054851, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
+      propertyPath: Walk
+      value: 
+      objectReference: {fileID: 4651899004902672763, guid: fb4faec997f07dcabaf50bd27dda1276, type: 2}
+    - target: {fileID: 8868133796976054851, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
+      propertyPath: Attack
+      value: 
+      objectReference: {fileID: -3570180687840326949, guid: 261dffd5478d1a0e0b0129053c116883, type: 2}
     m_RemovedComponents:
     - {fileID: 0}
     - {fileID: 0}
