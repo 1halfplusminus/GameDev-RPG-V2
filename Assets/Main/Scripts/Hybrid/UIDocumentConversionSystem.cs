@@ -1,6 +1,5 @@
 
 using Unity.Entities;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 
@@ -13,7 +12,6 @@ namespace RPG.Hybrid
     {
 
     }
-
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
     public class UIDocumentDeclareReferenceConversionSystem : GameObjectConversionSystem
     {

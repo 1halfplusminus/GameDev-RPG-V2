@@ -15,4 +15,16 @@ Label {
 }
 
 .Text {
+    font-size: 13px;
+}
+
+.Box {
+    flex-grow: 0;
+    cursor: initial;
+    -unity-background-image-tint-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.57);
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
