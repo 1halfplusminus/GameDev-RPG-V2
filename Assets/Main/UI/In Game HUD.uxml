@@ -4,12 +4,12 @@
     <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; align-items: flex-start; flex-direction: column; justify-content: flex-start; height: 100%; flex-wrap: nowrap; flex-shrink: 0; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px; cursor: initial;">
         <ui:VisualElement class="Box">
             <ui:VisualElement class="Interactive" style="flex-direction: row; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px;">
-                <ui:Label text="Level:" display-tooltip-when-elided="true" class="Text Label" style="font-size: 40%; -unity-text-align: middle-left; color: rgb(255, 255, 255); -unity-font-style: italic;" />
-                <ui:Label text="1" display-tooltip-when-elided="true" name="Level" class="Text" style="-unity-font-style: bold; color: rgb(250, 250, 250); font-size: 40%; -unity-text-align: middle-left;" />
+                <ui:Label text="Level:" display-tooltip-when-elided="true" class="Text Label" style="font-size: 40%; -unity-text-align: middle-left; color: rgb(255, 255, 255); -unity-font-style: normal;" />
+                <ui:Label text="1" display-tooltip-when-elided="true" name="Level" class="Text" style="-unity-font-style: bold; color: rgb(241, 92, 92); font-size: 40%; -unity-text-align: middle-left;" />
             </ui:VisualElement>
             <ui:VisualElement class="Interactive" style="flex-direction: row; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px;">
-                <ui:Label text="Health:" display-tooltip-when-elided="true" class="Text" style="font-size: 40%; -unity-text-align: middle-left; color: rgb(255, 255, 255); -unity-font-style: italic;" />
-                <ui:Label text="100%" display-tooltip-when-elided="true" name="Health" class="Text" style="-unity-font-style: bold; color: rgb(250, 240, 240); font-size: 40%; -unity-text-align: middle-left;" />
+                <ui:Label text="Health:" display-tooltip-when-elided="true" class="Text" style="font-size: 40%; -unity-text-align: middle-left; color: rgb(255, 255, 255); -unity-font-style: normal;" />
+                <ui:Label text="100%" display-tooltip-when-elided="true" name="Health" class="Text" style="-unity-font-style: bold; color: rgb(241, 92, 92); font-size: 40%; -unity-text-align: middle-left;" />
             </ui:VisualElement>
             <ui:VisualElement name="EnemyContainer" class="Interactive" style="flex-direction: row; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px; display: none;">
                 <ui:Label text="Enemy" display-tooltip-when-elided="true" class="Text" style="font-size: 40%; -unity-text-align: middle-left;" />
@@ -18,8 +18,8 @@
         </ui:VisualElement>
         <ui:VisualElement picking-mode="Ignore" style="flex-direction: column; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-grow: 1; align-items: flex-start; flex-shrink: 1; justify-content: flex-end;">
             <ui:VisualElement class="Interactive Box" style="flex-direction: row;">
-                <ui:Label text="Experience:" display-tooltip-when-elided="true" class="Text" style="font-size: 40%; -unity-text-align: middle-left; color: rgb(255, 255, 255); -unity-font-style: italic;" />
-                <ui:Label text="0" display-tooltip-when-elided="true" name="Experience" class="Text" style="-unity-font-style: bold; color: rgb(255, 247, 247); font-size: 40%; -unity-text-align: middle-left;" />
+                <ui:Label text="Experience:" display-tooltip-when-elided="true" class="Text" style="font-size: 40%; -unity-text-align: middle-left; color: rgb(255, 255, 255); -unity-font-style: normal;" />
+                <ui:Label text="0" display-tooltip-when-elided="true" name="Experience" class="Text" style="-unity-font-style: bold; color: rgb(255, 208, 95); font-size: 40%; -unity-text-align: middle-left;" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

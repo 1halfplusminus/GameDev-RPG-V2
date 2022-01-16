@@ -132,7 +132,7 @@ MonoBehaviour:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 40
+          value: 100
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -152,7 +152,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       Stats: 0
-      MinValue: 40
+      MinValue: 100
       MaxValue: 2020
     - Curve:
         serializedVersion: 2
@@ -216,7 +216,7 @@ MonoBehaviour:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 64
+          value: 180
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -236,7 +236,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       Stats: 0
-      MinValue: 64
+      MinValue: 180
       MaxValue: 3232
     - Curve:
         serializedVersion: 2
@@ -300,7 +300,7 @@ MonoBehaviour:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 64
+          value: 160
           inSlope: 2.330405
           outSlope: 2.330405
           tangentMode: 0
@@ -320,7 +320,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       Stats: 0
-      MinValue: 64
+      MinValue: 160
       MaxValue: 3232
     - Curve:
         serializedVersion: 2
@@ -393,7 +393,7 @@ MonoBehaviour:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 160
+          value: 200
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -413,7 +413,7 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       Stats: 0
-      MinValue: 160
+      MinValue: 200
       MaxValue: 8080
     - Curve:
         serializedVersion: 2

@@ -1,17 +1,19 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/Main/UI/GameHUH.uss?fileID=7433441132597879392&amp;guid=d337463dc0df7fbe3b8a9edd5971530f&amp;type=3#GameHUH" />
+    <Style src="project://database/Assets/Main/UI/In%20Game%20HUD%20Style.uss?fileID=7433441132597879392&amp;guid=d337463dc0df7fbe3b8a9edd5971530f&amp;type=3#In Game HUD Style" />
     <ui:VisualElement name="MenuTemplate" class="Interactive" style="flex-grow: 1;">
         <ui:VisualElement name="Col" style="flex-wrap: nowrap; justify-content: flex-start; align-items: flex-end; flex-grow: 1; flex-direction: column;">
-            <ui:VisualElement name="Box" style="padding-left: 25px; padding-right: 25px; padding-top: 10px; padding-bottom: 10px; flex-grow: 1; flex-shrink: initial; flex-basis: auto; flex-direction: column; align-items: stretch; justify-content: center; min-width: 100%; cursor: url(&apos;project://database/Assets/Main/Assets%20Packs/Pixel%20Cursors/Cursors/basic_01.png?fileID=2800000&amp;guid=2e71a8202d3b4a3448ec85ced5a40265&amp;type=3#basic_01&apos;);">
-                <ui:VisualElement name="TitleWrapper" class="Interactive" style="flex-direction: row; flex-grow: 0; width: 100%; justify-content: center; align-items: center; flex-basis: auto; height: 199px;">
-                    <ui:Label text="Pause" display-tooltip-when-elided="true" style="justify-content: flex-start; align-items: auto; -unity-font: url(&apos;project://database/Assets/Packages/Quixel/Scripts/Fonts/SourceSansPro-Black.ttf?fileID=12800000&amp;guid=8659d6af0bfaedd42ae2ac68fd06e043&amp;type=3#SourceSansPro-Black&apos;); font-size: 50px; -unity-text-align: lower-center; letter-spacing: 2px; -unity-font-style: bold; color: rgb(190, 35, 35);" />
-                </ui:VisualElement>
-                <ui:VisualElement name="Box" class="Interactive" style="flex-grow: 0.5;">
-                    <ui:VisualElement name="Row" class="Row" style="justify-content: center; flex-direction: row;">
-                        <ui:Button text="Save" display-tooltip-when-elided="true" name="Save" class="Button" style="align-items: auto; flex-grow: 0; flex-direction: row; flex-shrink: 1; justify-content: flex-start; -unity-text-align: upper-center; min-width: 20%;" />
+            <ui:VisualElement name="Box" style="padding-left: 25px; padding-right: 25px; padding-top: 10px; padding-bottom: 10px; flex-grow: 1; flex-shrink: initial; flex-basis: auto; flex-direction: column; align-items: center; justify-content: center; min-width: 100%; cursor: url(&apos;project://database/Assets/Main/Assets%20Packs/Pixel%20Cursors/Cursors/basic_01.png?fileID=2800000&amp;guid=2e71a8202d3b4a3448ec85ced5a40265&amp;type=3#basic_01&apos;);">
+                <ui:VisualElement style="align-items: auto; justify-content: flex-start; flex-direction: column-reverse; flex-grow: 0; white-space: normal; padding-left: 50px; padding-right: 50px; padding-top: 50px; padding-bottom: 50px; background-color: rgba(0, 0, 0, 0.15);">
+                    <ui:VisualElement name="Box" class="Interactive" style="flex-grow: 0.5;">
+                        <ui:VisualElement name="Row" class="Row" style="justify-content: center; flex-direction: row;">
+                            <ui:Button text="Save" display-tooltip-when-elided="true" name="Save" class="my-button Interactive" style="align-items: auto; flex-grow: 0; flex-direction: row; flex-shrink: 1; justify-content: flex-start; -unity-text-align: upper-center; min-width: 20%;" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="Row" class="Row" style="flex-direction: row; justify-content: center; align-items: center; max-width: none; margin-top: 10px;">
+                            <ui:Button text="Quit the game" display-tooltip-when-elided="true" name="Exit" class="my-button Interactive" style="flex-grow: 0; max-width: none; min-width: 20%; align-items: stretch; justify-content: center; flex-direction: column; flex-shrink: 1; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; -unity-text-align: upper-center;" />
+                        </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:VisualElement name="Row" class="Row" style="flex-direction: row; justify-content: center; align-items: center; max-width: none;">
-                        <ui:Button text="Quit the game" display-tooltip-when-elided="true" name="Exit" class="Button" style="flex-grow: 0; max-width: none; min-width: 20%; align-items: stretch; justify-content: center; flex-direction: column; flex-shrink: 1; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; -unity-text-align: upper-center;" />
+                    <ui:VisualElement name="TitleWrapper" class="Interactive" style="flex-direction: row; flex-grow: 0; width: 100%; justify-content: center; align-items: center; flex-basis: auto; height: 199px;">
+                        <ui:Label text="Pause" display-tooltip-when-elided="true" style="justify-content: flex-start; align-items: auto; -unity-font: url(&apos;project://database/Assets/Packages/Quixel/Scripts/Fonts/SourceSansPro-Black.ttf?fileID=12800000&amp;guid=8659d6af0bfaedd42ae2ac68fd06e043&amp;type=3#SourceSansPro-Black&apos;); font-size: 50px; -unity-text-align: lower-center; letter-spacing: 2px; -unity-font-style: bold; color: rgb(255, 255, 255);" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

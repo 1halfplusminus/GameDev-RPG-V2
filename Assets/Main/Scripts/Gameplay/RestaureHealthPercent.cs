@@ -29,22 +29,25 @@ namespace RPG.Gameplay
             currentHealth.Value = math.min(currentHealth.Value + regen, maxHealth);
         }
     }
-
+    public struct Picking : IComponentData { }
     public struct Picked : IComponentData { }
     [UpdateInGroup(typeof(GameplaySystemGroup))]
     public class HealthPickupSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
+        EntityQuery pickingEntityQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            pickingEntityQuery = GetEntityQuery(typeof(HealthPickup), typeof(Picking));
 
         }
         protected override void OnUpdate()
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
+            cb.RemoveComponentForEntityQuery<Picking>(pickingEntityQuery);
             Entities
             .WithNone<Picked>()
             .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer collidWithPlayer, in RestaureHealthPercent restaureHealthPercent) =>
@@ -56,10 +59,21 @@ namespace RPG.Gameplay
                     restaureHealthPercent.RestaureHealth(ref health, basestats);
                     cbp.AddComponent(entityInQueryIndex, collidWithPlayer.Entity, health);
                     cbp.AddComponent<Picked>(entityInQueryIndex, e);
+                    cbp.AddComponent<Picking>(entityInQueryIndex, e);
                     Log(e, health.Value);
                 }
 
             }).ScheduleParallel();
+
+            Entities
+            .WithAll<Picking, HealthPickup>()
+            .ForEach((in HealingAudio healingAudio) =>
+            {
+                var audioSourceEntity = EntityManager.GetComponentObject<AudioSource>(healingAudio.Entity);
+                audioSourceEntity.Play();
+            })
+            .WithoutBurst()
+            .Run();
 
             Entities
             .WithAll<Picked>()
@@ -78,7 +92,7 @@ namespace RPG.Gameplay
             .ForEach((int entityInQueryIndex, Entity e) =>
             {
                 cbp.AddComponent<DisableRendering>(entityInQueryIndex, e);
-                cbp.AddComponent<Disabled>(entityInQueryIndex, e);
+                // cbp.AddComponent<Disabled>(entityInQueryIndex, e);
             }).ScheduleParallel();
 
             Entities
@@ -99,6 +113,7 @@ namespace RPG.Gameplay
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
+
 
         private static void Log(Entity e, float newHealth)
         {

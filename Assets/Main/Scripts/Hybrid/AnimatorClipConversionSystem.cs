@@ -7,6 +7,19 @@ namespace RPG.Hybrid
 #if UNITY_EDITOR
     using Unity.Animation.Hybrid;
     using UnityEngine.AddressableAssets;
+    // public class AnimationConversionSystem : GameObjectConversionSystem
+    // {
+    //     protected override void OnUpdate()
+    //     {
+
+    //         Entities.ForEach((UnityEngine.Animation animation) =>
+    //         {
+    //             DeclareLinkedEntityGroup(animation.gameObject);
+    //             DeclareLinkedEntityGroup(animation.transform.parent.gameObject);
+    //             AddHybridComponent(animation);
+    //         });
+    //     }
+    // }
 
     public struct AnimatorClip : IBufferElementData
     {
@@ -31,18 +44,7 @@ namespace RPG.Hybrid
             });
         }
     }
-    // public class AnimationConversionSystem : GameObjectConversionSystem
-    // {
-    //     protected override void OnUpdate()
-    //     {
-
-    //         Entities.ForEach((UnityEngine.Animation animation) =>
-    //         {
-    //             DeclareLinkedEntityGroup(animation.gameObject);
-    //             DeclareLinkedEntityGroup(animation.transform.parent.gameObject);
-    //             AddHybridComponent(animation);
-    //         });
-    //     }
-    // }
 #endif
+
+
 }
