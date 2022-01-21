@@ -9,7 +9,6 @@ using UnityEngine.VFX;
 using RPG.Gameplay;
 using Unity.Rendering;
 using Unity.Physics;
-using RPG.Mouvement;
 
 namespace RPG.Combat
 {
@@ -60,13 +59,6 @@ namespace RPG.Combat
                    cb.AddComponent<DisableRendering>(child.Value);
                }
            }).WithoutBurst().Run();
-
-            // Entities
-            // .WithAll<DisableRendering>()
-            // .ForEach((TrailRenderer renderer) =>
-            // {
-            //     renderer.enabled = false;
-            // }).WithoutBurst().Run();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
