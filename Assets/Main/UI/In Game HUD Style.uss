@@ -70,7 +70,7 @@ Label {
     border-bottom-right-radius: 0;
     background-image: url('project://database/Assets/Main/UI/Button-Primary-Default-Without%20Icon.png?fileID=2800000&guid=95fed834cad65eb4ca213ba667a48125&type=3#Button-Primary-Default-Without Icon');
     background-color: rgba(0, 0, 0, 0);
-    -unity-background-image-tint-color: rgb(250, 207, 207);
+    -unity-background-image-tint-color: rgb(226, 157, 157);
     border-left-width: 0;
     border-right-width: 0;
     border-top-width: 0;
