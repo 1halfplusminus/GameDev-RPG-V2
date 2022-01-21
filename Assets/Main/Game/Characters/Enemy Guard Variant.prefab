@@ -227,6 +227,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChaseDistance: 6
   SuspiciousTime: 9
+  AngleOfView: 90
 --- !u!114 &7069064092954979727
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -39,6 +39,22 @@ PrefabInstance:
       propertyPath: m_Parameters.colorGradient.key0.r
       value: 0.9056604
       objectReference: {fileID: 0}
+    - target: {fileID: 5353056389601081519, guid: ed505d5f1f47b3ecb8b3e4f7a25cb59f, type: 3}
+      propertyPath: m_Smoothing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353056389601081519, guid: ed505d5f1f47b3ecb8b3e4f7a25cb59f, type: 3}
+      propertyPath: m_MotionType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353056389601081519, guid: ed505d5f1f47b3ecb8b3e4f7a25cb59f, type: 3}
+      propertyPath: m_InitialLinearVelocity.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353056389601081519, guid: ed505d5f1f47b3ecb8b3e4f7a25cb59f, type: 3}
+      propertyPath: m_InitialLinearVelocity.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5475211252939139569, guid: ed505d5f1f47b3ecb8b3e4f7a25cb59f, type: 3}
       propertyPath: m_Name
       value: Red Arrow Variant

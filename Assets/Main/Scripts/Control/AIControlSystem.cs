@@ -180,7 +180,7 @@ namespace RPG.Control
             //TODO: Refractor with a event system create a event when target lost & when target aquired
             var beginSimulationEntityCommandBuffer = beginSimulationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             Entities
-            .WithNone<IsChasingTarget, Spawned>()
+            .WithNone<IsChasingTarget, Spawned, IsDeadTag>()
             .WithReadOnly(playerPositions)
             .ForEach((int entityInQueryIndex, Entity e, in ChasePlayer chasePlayer, in LocalToWorld localToWorld) =>
             {
@@ -191,7 +191,11 @@ namespace RPG.Control
                 {
                     var playerLocalToWorld = localToWorlds[i];
                     var entity = entities[i];
-                    if (math.abs(math.distance(localToWorld.Position, playerLocalToWorld.Position)) <= chasePlayer.ChaseDistance)
+                    var direction = playerLocalToWorld.Position * playerLocalToWorld.Forward - localToWorld.Position * localToWorld.Forward;
+                    var angle = math.abs(math.degrees(math.atan2(direction.y, direction.x)));
+                    var distance = math.abs(math.distance(localToWorld.Position, playerLocalToWorld.Position));
+                    Debug.Log($"{e} enemy at angle {angle} and distance {distance}");
+                    if (distance <= chasePlayer.ChaseDistance && angle <= chasePlayer.AngleOfView)
                     {
                         beginSimulationEntityCommandBuffer.AddComponent<IsChasingTarget>(entityInQueryIndex, e);
                         beginSimulationEntityCommandBuffer.AddComponent(entityInQueryIndex, e, new StartChaseTarget { Target = entity, Position = playerLocalToWorld.Position });
@@ -200,9 +204,9 @@ namespace RPG.Control
             }).ScheduleParallel();
 
             Entities.ForEach((ref ChasePlayer chasePlayer, in StartChaseTarget startChaseTarget) =>
-           {
-               chasePlayer.Target = startChaseTarget.Target;
-           }).ScheduleParallel();
+                   {
+                       chasePlayer.Target = startChaseTarget.Target;
+                   }).ScheduleParallel();
 
             Entities.ForEach((ref Fighter fighter, in StartChaseTarget startChaseTarget) =>
             {

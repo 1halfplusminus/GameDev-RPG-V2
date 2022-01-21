@@ -1,7 +1,4 @@
-
 using RPG.Core;
-using RPG.Mouvement;
-using Unity.Entities;
 using UnityEngine;
 
 
@@ -12,6 +9,9 @@ namespace RPG.Control
         public float ChaseDistance;
 
         public float SuspiciousTime;
+
+        [Range(0f, 360f)]
+        public float AngleOfView;
         // Called by unity
         public void OnDrawGizmosSelected()
         {
@@ -21,6 +21,7 @@ namespace RPG.Control
         {
             Gizmos.color = Color.blue;
             Gizmos.DrawWireSphere(transform.position, ChaseDistance);
+
         }
     }
 
@@ -34,7 +35,7 @@ namespace RPG.Control
                 DstEntityManager.AddComponent<AIControlled>(entity);
                 // Fighter should add this
                 DstEntityManager.AddComponent<DeltaTime>(entity);
-                DstEntityManager.AddComponentData(entity, new ChasePlayer { ChaseDistance = chasePlayer.ChaseDistance });
+                DstEntityManager.AddComponentData(entity, new ChasePlayer { ChaseDistance = chasePlayer.ChaseDistance, AngleOfView = chasePlayer.AngleOfView });
                 if (chasePlayer.SuspiciousTime >= 0)
                 {
                     DstEntityManager.AddComponentData(entity, new Suspicious { Time = chasePlayer.SuspiciousTime });

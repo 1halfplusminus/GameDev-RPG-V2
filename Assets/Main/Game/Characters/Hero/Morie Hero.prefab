@@ -648,6 +648,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4903365598418441012}
+  - component: {fileID: 2433758560675670948}
   m_Layer: 0
   m_Name: Spine
   m_TagString: Untagged
@@ -663,7 +664,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1438232083162310032}
   m_LocalRotation: {x: 0.17926879, y: 0.0000000087027985, z: -0.000000008752198, w: 0.9838002}
-  m_LocalPosition: {x: -0.0000000021845583, y: 0.0002465921, z: 0.00031752494}
+  m_LocalPosition: {x: 0, y: 0.0002465921, z: 0.00031752494}
   m_LocalScale: {x: 1, y: 0.99999994, z: 0.99999994}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -673,6 +674,18 @@ Transform:
   m_Father: {fileID: 3702782417683000813}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2433758560675670948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438232083162310032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e71dfe142c3804292455a0ed49bfff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1443475973701004395
 GameObject:
   m_ObjectHideFlags: 0
@@ -1413,6 +1426,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3769601644115343787}
   - component: {fileID: 358649815}
+  - component: {fileID: 5541792226469208078}
   m_Layer: 0
   m_Name: Hand.R
   m_TagString: Untagged
@@ -1450,6 +1464,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24e71dfe142c3804292455a0ed49bfff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5541792226469208078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2945571249238839105}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c74113144ff30da4f894be7b64efbd67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &3059896169263680221
@@ -3163,6 +3189,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2010851700558888039}
   - component: {fileID: 142956689}
+  - component: {fileID: 3947182330927578163}
   m_Layer: 0
   m_Name: Hand.L
   m_TagString: Untagged
@@ -3200,6 +3227,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 24e71dfe142c3804292455a0ed49bfff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3947182330927578163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6273839581067001844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c74113144ff30da4f894be7b64efbd67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &6426380187693186269

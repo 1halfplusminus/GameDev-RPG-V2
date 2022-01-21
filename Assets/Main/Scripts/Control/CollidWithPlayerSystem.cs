@@ -21,21 +21,22 @@ namespace RPG.Control
         }
         protected override void OnUpdate()
         {
-            var commandBufferP = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-            var players = GetComponentDataFromEntity<PlayerControlled>(true);
+            var commandBufferP = entityCommandBufferSystem
+            .CreateCommandBuffer()
+            .AsParallelWriter();
             Entities.ForEach((int entityInQueryIndex, Entity e, DynamicBuffer<StatefulTriggerEvent> triggerEvents) =>
             {
                 foreach (var triggerEvent in triggerEvents)
                 {
                     var otherEntity = triggerEvent.GetOtherEntity(e);
-                    if (players.HasComponent(otherEntity))
+                    if (HasComponent<PlayerControlled>(otherEntity) && HasComponent<DisabledControl>(otherEntity) == false)
                     {
                         Debug.Log($" {e.Index} Collid with player {otherEntity.Index}");
                         commandBufferP.AddComponent(entityInQueryIndex, e, new CollidWithPlayer { Entity = otherEntity });
                         break;
                     }
                 }
-            }).WithReadOnly(players).ScheduleParallel();
+            }).ScheduleParallel();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }

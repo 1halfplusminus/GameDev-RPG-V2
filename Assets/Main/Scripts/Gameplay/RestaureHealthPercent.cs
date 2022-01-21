@@ -103,7 +103,7 @@ namespace RPG.Gameplay
                 {
                     if (rayHit.Hitted != Entity.Null)
                     {
-                        if (HasComponent<RestaureHealthPercent>(rayHit.Hitted))
+                        if (HasComponent<HealthPickup>(rayHit.Hitted))
                         {
                             cursor.Cursor = CursorType.Health;
                         }

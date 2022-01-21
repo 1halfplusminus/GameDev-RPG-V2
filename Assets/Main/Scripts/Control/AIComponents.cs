@@ -10,6 +10,7 @@ namespace RPG.Control
 
     public struct ChasePlayer : IComponentData
     {
+        public float AngleOfView;
         public float ChaseDistance;
         public Entity Target;
     }

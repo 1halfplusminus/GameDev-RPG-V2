@@ -58,7 +58,6 @@ namespace RPG.Combat
         }
     }
 
-
     //FIXME: More receive damage system
     [UpdateInGroup(typeof(CombatSystemGroup))]
     [UpdateAfter(typeof(ShootProjectileSystem))]
@@ -100,18 +99,7 @@ namespace RPG.Combat
 
             }).ScheduleParallel();
 
-            Entities
-            .WithAll<WasHitted>()
-            .WithNone<IsFighting, IsDeadTag>()
-           .ForEach((ref Fighter fighter, in DynamicBuffer<WasHitteds> hitted) =>
-           {
-               Debug.Log("Was Hitted");
-               if (hitted.Length > 0)
-               {
-                   fighter.Target = hitted[0].Hitter;
-                   fighter.MoveTowardTarget = true;
-               }
-           }).ScheduleParallel();
+
             commandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 

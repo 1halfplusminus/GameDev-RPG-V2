@@ -40,6 +40,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 749245506721374363}
+  - component: {fileID: 5448954478466091253}
+  - component: {fileID: 7163046015771028419}
   m_Layer: 0
   m_Name: Hand.R
   m_TagString: Untagged
@@ -66,6 +68,30 @@ Transform:
   m_Father: {fileID: 2138488713194417896}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5448954478466091253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361666371169263913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c74113144ff30da4f894be7b64efbd67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7163046015771028419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 361666371169263913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e71dfe142c3804292455a0ed49bfff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &413503119514859603
 GameObject:
   m_ObjectHideFlags: 0
@@ -75,6 +101,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6644939940388408443}
+  - component: {fileID: 5392957556602010781}
+  - component: {fileID: 7339453854531281212}
   m_Layer: 0
   m_Name: Hand.L
   m_TagString: Untagged
@@ -101,6 +129,30 @@ Transform:
   m_Father: {fileID: 7266574736502677967}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5392957556602010781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413503119514859603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e71dfe142c3804292455a0ed49bfff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7339453854531281212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413503119514859603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c74113144ff30da4f894be7b64efbd67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &536813270102120831
 GameObject:
   m_ObjectHideFlags: 0
@@ -2015,6 +2067,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7648378017926912090}
+  - component: {fileID: 838963241137547196}
+  - component: {fileID: 8852628158614634425}
   m_Layer: 0
   m_Name: Spine
   m_TagString: Untagged
@@ -2040,6 +2094,30 @@ Transform:
   m_Father: {fileID: 3838645579856403629}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &838963241137547196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5964645783024312601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24e71dfe142c3804292455a0ed49bfff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8852628158614634425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5964645783024312601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c74113144ff30da4f894be7b64efbd67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6012664168120772640
 GameObject:
   m_ObjectHideFlags: 0
@@ -3402,8 +3480,16 @@ MonoBehaviour:
   TranslationChannels:
   - Id: MainH
     DefaultValue: {x: 0, y: 0, z: 0}
+  - Id: Hand.L
+    DefaultValue: {x: 0, y: 0, z: 0}
+  - Id: Hand.R
+    DefaultValue: {x: 0, y: 0, z: 0}
   RotationChannels:
   - Id: MainH
+    DefaultValue: {x: 0, y: 0, z: 0, w: 0}
+  - Id: Hand.L
+    DefaultValue: {x: 0, y: 0, z: 0, w: 0}
+  - Id: Hand.R
     DefaultValue: {x: 0, y: 0, z: 0, w: 0}
   ScaleChannels: []
   FloatChannels: []

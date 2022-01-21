@@ -8,6 +8,8 @@ using RPG.Core;
 using UnityEngine.VFX;
 using RPG.Gameplay;
 using Unity.Rendering;
+using Unity.Physics;
+using RPG.Mouvement;
 
 namespace RPG.Combat
 {
@@ -59,7 +61,12 @@ namespace RPG.Combat
                }
            }).WithoutBurst().Run();
 
-
+            // Entities
+            // .WithAll<DisableRendering>()
+            // .ForEach((TrailRenderer renderer) =>
+            // {
+            //     renderer.enabled = false;
+            // }).WithoutBurst().Run();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
@@ -89,20 +96,16 @@ namespace RPG.Combat
             .WithReadOnly(isDead)
             .WithReadOnly(hitableLocalToWorld)
             .WithDisposeOnCompletion(hitableLocalToWorld)
+            .WithNone<ProjectileHitted>()
             .WithAny<IsHomingProjectile>()
-            .ForEach((int entityInQueryIndex, Entity e, ref TargetLook targetLook, ref Rotation r, in Projectile p, in LocalToWorld localToWorld) =>
+            .ForEach((int entityInQueryIndex, Entity e, ref PhysicsVelocity v, ref Rotation r, in Projectile p, in LocalToWorld localToWorld) =>
             {
-                targetLook.TargetDirection = LookTarget(e, p, localToWorld, isDead, hitableLocalToWorld);
-                r.Value = quaternion.LookRotation(targetLook.TargetDirection, math.up());
+                var direction = LookTarget(e, p, localToWorld, isDead, hitableLocalToWorld);
+                var lookRotation = quaternion.LookRotation(direction, math.up());
+                v.Linear = math.normalize(direction) * p.Speed;
+
             }).ScheduleParallel();
 
-            Entities
-            .WithNone<ProjectileHitted>()
-            .ForEach((int entityInQueryIndex, Entity e, ref Translation t, in LocalToWorld localToWorld, in Projectile p, in DeltaTime dt) =>
-            {
-                Debug.Log($"Projectile {e} moving to position {localToWorld.Forward}  ");
-                t.Value += math.normalize(localToWorld.Forward) * p.Speed * dt.Value;
-            }).ScheduleParallel();
 
             Entities
             .WithReadOnly(isDead)
@@ -118,6 +121,7 @@ namespace RPG.Combat
                         {
                             Debug.Log($"Projectile {e} collid with {other.Index}  ");
                             var hitEntity = cbp.CreateEntity(entityInQueryIndex);
+                            cbp.RemoveComponent<PhysicsVelocity>(entityInQueryIndex, e);
                             cbp.AddComponent(entityInQueryIndex, hitEntity, new Hit() { Hitter = p.ShootBy, Hitted = other });
                             cbp.AddComponent<IsProjectile>(entityInQueryIndex, hitEntity);
                             Debug.Log($"Projectile {e} destroyed by {other.Index}  ");
@@ -202,9 +206,18 @@ namespace RPG.Combat
                         var position = localToWorlds[socket].Position;
                         var translation = new Translation { Value = position };
                         var projectileEntity = cbp.Instantiate(entityInQueryIndex, prefabEntity);
-                        var lookRotation = quaternion.LookRotation(targetPosition - position, math.up());
-
+                        var direction = targetPosition - position;
+                        var angle = math.abs(math.degrees(math.atan2(direction.y, direction.x)));
+                        var lookRotation = quaternion.LookRotation(direction, math.up());
+                        var linearVelocity = math.normalize(direction) * projectile.Speed;
+                        linearVelocity.y = 0;
+                        cbp.AddComponent<LocalToWorld>(entityInQueryIndex, projectileEntity);
                         cbp.AddComponent(entityInQueryIndex, projectileEntity, translation);
+                        cbp.AddComponent(entityInQueryIndex, projectileEntity, new PhysicsVelocity
+                        {
+                            Angular = new float3(lookRotation.value.x, 0, 0),
+                            Linear = linearVelocity
+                        });
                         cbp.AddComponent(entityInQueryIndex, projectileEntity, new Projectile { Target = hit.Hitted, Speed = projectile.Speed, ShootBy = hit.Hitter });
                         cbp.AddComponent(entityInQueryIndex, projectileEntity, new Rotation { Value = lookRotation });
                         cbp.AddComponent<ProjectileShooted>(entityInQueryIndex, projectileEntity);
