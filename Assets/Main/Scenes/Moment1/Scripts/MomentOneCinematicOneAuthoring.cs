@@ -1,6 +1,7 @@
 
 using Cinemachine;
 using RPG.Core;
+using RPG.Gameplay;
 using Unity.Entities;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -11,7 +12,7 @@ public class MomentOneCinematicOne : IComponentData
 
 }
 
-
+[UpdateInGroup(typeof(GameplaySystemGroup))]
 public class MomentOneCinematic : SystemBase
 {
     protected override void OnUpdate()

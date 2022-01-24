@@ -275,7 +275,7 @@ namespace RPG.Control
         }
     }
 
-
+    [UpdateInGroup(typeof(ControlSystemGroup))]
     public class AIAnimationSystem : SystemBase
     {
         protected override void OnUpdate()

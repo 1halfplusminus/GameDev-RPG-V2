@@ -67,7 +67,7 @@ namespace RPG.Gameplay
             });
         }
     }
-
+    [UpdateInGroup(typeof(GameplaySystemGroup))]
     public class LevelUpEffectSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;

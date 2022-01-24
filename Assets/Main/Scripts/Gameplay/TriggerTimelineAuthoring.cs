@@ -179,6 +179,7 @@ namespace RPG.Gameplay
             }).WithoutBurst().Run();
         }
     }
+    [UpdateInGroup(typeof(GameplaySystemGroup))]
     [UpdateAfter(typeof(FixedStepSimulationSystemGroup))]
     public class TriggerTimelineSystem : SystemBase
     {

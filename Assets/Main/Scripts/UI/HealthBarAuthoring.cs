@@ -91,7 +91,7 @@ namespace RPG.UI
             });
         }
     }
-
+    [UpdateInGroup(typeof(UISystemGroup))]
     public class HealthBarUISystem : SystemBase
     {
 

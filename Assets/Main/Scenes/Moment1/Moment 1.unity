@@ -2338,7 +2338,7 @@ Transform:
   - {fileID: 1938560570}
   - {fileID: 588309707}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &529792683 stripped
 GameObject:
@@ -3275,7 +3275,7 @@ Transform:
   - {fileID: 1475172562}
   - {fileID: 1194541614}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &948151888 stripped
 GameObject:
@@ -4852,7 +4852,7 @@ Transform:
   - {fileID: 1304963093}
   - {fileID: 695396217301379483}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1373858693
 MonoBehaviour:
@@ -5349,7 +5349,7 @@ Transform:
   - {fileID: 1427100328}
   - {fileID: 1635092371909849161}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1460191831 stripped
 MonoBehaviour:
@@ -7443,7 +7443,7 @@ Transform:
   - {fileID: 1517198350}
   - {fileID: 1324722724419603959}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2011963852
 PrefabInstance:
@@ -9500,7 +9500,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132148094078466}
   m_LocalRotation: {x: 0.000000015566556, y: 0.70193315, z: -0.000000015341222, w: 0.7122429}
-  m_LocalPosition: {x: 52.28, y: -1.179, z: 10.61}
+  m_LocalPosition: {x: 52.28, y: -1.186, z: 10.61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9915,6 +9915,7 @@ GameObject:
   - component: {fileID: 1711813854555910103}
   - component: {fileID: 3469287838551726879}
   - component: {fileID: 3469287838551726878}
+  - component: {fileID: 3469287838551726880}
   m_Layer: 0
   m_Name: Old Wooden Trough (1)
   m_TagString: Untagged
@@ -11290,8 +11291,8 @@ MonoBehaviour:
     y: 0.4049321
     z: -0.013276577
   m_PrimitiveSize:
-    x: 0.831754
-    y: 0.86035866
+    x: 0.96013016
+    y: 1.203861
     z: 2.6790736
   m_PrimitiveOrientation:
     Value:
@@ -11301,11 +11302,11 @@ MonoBehaviour:
     RotationOrder: 4
   m_Capsule:
     Height: 2.6790736
-    Radius: 0.43017933
+    Radius: 0.6019305
     Axis: 2
   m_Cylinder:
     Height: 2.6790736
-    Radius: 0.43017933
+    Radius: 0.6019305
     Axis: 2
   m_CylinderSideCount: 20
   m_SphereRadius: 1.3395368
@@ -11375,9 +11376,9 @@ MonoBehaviour:
         Category02: 1
         Category03: 1
         Category04: 1
-        Category05: 1
-        Category06: 1
-        Category07: 1
+        Category05: 0
+        Category06: 0
+        Category07: 0
         Category08: 1
         Category09: 1
         Category10: 1
@@ -11458,13 +11459,29 @@ MonoBehaviour:
     z: 0.4
   m_CustomTags:
     Tag00: 0
-    Tag01: 0
+    Tag01: 1
     Tag02: 0
     Tag03: 0
     Tag04: 0
     Tag05: 0
     Tag06: 0
     Tag07: 0
+--- !u!114 &3469287838551726880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148094078466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Size: {x: 2.0075932, y: 1.8299156, z: 2.3}
+  m_Center: {x: 0.0011954308, y: 0.41495806, z: -0.26011705}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
 --- !u!23 &3558871227388104247
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -16079,13 +16096,13 @@ MonoBehaviour:
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   colorGradientTexture: {fileID: 0}
-  shallowColor: {r: 0.19804743, g: 0.61517215, b: 0.8584906, a: 1}
-  deepColor: {r: 0.044745788, g: 0.56350243, b: 0.8679245, a: 1}
+  shallowColor: {r: 0.1980462, g: 0.61517215, b: 0.8584906, a: 1}
+  deepColor: {r: 0.044744857, g: 0.56350243, b: 0.8679245, a: 1}
   colorDepth: 0
-  horizonColor: {r: 0, g: 0.22692361, b: 0.8, a: 1}
+  horizonColor: {r: 0, g: 0.22692233, b: 0.8, a: 1}
   horizonDistance: 2.71
   shoreFade: 0
-  shoreColor: {r: 0, g: 0.98039216, b: 0.30143338, a: 0.106}
+  shoreColor: {r: 0, g: 0.98039216, b: 0.3014321, a: 0.106}
   shoreStrength: 0.106
   shoreBlend: 0.532
   shoreDepth: 0.678
@@ -16098,8 +16115,8 @@ MonoBehaviour:
   surfaceFoamCutoff: 0.62
   surfaceFoamDistortion: 0
   surfaceFoamBlend: 1
-  surfaceFoamColor1: {r: 0.058654763, g: 0.42966926, b: 0.5, a: 0.5176471}
-  surfaceFoamColor2: {r: 0.17659572, g: 0.21087262, b: 0.32030678, a: 0.7294118}
+  surfaceFoamColor1: {r: 0.058653794, g: 0.42966798, b: 0.5, a: 0.5176471}
+  surfaceFoamColor2: {r: 0.1765945, g: 0.21087134, b: 0.3203055, a: 0.7294118}
   surfaceFoamMovement: {x: 0.382, y: 0.056, z: 0, w: 1.731}
   surfaceFoamDirection1: 0.382
   surfaceFoamDirection2: 0

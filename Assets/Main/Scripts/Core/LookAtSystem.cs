@@ -30,6 +30,7 @@ namespace RPG.Core
             }).ScheduleParallel();
         }
     }
+    [UpdateInGroup(typeof(CoreSystemGroup))]
     public class CameraFacingSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
