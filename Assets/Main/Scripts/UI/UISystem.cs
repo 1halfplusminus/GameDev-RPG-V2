@@ -1,3 +1,4 @@
+using System;
 using RPG.Combat;
 using RPG.Control;
 using RPG.Core;
@@ -5,8 +6,12 @@ using RPG.Saving;
 using RPG.Stats;
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UIElements;
 using static Unity.Entities.ComponentType;
+using static RPG.UI.UIExtensions;
+
 namespace RPG.UI
 {
     public struct InGame : IComponentData
@@ -19,11 +24,111 @@ namespace RPG.UI
     }
     public struct Initialized : IComponentData
     {
-
+    }
+    public struct Destroy : IComponentData
+    {
 
     }
+    [UpdateInGroup(typeof(UISystemGroup))]
+    public class GameOverUISystem : SystemBase
+    {
+        public string GAME_OVER_UI_ADDRESS = "GameOverUI";
+        private AsyncOperationHandle<GameObject> handle;
+        private Entity gameOverPrefab;
+        private EntityCommandBufferSystem entityCommandBufferSystem;
+        private SavingWrapperSystem savingSystem;
+        private MainGameUISystem mainGameUISystem;
 
 
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            LoadGameUIAddressable();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            savingSystem = World.GetOrCreateSystem<SavingWrapperSystem>();
+            mainGameUISystem = World.GetOrCreateSystem<MainGameUISystem>();
+        }
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            Addressables.Release(handle);
+        }
+        private void HandleCompleted(AsyncOperationHandle<GameObject> operation)
+        {
+            if (operation.Status == AsyncOperationStatus.Succeeded)
+            {
+                var convertToEntitySystem = World.GetExistingSystem<ConvertToEntitySystem>();
+                var conversionSetting = GameObjectConversionSettings.FromWorld(World, convertToEntitySystem.BlobAssetStore);
+                gameOverPrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(operation.Result, conversionSetting);
+            }
+            else
+            {
+                Debug.LogError($"Asset for gameover ui failed to load.");
+            }
+        }
+
+        private void LoadGameUIAddressable()
+        {
+            if (!handle.IsValid())
+            {
+                handle = Addressables.LoadAssetAsync<GameObject>(GAME_OVER_UI_ADDRESS);
+                handle.Completed += HandleCompleted;
+            }
+        }
+
+        private Action OnMainMenuReload(Entity e)
+        {
+            return () =>
+            {
+                mainGameUISystem.ReloadMainMenu(e);
+            };
+
+        }
+        private Action OnTryAgain(Entity e)
+        {
+            return () =>
+            {
+                savingSystem.LoadDefaultSave(e);
+            };
+        }
+        protected override void OnUpdate()
+        {
+            var cb = entityCommandBufferSystem.CreateCommandBuffer();
+            Entities
+            .WithNone<GameOverUI>()
+            .WithAll<PlayerControlled, IsDeadTag>()
+            .ForEach((Entity e) =>
+            {
+                if (gameOverPrefab != Entity.Null)
+                {
+                    var instance = cb.Instantiate(gameOverPrefab);
+                    cb.AddComponent<GameOverUI>(e);
+                }
+            }).WithoutBurst().Run();
+            Entities
+            .WithAll<GameOverUI, UIReady>()
+            .WithNone<GameOverUIController>()
+            .ForEach((Entity e, UIDocument document) =>
+            {
+                var controller = new GameOverUIController();
+                controller.OnTryAgain += OnTryAgain(e);
+                controller.OnMainMenu += OnMainMenuReload(e);
+                controller.Init(document.rootVisualElement);
+                cb.AddComponent(e, controller);
+            })
+            .WithoutBurst()
+            .Run();
+
+            Entities
+            .WithAll<GameOverUI, TriggeredSceneLoaded, UIReady>()
+            .ForEach((Entity e) =>
+            {
+                cb.DestroyEntity(e);
+            }).Schedule();
+
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+        }
+    }
 
     [UpdateInGroup(typeof(UISystemGroup))]
     public class InGameUISystem : SystemBase
@@ -137,13 +242,7 @@ namespace RPG.UI
             ui.Q<Button>("Save").clicked += Save;
             ui.Q<Button>("Exit").clicked += QuitGame;
         }
-        private void QuitGame()
-        {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#endif
-            Application.Quit();
-        }
+
         private void Save()
         {
             Debug.Log("Saving game");
@@ -188,9 +287,11 @@ namespace RPG.UI
 
         EntityQuery gameEventListener;
 
+        EntityQuery mainMenuUIPrefabsQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
+            mainMenuUIPrefabsQuery = GetEntityQuery(new ComponentType[] { ReadOnly<NewGameUI>(), ReadOnly<Prefab>() });
             savingWrapperSystem = World.GetOrCreateSystem<SavingWrapperSystem>();
             uiDocumentQuery = EntityManager.CreateEntityQuery(new EntityQueryDesc()
             {
@@ -216,6 +317,20 @@ namespace RPG.UI
                 }
             }));
         }
+        public void ReloadMainMenu(Entity trigger)
+        {
+            SceneLoadingSystem.UnloadAllCurrentlyLoadedScene(EntityManager);
+            var mainMenuEntity = GetMainMenuPrefab();
+            EntityManager.Instantiate(mainMenuEntity);
+            if (trigger != Entity.Null)
+            {
+                EntityManager.DestroyEntity(trigger);
+            }
+        }
+        public Entity GetMainMenuPrefab()
+        {
+            return mainMenuUIPrefabsQuery.GetSingletonEntity();
+        }
         protected void NewGame(Entity e)
         {
             EntityManager.AddComponent<TriggerNewGame>(e);
@@ -239,7 +354,9 @@ namespace RPG.UI
             .ForEach((int entityInQueryIndex, Entity e, UIDocument uiDocument) =>
             {
                 ec.DestroyEntity(e);
-            }).WithoutBurst().Run();
+            })
+            .WithoutBurst()
+            .Run();
 
             if (uiDocumentQuery.CalculateEntityCount() > 0)
             {
@@ -292,7 +409,9 @@ namespace RPG.UI
                 Debug.Log($"Instanciate {e.Index}");
                 em.Instantiate(e);
                 em.RemoveComponent<AutoInstantiateUI>(e);
-            }).WithStructuralChanges().WithoutBurst().Run();
+            }).WithStructuralChanges()
+            .WithoutBurst()
+            .Run();
         }
     }
 

@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Main/UI/In%20Game%20HUD%20Style.uss?fileID=7433441132597879392&amp;guid=d337463dc0df7fbe3b8a9edd5971530f&amp;type=3#In Game HUD Style" />
+    <ui:VisualElement style="background-color: rgb(0, 0, 0); flex-grow: 1; font-size: 30px; justify-content: center; align-items: center;">
+        <ui:VisualElement class="Interactive" style="margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px;">
+            <ui:Label text="GAME OVER" display-tooltip-when-elided="true" style="font-size: 50px; -unity-text-align: upper-center; padding-left: 30px; padding-right: 30px; padding-top: 30px; padding-bottom: 30px;" />
+            <ui:VisualElement style="justify-content: flex-start; align-items: center;">
+                <ui:Button text="Try Again" display-tooltip-when-elided="true" name="TryAgain" class="my-button Interactive" style="margin-bottom: 25px;" />
+                <ui:Button text="Main Menu" display-tooltip-when-elided="true" name="MainMenu" class="my-button Interactive" style="margin-bottom: 25px;" />
+                <ui:Button text="Exit" display-tooltip-when-elided="true" name="Exit" class="my-button Interactive" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

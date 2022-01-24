@@ -140,12 +140,14 @@ namespace RPG.Saving
             var lastSceneEntity = lastSceneBuildQuery.GetSingletonEntity();
             var lastSceneEntityId = lastSceneBuildQuery.GetSingleton<Identifier>();
             var id = lastSceneEntityId.Id.ToString();
+
             if (states.ContainsKey(id))
             {
                 var lastSceneState = (Dictionary<string, object>)states[id];
                 RestoreSerializersState(lastSceneState, lastSceneEntity);
                 return true;
             }
+
             return false;
         }
 

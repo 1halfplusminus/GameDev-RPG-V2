@@ -82,3 +82,21 @@ Label {
     background-image: url('project://database/Assets/Main/UI/Button-Primary-Hover-Without%20Icon.png?fileID=2800000&guid=b4093ce723a1b2e19af4dfcea73e62c7&type=3#Button-Primary-Hover-Without Icon');
     background-color: rgba(0, 0, 0, 0);
 }
+
+Button {
+    margin-top: 0;
+    flex-grow: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+    justify-content: center;
+    align-items: center;
+}
+.Button:disabled {
+    cursor: url('project://database/Assets/Main/Assets%20Packs/Pixel%20Cursors/Cursors/basic_01%20RED.png?fileID=2800000&guid=2a2b4775272c890448e1bd6239fdfc84&type=3#basic_01 RED');
+    opacity: 0.6;
+    color: rgba(255, 255, 255, 255);
+}

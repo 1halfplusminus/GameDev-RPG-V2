@@ -1,15 +1,4 @@
-Button {
-    margin-top: 0;
-    flex-grow: 0;
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    margin-bottom: 0;
-    flex-shrink: 0;
-    justify-content: center;
-    align-items: center;
-}
+
 
 .Button {
     flex-grow: 1;
@@ -25,11 +14,5 @@ Button {
 
 * {
     cursor: url('project://database/Assets/Main/Assets%20Packs/Pixel%20Cursors/Cursors/basic_01.png?fileID=2800000&guid=2e71a8202d3b4a3448ec85ced5a40265&type=3#basic_01');
-}
-
-.Button:disabled {
-    cursor: url('project://database/Assets/Main/Assets%20Packs/Pixel%20Cursors/Cursors/basic_01%20RED.png?fileID=2800000&guid=2a2b4775272c890448e1bd6239fdfc84&type=3#basic_01 RED');
-    opacity: 0.6;
-    color: rgba(255, 255, 255, 255);
 }
 
