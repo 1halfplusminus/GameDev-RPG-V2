@@ -2,3 +2,5 @@
 *.csproj eol=crlf
 *.asset eol=crlf
 *.prefab eol=crlf
+*.meta binary
+*.asset binary
