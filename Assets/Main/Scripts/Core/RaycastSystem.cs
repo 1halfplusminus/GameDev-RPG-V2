@@ -41,7 +41,6 @@ namespace RPG.Core
         BuildPhysicsWorld buildPhysicsWorld;
         StepPhysicsWorld stepPhysicsWorld;
 
-        EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery rayCastQuery;
 
         protected override void OnCreate()
@@ -49,7 +48,6 @@ namespace RPG.Core
             base.OnCreate();
             buildPhysicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
             stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
-            // entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
         {
@@ -57,8 +55,6 @@ namespace RPG.Core
             {
                 var physicsWorld = buildPhysicsWorld.PhysicsWorld;
                 var collisionWorld = physicsWorld.CollisionWorld;
-                // var cb = entityCommandBufferSystem.CreateCommandBuffer();
-                // var cbp = cb.AsParallelWriter();
                 Dependency = JobHandle.CombineDependencies(Dependency, buildPhysicsWorld.GetOutputDependency(), stepPhysicsWorld.GetOutputDependency());
                 EntityManager.RemoveComponent<InteractWithUI>(rayCastQuery);
                 var raycastJob = Entities
@@ -77,14 +73,12 @@ namespace RPG.Core
                         {
                             var hittedEntity = physicsWorld.Bodies[hits[i].RigidBodyIndex].Entity;
                             rayHits.Add(new HittedByRaycastEvent { Hit = hits[i], Hitted = hittedEntity });
-                            // cbp.AddComponent<HittedByRaycast>(entityInQueryIndex, hittedEntity);
                         }
                         raycast.Completed = true;
                     }
 
                 }).ScheduleParallel(Dependency);
                 Dependency = raycastJob;
-                // entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
             }
             else
             {

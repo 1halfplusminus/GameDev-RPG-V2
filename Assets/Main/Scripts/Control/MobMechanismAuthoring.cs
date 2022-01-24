@@ -1,13 +1,26 @@
 
+using System;
 using RPG.Combat;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Mathematics;
+using Unity.Physics;
+using Unity.Physics.Authoring;
+using Unity.Physics.Systems;
+using Unity.Transforms;
 using UnityEngine;
 
 
 namespace RPG.Control
 {
+    [Serializable]
+    public struct MobMechanism : IComponentData
+    {
+        public float ShoutRadius;
+        public CollisionFilter CollisionFilter;
+    }
     public struct LinkedMob : IBufferElementData
     {
         public Entity Entity;
@@ -16,7 +29,14 @@ namespace RPG.Control
     public class MobMechanismAuthoring : MonoBehaviour
     {
         public FighterAuthoring[] linked;
+        public float ShoutRadius;
+        public PhysicsCategoryTags CollidWith;
+        public PhysicsCategoryTags BelongTo;
 
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawWireSphere(transform.position, ShoutRadius);
+        }
     }
 
     [UpdateAfter(typeof(FighterConversionSystem))]
@@ -26,6 +46,12 @@ namespace RPG.Control
         {
             Entities.ForEach((MobMechanismAuthoring mobMechanismAuthoring) =>
             {
+                var entity = GetPrimaryEntity(mobMechanismAuthoring);
+                DstEntityManager.AddComponentData(entity, new MobMechanism
+                {
+                    ShoutRadius = mobMechanismAuthoring.ShoutRadius,
+                    CollisionFilter = new CollisionFilter { BelongsTo = mobMechanismAuthoring.BelongTo.Value, CollidesWith = mobMechanismAuthoring.CollidWith.Value }
+                });
                 AddLinkedMob(mobMechanismAuthoring, mobMechanismAuthoring);
                 foreach (var linked in mobMechanismAuthoring.linked)
                 {
@@ -55,61 +81,83 @@ namespace RPG.Control
         }
 
     }
-
     [UpdateInGroup(typeof(ControlSystemGroup))]
     public class MobMechanismSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
+        BuildPhysicsWorld buildPhysicsWorld;
 
+        StepPhysicsWorld stepPhysicsWorld;
         protected override void OnCreate()
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            buildPhysicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
+            stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
         }
         protected override void OnUpdate()
         {
+            Dependency = JobHandle.CombineDependencies(Dependency, buildPhysicsWorld.GetOutputDependency(), stepPhysicsWorld.GetOutputDependency());
+            var physicsWorld = buildPhysicsWorld.PhysicsWorld;
+            var collisionWorld = physicsWorld.CollisionWorld;
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var cpb = cb.AsParallelWriter();
             Entities
-            .WithAll<AIControlled>()
-            .WithAny<StartChaseTarget, WasHitted>()
-            .ForEach((int entityInQueryIndex, Entity e, in DynamicBuffer<LinkedMob> linkedMob) =>
-            {
-                var target = Entity.Null;
-                if (HasComponent<StartChaseTarget>(e))
-                {
-                    var startChaseTarget = GetComponent<StartChaseTarget>(e);
-                    target = startChaseTarget.Target;
-                }
-                if (target == Entity.Null && HasComponent<WasHitted>(e))
-                {
-                    var wasHitted = cpb.SetBuffer<WasHitteds>(entityInQueryIndex, e);
-                    if (wasHitted.Length > 0)
-                    {
-                        target = wasHitted[^1].Hitter;
-                    }
+                   .WithReadOnly(collisionWorld)
+                   .WithReadOnly(physicsWorld)
+                   .WithAll<AIControlled>()
+                   .WithAny<StartChaseTarget, Hitter, IsFighting>()
+                   .ForEach((int entityInQueryIndex, Entity e, in MobMechanism mobMechanism, in LocalToWorld localToWorld, in DynamicBuffer<LinkedMob> linkedMob) =>
+                   {
+                       var target = Entity.Null;
+                       if (HasComponent<StartChaseTarget>(e))
+                       {
+                           var startChaseTarget = GetComponent<StartChaseTarget>(e);
+                           target = startChaseTarget.Target;
+                       }
+                       if (target == Entity.Null && HasComponent<Hitter>(e))
+                       {
+                           var hitter = GetComponent<Hitter>(e);
+                           target = hitter.Value;
+                       }
+                       var linksFound = new NativeList<Entity>(Allocator.Temp);
+                       var hits = new NativeList<ColliderCastHit>(Allocator.Temp);
+                       collisionWorld.SphereCastAll(localToWorld.Position, mobMechanism.ShoutRadius, math.up(), 0, ref hits, mobMechanism.CollisionFilter);
+                       for (int i = 0; i < hits.Length; i++)
+                       {
+                           var hittedEntity = physicsWorld.Bodies[hits[i].RigidBodyIndex].Entity;
+                           if (HasComponent<MobMechanism>(hittedEntity))
+                           {
+                               Debug.Log($"hitted by raycast {hittedEntity.Index}");
+                               linksFound.Add(hittedEntity);
+                           }
+                       }
+                       for (int i = 0; i < linkedMob.Length; i++)
+                       {
+                           var linked = linkedMob[i];
+                           linksFound.Add(linked.Entity);
+                       }
+                       for (int i = 0; i < linksFound.Length; i++)
+                       {
 
-                }
-                for (int i = 0; i < linkedMob.Length; i++)
-                {
-                    var linked = linkedMob[i];
-                    if (linked.Entity != e && HasComponent<Fighter>(linked.Entity))
-                    {
-                        var fighter = GetComponent<Fighter>(linked.Entity);
-                        if (fighter.Target == Entity.Null)
-                        {
-                            fighter.Target = target;
-                            fighter.MoveTowardTarget = true;
-                            cpb.SetComponent(entityInQueryIndex, linked.Entity, fighter);
-                        }
-                        Debug.Log($"{e} linked to {linked} change linked entity target");
-                    }
-                    Debug.Log($"{e.Index} linked to {linked.Entity.Index} change linked entity target");
-                }
+                           var linkedEntity = linksFound[i];
+                           if (linkedEntity != e && HasComponent<Fighter>(linkedEntity))
+                           {
+                               var fighter = GetComponent<Fighter>(linkedEntity);
+                               if (fighter.Target == Entity.Null)
+                               {
+                                   fighter.Target = target;
+                                   fighter.MoveTowardTarget = true;
+                                   cpb.SetComponent(entityInQueryIndex, linkedEntity, fighter);
+                               }
 
-            })
-            .ScheduleParallel();
-
+                           }
+                           //  Debug.Log($"{e.Index} linked to {linkedEntity.Index} change linked entity target");
+                       }
+                       linksFound.Dispose();
+                       hits.Dispose();
+                   })
+                   .ScheduleParallel();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
 

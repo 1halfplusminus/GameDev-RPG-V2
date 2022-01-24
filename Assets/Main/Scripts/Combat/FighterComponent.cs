@@ -101,7 +101,7 @@ namespace RPG.Combat
         public BlobAssetReference<WeaponBlobAsset> WeaponAsset;
 
         public Entity Instance;
-        
+
     }
     public struct EquippedBy : IComponentData
     {
@@ -168,6 +168,10 @@ namespace RPG.Combat
     public struct WasHitted : IComponentData
     {
 
+    }
+    public struct Hitter : IComponentData
+    {
+        public Entity Value;
     }
     public struct WasHitteds : IBufferElementData
     {

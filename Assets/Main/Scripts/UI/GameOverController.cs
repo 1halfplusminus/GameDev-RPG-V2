@@ -22,9 +22,16 @@ namespace RPG.UI
             mainMenuButton = root.Q<Button>("MainMenu");
 
             mainMenuButton.clicked += OnMainMenu;
-
+            exitButton.clicked += () =>
+            {
+                exitButton.SetEnabled(false);
+            };
             exitButton.clicked += QuitGame;
 
+            tryAgainButton.clicked += () =>
+            {
+                tryAgainButton.SetEnabled(false);
+            };
             tryAgainButton.clicked += OnTryAgain;
         }
     }

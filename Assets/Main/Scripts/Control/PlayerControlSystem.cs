@@ -44,7 +44,7 @@ namespace RPG.Control
 
             Entities
             .WithNone<DisabledControl>()
-            .WithAll<PlayerControlled>()
+            .WithAll<PlayerControlled, WorldClick>()
             .ForEach((Entity player, ref Fighter fighter, ref VisibleCursor visibleCursor, in MouseClick mouseClick) =>
             {
 

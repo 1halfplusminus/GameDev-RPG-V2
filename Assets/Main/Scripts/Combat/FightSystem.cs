@@ -94,6 +94,7 @@ namespace RPG.Combat
                     {
                         buffer.RemoveAt(0);
                     }
+                    cbp.AddComponent<Hitter>(entityInQueryIndex, hit.Hitted, new Hitter { Value = hit.Hitter });
                     cbp.AddComponent<WasHitted>(entityInQueryIndex, hit.Hitted);
                 }
 

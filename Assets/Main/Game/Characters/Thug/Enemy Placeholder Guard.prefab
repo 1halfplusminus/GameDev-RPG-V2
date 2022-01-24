@@ -3406,7 +3406,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: m_Material.m_CollidesWithCategories.m_Value.Category00
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: m_Material.m_CollidesWithCategories.m_Value.Category01
@@ -3426,7 +3426,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: m_Material.m_CollidesWithCategories.m_Value.Category05
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7356440603830272542, guid: 5d3d1159bd27d5d7c9957be29a55bd67, type: 3}
       propertyPath: m_Material.m_CollidesWithCategories.m_Value.Category06
@@ -4256,6 +4256,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChaseDistance: 6
   SuspiciousTime: 9
+  AngleOfView: 0
 --- !u!114 &-781755918778158974
 MonoBehaviour:
   m_ObjectHideFlags: 0

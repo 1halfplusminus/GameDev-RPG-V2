@@ -13,10 +13,138 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
       propertyPath: m_Material.m_BelongsToCategories.m_Value.Category00
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category01
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
       propertyPath: m_Material.m_BelongsToCategories.m_Value.Category02
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category03
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category04
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category05
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category06
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category07
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category08
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category09
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category10
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category11
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category12
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category13
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category14
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category15
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category16
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category17
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category18
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category19
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category20
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category21
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category22
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category23
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category24
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category25
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category26
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category27
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category28
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category29
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category30
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_BelongsToCategories.m_Value.Category31
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_CollidesWithCategories.m_Value.Category03
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5462064060957582741, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: m_Material.m_CollidesWithCategories.m_Value.Category06
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4918083197768974198, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
@@ -83,6 +211,18 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5695745319709861324, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
   m_PrefabInstance: {fileID: 5919289489370536053}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &-5591174683644377811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2102847174563085753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09ad2c9ad0d8b3a75b64cdf3b02ea345, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &-5142438563348407387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,7 +250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DamageTextPrefab: {fileID: 1068927576432277031, guid: 6b9bfa31ff376bf23a34c2311d8bd093, type: 3}
---- !u!114 &-5591174683644377811
+--- !u!114 &-3864727462062942378
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -119,6 +259,74 @@ MonoBehaviour:
   m_GameObject: {fileID: 2102847174563085753}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09ad2c9ad0d8b3a75b64cdf3b02ea345, type: 3}
+  m_Script: {fileID: 11500000, guid: a2ff79a47690fa2e0b222b051146b580, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  linked: []
+  ShoutRadius: 12
+  CollidWith:
+    Category00: 0
+    Category01: 0
+    Category02: 0
+    Category03: 0
+    Category04: 0
+    Category05: 0
+    Category06: 0
+    Category07: 0
+    Category08: 1
+    Category09: 0
+    Category10: 0
+    Category11: 0
+    Category12: 0
+    Category13: 0
+    Category14: 0
+    Category15: 0
+    Category16: 0
+    Category17: 0
+    Category18: 0
+    Category19: 0
+    Category20: 0
+    Category21: 0
+    Category22: 0
+    Category23: 0
+    Category24: 0
+    Category25: 0
+    Category26: 0
+    Category27: 0
+    Category28: 0
+    Category29: 0
+    Category30: 0
+    Category31: 0
+  BelongTo:
+    Category00: 1
+    Category01: 0
+    Category02: 0
+    Category03: 0
+    Category04: 0
+    Category05: 0
+    Category06: 0
+    Category07: 0
+    Category08: 0
+    Category09: 0
+    Category10: 0
+    Category11: 0
+    Category12: 0
+    Category13: 0
+    Category14: 0
+    Category15: 0
+    Category16: 0
+    Category17: 0
+    Category18: 0
+    Category19: 0
+    Category20: 0
+    Category21: 0
+    Category22: 0
+    Category23: 0
+    Category24: 0
+    Category25: 0
+    Category26: 0
+    Category27: 0
+    Category28: 0
+    Category29: 0
+    Category30: 0
+    Category31: 0

@@ -204,7 +204,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: MaxNavPathLength
-      value: 25
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Cursors.Array.size

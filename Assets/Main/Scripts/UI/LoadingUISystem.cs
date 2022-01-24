@@ -48,7 +48,7 @@ namespace RPG.UI
                 Current = To;
                 return;
             }
-            var step = math.smoothstep(Current, Duration, _timeElapsed);
+            // var step = math.smoothstep(Current, Duration, _timeElapsed);
             Current = math.lerp(From, To, _timeElapsed / Duration);
 
         }
