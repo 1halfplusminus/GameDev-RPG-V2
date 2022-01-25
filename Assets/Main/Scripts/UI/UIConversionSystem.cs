@@ -24,6 +24,7 @@ namespace RPG.UI
                 var handle = Addressables.LoadAssetsAsync<GameObject>(UI_ADDRESSABLE_LABEL, (r) =>
                 {
                 });
+
                 handle.WaitForCompletion();
                 foreach (var r in handle.Result)
                 {

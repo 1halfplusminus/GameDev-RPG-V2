@@ -494,31 +494,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1091516340708738377, guid: 207560554663778d6a70e9afd381783c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.944043
+      value: 3.41
       objectReference: {fileID: 0}
     - target: {fileID: 1091516340708738377, guid: 207560554663778d6a70e9afd381783c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 19.41079
+      value: 18.22
       objectReference: {fileID: 0}
     - target: {fileID: 1091516340708738377, guid: 207560554663778d6a70e9afd381783c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.998079
+      value: -13.02
       objectReference: {fileID: 0}
     - target: {fileID: 1091516340708738377, guid: 207560554663778d6a70e9afd381783c, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.595028
+      value: 0.841498
       objectReference: {fileID: 0}
     - target: {fileID: 1091516340708738377, guid: 207560554663778d6a70e9afd381783c, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.38202325
+      value: 0.5402602
       objectReference: {fileID: 0}
     - target: {fileID: 1091516340708738377, guid: 207560554663778d6a70e9afd381783c, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.595028
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1091516340708738377, guid: 207560554663778d6a70e9afd381783c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.38202325
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1091516340708738377, guid: 207560554663778d6a70e9afd381783c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -538,6 +538,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1091516340708738382, guid: 207560554663778d6a70e9afd381783c, type: 3}
       propertyPath: m_Antialiasing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1091516340708738382, guid: 207560554663778d6a70e9afd381783c, type: 3}
+      propertyPath: m_RenderPostProcessing
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5873053337185248464, guid: 207560554663778d6a70e9afd381783c, type: 3}

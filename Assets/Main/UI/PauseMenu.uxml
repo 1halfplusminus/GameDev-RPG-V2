@@ -5,8 +5,11 @@
             <ui:VisualElement name="Box" style="padding-left: 25px; padding-right: 25px; padding-top: 10px; padding-bottom: 10px; flex-grow: 1; flex-shrink: initial; flex-basis: auto; flex-direction: column; align-items: center; justify-content: center; min-width: 100%; cursor: url(&apos;project://database/Assets/Main/Assets%20Packs/Pixel%20Cursors/Cursors/basic_01.png?fileID=2800000&amp;guid=2e71a8202d3b4a3448ec85ced5a40265&amp;type=3#basic_01&apos;);">
                 <ui:VisualElement style="align-items: auto; justify-content: flex-start; flex-direction: column-reverse; flex-grow: 0; white-space: normal; padding-left: 50px; padding-right: 50px; padding-top: 50px; padding-bottom: 50px; background-color: rgba(0, 0, 0, 0.15);">
                     <ui:VisualElement name="Box" class="Interactive" style="flex-grow: 0.5;">
-                        <ui:VisualElement name="Row" class="Row" style="justify-content: center; flex-direction: row;">
+                        <ui:VisualElement name="Row" class="Row" style="justify-content: center; flex-direction: row; margin-bottom: 10px;">
                             <ui:Button text="Save" display-tooltip-when-elided="true" name="Save" class="my-button Interactive" style="align-items: auto; flex-grow: 0; flex-direction: row; flex-shrink: 1; justify-content: flex-start; -unity-text-align: upper-center; min-width: 20%;" />
+                        </ui:VisualElement>
+                        <ui:VisualElement name="Row" class="Row" style="justify-content: center; flex-direction: row;">
+                            <ui:Button text="Main Menu" display-tooltip-when-elided="true" name="MainMenu" class="my-button Interactive" style="align-items: auto; flex-grow: 0; flex-direction: row; flex-shrink: 1; justify-content: flex-start; -unity-text-align: upper-center; min-width: 20%;" />
                         </ui:VisualElement>
                         <ui:VisualElement name="Row" class="Row" style="flex-direction: row; justify-content: center; align-items: center; max-width: none; margin-top: 10px;">
                             <ui:Button text="Quit the game" display-tooltip-when-elided="true" name="Exit" class="my-button Interactive" style="flex-grow: 0; max-width: none; min-width: 20%; align-items: stretch; justify-content: center; flex-direction: column; flex-shrink: 1; margin-left: 3px; margin-right: 3px; margin-top: 3px; margin-bottom: 3px; -unity-text-align: upper-center;" />

@@ -8,6 +8,7 @@ using Unity.Rendering;
 using UnityEngine.VFX;
 using RPG.Control;
 using RPG.Stats;
+using Unity.Collections;
 
 namespace RPG.Combat
 {
@@ -117,12 +118,7 @@ namespace RPG.Combat
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
-            Entities.WithAny<RemoveEquipedInSocket>().ForEach((int entityInQueryIndex, Entity e) =>
-            {
-                cbp.RemoveComponent<Equipped>(entityInQueryIndex, e);
-                cbp.AddComponent<DestroySpawn>(entityInQueryIndex, e);
-                cbp.RemoveComponent<RemoveEquipedInSocket>(entityInQueryIndex, e);
-            }).ScheduleParallel();
+
             Entities
             .WithNone<Equipped>()
             .ForEach((int entityInQueryIndex, Entity e, in ShootProjectile shootProjectile, in WeaponAssetData weaponAssetData) =>
@@ -223,14 +219,18 @@ namespace RPG.Combat
             .ForEach((int entityInQueryIndex, Entity e, VisualEffect visualEffect) =>
             {
                 visualEffect.Stop();
-            }).WithoutBurst().Run();
+            })
+            .WithoutBurst()
+            .Run();
 
             Entities
             .WithAll<Picked, UnHide>()
             .ForEach((int entityInQueryIndex, Entity e, VisualEffect visualEffect) =>
             {
                 visualEffect.Play();
-            }).WithoutBurst().Run();
+            })
+            .WithoutBurst()
+            .Run();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
@@ -243,17 +243,38 @@ namespace RPG.Combat
         EntityCommandBufferSystem entityCommandBufferSystem;
 
         EntityQuery fighterEquipQuery;
-
+        EntityQuery weaponToDestroyQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-            RequireForUpdate(fighterEquipQuery);
+            weaponToDestroyQuery = GetEntityQuery(new EntityQueryDesc()
+            {
+                All = new ComponentType[] {
+                     typeof(UnEquiped)
+                },
+                None = new ComponentType[]{
+                    typeof(EquippedBy)
+                }
+            });
+            // RequireForUpdate(fighterEquipQuery);
         }
         protected override void OnUpdate()
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
+
+            // Entities
+            // .WithAll<UnEquiped, WeaponInstance>()
+            // .ForEach((int entityInQueryIndex, Entity e, DynamicBuffer<Child> childrens) =>
+            // {
+            //     cbp.RemoveComponent<Child>(entityInQueryIndex, e);
+            //     for (int i = 0; i < childrens.Length; i++)
+            //     {
+            //         cbp.DestroyEntity(entityInQueryIndex, childrens[i].Value);
+            //     }
+            // }).ScheduleParallel();
+
             Entities
             .WithStoreEntityQueryInField(ref fighterEquipQuery)
             .ForEach((int entityInQueryIndex, Entity e, in Equip picked, in EquipableSockets sockets) =>
@@ -262,17 +283,21 @@ namespace RPG.Combat
                 //TODO: Should only unequip left hand weapon if equip a weapon in right hand
                 for (int i = 0; i < listSockets.Length; i++)
                 {
-                    Debug.Log($"Remove weapons {listSockets[i].Index}");
                     // Remove currently equiped weapon
                     cbp.RemoveComponent<Equipped>(entityInQueryIndex, listSockets[i]);
                     if (HasComponent<WeaponInstance>(listSockets[i]))
                     {
                         var weaponInstance = GetComponent<WeaponInstance>(listSockets[i]);
-                        cbp.DestroyEntity(entityInQueryIndex, weaponInstance.Entity);
+                        if (weaponInstance.Entity != Entity.Null)
+                        {
+                            Debug.Log($"Remove weapons {weaponInstance.Entity.Index}");
+                            cbp.AddComponent<UnEquiped>(entityInQueryIndex, weaponInstance.Entity);
+                            cbp.RemoveComponent<EquippedBy>(entityInQueryIndex, weaponInstance.Entity);
+                            // cbp.DestroyEntity(entityInQueryIndex, weaponInstance.Entity);
+                        }
+                        cbp.RemoveComponent<WeaponInstance>(entityInQueryIndex, listSockets[i]);
                     }
-                    // cbp.AddComponent<DestroySpawn>(entityInQueryIndex, listSockets[i]);
                     var buffer = cbp.AddBuffer<StatsModifier>(entityInQueryIndex, listSockets[i]);
-                    buffer.Clear();
                 }
                 var socket = sockets.GetSocketForType(picked.SocketType);
                 Debug.Log($"Player {e.Index} equip pickup Weapon: ${picked.Equipable.Index} in socket: {socket.Index}");
@@ -280,8 +305,28 @@ namespace RPG.Combat
 
                 cbp.RemoveComponent<Equip>(entityInQueryIndex, e);
                 cbp.RemoveComponent<ShootProjectile>(entityInQueryIndex, e);
-            }).ScheduleParallel();
 
+            }).ScheduleParallel();
+            if (weaponToDestroyQuery.CalculateEntityCount() > 0)
+            {
+                using var entitiesList = new NativeList<Entity>(Allocator.Temp);
+                using var entityToDestroy = weaponToDestroyQuery.ToEntityArray(Unity.Collections.Allocator.Temp);
+                for (int i = 0; i < entityToDestroy.Length; i++)
+                {
+                    entitiesList.Add(entityToDestroy[i]);
+                    if (EntityManager.HasComponent<Child>(entityToDestroy[i]))
+                    {
+                        var childrens = EntityManager.GetBuffer<Child>(entityToDestroy[i]);
+                        foreach (var child in childrens)
+                        {
+                            entitiesList.Add(child.Value);
+                        }
+
+                    }
+                }
+                using var toDestroy = entitiesList.AsArray();
+                EntityManager.DestroyEntity(toDestroy);
+            }
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 

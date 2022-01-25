@@ -3,15 +3,10 @@ using Unity.Entities;
 using UnityEngine.UIElements;
 
 
-[assembly: RegisterGenericComponentType(typeof(TemplateContainer.UxmlFactory))]
 
 namespace RPG.Hybrid
 {
 
-    public struct VisualElementContainer
-    {
-
-    }
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
     public class UIDocumentDeclareReferenceConversionSystem : GameObjectConversionSystem
     {
@@ -33,8 +28,6 @@ namespace RPG.Hybrid
             Entities.ForEach((UIDocument uiDocument) =>
             {
                 AddHybridComponent(uiDocument);
-                var entity = TryGetPrimaryEntity(uiDocument);
-
             });
         }
     }

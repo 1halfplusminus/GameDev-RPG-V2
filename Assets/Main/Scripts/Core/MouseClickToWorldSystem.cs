@@ -11,14 +11,12 @@ namespace RPG.Core
     {
         public float3 WorldPosition;
         public int Frame;
-
         public Entity Hitted;
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
     [UpdateAfter(typeof(RaycastSystem))]
     public class ClickOnTerrainSystem : SystemBase
     {
-
 
         EntityCommandBufferSystem commandBufferSystem;
 
@@ -39,7 +37,7 @@ namespace RPG.Core
                 {
                     if (HasComponent<Navigable>(rayHit.Hitted))
                     {
-                        cbp.AddComponent(entityInQueryIndex, e, new WorldClick() { WorldPosition = rayHit.Hit.Position, Frame = 0, Hitted = rayHit.Hitted });
+                        cbp.AddComponent(entityInQueryIndex, e, new WorldClick() { WorldPosition = rayHit.Position, Frame = 0, Hitted = rayHit.Hitted });
                         return;
                     }
 

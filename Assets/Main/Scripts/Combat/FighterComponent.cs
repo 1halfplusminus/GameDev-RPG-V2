@@ -107,6 +107,10 @@ namespace RPG.Combat
     {
         public Entity Entity;
     }
+    public struct UnEquiped : IComponentData
+    {
+
+    }
     public struct Equipped : IComponentData
     {
         public BlobAssetReference<WeaponBlobAsset> Equipable;
@@ -128,6 +132,7 @@ namespace RPG.Combat
 
         public SocketType SocketType;
     }
+
     public struct RemoveEquipedInSocket : IComponentData
     {
 

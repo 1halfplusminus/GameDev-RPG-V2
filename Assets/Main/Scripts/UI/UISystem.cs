@@ -221,15 +221,20 @@ namespace RPG.UI
         EntityQuery instantiatingPauseUIQuery;
         EntityQuery pauseUIQuery;
 
+        MainGameUISystem mainGameUISystem;
+
+        EntityCommandBufferSystem entityCommandBufferSystem;
 
         protected override void OnCreate()
         {
             base.OnCreate();
+            mainGameUISystem = World.GetOrCreateSystem<MainGameUISystem>();
             inputSystem = World.GetOrCreateSystem<InputSystem>();
             saveSystem = World.GetOrCreateSystem<SavingWrapperSystem>();
             pauseSystem = World.GetOrCreateSystem<PauseSystem>();
             instantiatingPauseUIQuery = GetEntityQuery(ReadOnly<PauseUI>(), ReadOnly<Prefab>());
             pauseUIQuery = GetEntityQuery(ReadOnly<PauseUI>());
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
             RequireForUpdate(GetEntityQuery(new EntityQueryDesc()
             {
                 Any = new ComponentType[] {
@@ -237,12 +242,24 @@ namespace RPG.UI
                 }
             }));
         }
-        private void InitGUI(VisualElement ui)
+        private void InitGUI(Entity e, VisualElement ui)
         {
+            var mainMenu = ui.Q<Button>("MainMenu");
             ui.Q<Button>("Save").clicked += Save;
             ui.Q<Button>("Exit").clicked += QuitGame;
+            ui.Q<Button>("MainMenu").clicked += OnMainMenuReload(e, mainMenu);
         }
+        private Action OnMainMenuReload(Entity e, Button button)
+        {
+            return () =>
+            {
+                button.SetEnabled(false);
+                mainGameUISystem.ReloadMainMenu(e);
+                SetPause(false);
+                button.SetEnabled(true);
+            };
 
+        }
         private void Save()
         {
             Debug.Log("Saving game");
@@ -250,6 +267,7 @@ namespace RPG.UI
         }
         protected override void OnUpdate()
         {
+            var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var input = inputSystem.Input;
             if (input.UI.TogglePauseMenu.WasPressedThisFrame())
             {
@@ -267,7 +285,17 @@ namespace RPG.UI
                 }
                 Debug.Log($"Toggle Pause Menu Pressed");
             }
-            Entities.WithAll<PauseUI, UIReady>().ForEach((UIDocument document) => InitGUI(document.rootVisualElement)).WithoutBurst().Run();
+            Entities
+            .WithAll<PauseUI, UIReady>()
+            .WithNone<Initialized>()
+            .ForEach((Entity e, UIDocument document) =>
+            {
+                InitGUI(e, document.rootVisualElement);
+                cb.AddComponent<Initialized>(e);
+            })
+            .WithoutBurst()
+            .Run();
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 
         private void SetPause(bool paused)

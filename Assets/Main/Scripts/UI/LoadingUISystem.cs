@@ -5,6 +5,8 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UIElements;
 
 namespace RPG.UI
@@ -58,38 +60,60 @@ namespace RPG.UI
     public class LoadingUISystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
+        EntityQuery anySceneLoadingQuery;
+        EntityQuery loadingUIPrefabQuery;
+
+        EntityQuery loadingUIQuery;
+
+        EntityQuery fadedLoadingUIQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetExistingSystem<EndSimulationEntityCommandBufferSystem>();
-
+            anySceneLoadingQuery = GetEntityQuery(ComponentType.ReadOnly<TriggerSceneLoad>());
+            loadingUIPrefabQuery = GetEntityQuery(ComponentType.ReadWrite<LoadingUI>(), ComponentType.ReadWrite<Prefab>());
+            loadingUIQuery = GetEntityQuery(ComponentType.ReadWrite<LoadingUI>(), ComponentType.ReadWrite<UIDocument>());
+            fadedLoadingUIQuery = GetEntityQuery(new EntityQueryDesc()
+            {
+                None = new ComponentType[]{
+                   typeof(Fade),typeof(IsLoading)
+                },
+                All = new ComponentType[]{
+                   typeof(LoadingUI)
+                }
+            });
         }
+
         protected override void OnUpdate()
         {
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
-            var commandBufferP = commandBuffer.AsParallelWriter();
-
-            Entities
-            .WithAll<LoadingUI>()
-            .WithNone<IsLoading>()
-            .ForEach((Entity e, UIDocument uiDocument, in AnySceneLoading anySceneLoading) =>
+            if (anySceneLoadingQuery.CalculateEntityCount() > 0 && loadingUIPrefabQuery.CalculateEntityCount() == 1 && loadingUIQuery.CalculateEntityCount() == 0)
             {
-                commandBuffer.AddComponent(e, new Show() { });
-                commandBuffer.AddComponent(e, new DeltaTime { });
-                commandBuffer.AddComponent(e, new Fade()
+                Debug.Log("Instanciate LoadingUI");
+                var instance = EntityManager.Instantiate(loadingUIPrefabQuery.GetSingletonEntity());
+                EntityManager.RemoveComponent<SceneTag>(instance);
+                EntityManager.AddComponent<AnySceneLoading>(instance);
+                EntityManager.AddComponentData(instance, new DeltaTime { });
+                EntityManager.AddComponentData(instance, new Fade()
                 {
                     To = 100f,
                     From = 90f,
                     Duration = 0.1f
                 });
-                commandBuffer.AddComponent<IsLoading>(e);
-                foreach (var trigger in anySceneLoading.Triggers)
-                {
-                    commandBuffer.AddComponent<DisabledControl>(trigger);
-                }
-            })
-            .WithoutBurst()
-            .Run();
+                EntityManager.AddComponent<IsLoading>(instance);
+                EntityManager.AddComponent<AnySceneLoading>(instance);
+            }
+            // Entities
+            // .WithAll<LoadingUI, AnySceneLoading, UIReady>()
+            // .WithNone<IsLoading>()
+            // .ForEach((Entity e, UIDocument uiDocument) =>
+            // {
+            //     Debug.Log("Show LoadingUI");
+            //     // commandBuffer.AddComponent(e, new Show() { });
+
+            // })
+            // .WithoutBurst()
+            // .Run();
 
             Entities
             .WithAny<IsLoading>()
@@ -105,34 +129,19 @@ namespace RPG.UI
                     From = 100f,
                     Duration = 1f
                 });
-                commandBuffer.AddComponent(e, new EnableControl()
-                {
-                    Entities = anySceneLoading.Triggers
-                });
-
             })
             .WithoutBurst()
             .Run();
 
-            // TODO: move in a system in controls
             Entities
-            .WithNone<Fade>()
-            .ForEach((int entityInQueryIndex, Entity e, in EnableControl enableControl) =>
+            .WithNone<Fade, IsLoading, Hide>()
+            .WithAll<LoadingUI, UIReady>()
+            .ForEach((Entity e) =>
             {
-                foreach (var entity in enableControl.Entities)
-                {
-                    commandBufferP.RemoveComponent<DisabledControl>(entityInQueryIndex, entity);
-                }
-                commandBufferP.RemoveComponent<EnableControl>(entityInQueryIndex, e);
+                Debug.Log("Destroy Loading UI LoadingUI");
+                EntityManager.DestroyEntity(e);
             })
-            .ScheduleParallel();
-
-            Entities
-            .WithNone<Fade>()
-            .ForEach((UIDocument uiDocument, in EnableControl enableControl) =>
-            {
-                uiDocument.rootVisualElement.style.visibility = Visibility.Hidden;
-            })
+            .WithStructuralChanges()
             .WithoutBurst()
             .Run();
 
@@ -202,7 +211,6 @@ namespace RPG.UI
             .WithAll<Show>()
             .ForEach((Entity e, UIDocument uiDocument) =>
             {
-
                 var visualElement = uiDocument.rootVisualElement.Q<VisualElement>();
                 visualElement.visible = true;
                 visualElement.SetEnabled(true);

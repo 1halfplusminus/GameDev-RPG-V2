@@ -203,12 +203,44 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: RaycastRadius
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: MaxNavPathLength
       value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Cursors.Array.size
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: BelongTo.Category00
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: BelongTo.Category02
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: BelongTo.Category03
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: CollidWith.Category02
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: CollidWith.Category03
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: CollidWith.Category04
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: CollidWith.Category08
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8635965599112968116, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: Cursors.Array.data[0].Type

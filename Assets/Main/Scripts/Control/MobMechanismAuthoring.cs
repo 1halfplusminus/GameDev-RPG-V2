@@ -1,7 +1,6 @@
 
 using System;
 using RPG.Combat;
-using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -121,8 +120,9 @@ namespace RPG.Control
                            target = hitter.Value;
                        }
                        var linksFound = new NativeList<Entity>(Allocator.Temp);
-                       var hits = new NativeList<ColliderCastHit>(Allocator.Temp);
-                       collisionWorld.SphereCastAll(localToWorld.Position, mobMechanism.ShoutRadius, math.up(), 0, ref hits, mobMechanism.CollisionFilter);
+                       var hits = new NativeList<DistanceHit>(Allocator.Temp);
+                       var pointDistanceInput = new PointDistanceInput { Filter = mobMechanism.CollisionFilter, MaxDistance = mobMechanism.ShoutRadius, Position = localToWorld.Position };
+                       collisionWorld.CalculateDistance(pointDistanceInput, ref hits);
                        for (int i = 0; i < hits.Length; i++)
                        {
                            var hittedEntity = physicsWorld.Bodies[hits[i].RigidBodyIndex].Entity;

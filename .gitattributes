@@ -4,3 +4,4 @@
 *.prefab eol=crlf
 *.meta binary
 *.asset binary
+*.scene binary

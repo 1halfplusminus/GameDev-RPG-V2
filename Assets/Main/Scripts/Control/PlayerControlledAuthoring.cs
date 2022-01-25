@@ -3,6 +3,7 @@ using RPG.Core;
 using System;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Physics.Authoring;
 
 namespace RPG.Control
 {
@@ -18,12 +19,12 @@ namespace RPG.Control
             public CursorType Type;
         }
         public float RaycastDistance;
-
         public InGameCursorAuthoring[] Cursors;
-
-
         public float MaxNavPathLength;
         public float MaxNavMeshProjectionDistance;
+        public float RaycastRadius;
+        public PhysicsCategoryTags BelongTo;
+        public PhysicsCategoryTags CollidWith;
 
     }
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
@@ -49,7 +50,18 @@ namespace RPG.Control
             {
                 var entity = GetPrimaryEntity(playerControlled);
                 DstEntityManager.AddComponent<PlayerControlled>(entity);
-                DstEntityManager.AddComponentData(entity, new Raycast { Distance = playerControlled.RaycastDistance, MaxNavMeshProjectionDistance = playerControlled.MaxNavMeshProjectionDistance, MaxNavPathLength = playerControlled.MaxNavPathLength });
+                DstEntityManager.AddComponentData(entity, new Raycast
+                {
+                    Radius = playerControlled.RaycastRadius,
+                    Distance = playerControlled.RaycastDistance,
+                    MaxNavMeshProjectionDistance = playerControlled.MaxNavMeshProjectionDistance,
+                    MaxNavPathLength = playerControlled.MaxNavPathLength,
+                    CollisionFilter = new Unity.Physics.CollisionFilter
+                    {
+                        BelongsTo = playerControlled.BelongTo.Value,
+                        CollidesWith = playerControlled.CollidWith.Value
+                    }
+                });
                 DstEntityManager.AddComponent<MouseClick>(entity);
                 foreach (var cursor in playerControlled.Cursors)
                 {
@@ -59,7 +71,6 @@ namespace RPG.Control
                     DstEntityManager.AddComponentObject(iconEntity, cursor.Texture);
                 }
                 DstEntityManager.AddComponentData(entity, new VisibleCursor { Cursor = CursorType.Movement });
-
             });
         }
     }

@@ -10,11 +10,7 @@ public class SkinnedMeshRendererConversionSystem : GameObjectConversionSystem
 
             var entity = GetPrimaryEntity(anim);
             AddHybridComponent(anim);
-            /* foreach (var item in anim.GetComponentsInChildren<Transform>())
-            {
-                DeclareDependency(item, anim);
-                AddHybridComponent(item);
-            } */
+
         });
     }
 }
