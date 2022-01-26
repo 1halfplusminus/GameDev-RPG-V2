@@ -11,6 +11,9 @@
             <ui:VisualElement name="Box" style="flex-grow: 0.5; -unity-text-align: upper-left; flex-direction: column; flex-wrap: wrap-reverse;">
                 <ui:VisualElement style="flex-direction: column-reverse; left: -17%; top: -70px;">
                     <ui:VisualElement name="Row" class="Row" style="flex-direction: row; justify-content: center; align-items: center; max-width: none; margin-top: 20px;">
+                        <ui:Button text="Quit" display-tooltip-when-elided="true" name="Exit" class="my-button Button" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="Row" class="Row" style="flex-direction: row; justify-content: center; align-items: center; max-width: none; margin-top: 20px;">
                         <ui:Button text="Load" display-tooltip-when-elided="true" name="Load" class="my-button Button" />
                     </ui:VisualElement>
                     <ui:VisualElement name="Row" class="Row" style="justify-content: center; flex-direction: row; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; overflow: hidden;">

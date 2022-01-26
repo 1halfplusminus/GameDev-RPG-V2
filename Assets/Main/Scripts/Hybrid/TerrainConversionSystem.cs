@@ -14,9 +14,9 @@ public class TerrainConversionSystem : GameObjectConversionSystem
         {
             var terrainCollider = terrain.GetComponent<UnityEngine.TerrainCollider>();
             AddHybridComponent(terrain);
-            AddHybridComponent(terrainCollider);
+            // AddHybridComponent(terrainCollider);
             var entity = GetPrimaryEntity(terrain);
-            DstEntityManager.AddComponentObject(entity, terrainCollider);
+            // DstEntityManager.AddComponentObject(entity, terrainCollider);
 
             if (terrainCollider == null || terrainCollider.terrainData == null)
                 return;
@@ -26,7 +26,7 @@ public class TerrainConversionSystem : GameObjectConversionSystem
             var delta = data.size.x / (size.x - 1);
             var scale = new float3(delta, 1f, delta);
 
-            var heights = new NativeArray<float>(size.x * size.y * UnsafeUtility.SizeOf<float>(), Allocator.Temp);
+            var heights = new NativeArray<float>(size.x * size.y * UnsafeUtility.SizeOf<float>(), Allocator.Persistent);
 
             var index = 0;
             for (var i = 0; i < size.x; ++i)
@@ -46,8 +46,9 @@ public class TerrainConversionSystem : GameObjectConversionSystem
             {
                 Value = colliders
             });
-            DeclareAssetDependency(terrain.gameObject, terrain.terrainData);
-            DeclareAssetDependency(terrain.gameObject, terrainCollider);
+
+            // DeclareAssetDependency(terrain.gameObject, terrain.terrainData);
+            // DeclareAssetDependency(terrain.gameObject, terrainCollider);
         });
     }
 }

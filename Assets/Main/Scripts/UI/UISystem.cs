@@ -406,9 +406,20 @@ namespace RPG.UI
             var uiDocumentEntity = uiDocumentQuery.GetSingletonEntity();
             var uiDocument = EntityManager.GetComponentObject<UIDocument>(uiDocumentEntity);
             var visualElement = uiDocument.rootVisualElement;
+            InitExitButton(uiDocumentEntity, visualElement);
             InitNewGameButton(uiDocumentEntity, visualElement);
             InitLoadButton(uiDocumentEntity, visualElement);
             EntityManager.AddComponent<Initialized>(uiDocumentEntity);
+        }
+        private void InitExitButton(Entity uiDocumentEntity, VisualElement visualElement)
+        {
+            var button = visualElement
+            .Q<Button>("Exit");
+            button
+            .clicked += () =>
+            {
+                QuitGame();
+            };
         }
 
         private void InitLoadButton(Entity uiDocumentEntity, VisualElement visualElement)
