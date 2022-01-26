@@ -12,6 +12,7 @@ namespace RPG.Core
         public float3 WorldPosition;
         public int Frame;
         public Entity Hitted;
+
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
     [UpdateAfter(typeof(RaycastSystem))]

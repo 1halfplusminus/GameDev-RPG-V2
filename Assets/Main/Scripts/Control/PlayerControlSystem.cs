@@ -103,29 +103,27 @@ namespace RPG.Control
 
             Entities
             .WithNone<InteractWithUI>()
-            // .WithChangeFilter<WorldClick>()
+            .WithChangeFilter<MouseClick>()
             .WithAll<PlayerControlled>()
             .ForEach((Entity e, ref MoveTo moveTo, ref VisibleCursor cursor, ref WorldClick worldClick, in Raycast raycast, in LocalToWorld localToWorld) =>
             {
-                if (worldClick.Frame <= 1)
+                var havePathToTarget = false;
+                NavMesh.SamplePosition(worldClick.WorldPosition, out var hit, raycast.MaxNavMeshProjectionDistance, NavMesh.AllAreas);
+                if (hit.hit)
                 {
-                    var havePathToTarget = false;
-                    NavMesh.SamplePosition(worldClick.WorldPosition, out var hit, raycast.MaxNavMeshProjectionDistance, NavMesh.AllAreas);
-                    if (hit.hit)
+                    var nashMeshPath = new NavMeshPath();
+                    NavMesh.CalculatePath(localToWorld.Position, hit.position, NavMesh.AllAreas, nashMeshPath);
+                    if (nashMeshPath.status == NavMeshPathStatus.PathComplete && CalculeDistance(nashMeshPath) <= raycast.MaxNavPathLength)
                     {
-                        var nashMeshPath = new NavMeshPath();
-                        NavMesh.CalculatePath(localToWorld.Position, hit.position, NavMesh.AllAreas, nashMeshPath);
-                        if (nashMeshPath.status == NavMeshPathStatus.PathComplete && CalculeDistance(nashMeshPath) <= raycast.MaxNavPathLength)
-                        {
-                            havePathToTarget = true;
-                            worldClick.WorldPosition = hit.position;
-                            EntityManager.AddComponent<HasPathToTarget>(e);
-                        }
+                        havePathToTarget = true;
+                        worldClick.WorldPosition = hit.position;
+                        EntityManager.AddComponent<HasPathToTarget>(e);
+
                     }
-                    if (!havePathToTarget)
-                    {
-                        EntityManager.RemoveComponent<HasPathToTarget>(e);
-                    }
+                }
+                if (!havePathToTarget)
+                {
+                    EntityManager.RemoveComponent<HasPathToTarget>(e);
                 }
             })
             .WithStructuralChanges()
@@ -133,7 +131,7 @@ namespace RPG.Control
             .Run();
 
             Entities
-           .WithNone<InteractWithUI>()
+           .WithNone<InteractWithUI, DisabledControl>()
            .WithAll<PlayerControlled, HasPathToTarget>()
            .ForEach((Entity e, ref MoveTo moveTo, ref VisibleCursor cursor, ref WorldClick worldClick, in Raycast raycast, in LocalToWorld localToWorld, in MouseClick mouseClick) =>
            {
@@ -162,15 +160,11 @@ namespace RPG.Control
             Entities
             .WithNone<InteractWithUI>()
             .WithAll<PlayerControlled>()
-            // .WithChangeFilter<MouseClick>()
+            .WithChangeFilter<MouseClick>()
             .ForEach((ref Raycast cast, in MouseClick mouseClick) =>
             {
-                if (mouseClick.Frame <= 1)
-                {
-                    cast.Completed = false;
-                    cast.Ray = mouseClick.Ray;
-                }
-
+                cast.Completed = false;
+                cast.Ray = mouseClick.Ray;
             }).ScheduleParallel();
         }
     }
@@ -190,8 +184,9 @@ namespace RPG.Control
         {
 
             Entities
-            .WithNone<DisabledControl, InteractWithUI, HasPathToTarget>()
-            .WithAny<PlayerControlled>()
+            .WithAny<DisabledControl, InteractWithUI, WorldClick>()
+            .WithNone<HasPathToTarget>()
+            .WithAll<PlayerControlled>()
             .ForEach((int entityInQueryIndex, Entity e, ref VisibleCursor visibleCursor, in Fighter f) =>
             {
                 if (f.TargetFoundThisFrame == 0)
