@@ -128,7 +128,6 @@ namespace RPG.Control
                            var hittedEntity = physicsWorld.Bodies[hits[i].RigidBodyIndex].Entity;
                            if (HasComponent<MobMechanism>(hittedEntity))
                            {
-                               Debug.Log($"hitted by raycast {hittedEntity.Index}");
                                linksFound.Add(hittedEntity);
                            }
                        }
