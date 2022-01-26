@@ -87,7 +87,8 @@ namespace RPG.UI
         protected override void OnUpdate()
         {
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
-            if (anySceneLoadingQuery.CalculateEntityCount() > 0 && loadingUIPrefabQuery.CalculateEntityCount() == 1 && loadingUIQuery.CalculateEntityCount() == 0)
+            var sceneLoadingCount = anySceneLoadingQuery.CalculateEntityCount();
+            if (sceneLoadingCount > 0 && loadingUIPrefabQuery.CalculateEntityCount() == 1 && loadingUIQuery.CalculateEntityCount() == 0)
             {
                 Debug.Log("Instanciate LoadingUI");
                 var instance = EntityManager.Instantiate(loadingUIPrefabQuery.GetSingletonEntity());
@@ -103,35 +104,28 @@ namespace RPG.UI
                 EntityManager.AddComponent<IsLoading>(instance);
                 EntityManager.AddComponent<AnySceneLoading>(instance);
             }
-            // Entities
-            // .WithAll<LoadingUI, AnySceneLoading, UIReady>()
-            // .WithNone<IsLoading>()
-            // .ForEach((Entity e, UIDocument uiDocument) =>
-            // {
-            //     Debug.Log("Show LoadingUI");
-            //     // commandBuffer.AddComponent(e, new Show() { });
 
-            // })
-            // .WithoutBurst()
-            // .Run();
-
-            Entities
-            .WithAny<IsLoading>()
-            .WithAll<LoadingUI>()
-            .ForEach((Entity e, UIDocument uiDocument, in AnySceneFinishLoading anySceneLoading) =>
+            if (sceneLoadingCount == 0)
             {
-                Debug.Log("Hide UI when Loading finish");
-                commandBuffer.RemoveComponent<IsLoading>(e);
-                commandBuffer.AddComponent(e, new DeltaTime { });
-                commandBuffer.AddComponent(e, new Fade()
+                Entities
+                .WithAny<IsLoading>()
+                .WithAll<LoadingUI>()
+                .ForEach((Entity e, UIDocument uiDocument, in AnySceneFinishLoading anySceneLoading) =>
                 {
-                    To = 0f,
-                    From = 100f,
-                    Duration = 1f
-                });
-            })
-            .WithoutBurst()
-            .Run();
+                    Debug.Log("Hide UI when Loading finish");
+                    commandBuffer.RemoveComponent<IsLoading>(e);
+                    commandBuffer.AddComponent(e, new DeltaTime { });
+                    commandBuffer.AddComponent(e, new Fade()
+                    {
+                        To = 0f,
+                        From = 100f,
+                        Duration = 1f
+                    });
+                })
+                .WithoutBurst()
+                .Run();
+            }
+
 
             Entities
             .WithNone<Fade, IsLoading, Hide>()
