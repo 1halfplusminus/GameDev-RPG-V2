@@ -89,7 +89,7 @@ namespace RPG.Gameplay
             Entities
             .ForEach((Entity e, in CollidWithPlayer collidWithPlayer, in Portal portal, in SceneSection currentScene, in LinkPortal linkPortal) =>
             {
-                commandBuffer.AddComponent<Disabled>(e);
+                commandBuffer.AddComponent<DisabledControl>(collidWithPlayer.Entity);
                 commandBuffer.AddComponent(collidWithPlayer.Entity, new TriggerSceneLoad() { SceneGUID = linkPortal.SceneGUID });
                 commandBuffer.AddComponent(collidWithPlayer.Entity, new TriggerUnloadScene() { SceneGUID = currentScene.SceneGUID });
                 commandBuffer.AddComponent(collidWithPlayer.Entity, new WarpToPortal { PortalIndex = linkPortal.Index });
@@ -126,7 +126,7 @@ namespace RPG.Gameplay
                         commandBufferP.AddComponent(entityInQueryIndex, e, new Translation() { Value = destination.Position });
                         commandBufferP.AddComponent(entityInQueryIndex, e, new WarpTo() { Destination = destination.Position });
                         commandBufferP.AddComponent(entityInQueryIndex, e, new Rotation() { Value = quaternion.LookRotation(destination.Forward, destination.Up) });
-                        commandBufferP.RemoveComponent<Disabled>(entityInQueryIndex, e);
+                        commandBufferP.RemoveComponent<DisabledControl>(entityInQueryIndex, e);
                         commandBufferP.RemoveComponent<WarpToPortal>(entityInQueryIndex, e);
                     }
                 }).ScheduleParallel();

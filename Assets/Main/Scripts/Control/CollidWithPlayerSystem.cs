@@ -31,7 +31,7 @@ namespace RPG.Control
                     var otherEntity = triggerEvent.GetOtherEntity(e);
                     if (HasComponent<PlayerControlled>(otherEntity) && HasComponent<DisabledControl>(otherEntity) == false)
                     {
-                        Debug.Log($" {e.Index} Collid with player {otherEntity.Index}");
+                        // Debug.Log($" {e.Index} Collid with player {otherEntity.Index}");
                         commandBufferP.AddComponent(entityInQueryIndex, e, new CollidWithPlayer { Entity = otherEntity });
                         break;
                     }

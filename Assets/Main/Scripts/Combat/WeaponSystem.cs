@@ -188,7 +188,7 @@ namespace RPG.Combat
             .WithChangeFilter<CollidWithPlayer>()
             .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer collidWithPlayer, in PickableWeapon picked) =>
             {
-                Debug.Log($" {e.Index} collid with player {collidWithPlayer.Entity.Index} and pickup Weapon: ${picked.Entity.Index}");
+                // Debug.Log($" {e.Index} collid with player {collidWithPlayer.Entity.Index} and pickup Weapon: ${picked.Entity.Index}");
                 cbp.AddComponent(entityInQueryIndex, collidWithPlayer.Entity, new Equip { Equipable = picked.Entity, SocketType = picked.SocketType });
                 cbp.AddComponent<Picked>(entityInQueryIndex, e);
                 cbp.AddComponent(entityInQueryIndex, e, new HideForSecond { Time = 5f });
@@ -257,76 +257,67 @@ namespace RPG.Combat
                     typeof(EquippedBy)
                 }
             });
-            // RequireForUpdate(fighterEquipQuery);
+
         }
         protected override void OnUpdate()
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
 
-            // Entities
-            // .WithAll<UnEquiped, WeaponInstance>()
-            // .ForEach((int entityInQueryIndex, Entity e, DynamicBuffer<Child> childrens) =>
-            // {
-            //     cbp.RemoveComponent<Child>(entityInQueryIndex, e);
-            //     for (int i = 0; i < childrens.Length; i++)
-            //     {
-            //         cbp.DestroyEntity(entityInQueryIndex, childrens[i].Value);
-            //     }
-            // }).ScheduleParallel();
+
+            Entities
+            .WithAll<UnEquiped>().ForEach((int entityInQueryIndex, Entity e) =>
+            {
+                cbp.RemoveComponent<UnEquiped>(entityInQueryIndex, e);
+                cbp.RemoveComponent<Equipped>(entityInQueryIndex, e);
+                if (HasComponent<WeaponInstance>(e))
+                {
+                    var weaponInstance = GetComponent<WeaponInstance>(e);
+                    if (weaponInstance.Entity != Entity.Null)
+                    {
+                        Debug.Log($"Remove weapons {weaponInstance.Entity.Index}");
+                        cbp.DestroyEntity(entityInQueryIndex, weaponInstance.Entity);
+                    }
+                    cbp.RemoveComponent<WeaponInstance>(entityInQueryIndex, e);
+                }
+                var buffer = cbp.AddBuffer<StatsModifier>(entityInQueryIndex, e);
+            }).ScheduleParallel();
+
+            Entities
+            .WithAll<UnEquiped>()
+            .ForEach((int entityInQueryIndex, Entity e, DynamicBuffer<Child> childrens) =>
+            {
+                cbp.RemoveComponent<Child>(entityInQueryIndex, e);
+                for (int i = 0; i < childrens.Length; i++)
+                {
+                    cbp.DestroyEntity(entityInQueryIndex, childrens[i].Value);
+                }
+            }).ScheduleParallel();
 
             Entities
             .WithStoreEntityQueryInField(ref fighterEquipQuery)
             .ForEach((int entityInQueryIndex, Entity e, in Equip picked, in EquipableSockets sockets) =>
             {
                 var listSockets = sockets.ToList();
+                var unequipWeapon = false;
                 //TODO: Should only unequip left hand weapon if equip a weapon in right hand
                 for (int i = 0; i < listSockets.Length; i++)
                 {
-                    // Remove currently equiped weapon
-                    cbp.RemoveComponent<Equipped>(entityInQueryIndex, listSockets[i]);
-                    if (HasComponent<WeaponInstance>(listSockets[i]))
+                    if (HasComponent<Equipped>(listSockets[i]))
                     {
-                        var weaponInstance = GetComponent<WeaponInstance>(listSockets[i]);
-                        if (weaponInstance.Entity != Entity.Null)
-                        {
-                            Debug.Log($"Remove weapons {weaponInstance.Entity.Index}");
-                            cbp.AddComponent<UnEquiped>(entityInQueryIndex, weaponInstance.Entity);
-                            cbp.RemoveComponent<EquippedBy>(entityInQueryIndex, weaponInstance.Entity);
-                            // cbp.DestroyEntity(entityInQueryIndex, weaponInstance.Entity);
-                        }
-                        cbp.RemoveComponent<WeaponInstance>(entityInQueryIndex, listSockets[i]);
+                        cbp.AddComponent<UnEquiped>(entityInQueryIndex, listSockets[i]);
                     }
-                    var buffer = cbp.AddBuffer<StatsModifier>(entityInQueryIndex, listSockets[i]);
                 }
-                var socket = sockets.GetSocketForType(picked.SocketType);
-                Debug.Log($"Player {e.Index} equip pickup Weapon: ${picked.Equipable.Index} in socket: {socket.Index}");
-                cbp.AddComponent(entityInQueryIndex, socket, new EquipInSocket { Socket = socket, Weapon = picked.Equipable });
-
-                cbp.RemoveComponent<Equip>(entityInQueryIndex, e);
-                cbp.RemoveComponent<ShootProjectile>(entityInQueryIndex, e);
-
-            }).ScheduleParallel();
-            if (weaponToDestroyQuery.CalculateEntityCount() > 0)
-            {
-                using var entitiesList = new NativeList<Entity>(Allocator.Temp);
-                using var entityToDestroy = weaponToDestroyQuery.ToEntityArray(Unity.Collections.Allocator.Temp);
-                for (int i = 0; i < entityToDestroy.Length; i++)
+                if (!unequipWeapon)
                 {
-                    entitiesList.Add(entityToDestroy[i]);
-                    if (EntityManager.HasComponent<Child>(entityToDestroy[i]))
-                    {
-                        var childrens = EntityManager.GetBuffer<Child>(entityToDestroy[i]);
-                        foreach (var child in childrens)
-                        {
-                            entitiesList.Add(child.Value);
-                        }
-
-                    }
+                    var socket = sockets.GetSocketForType(picked.SocketType);
+                    Debug.Log($"Player {e.Index} equip pickup Weapon: ${picked.Equipable.Index} in socket: {socket.Index}");
+                    cbp.AddComponent(entityInQueryIndex, socket, new EquipInSocket { Socket = socket, Weapon = picked.Equipable });
+                    cbp.RemoveComponent<Equip>(entityInQueryIndex, e);
+                    cbp.RemoveComponent<ShootProjectile>(entityInQueryIndex, e);
                 }
-                using var toDestroy = entitiesList.AsArray();
-                EntityManager.DestroyEntity(toDestroy);
-            }
+            }).ScheduleParallel();
+
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 

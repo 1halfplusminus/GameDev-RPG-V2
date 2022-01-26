@@ -12,6 +12,7 @@ namespace RPG.Core
         {
             Entities.ForEach((GameManager gm) =>
             {
+
                 DeclareReferencedAsset(gm.Settings);
             });
 
@@ -21,6 +22,7 @@ namespace RPG.Core
     {
         protected override void OnUpdate()
         {
+
             Entities.ForEach((GameSettingsAsset setting) =>
             {
                 var entity = GetPrimaryEntity(setting);

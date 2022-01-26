@@ -46,8 +46,7 @@ namespace RPG.Combat
             var conversionSetting = GameObjectConversionSettings.FromWorld(em.World, convertToEntitySystem.BlobAssetStore);
             foreach (var socket in equipableSockets.ToList())
             {
-                em.RemoveComponent<Equipped>(socket);
-                em.AddComponent<DestroySpawn>(socket);
+                em.AddComponent<UnEquiped>(socket);
             }
             if (state is List<string> weapons)
             {

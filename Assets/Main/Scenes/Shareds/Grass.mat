@@ -89,7 +89,7 @@ Material:
     - EFFECT_BILLBOARD: 1
     - EFFECT_EXTRA_TEX: 0
     - _AlphaClip: 1
-    - _AlphaClipThreshold: 0.641
+    - _AlphaClipThreshold: 1
     - _Blend: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0

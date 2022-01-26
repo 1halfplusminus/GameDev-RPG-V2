@@ -76,7 +76,7 @@ namespace RPG.Control
         protected override void OnCreate()
         {
             base.OnCreate();
-            commandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            commandBufferSystem = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
         }
         private static float CalculeDistance(NavMeshPath navMeshPath)
         {
@@ -103,7 +103,7 @@ namespace RPG.Control
 
             Entities
             .WithNone<InteractWithUI>()
-            .WithChangeFilter<WorldClick>()
+            // .WithChangeFilter<WorldClick>()
             .WithAll<PlayerControlled>()
             .ForEach((Entity e, ref MoveTo moveTo, ref VisibleCursor cursor, ref WorldClick worldClick, in Raycast raycast, in LocalToWorld localToWorld) =>
             {
@@ -162,11 +162,15 @@ namespace RPG.Control
             Entities
             .WithNone<InteractWithUI>()
             .WithAll<PlayerControlled>()
-            .WithChangeFilter<MouseClick>()
+            // .WithChangeFilter<MouseClick>()
             .ForEach((ref Raycast cast, in MouseClick mouseClick) =>
             {
-                cast.Completed = false;
-                cast.Ray = mouseClick.Ray;
+                if (mouseClick.Frame <= 1)
+                {
+                    cast.Completed = false;
+                    cast.Ray = mouseClick.Ray;
+                }
+
             }).ScheduleParallel();
         }
     }
