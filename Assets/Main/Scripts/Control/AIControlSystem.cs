@@ -26,7 +26,8 @@ namespace RPG.Control
                 var waypoints = waypointsByPath[path.Entity];
                 patrolling.Start(waypoints.Length);
             }).ScheduleParallel();
-            Entities.WithReadOnly(waypointsByPath)
+            Entities
+            .WithReadOnly(waypointsByPath)
             .WithChangeFilter<AutoStartPatroling>()
             .WithAll<AutoStartPatroling>().ForEach((ref Patrolling patrolling, in PatrollingPath path) =>
             {
@@ -34,7 +35,8 @@ namespace RPG.Control
                 var waypoints = waypointsByPath[path.Entity];
                 patrolling.Start(waypoints.Length);
             }).ScheduleParallel();
-            Entities.WithReadOnly(waypointsByPath)
+            Entities
+            .WithReadOnly(waypointsByPath)
             .WithNone<IsSuspicious, IsChasingTarget, IsFighting>()
             .ForEach((ref Patrolling patrolling, ref MoveTo moveTo, ref Suspicious suspicious, in PatrollingPath path, in LocalToWorld localToWorld) =>
             {
@@ -194,7 +196,7 @@ namespace RPG.Control
                     var direction = playerLocalToWorld.Position * playerLocalToWorld.Forward - localToWorld.Position * localToWorld.Forward;
                     var angle = math.abs(math.degrees(math.atan2(direction.y, direction.x)));
                     var distance = math.abs(math.distance(localToWorld.Position, playerLocalToWorld.Position));
-                    Debug.Log($"{e} enemy at angle {angle} and distance {distance}");
+                    // Debug.Log($"{e} enemy at angle {angle} and distance {distance}");
                     if (distance <= chasePlayer.ChaseDistance && angle <= chasePlayer.AngleOfView)
                     {
                         beginSimulationEntityCommandBuffer.AddComponent<IsChasingTarget>(entityInQueryIndex, e);

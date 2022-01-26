@@ -40,9 +40,6 @@ namespace RPG.Gameplay
                 var entity = GetPrimaryEntity(portalAuthoring);
                 DstEntityManager.AddComponentData(entity, new Portal { Index = portalAuthoring.PortalIndex, WarpPoint = new LocalToWorld() { Value = portalAuthoring.Warppoint.transform.localToWorldMatrix } });
                 DstEntityManager.AddComponentData(entity, new LinkPortal { Index = portalAuthoring.OtherScenePortalIndex, SceneGUID = SceneGUID });
-                /*                DstEntityManager.AddComponentData(entity, new LocalToWorld() { Value = portalAuthoring.Warppoint.localToWorldMatrix }); */
-                /* var sceneEntity = sceneSystem.LoadSceneAsync(SceneGUID, new SceneSystem.LoadParameters { Flags = SceneLoadFlags.DisableAutoLoad });
-                DstEntityManager.AddSharedComponentData(sceneEntity, new SceneSection() { SceneGUID = SceneGUID }); */
             });
         }
     }
@@ -76,6 +73,8 @@ namespace RPG.Gameplay
 
         EntityQuery needWarpQuery;
 
+        PauseSystem pauseSystem;
+
         protected override void OnCreate()
         {
             base.OnCreate();
@@ -90,7 +89,7 @@ namespace RPG.Gameplay
             Entities
             .ForEach((Entity e, in CollidWithPlayer collidWithPlayer, in Portal portal, in SceneSection currentScene, in LinkPortal linkPortal) =>
             {
-
+                commandBuffer.AddComponent<Disabled>(e);
                 commandBuffer.AddComponent(collidWithPlayer.Entity, new TriggerSceneLoad() { SceneGUID = linkPortal.SceneGUID });
                 commandBuffer.AddComponent(collidWithPlayer.Entity, new TriggerUnloadScene() { SceneGUID = currentScene.SceneGUID });
                 commandBuffer.AddComponent(collidWithPlayer.Entity, new WarpToPortal { PortalIndex = linkPortal.Index });
@@ -127,6 +126,7 @@ namespace RPG.Gameplay
                         commandBufferP.AddComponent(entityInQueryIndex, e, new Translation() { Value = destination.Position });
                         commandBufferP.AddComponent(entityInQueryIndex, e, new WarpTo() { Destination = destination.Position });
                         commandBufferP.AddComponent(entityInQueryIndex, e, new Rotation() { Value = quaternion.LookRotation(destination.Forward, destination.Up) });
+                        commandBufferP.RemoveComponent<Disabled>(entityInQueryIndex, e);
                         commandBufferP.RemoveComponent<WarpToPortal>(entityInQueryIndex, e);
                     }
                 }).ScheduleParallel();

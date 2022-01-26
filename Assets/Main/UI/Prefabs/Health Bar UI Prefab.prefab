@@ -50,7 +50,7 @@ MonoBehaviour:
   m_PanelSettings: {fileID: 11400000, guid: 6edc7205011273e828e12b6403751d08, type: 2}
   m_ParentUI: {fileID: 0}
   sourceAsset: {fileID: 9197481963319205126, guid: 6c3d4153cc162d4df9e11efc98abe6dd, type: 3}
-  m_SortingOrder: 0
+  m_SortingOrder: -1
 --- !u!114 &1682896045582287093
 MonoBehaviour:
   m_ObjectHideFlags: 0

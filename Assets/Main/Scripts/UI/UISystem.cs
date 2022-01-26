@@ -94,6 +94,7 @@ namespace RPG.UI
         protected override void OnUpdate()
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
+            var unLoadScene = false;
             Entities
             .WithNone<GameOverUI>()
             .WithAll<PlayerControlled, IsDeadTag>()
@@ -103,8 +104,14 @@ namespace RPG.UI
                 {
                     var instance = cb.Instantiate(gameOverPrefab);
                     cb.AddComponent<GameOverUI>(e);
+                    unLoadScene = true;
+
                 }
             }).WithoutBurst().Run();
+            if (unLoadScene)
+            {
+                SceneLoadingSystem.UnloadAllCurrentlyLoadedScene(EntityManager);
+            }
             Entities
             .WithAll<GameOverUI, UIReady>()
             .WithNone<GameOverUIController>()
