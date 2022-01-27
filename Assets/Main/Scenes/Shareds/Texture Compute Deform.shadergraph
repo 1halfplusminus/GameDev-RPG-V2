@@ -46,9 +46,6 @@
             "m_Id": "9b94bb4012c34a0b953e924da95ef5b9"
         },
         {
-            "m_Id": "1723b1fd72494c9ab4075021927ddd9b"
-        },
-        {
             "m_Id": "ad0c2910512a42379401e53c1c136de2"
         },
         {
@@ -577,41 +574,6 @@
 {
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
-    "m_ObjectId": "1723b1fd72494c9ab4075021927ddd9b",
-    "m_Group": {
-        "m_Id": ""
-    },
-    "m_Name": "Property",
-    "m_DrawState": {
-        "m_Expanded": true,
-        "m_Position": {
-            "serializedVersion": "2",
-            "x": -518.3999633789063,
-            "y": 303.1999816894531,
-            "width": 139.19998168945313,
-            "height": 33.600006103515628
-        }
-    },
-    "m_Slots": [
-        {
-            "m_Id": "24d9e973a39c4eb6b77c5ee903e26a53"
-        }
-    ],
-    "synonyms": [],
-    "m_Precision": 0,
-    "m_PreviewExpanded": true,
-    "m_PreviewMode": 0,
-    "m_CustomColors": {
-        "m_SerializableColors": []
-    },
-    "m_Property": {
-        "m_Id": "9447a40d77b74b5e8d3a0bbf665869ab"
-    }
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
     "m_ObjectId": "18384e2ace4b4b1a9dfe7b798081a7a4",
     "m_Group": {
         "m_Id": ""
@@ -849,19 +811,6 @@
         "e32": 0.0,
         "e33": 1.0
     }
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Texture2DMaterialSlot",
-    "m_ObjectId": "24d9e973a39c4eb6b77c5ee903e26a53",
-    "m_Id": 0,
-    "m_DisplayName": "Texture2D",
-    "m_SlotType": 1,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "Out",
-    "m_StageCapability": 3,
-    "m_BareResource": false
 }
 
 {
@@ -1282,10 +1231,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -265.6499938964844,
-            "y": 1390.35009765625,
-            "width": 0.0,
-            "height": 0.0
+            "x": -102.0,
+            "y": 1535.0,
+            "width": 147.0,
+            "height": 34.0
         }
     },
     "m_Slots": [

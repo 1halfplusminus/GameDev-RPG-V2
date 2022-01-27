@@ -1,0 +1,6 @@
+DialogGraphView GridBackground {
+  --grid-background-color: rgb(40, 40, 40) !important;
+  --line-color: rgba(193, 196, 0, 0.1) !important;
+  --thick-line-color: rgba(193, 196, 192, 0.1) !important;
+  --spacing: 15 !important;
+}

@@ -16,9 +16,13 @@ namespace RPG.Combat
     {
 
     }
-    public struct WeaponInstance : IComponentData
+    public struct InstanciedWeapon : IComponentData
     {
         public Entity Entity;
+    }
+    public struct WeaponInstance : IComponentData
+    {
+
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class FighterEquipWeaponSystem : SystemBase
@@ -65,10 +69,20 @@ namespace RPG.Combat
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery spawnWeaponQuery;
+        EntityQuery weaponInstanceWithoutParent;
         protected override void OnCreate()
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            weaponInstanceWithoutParent = GetEntityQuery(new EntityQueryDesc
+            {
+                All = new ComponentType[] {
+                    typeof(WeaponInstance)
+                },
+                None = new ComponentType[]{
+                    typeof(Parent)
+                }
+            });
             // RequireForUpdate(spawnWeaponQuery);
         }
         protected override void OnUpdate()
@@ -86,7 +100,10 @@ namespace RPG.Combat
                     instance = cbp.Instantiate(entityInQueryIndex, spawn.Prefab);
                     cbp.AddComponent(entityInQueryIndex, instance, new Parent { Value = e });
                     cbp.AddComponent<LocalToParent>(entityInQueryIndex, instance);
-                    cbp.AddComponent(entityInQueryIndex, e, new WeaponInstance { Entity = instance });
+                    cbp.AddComponent<WeaponInstance>(entityInQueryIndex, instance);
+
+                    cbp.AddComponent(entityInQueryIndex, e, new InstanciedWeapon { Entity = instance });
+
                 }
                 cbp.RemoveComponent<SpawnWeapon>(entityInQueryIndex, e);
                 cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new FighterEquipped { WeaponAsset = spawn.Weapon, Instance = instance });
@@ -97,6 +114,7 @@ namespace RPG.Combat
                 cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new ChangeAttackAnimation() { Animation = spawn.Animation });
             }).ScheduleParallel();
 
+            cb.DestroyEntitiesForEntityQuery(weaponInstanceWithoutParent);
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 
@@ -112,7 +130,9 @@ namespace RPG.Combat
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+
             RequireForUpdate(equipPrefabInSocketQuery);
+
         }
         protected override void OnUpdate()
         {
@@ -188,7 +208,6 @@ namespace RPG.Combat
             .WithChangeFilter<CollidWithPlayer>()
             .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer collidWithPlayer, in PickableWeapon picked) =>
             {
-                // Debug.Log($" {e.Index} collid with player {collidWithPlayer.Entity.Index} and pickup Weapon: ${picked.Entity.Index}");
                 cbp.AddComponent(entityInQueryIndex, collidWithPlayer.Entity, new Equip { Equipable = picked.Entity, SocketType = picked.SocketType });
                 cbp.AddComponent<Picked>(entityInQueryIndex, e);
                 cbp.AddComponent(entityInQueryIndex, e, new HideForSecond { Time = 5f });
@@ -243,12 +262,14 @@ namespace RPG.Combat
         EntityCommandBufferSystem entityCommandBufferSystem;
 
         EntityQuery fighterEquipQuery;
-        EntityQuery weaponToDestroyQuery;
+        EntityQuery unequipWeaponQuery;
+
+        EntityQuery weaponInstanceWithoutParent;
         protected override void OnCreate()
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-            weaponToDestroyQuery = GetEntityQuery(new EntityQueryDesc()
+            unequipWeaponQuery = GetEntityQuery(new EntityQueryDesc()
             {
                 All = new ComponentType[] {
                      typeof(UnEquiped)
@@ -257,6 +278,8 @@ namespace RPG.Combat
                     typeof(EquippedBy)
                 }
             });
+
+
 
         }
         protected override void OnUpdate()
@@ -270,15 +293,15 @@ namespace RPG.Combat
             {
                 cbp.RemoveComponent<UnEquiped>(entityInQueryIndex, e);
                 cbp.RemoveComponent<Equipped>(entityInQueryIndex, e);
-                if (HasComponent<WeaponInstance>(e))
+                if (HasComponent<InstanciedWeapon>(e))
                 {
-                    var weaponInstance = GetComponent<WeaponInstance>(e);
+                    var weaponInstance = GetComponent<InstanciedWeapon>(e);
                     if (weaponInstance.Entity != Entity.Null)
                     {
                         Debug.Log($"Remove weapons {weaponInstance.Entity.Index}");
                         cbp.DestroyEntity(entityInQueryIndex, weaponInstance.Entity);
                     }
-                    cbp.RemoveComponent<WeaponInstance>(entityInQueryIndex, e);
+                    cbp.RemoveComponent<InstanciedWeapon>(entityInQueryIndex, e);
                 }
                 var buffer = cbp.AddBuffer<StatsModifier>(entityInQueryIndex, e);
             }).ScheduleParallel();

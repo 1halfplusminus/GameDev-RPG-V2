@@ -70,7 +70,15 @@ namespace RPG.UI
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetExistingSystem<EndSimulationEntityCommandBufferSystem>();
-            anySceneLoadingQuery = GetEntityQuery(ComponentType.ReadOnly<TriggerSceneLoad>());
+            anySceneLoadingQuery = GetEntityQuery(new EntityQueryDesc
+            {
+                Any = new ComponentType[] {
+                    typeof(TriggerSceneLoad)
+                },
+                None = new ComponentType[]{
+                    typeof(TriggeredSceneLoaded)
+                }
+            });
             loadingUIPrefabQuery = GetEntityQuery(ComponentType.ReadWrite<LoadingUI>(), ComponentType.ReadWrite<Prefab>());
             loadingUIQuery = GetEntityQuery(ComponentType.ReadWrite<LoadingUI>(), ComponentType.ReadWrite<UIDocument>());
             fadedLoadingUIQuery = GetEntityQuery(new EntityQueryDesc()
