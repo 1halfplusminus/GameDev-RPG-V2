@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 
 namespace RPG.Gameplay
@@ -10,6 +11,7 @@ namespace RPG.Gameplay
         public string DialogueText;
 
         public bool EntryPoint;
+
     }
 }
 #endif

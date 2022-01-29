@@ -55,18 +55,6 @@ namespace RPG.Animation
             RebuildNativeData(Data);
             var clipRef = BuildClip(NativeData, out world);
             return clipRef;
-            /* using (BlobBuilder blobBuilder = new BlobBuilder(Allocator.Temp))
-            {
-                UnityEngine.Debug.Log($"In GetClip {Data.Length} {clipRef.Value.FrameCount}");
-                ref Clip clipRoot = ref blobBuilder.ConstructRoot<Clip>();
-                SetRef(ref clipRoot.Bindings, ref clipRef.Value.Bindings);
-                SetRef(ref clipRoot.Samples, ref clipRef.Value.Samples);
-                SetRef(ref clipRoot.SynchronizationTags, ref clipRef.Value.SynchronizationTags);
-                clipRoot.Duration = clipRef.Value.Duration;
-                clipRoot.SampleRate = clipRef.Value.SampleRate;
-                Ref = blobBuilder.CreateBlobAssetReference<Clip>(Allocator.Persistent);
-                return Ref;
-            } */
 
         }
 #if UNITY_EDITOR

@@ -1,4 +1,13 @@
 {
+  "scopedRegistries": [
+    {
+      "name": "Microsoft",
+      "url": "https://pkgs.dev.azure.com/UnityDeveloperTools/MSBuildForUnity/_packaging/UnityDeveloperTools/npm/registry/",
+      "scopes": [
+        "com.microsoft"
+      ]
+    }
+  ],
   "dependencies": {
     "com.unity.addressables": "1.19.17",
     "com.unity.ai.navigation": "1.0.0-exp.4",
