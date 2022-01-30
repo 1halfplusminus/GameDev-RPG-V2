@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Main/UI/Dialog%20Style.uss?fileID=7433441132597879392&amp;guid=0d5dbfc99604ddd8780b8af86633f81b&amp;type=3#Dialog Style" />
+    <ui:VisualElement style="align-items: auto; flex-grow: 1; flex-basis: 70%;" />
+    <ui:VisualElement name="DialogBox" style="flex-basis: 40%; flex-grow: 1;">
+        <ui:VisualElement>
+            <ui:Label name="DialogText" display-tooltip-when-elided="true" />
+        </ui:VisualElement>
+        <ui:ListView focusable="true" show-alternating-row-backgrounds="None" name="Choices" virtualization-method="DynamicHeight" style="height: 321px;" />
+    </ui:VisualElement>
+</ui:UXML>

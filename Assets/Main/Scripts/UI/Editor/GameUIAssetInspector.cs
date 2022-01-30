@@ -5,7 +5,7 @@ using RPG.Core;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
 using System.Collections.Generic;
-
+using static RPG.Core.AddressableExtensions;
 namespace RPG.UI
 {
     [CustomEditor(typeof(GameUIAsset))]

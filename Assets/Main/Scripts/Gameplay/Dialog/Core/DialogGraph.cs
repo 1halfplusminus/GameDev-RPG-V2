@@ -9,9 +9,14 @@ using System.Linq;
 
 namespace RPG.Gameplay
 {
-    public struct CurrentDialog : IComponentData
+    public struct PlayDialog : IComponentData
     {
-        public int NodeIndex;
+        public int CurrentIndex;
+    }
+    public struct Dialog : IComponentData
+    {
+        public BlobAssetReference<BlobDialog> Reference;
+
     }
     [Serializable]
     public struct NodeData
@@ -105,26 +110,24 @@ namespace RPG.Gameplay
             {
                 var edge = graph.edges[i];
                 var choice = new BlobDialogChoice { Text = edge.OutputPortName };
-                if (indexMap.ContainsKey(edge.OutputNode))
-                {
-                    var index = indexMap[edge.OutputNode];
-                    ref var node = ref blobNodes[index];
-                    choice.NextIndex = index;
-                    blobChoices[i] = choice;
-                    blobBuilder.SetPointer(ref blobChoices[i].Next, ref node);
-                    if (!choicesByNode.ContainsKey(edge.OutputNode))
-                    {
-                        choicesByNode.Add(edge.OutputNode, new List<int>());
-                    }
-                    choicesByNode[edge.OutputNode].Add(i);
-                }
-                else if (indexMap.ContainsKey(edge.InputNode))
+                if (!indexMap.ContainsKey(edge.OutputNode))
                 {
                     var index = indexMap[edge.InputNode];
                     ref var node = ref blobNodes[indexMap[edge.InputNode]];
                     dialog.StartIndex = index;
                     blobBuilder.SetPointer(ref dialog.Start, ref node);
+
                 }
+                var nextIndex = indexMap[edge.InputNode];
+                ref var nextNode = ref blobNodes[nextIndex];
+                choice.NextIndex = nextIndex;
+                blobChoices[i] = choice;
+                blobBuilder.SetPointer(ref blobChoices[i].Next, ref nextNode);
+                if (!choicesByNode.ContainsKey(edge.OutputNode))
+                {
+                    choicesByNode.Add(edge.OutputNode, new List<int>());
+                }
+                choicesByNode[edge.OutputNode].Add(i);
             }
             foreach (KeyValuePair<string, List<int>> entry in choicesByNode)
             {

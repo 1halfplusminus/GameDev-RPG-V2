@@ -4,11 +4,15 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "RPG.Gameplay.Dialog",
         "Unity.Entities",
         "Unity.Mathematics",
         "Unity.Collections",
-        "Unity.Entities.Hybrid"
+        "Unity.Entities.Hybrid",
+        "RPG.Gameplay.Dialog.UI",
+        "Unity.Addressables",
+        "Unity.ResourceManager",
+        "RPG.Gameplay.Dialog",
+        "RPG"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

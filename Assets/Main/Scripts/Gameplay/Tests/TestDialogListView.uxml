@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Main/UI/Dialog%20Style.uss?fileID=7433441132597879392&amp;guid=0d5dbfc99604ddd8780b8af86633f81b&amp;type=3#Dialog Style" />
+    <RPG.Test.TestDialogListView focusable="true" style="flex-grow: 1;" />
+</ui:UXML>

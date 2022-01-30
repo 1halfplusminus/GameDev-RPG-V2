@@ -26,7 +26,7 @@ namespace RPG.UI
             if (VisualTreeAsset == null) { return null; }
 
             var root = VisualTreeAsset.Instantiate();
-            root.Q<PropertyField>("VisualTreeAsset").SetEnabled(false);
+            root.Q<PropertyField>("VisualTreeAsset").SetEnabled(true);
             if (target is GameUIAuthoring go)
             {
                 // var uiDocument = go.GetComponent<UIDocument>();

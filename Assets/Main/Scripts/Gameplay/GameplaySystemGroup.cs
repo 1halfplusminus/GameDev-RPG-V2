@@ -1,5 +1,4 @@
 using Unity.Entities;
-using RPG.Core;
 using RPG.Control;
 
 namespace RPG.Gameplay
