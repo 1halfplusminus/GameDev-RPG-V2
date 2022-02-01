@@ -52,6 +52,7 @@ namespace RPG.Saving
         {
 
             if (Application.IsPlaying(gameObject)) { return; }
+            if (World.DefaultGameObjectInjectionWorld == null) { return; }
             var em = World.DefaultGameObjectInjectionWorld.EntityManager;
             entity = em.CreateEntity();
             if (!string.IsNullOrEmpty(UniqueIdentifier) && IsUnique(UniqueIdentifier))

@@ -16,6 +16,7 @@
     padding-right: 15px;
     padding-top: 15px;
     padding-bottom: 15px;
+    color: rgba(255, 255, 255, 255);
 }
 
 #DialogBox {
@@ -35,4 +36,5 @@
     font-size: 60px;
     -unity-font-style: normal;
     -unity-font: url('project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&guid=e3265ab4bf004d28a9537516768c1c75&type=3#LiberationSans');
+    color: rgba(255, 255, 255, 255);
 }

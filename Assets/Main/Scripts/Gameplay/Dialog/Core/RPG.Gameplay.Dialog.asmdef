@@ -5,7 +5,8 @@
         "Unity.Entities",
         "Unity.Mathematics",
         "Unity.Collections",
-        "Unity.Entities.Hybrid"
+        "Unity.Entities.Hybrid",
+        "RPG"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

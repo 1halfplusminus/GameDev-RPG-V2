@@ -35,6 +35,15 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""InGameInteraction"",
+                    ""type"": ""Button"",
+                    ""id"": ""aa146469-12e0-4fbc-83cc-fd1766f9eb58"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -46,6 +55,17 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5d49bd43-2758-4d3a-9928-f1f0f9591173"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""InGameInteraction"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -96,6 +116,7 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
         // Gameplay
         m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
         m_Gameplay_Click = m_Gameplay.FindAction("Click", throwIfNotFound: true);
+        m_Gameplay_InGameInteraction = m_Gameplay.FindAction("InGameInteraction", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_TogglePauseMenu = m_UI.FindAction("TogglePauseMenu", throwIfNotFound: true);
@@ -159,11 +180,13 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Gameplay;
     private IGameplayActions m_GameplayActionsCallbackInterface;
     private readonly InputAction m_Gameplay_Click;
+    private readonly InputAction m_Gameplay_InGameInteraction;
     public struct GameplayActions
     {
         private @GameInput m_Wrapper;
         public GameplayActions(@GameInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Click => m_Wrapper.m_Gameplay_Click;
+        public InputAction @InGameInteraction => m_Wrapper.m_Gameplay_InGameInteraction;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -176,6 +199,9 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @Click.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnClick;
                 @Click.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnClick;
                 @Click.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnClick;
+                @InGameInteraction.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnInGameInteraction;
+                @InGameInteraction.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnInGameInteraction;
+                @InGameInteraction.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnInGameInteraction;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -183,6 +209,9 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
                 @Click.started += instance.OnClick;
                 @Click.performed += instance.OnClick;
                 @Click.canceled += instance.OnClick;
+                @InGameInteraction.started += instance.OnInGameInteraction;
+                @InGameInteraction.performed += instance.OnInGameInteraction;
+                @InGameInteraction.canceled += instance.OnInGameInteraction;
             }
         }
     }
@@ -223,6 +252,7 @@ public partial class @GameInput : IInputActionCollection2, IDisposable
     public interface IGameplayActions
     {
         void OnClick(InputAction.CallbackContext context);
+        void OnInGameInteraction(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

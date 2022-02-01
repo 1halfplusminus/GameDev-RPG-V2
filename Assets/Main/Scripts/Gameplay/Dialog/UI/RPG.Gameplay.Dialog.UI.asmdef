@@ -5,7 +5,10 @@
         "Unity.Entities",
         "Unity.Collections",
         "RPG.Gameplay.Dialog",
-        "RPG"
+        "RPG",
+        "Unity.Entities.Hybrid",
+        "Unity.Transforms",
+        "Unity.Mathematics"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

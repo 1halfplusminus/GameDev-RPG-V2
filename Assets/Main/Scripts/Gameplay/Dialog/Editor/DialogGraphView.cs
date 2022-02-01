@@ -115,7 +115,7 @@ namespace RPG.Gameplay
             Insert(0, new GridBackground());
             AddElement(GenerateEntrPointNode());
         }
-        private (DialogGraph value, bool loaded, SerializedObject serialized) CreateOrLoadAsset(string path)
+        private (DialogGraph value, bool loaded) CreateOrLoadAsset(string path)
         {
             var asset = AssetDatabase.LoadAssetAtPath<DialogGraph>(path);
             var loaded = true;
@@ -124,9 +124,9 @@ namespace RPG.Gameplay
                 asset = ScriptableObject.CreateInstance<DialogGraph>();
                 loaded = false;
             }
-            return (asset, loaded, new SerializedObject(asset));
+            return (asset, loaded);
         }
-        private void SaveAsset((DialogGraph value, bool loaded, SerializedObject serialized) asset, string path)
+        private void SaveAsset((DialogGraph value, bool loaded) asset, string path)
         {
             if (!asset.loaded)
             {
@@ -134,14 +134,16 @@ namespace RPG.Gameplay
             }
             else
             {
-                asset.serialized.ApplyModifiedProperties();
+                // asset.serialized.ApplyModifiedProperties();
+                // asset.serialized.UpdateIfRequiredOrScript();
                 AssetDatabase.SaveAssetIfDirty(AssetDatabase.GUIDFromAssetPath(path));
+                AssetDatabase.SaveAssets();
             }
         }
         public void LoadData(string path)
         {
             ClearNodes();
-            var (asset, loaded, s) = CreateOrLoadAsset(path);
+            var (asset, loaded) = CreateOrLoadAsset(path);
             var index = new Dictionary<string, DialogGraphNode>();
             this.Query<DialogGraphNode>().ForEach((n) =>
             {
@@ -173,9 +175,12 @@ namespace RPG.Gameplay
         }
         public void SaveData(string path)
         {
-            var (asset, loaded, s) = CreateOrLoadAsset(path);
+            var (asset, loaded) = CreateOrLoadAsset(path);
+            AssetDatabase.StartAssetEditing();
             SaveData(asset);
-            SaveAsset((asset, loaded, s), path);
+            AssetDatabase.StopAssetEditing();
+            SaveAsset((asset, loaded), path);
+
         }
 
         private void SaveData(DialogGraph asset)

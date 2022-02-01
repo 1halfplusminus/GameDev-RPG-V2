@@ -7,6 +7,7 @@ namespace RPG.Control
     public struct CollidWithPlayer : IComponentData
     {
         public Entity Entity;
+        public EventOverlapState State;
     }
     [UpdateInGroup(typeof(ControlSystemGroup))]
 
@@ -32,7 +33,7 @@ namespace RPG.Control
                     if (HasComponent<PlayerControlled>(otherEntity) && HasComponent<DisabledControl>(otherEntity) == false)
                     {
                         // Debug.Log($" {e.Index} Collid with player {otherEntity.Index}");
-                        commandBufferP.AddComponent(entityInQueryIndex, e, new CollidWithPlayer { Entity = otherEntity });
+                        commandBufferP.AddComponent(entityInQueryIndex, e, new CollidWithPlayer { Entity = otherEntity, State = triggerEvent.State });
                         break;
                     }
                 }

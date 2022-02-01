@@ -16,6 +16,7 @@ namespace RPG.Gameplay
     public struct Dialog : IComponentData
     {
         public BlobAssetReference<BlobDialog> Reference;
+        public Entity DialogInteractionPrefab;
 
     }
     [Serializable]
