@@ -13,40 +13,22 @@ MonoBehaviour:
   m_Name: Dialog
   m_EditorClassIdentifier: Assembly-CSharp:RPG.Gameplay:DialogGraph
   nodes:
-  - Text: 
-    GUID: edbc1f75e5378e614b4d99ed3852a95e
-    Position:
-      x: 778
-      y: 253
-  - Text: This is a test !
-    GUID: 5ddacec359b5bc96caa13e97e6e916d4
-    Position:
-      x: 440
-      y: 382
-  - Text: What'sup ?
-    GUID: 510db59d49a4c032ba44c9a26b26d205
-    Position:
-      x: 440
-      y: 253
   - Text: Hello {username}
     GUID: 2101ab413e6fe97268cbbc64fd8c8170
     Position:
-      x: 96
-      y: 253
+      x: 330
+      y: 244
+  - Text: 
+    GUID: 4f33227ac2d22b3639601e60f4e12634
+    Position:
+      x: 552
+      y: 229
   edges:
-  - OutputPortName: Option 1
-    InputPortName: Input
-    InputNode: edbc1f75e5378e614b4d99ed3852a95e
-    OutputNode: 510db59d49a4c032ba44c9a26b26d205
   - OutputPortName: Next
     InputPortName: Input
     InputNode: 2101ab413e6fe97268cbbc64fd8c8170
     OutputNode: Start
-  - OutputPortName: Hey !
+  - OutputPortName: Choice 0
     InputPortName: Input
-    InputNode: 510db59d49a4c032ba44c9a26b26d205
-    OutputNode: 2101ab413e6fe97268cbbc64fd8c8170
-  - OutputPortName: Howdy!
-    InputPortName: Input
-    InputNode: 5ddacec359b5bc96caa13e97e6e916d4
+    InputNode: 4f33227ac2d22b3639601e60f4e12634
     OutputNode: 2101ab413e6fe97268cbbc64fd8c8170
