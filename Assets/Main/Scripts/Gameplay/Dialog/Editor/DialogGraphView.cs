@@ -176,9 +176,8 @@ namespace RPG.Gameplay
         public void SaveData(string path)
         {
             var (asset, loaded) = CreateOrLoadAsset(path);
-            AssetDatabase.StartAssetEditing();
             SaveData(asset);
-            AssetDatabase.StopAssetEditing();
+            EditorUtility.SetDirty(asset);
             SaveAsset((asset, loaded), path);
 
         }

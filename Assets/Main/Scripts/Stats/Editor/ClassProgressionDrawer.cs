@@ -1,4 +1,4 @@
-
+#if UNITY_EDITOR
 
 namespace RPG.Stats
 {
@@ -165,3 +165,5 @@ namespace RPG.Stats
         }
     }
 }
+
+#endif

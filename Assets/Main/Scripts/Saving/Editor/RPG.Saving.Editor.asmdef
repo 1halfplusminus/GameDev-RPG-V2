@@ -1,0 +1,19 @@
+{
+    "name": "RPG.Saving.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:4836d2d95d187d5ffbc37f56dc6c1e4d",
+        "GUID:a5baed0c9693541a5bd947d336ec7659"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
