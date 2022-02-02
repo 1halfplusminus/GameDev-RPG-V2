@@ -8,6 +8,7 @@ using Unity.Transforms;
 using RPG.Core;
 using RPG.Animation;
 using UnityEngine;
+using static Unity.Animation.mathex;
 
 namespace RPG.Control
 {
@@ -167,6 +168,12 @@ namespace RPG.Control
             beginSimulationEntityCommandBufferSystem = World.GetOrCreateSystem<BeginPresentationEntityCommandBufferSystem>();
             RequireForUpdate(playerChaserQuery);
         }
+        public static float anglesigned(float3 from, float3 to, float3 axis)
+        {
+            float angle = math.acos(math.dot(math.normalize(from), math.normalize(to)));
+            float sign = math.sign(math.dot(axis, math.cross(from, to)));
+            return math.degrees(angle * sign);
+        }
         protected override void OnUpdate()
         {
             var playerPositions = new NativeHashMap<Entity, LocalToWorld>(playerControlledQuery.CalculateEntityCount(), Allocator.TempJob);
@@ -178,13 +185,13 @@ namespace RPG.Control
             .ForEach((Entity e, in LocalToWorld position) =>
             {
                 playerPositionsWriter.TryAdd(e, position);
-            }).Run();
+            }).ScheduleParallel();
             //TODO: Refractor with a event system create a event when target lost & when target aquired
             var beginSimulationEntityCommandBuffer = beginSimulationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             Entities
             .WithNone<IsChasingTarget, Spawned, IsDeadTag>()
             .WithReadOnly(playerPositions)
-            .ForEach((int entityInQueryIndex, Entity e, in ChasePlayer chasePlayer, in LocalToWorld localToWorld) =>
+            .ForEach((int entityInQueryIndex, Entity e, in ChasePlayer chasePlayer, in LocalToWorld localToWorld, in Rotation rotation) =>
             {
                 var localToWorlds = playerPositions.GetValueArray(Allocator.Temp);
                 var entities = playerPositions.GetKeyArray(Allocator.Temp);
@@ -193,11 +200,18 @@ namespace RPG.Control
                 {
                     var playerLocalToWorld = localToWorlds[i];
                     var entity = entities[i];
-                    var direction = playerLocalToWorld.Position * playerLocalToWorld.Forward - localToWorld.Position * localToWorld.Forward;
-                    var angle = math.abs(math.degrees(math.atan2(direction.y, direction.x)));
-                    var distance = math.abs(math.distance(localToWorld.Position, playerLocalToWorld.Position));
-                    // Debug.Log($"{e} enemy at angle {angle} and distance {distance}");
-                    if (distance <= chasePlayer.ChaseDistance && angle <= chasePlayer.AngleOfView && angle != 0)
+
+                    var forwardVector = math.forward(rotation.Value);
+                    var vectorToPlayer = playerLocalToWorld.Position - localToWorld.Position;
+                    var distance = math.lengthsq(vectorToPlayer);
+                    var unitVecToPlayer = math.normalize(vectorToPlayer);
+                    var angleRadians = math.radians(chasePlayer.AngleOfView);
+                    // Use the dot product to determine if the player is within our vision cone
+                    var dot = math.dot(forwardVector, unitVecToPlayer);
+                    var canSeePlayer = dot > 0.0f && // player is in front of us
+                        math.abs(math.acos(dot)) < angleRadians;
+
+                    if (distance <= chasePlayer.ChaseDistanceSq && canSeePlayer)
                     {
                         beginSimulationEntityCommandBuffer.AddComponent<IsChasingTarget>(entityInQueryIndex, e);
                         beginSimulationEntityCommandBuffer.AddComponent(entityInQueryIndex, e, new StartChaseTarget { Target = entity, Position = playerLocalToWorld.Position });

@@ -12,6 +12,7 @@ namespace RPG.Control
     {
         public float AngleOfView;
         public float ChaseDistance;
+        public float ChaseDistanceSq;
         public Entity Target;
     }
 

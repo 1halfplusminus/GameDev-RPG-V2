@@ -1,4 +1,5 @@
 using RPG.Core;
+using Unity.Mathematics;
 using UnityEngine;
 
 
@@ -35,7 +36,7 @@ namespace RPG.Control
                 DstEntityManager.AddComponent<AIControlled>(entity);
                 // Fighter should add this
                 DstEntityManager.AddComponent<DeltaTime>(entity);
-                DstEntityManager.AddComponentData(entity, new ChasePlayer { ChaseDistance = chasePlayer.ChaseDistance, AngleOfView = chasePlayer.AngleOfView });
+                DstEntityManager.AddComponentData(entity, new ChasePlayer { ChaseDistance = chasePlayer.ChaseDistance, AngleOfView = chasePlayer.AngleOfView, ChaseDistanceSq = chasePlayer.ChaseDistance * chasePlayer.ChaseDistance });
                 if (chasePlayer.SuspiciousTime >= 0)
                 {
                     DstEntityManager.AddComponentData(entity, new Suspicious { Time = chasePlayer.SuspiciousTime });

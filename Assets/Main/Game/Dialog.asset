@@ -19,15 +19,15 @@ MonoBehaviour:
       x: 330
       y: 244
   - Text: ...
-    GUID: fc1dabef28d341494a580da20142ef39
-    Position:
-      x: 685
-      y: 380
-  - Text: ...
     GUID: 90ba2ebbad96f2e8e942870252a54c24
     Position:
-      x: 699
-      y: 229
+      x: 769
+      y: 244
+  - Text: ...
+    GUID: fc1dabef28d341494a580da20142ef39
+    Position:
+      x: 759
+      y: 134
   edges:
   - OutputPortName: Next
     InputPortName: Input
@@ -37,7 +37,7 @@ MonoBehaviour:
     InputPortName: Input
     InputNode: fc1dabef28d341494a580da20142ef39
     OutputNode: 2101ab413e6fe97268cbbc64fd8c8170
-  - OutputPortName: Be my friend
+  - OutputPortName: 'And why not you are rather cheeky for a rock ! '
     InputPortName: Input
     InputNode: 90ba2ebbad96f2e8e942870252a54c24
     OutputNode: 2101ab413e6fe97268cbbc64fd8c8170

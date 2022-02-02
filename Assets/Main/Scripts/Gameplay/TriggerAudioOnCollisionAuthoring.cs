@@ -86,7 +86,7 @@ namespace RPG.Gameplay
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var cpb = cb.AsParallelWriter();
             Entities
-            .ForEach((int entityInQueryIndex, Entity e, TriggerAudioOnCollion trigger, in DynamicBuffer<StatefulTriggerEvent> statefulTriggerEvent) =>
+            .ForEach((int entityInQueryIndex, Entity e, in TriggerAudioOnCollion trigger, in DynamicBuffer<StatefulTriggerEvent> statefulTriggerEvent) =>
             {
                 for (int i = 0; i < statefulTriggerEvent.Length; i++)
                 {
