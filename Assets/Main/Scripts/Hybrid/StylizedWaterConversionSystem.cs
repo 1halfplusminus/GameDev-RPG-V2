@@ -8,6 +8,7 @@ namespace RPG.Hybrid
             Entities.ForEach((StylizedWater.StylizedWaterURP stylizedWater) =>
             {
                 AddHybridComponent(stylizedWater.meshRenderer);
+                AddHybridComponent(stylizedWater.meshFilter);
                 AddHybridComponent(stylizedWater);
             });
         }

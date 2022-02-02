@@ -26,7 +26,7 @@ public class TerrainConversionSystem : GameObjectConversionSystem
             var delta = data.size.x / (size.x - 1);
             var scale = new float3(delta, 1f, delta);
 
-            var heights = new NativeArray<float>(size.x * size.y * UnsafeUtility.SizeOf<float>(), Allocator.Persistent);
+            var heights = new NativeArray<float>(size.x * size.y * UnsafeUtility.SizeOf<float>(), Allocator.Temp);
 
             var index = 0;
             for (var i = 0; i < size.x; ++i)
@@ -46,7 +46,7 @@ public class TerrainConversionSystem : GameObjectConversionSystem
             {
                 Value = colliders
             });
-
+            heights.Dispose();
             // DeclareAssetDependency(terrain.gameObject, terrain.terrainData);
             // DeclareAssetDependency(terrain.gameObject, terrainCollider);
         });

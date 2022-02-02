@@ -133,7 +133,7 @@ namespace RPG.UI
             var dialogUIPrefab = dialogUIPrefabQuery.GetSingletonEntity();
             Entities
             .WithNone<DialogInstance>()
-            .ForEach((int entityInQueryIndex, Entity e, Dialog dialog) =>
+            .ForEach((int entityInQueryIndex, Entity e, in Dialog dialog) =>
             {
                 var instance = cbp.Instantiate(entityInQueryIndex, dialogUIPrefab);
                 cbp.AddComponent(entityInQueryIndex, instance, new RenderDialog { DialogAsset = dialog.Reference, DialogEntity = e });
