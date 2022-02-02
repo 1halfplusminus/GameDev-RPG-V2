@@ -197,7 +197,7 @@ namespace RPG.Control
                     var angle = math.abs(math.degrees(math.atan2(direction.y, direction.x)));
                     var distance = math.abs(math.distance(localToWorld.Position, playerLocalToWorld.Position));
                     // Debug.Log($"{e} enemy at angle {angle} and distance {distance}");
-                    if (distance <= chasePlayer.ChaseDistance && angle <= chasePlayer.AngleOfView)
+                    if (distance <= chasePlayer.ChaseDistance && angle <= chasePlayer.AngleOfView && angle != 0)
                     {
                         beginSimulationEntityCommandBuffer.AddComponent<IsChasingTarget>(entityInQueryIndex, e);
                         beginSimulationEntityCommandBuffer.AddComponent(entityInQueryIndex, e, new StartChaseTarget { Target = entity, Position = playerLocalToWorld.Position });

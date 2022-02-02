@@ -39,7 +39,7 @@ public class TerrainConversionSystem : GameObjectConversionSystem
             }
 
             var colliders = Unity.Physics.TerrainCollider.Create(heights, size, scale,
-                Unity.Physics.TerrainCollider.CollisionMethod.VertexSamples,
+                Unity.Physics.TerrainCollider.CollisionMethod.Triangles,
                 CollisionFilter.Default);
             DstEntityManager.AddComponent<Navigable>(entity);
             DstEntityManager.AddComponentData(entity, new PhysicsCollider()
@@ -47,7 +47,7 @@ public class TerrainConversionSystem : GameObjectConversionSystem
                 Value = colliders
             });
             heights.Dispose();
-            // DeclareAssetDependency(terrain.gameObject, terrain.terrainData);
+            DeclareAssetDependency(terrain.gameObject, terrain.terrainData);
             // DeclareAssetDependency(terrain.gameObject, terrainCollider);
         });
     }
