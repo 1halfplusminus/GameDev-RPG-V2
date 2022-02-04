@@ -1,5 +1,6 @@
 using RPG.Core;
 using Unity.Mathematics;
+using Unity.Physics.Authoring;
 using UnityEngine;
 
 
@@ -10,6 +11,9 @@ namespace RPG.Control
         public float ChaseDistance;
 
         public float SuspiciousTime;
+
+        public PhysicsCategoryTags CollidWith;
+        public PhysicsCategoryTags BelongTo;
 
         [Range(0f, 360f)]
         public float AngleOfView;
@@ -36,7 +40,14 @@ namespace RPG.Control
                 DstEntityManager.AddComponent<AIControlled>(entity);
                 // Fighter should add this
                 DstEntityManager.AddComponent<DeltaTime>(entity);
-                DstEntityManager.AddComponentData(entity, new ChasePlayer { ChaseDistance = chasePlayer.ChaseDistance, AngleOfView = chasePlayer.AngleOfView, ChaseDistanceSq = chasePlayer.ChaseDistance * chasePlayer.ChaseDistance });
+                DstEntityManager.AddComponentData(entity,
+                new ChasePlayer
+                {
+                    ChaseDistance = chasePlayer.ChaseDistance,
+                    AngleOfView = chasePlayer.AngleOfView,
+                    ChaseDistanceSq = chasePlayer.ChaseDistance * chasePlayer.ChaseDistance,
+                    Filter = new Unity.Physics.CollisionFilter { BelongsTo = chasePlayer.BelongTo.Value, CollidesWith = chasePlayer.CollidWith.Value }
+                });
                 if (chasePlayer.SuspiciousTime >= 0)
                 {
                     DstEntityManager.AddComponentData(entity, new Suspicious { Time = chasePlayer.SuspiciousTime });

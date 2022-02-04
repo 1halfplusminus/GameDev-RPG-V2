@@ -8,7 +8,8 @@ using Unity.Transforms;
 using RPG.Core;
 using RPG.Animation;
 using UnityEngine;
-using static Unity.Animation.mathex;
+using Unity.Physics;
+using Unity.Physics.Systems;
 
 namespace RPG.Control
 {
@@ -160,69 +161,114 @@ namespace RPG.Control
     {
         EntityQuery playerControlledQuery;
         EntityQuery playerChaserQuery;
-        EntityCommandBufferSystem beginSimulationEntityCommandBufferSystem;
+        EntityCommandBufferSystem entityCommandBufferSystem;
+        BuildPhysicsWorld buildPhysicsWorld;
+        StepPhysicsWorld stepPhysicsWorld;
+
         protected override void OnCreate()
         {
             base.OnCreate();
             playerChaserQuery = GetEntityQuery(typeof(ChasePlayer));
-            beginSimulationEntityCommandBufferSystem = World.GetOrCreateSystem<BeginPresentationEntityCommandBufferSystem>();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            buildPhysicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
+            stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
             RequireForUpdate(playerChaserQuery);
         }
-        public static float anglesigned(float3 from, float3 to, float3 axis)
-        {
-            float angle = math.acos(math.dot(math.normalize(from), math.normalize(to)));
-            float sign = math.sign(math.dot(axis, math.cross(from, to)));
-            return math.degrees(angle * sign);
-        }
+
         protected override void OnUpdate()
         {
-            var playerPositions = new NativeHashMap<Entity, LocalToWorld>(playerControlledQuery.CalculateEntityCount(), Allocator.TempJob);
-            var playerPositionsWriter = playerPositions.AsParallelWriter();
-            Entities
-            .WithDisposeOnCompletion(playerPositionsWriter)
-            .WithAll<PlayerControlled>()
-            .WithStoreEntityQueryInField(ref playerControlledQuery)
-            .ForEach((Entity e, in LocalToWorld position) =>
-            {
-                playerPositionsWriter.TryAdd(e, position);
-            }).ScheduleParallel();
+            var physicDependency = JobHandle.CombineDependencies(buildPhysicsWorld.GetOutputDependency(), stepPhysicsWorld.GetOutputDependency());
+            Dependency = JobHandle.CombineDependencies(physicDependency, Dependency);
+            var physicsWorld = buildPhysicsWorld.PhysicsWorld;
+            var collisionWorld = physicsWorld.CollisionWorld;
+            // var playerPositions = new NativeHashMap<Entity, LocalToWorld>(playerControlledQuery.CalculateEntityCount(), Allocator.TempJob);
+            // var playerPositionsWriter = playerPositions.AsParallelWriter();
+            // Entities
+            // .WithDisposeOnCompletion(playerPositionsWriter)
+            // .WithAll<PlayerControlled>()
+            // .WithStoreEntityQueryInField(ref playerControlledQuery)
+            // .ForEach((Entity e, in LocalToWorld position) =>
+            // {
+            //     playerPositionsWriter.TryAdd(e, position);
+            // }).ScheduleParallel();
             //TODO: Refractor with a event system create a event when target lost & when target aquired
-            var beginSimulationEntityCommandBuffer = beginSimulationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            var beginSimulationEntityCommandBuffer = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             Entities
-            .WithNone<IsChasingTarget, Spawned, IsDeadTag>()
-            .WithReadOnly(playerPositions)
-            .ForEach((int entityInQueryIndex, Entity e, in ChasePlayer chasePlayer, in LocalToWorld localToWorld, in Rotation rotation) =>
-            {
-                var localToWorlds = playerPositions.GetValueArray(Allocator.Temp);
-                var entities = playerPositions.GetKeyArray(Allocator.Temp);
+                       .WithNone<IsChasingTarget, Spawned, IsDeadTag>()
+                       .WithReadOnly(physicsWorld)
+                       .WithReadOnly(collisionWorld)
+                       // .WithReadOnly(playerPositions)
+                       .ForEach((int entityInQueryIndex, Entity e, in ChasePlayer chasePlayer, in LocalToWorld localToWorld, in Rotation rotation) =>
+                       {
+                           var pointDistanceInput = new PointDistanceInput { Position = localToWorld.Position, MaxDistance = chasePlayer.ChaseDistance, Filter = chasePlayer.Filter };
+                           NativeList<DistanceHit> hits = new NativeList<DistanceHit>(Allocator.Temp);
+                           collisionWorld.CalculateDistance(pointDistanceInput, ref hits);
+                           for (int i = 0; i < hits.Length; i++)
+                           {
 
-                for (int i = 0; i < localToWorlds.Length; i++)
-                {
-                    var playerLocalToWorld = localToWorlds[i];
-                    var entity = entities[i];
+                               var hit = hits[i];
+                               //    var playerPosition = hit.Position;
+                               var entity = physicsWorld.Bodies[hit.RigidBodyIndex].Entity;
+                               Debug.Log($"Chase Target found {entity.Index}");
+                               if (HasComponent<LocalToWorld>(entity))
+                               {
+                                   var playerLocalToWorld = GetComponent<LocalToWorld>(entity);
+                                   var playerPosition = playerLocalToWorld.Position;
 
-                    var forwardVector = math.forward(rotation.Value);
-                    var vectorToPlayer = playerLocalToWorld.Position - localToWorld.Position;
-                    var distance = math.lengthsq(vectorToPlayer);
-                    var unitVecToPlayer = math.normalize(vectorToPlayer);
-                    var angleRadians = math.radians(chasePlayer.AngleOfView);
-                    // Use the dot product to determine if the player is within our vision cone
-                    var dot = math.dot(forwardVector, unitVecToPlayer);
-                    var canSeePlayer = dot > 0.0f && // player is in front of us
-                        math.abs(math.acos(dot)) < angleRadians;
+                                   var forwardVector = math.forward(rotation.Value);
+                                   var vectorToPlayer = playerPosition - localToWorld.Position;
+                                   // var distance = math.lengthsq(vectorToPlayer);
+                                   var unitVecToPlayer = math.normalize(vectorToPlayer);
+                                   var angleRadians = math.radians(chasePlayer.AngleOfView);
+                                   // Use the dot product to determine if the player is within our vision cone
+                                   var dot = math.dot(forwardVector, unitVecToPlayer);
+                                   var canSeePlayer = dot > 0.0f && // player is in front of us
+                                       math.abs(math.acos(dot)) < angleRadians;
 
-                    if (distance <= chasePlayer.ChaseDistanceSq && canSeePlayer)
-                    {
-                        beginSimulationEntityCommandBuffer.AddComponent<IsChasingTarget>(entityInQueryIndex, e);
-                        beginSimulationEntityCommandBuffer.AddComponent(entityInQueryIndex, e, new StartChaseTarget { Target = entity, Position = playerLocalToWorld.Position });
-                    }
-                }
-            }).ScheduleParallel();
+                                   if (canSeePlayer)
+                                   {
+                                       beginSimulationEntityCommandBuffer.AddComponent<IsChasingTarget>(entityInQueryIndex, e);
+                                       beginSimulationEntityCommandBuffer.AddComponent(entityInQueryIndex, e, new StartChaseTarget { Target = entity, Position = playerPosition });
+                                       break;
+                                   }
+                               }
+
+                           }
+                           hits.Dispose();
+                           // var localToWorlds = playerPositions.GetValueArray(Allocator.Temp);
+                           // var entities = playerPositions.GetKeyArray(Allocator.Temp);
+
+                           // for (int i = 0; i < localToWorlds.Length; i++)
+                           // {
+                           //     var playerLocalToWorld = localToWorlds[i];
+                           //     var entity = entities[i];
+
+                           //     var forwardVector = math.forward(rotation.Value);
+                           //     var vectorToPlayer = playerLocalToWorld.Position - localToWorld.Position;
+                           //     var distance = math.lengthsq(vectorToPlayer);
+                           //     var unitVecToPlayer = math.normalize(vectorToPlayer);
+                           //     var angleRadians = math.radians(chasePlayer.AngleOfView);
+                           //     // Use the dot product to determine if the player is within our vision cone
+                           //     var dot = math.dot(forwardVector, unitVecToPlayer);
+                           //     var canSeePlayer = dot > 0.0f && // player is in front of us
+                           //         math.abs(math.acos(dot)) < angleRadians;
+
+                           //     if (distance <= chasePlayer.ChaseDistanceSq && canSeePlayer)
+                           //     {
+                           //         beginSimulationEntityCommandBuffer.AddComponent<IsChasingTarget>(entityInQueryIndex, e);
+                           //         beginSimulationEntityCommandBuffer.AddComponent(entityInQueryIndex, e, new StartChaseTarget { Target = entity, Position = playerLocalToWorld.Position });
+                           //     }
+                           // }
+                       }).ScheduleParallel();
+
+            // chasePlayer.Complete();
+
+            // Dependency = chasePlayer;
 
             Entities.ForEach((ref ChasePlayer chasePlayer, in StartChaseTarget startChaseTarget) =>
-                   {
-                       chasePlayer.Target = startChaseTarget.Target;
-                   }).ScheduleParallel();
+            {
+                chasePlayer.Target = startChaseTarget.Target;
+            }).ScheduleParallel();
 
             Entities.ForEach((ref Fighter fighter, in StartChaseTarget startChaseTarget) =>
             {
@@ -252,12 +298,12 @@ namespace RPG.Control
             Entities
             .WithAny<IsChasingTarget>()
             .WithNone<Spawned>()
-            .WithReadOnly(playerPositions)
-            .WithDisposeOnCompletion(playerPositions)
+            // .WithReadOnly(playerPositions)
+            // .WithDisposeOnCompletion(playerPositions)
             .ForEach((int entityInQueryIndex, Entity e, in ChasePlayer chasePlayer, in LocalToWorld localToWorld) =>
             {
                 var currentTarget = chasePlayer.Target;
-                var playerLocalToWorld = playerPositions[currentTarget];
+                var playerLocalToWorld = GetComponent<LocalToWorld>(currentTarget);
                 if (math.abs(math.distance(localToWorld.Position, playerLocalToWorld.Position)) >= chasePlayer.ChaseDistance)
                 {
                     beginSimulationEntityCommandBuffer.RemoveComponent<IsChasingTarget>(entityInQueryIndex, e);
@@ -286,7 +332,8 @@ namespace RPG.Control
                 beginSimulationEntityCommandBuffer.RemoveComponent<ChaseTargetLose>(entityInQueryIndex, entity);
             }).ScheduleParallel();
 
-            beginSimulationEntityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
 
         }
     }

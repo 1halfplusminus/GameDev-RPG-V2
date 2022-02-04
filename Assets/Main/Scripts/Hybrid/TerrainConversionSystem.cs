@@ -1,10 +1,10 @@
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
-using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
 using UnityEngine;
 using RPG.Mouvement;
+using RPG.Hybrid;
 
 public class TerrainConversionSystem : GameObjectConversionSystem
 {
@@ -14,10 +14,7 @@ public class TerrainConversionSystem : GameObjectConversionSystem
         {
             var terrainCollider = terrain.GetComponent<UnityEngine.TerrainCollider>();
             AddHybridComponent(terrain);
-            // AddHybridComponent(terrainCollider);
             var entity = GetPrimaryEntity(terrain);
-            // DstEntityManager.AddComponentObject(entity, terrainCollider);
-
             if (terrainCollider == null || terrainCollider.terrainData == null)
                 return;
 
@@ -37,10 +34,11 @@ public class TerrainConversionSystem : GameObjectConversionSystem
                     ++index;
                 }
             }
-
+            var terrainColliderAuthoring = terrain.GetComponent<TerrainColliderAuthoring>();
             var colliders = Unity.Physics.TerrainCollider.Create(heights, size, scale,
-                Unity.Physics.TerrainCollider.CollisionMethod.Triangles,
-                CollisionFilter.Default);
+                Unity.Physics.TerrainCollider.CollisionMethod.VertexSamples,
+               terrainColliderAuthoring != null ? terrainColliderAuthoring.GetFilter() : CollisionFilter.Default);
+            BlobAssetStore.AddUniqueBlobAsset(ref colliders);
             DstEntityManager.AddComponent<Navigable>(entity);
             DstEntityManager.AddComponentData(entity, new PhysicsCollider()
             {
@@ -48,7 +46,6 @@ public class TerrainConversionSystem : GameObjectConversionSystem
             });
             heights.Dispose();
             DeclareAssetDependency(terrain.gameObject, terrain.terrainData);
-            // DeclareAssetDependency(terrain.gameObject, terrainCollider);
         });
     }
 }

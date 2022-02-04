@@ -1,6 +1,7 @@
 
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Physics;
 using UnityEngine;
 
 namespace RPG.Control
@@ -14,6 +15,8 @@ namespace RPG.Control
         public float ChaseDistance;
         public float ChaseDistanceSq;
         public Entity Target;
+
+        public CollisionFilter Filter;
     }
 
     public struct GuardOriginalLocationTag : IComponentData { }

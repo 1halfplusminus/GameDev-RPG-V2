@@ -143,7 +143,7 @@ namespace RPG.UI
             Entities
             .WithAll<DialogUI, UIReady>()
             .WithNone<DialogController>()
-            .ForEach((UIDocument document, Entity e, RenderDialog displayDialog) =>
+            .ForEach((UIDocument document, Entity e, in RenderDialog displayDialog) =>
             {
                 var controller = new DialogController();
                 controller.onClose += OnClose(e);

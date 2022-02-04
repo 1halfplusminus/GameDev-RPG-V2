@@ -99,18 +99,17 @@ namespace RPG.Core
 
         }
     }
-    [UpdateBefore(typeof(EndSimulationEntityCommandBufferSystem))]
+    [UpdateInGroup(typeof(CoreSystemGroup))]
+    [UpdateBefore(typeof(RaycastSystem))]
     public class EndSimulationRaycastHitSystem : SystemBase
     {
         EndSimulationEntityCommandBufferSystem commandBufferSystem;
         protected override void OnCreate()
         {
             base.OnCreate();
-            commandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
         {
-            var commandBuffer = commandBufferSystem.CreateCommandBuffer();
             Entities.ForEach((ref DynamicBuffer<HittedByRaycastEvent> rayHits) => { rayHits.Clear(); }).ScheduleParallel();
         }
     }

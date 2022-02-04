@@ -12,21 +12,10 @@ namespace RPG.Animation
     [Serializable]
     public class ClipAsset : ScriptableObject
     {
-        public NativeArray<byte> NativeData;
         public byte[] Data;
 
-        public World world;
+        public BlobAssetStore blobAssetStore;
 
-        BlobAssetReference<Clip> Ref;
-
-        private void OnAwake()
-        {
-            RebuildNativeData(Data);
-        }
-        private void OnEnable()
-        {
-            RebuildNativeData(Data);
-        }
         private void InitData()
         {
             if (Data == null)
@@ -35,38 +24,41 @@ namespace RPG.Animation
             }
         }
 
-        public static BlobAssetReference<Clip> BuildClip(NativeArray<byte> data, out World world)
+        public static BlobAssetReference<Clip> BuildClip(byte[] data)
         {
-            world = new World("Clip");
+            using var world = new World("Clip", WorldFlags.Conversion);
             var query = world.EntityManager.CreateEntityQuery(typeof(ChangeAttackAnimation));
             unsafe
             {
-                using var binaryReader = new MemoryBinaryReader((byte*)data.GetUnsafePtr());
-                SerializeUtility.DeserializeWorld(world.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);
-                world.EntityManager.EndExclusiveEntityTransaction();
-                var changeAnimation = query.GetSingleton<ChangeAttackAnimation>();
-                return changeAnimation.Animation;
+                fixed (byte* ptr = &data[0])
+                {
+                    using var binaryReader = new MemoryBinaryReader(ptr);
+                    SerializeUtility.DeserializeWorld(world.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);
+                    world.EntityManager.EndExclusiveEntityTransaction();
+                    var changeAnimation = query.GetSingleton<ChangeAttackAnimation>();
+                    var clone = changeAnimation.Animation.Clone();
+                    return clone;
+
+                }
+
             }
+
         }
 
         public BlobAssetReference<Clip> GetClip()
         {
 
-            RebuildNativeData(Data);
-            var clipRef = BuildClip(NativeData, out world);
+            var clipRef = BuildClip(Data);
             return clipRef;
-
         }
 #if UNITY_EDITOR
         public void SetClip(AnimationClip animationClip)
         {
-            DisposeNativeDataIfNeeded();
-            NativeData = GetClipData(animationClip);
-            Data = NativeData.ToArray();
+            Data = GetClipData(animationClip);
         }
-        public static NativeArray<byte> GetClipData(AnimationClip animationClip)
+        public static byte[] GetClipData(AnimationClip animationClip)
         {
-            using var world = new World("Clip");
+            using var world = new World("Clip", WorldFlags.Conversion);
             var clipAssetRef = animationClip.ToDenseClip();
             world.EntityManager.DestroyAndResetAllEntities();
             var clipEntity = world.EntityManager.CreateEntity();
@@ -75,7 +67,7 @@ namespace RPG.Animation
             {
                 using var binaryWriter = new MemoryBinaryWriter();
                 SerializeUtility.SerializeWorld(world.EntityManager, binaryWriter);
-                var data = new NativeArray<byte>(binaryWriter.Length, Allocator.Persistent);
+                var data = new byte[binaryWriter.Length];
                 for (int i = 0; i < binaryWriter.Length; i++)
                 {
                     data[i] = binaryWriter.Data[i];
@@ -84,47 +76,7 @@ namespace RPG.Animation
             }
         }
 #endif
-        private void RebuildWorld()
-        {
-            DisposeWorld();
-            world = new World(GetInstanceID().ToString());
-        }
 
-        private void DisposeWorld()
-        {
-            if (world != null && world.IsCreated)
-            {
-                world.Dispose();
-            }
-        }
-
-        private void RebuildNativeData(int size)
-        {
-            DisposeNativeDataIfNeeded();
-            NativeData = new NativeArray<byte>(size, Allocator.Persistent);
-        }
-
-        private void DisposeNativeDataIfNeeded()
-        {
-            if (NativeData != null && NativeData.IsCreated)
-            {
-                NativeData.Dispose();
-            }
-        }
-
-        private void RebuildNativeData(byte[] Data)
-        {
-            RebuildNativeData(Data != null ? Data.Length : 0);
-            if (Data != null)
-            {
-                NativeData.CopyFrom(Data);
-            }
-        }
-        private void OnDisable()
-        {
-            DisposeNativeDataIfNeeded();
-            DisposeWorld();
-        }
     }
 
 

@@ -6,6 +6,7 @@ namespace RPG.Animation
 {
 #if UNITY_EDITOR
     using Unity.Animation.Hybrid;
+    using Unity.Collections;
 #endif
     static class AnimationConversionExtensions
     {
@@ -29,6 +30,7 @@ namespace RPG.Animation
             {
                 conversionSystem.DeclareAssetDependency(obj, clip);
                 blobAsset = clip.GetClip();
+                conversionSystem.BlobAssetStore.AddUniqueBlobAsset(ref blobAsset);
                 return true;
             }
             return false;
