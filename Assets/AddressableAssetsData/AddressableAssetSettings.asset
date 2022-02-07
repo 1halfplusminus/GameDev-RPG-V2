@@ -93,6 +93,7 @@ MonoBehaviour:
     - Weapon Instance
     - VFX
     - InGameUI
+    - Test Item
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 068d72f1a64c8f4bbabbf8b00b2ca1cd, type: 2}
@@ -112,14 +113,3 @@ MonoBehaviour:
     m_Settings: {fileID: 11400000}
     m_NextInstanceId: 0
     m_RegisteredServiceTypeRefs: []
-    m_GlobalProfileVariablesInfos:
-    - key: PrivateIpAddress
-      value: 192.168.1.26
-    - key: PrivateIpAddress_1
-      value: 192.168.1.23
-    - key: PrivateIpAddress_2
-      value: 172.18.0.1
-    - key: PrivateIpAddress_3
-      value: 172.28.0.1
-    - key: PrivateIpAddress_4
-      value: 172.19.0.1

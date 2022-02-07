@@ -20,10 +20,13 @@ namespace RPG.Gameplay
         {
             var input = inputSystem.Input;
             var dialogInteraction = input.Gameplay.InGameInteraction.WasReleasedThisFrame();
+            var openInventoryPressedThisFrame = input.Gameplay.OpenInventory.WasReleasedThisFrame();
+            var closeInventoryPressedThisFrame = input.Gameplay.CloseInventory.WasReleasedThisFrame();
             Entities.ForEach((ref GameplayInput gameplayInput) =>
             {
-                Debug.Log($"E Released this frame {dialogInteraction}");
                 gameplayInput.DialogInteractionPressedThisFrame = dialogInteraction;
+                gameplayInput.OpenInventoryPressedThisFrame = openInventoryPressedThisFrame;
+                gameplayInput.CloseInventoryPressedThisFrame = closeInventoryPressedThisFrame;
             }).ScheduleParallel();
         }
 

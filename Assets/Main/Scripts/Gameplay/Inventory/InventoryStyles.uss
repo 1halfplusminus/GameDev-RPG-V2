@@ -1,0 +1,124 @@
+.header_main {
+    font-size: 50px;
+}
+
+.Bar_Outer {
+    color: rgb(255, 255, 255);
+}
+
+.btn-main {
+    margin-left: 3px;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    flex-grow: 1;
+    -unity-text-align: middle-center;
+    font-size: 24px;
+    height: 52px;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: auto;
+    background-color: rgb(226, 137, 45);
+    border-left-color: rgb(226, 137, 45);
+    border-right-color: rgb(226, 137, 45);
+    border-top-color: rgb(226, 137, 45);
+    border-bottom-color: rgb(226, 137, 45);
+}
+
+.slot-icon {
+    width: 150px;
+    height: 150px;
+    max-width: 150px;
+    max-height: 150px;
+    min-height: 150px;
+    min-width: 150px;
+    border-left-color: rgb(75, 75, 75);
+    border-right-color: rgb(75, 75, 75);
+    border-top-color: rgb(75, 75, 75);
+    border-bottom-color: rgb(75, 75, 75);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    cursor: url('project://database/Assets/Main/Assets%20Packs/Pixel%20Cursors/Cursors/basic_01%20GREEN.png?fileID=2800000&guid=8ea795c067613354898068091ffc7130&type=3#basic_01 GREEN');
+    -unity-background-scale-mode: scale-and-crop;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    -unity-slice-left: 0;
+    -unity-slice-top: 0;
+    -unity-slice-right: 0;
+    -unity-slice-bottom: 0;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-grow: 0;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    background-image: none;
+}
+
+.header_main Label {
+    color: rgb(255, 255, 255);
+}
+
+#ItemDetails Label {
+    color: rgb(255, 255, 255);
+    cursor: url('project://database/Assets/Main/Assets%20Packs/Pixel%20Cursors/Cursors/basic_01%20BLUE.png?fileID=2800000&guid=44a99ee545fd8ba46a452b12c1f9378b&type=3#basic_01 BLUE');
+}
+
+.inventory-grid {
+    flex-direction: row;
+    height: 894px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 1203px;
+}
+
+Label {
+    cursor: url('project://database/Assets/Main/Assets%20Packs/Pixel%20Cursors/Cursors/basic_01.png?fileID=2800000&guid=2e71a8202d3b4a3448ec85ced5a40265&type=3#basic_01');
+}
+
+.iventory-icon {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+    padding-right: 0;
+    background-image: url('project://database/Assets/Main/Assets%20Packs/Clean%20Vector%20Icons/T_24_diamond_.png?fileID=2800000&guid=c9f0cc0739579d541a08ac2c78d3e605&type=3#T_24_diamond_');
+    padding-left: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.slot-background-container {
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+.slot-icon-telegraph {
+    position: absolute;
+    display: flex;
+    visibility: hidden;
+}
+
+.slot-highlight {
+    border-left-color: rgba(207, 37, 26, 255);
+    border-right-color: rgba(207, 37, 26, 255);
+    border-top-color: rgba(207, 37, 26, 255);
+    border-bottom-color: rgba(207, 37, 26, 255);
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+
+.slot-highlight-empty {
+    border-left-color: rgba(59, 221, 39, 255);
+    border-right-color: rgba(59, 221, 39, 255);
+    border-top-color: rgba(59, 221, 39, 255);
+    border-bottom-color: rgba(59, 221, 39, 255);
+}
