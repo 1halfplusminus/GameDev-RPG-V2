@@ -28,8 +28,6 @@
 .slot-icon {
     width: 150px;
     height: 150px;
-    max-width: 150px;
-    max-height: 150px;
     min-height: 150px;
     min-width: 150px;
     border-left-color: rgb(75, 75, 75);
@@ -106,10 +104,10 @@ Label {
 }
 
 .slot-highlight {
-    border-left-color: rgba(207, 37, 26, 255);
-    border-right-color: rgba(207, 37, 26, 255);
-    border-top-color: rgba(207, 37, 26, 255);
-    border-bottom-color: rgba(207, 37, 26, 255);
+    border-left-color: rgb(207, 37, 26);
+    border-right-color: rgb(207, 37, 26);
+    border-top-color: rgb(207, 37, 26);
+    border-bottom-color: rgb(207, 37, 26);
     border-left-width: 1px;
     border-right-width: 1px;
     border-top-width: 1px;
@@ -117,8 +115,8 @@ Label {
 }
 
 .slot-highlight-empty {
-    border-left-color: rgba(59, 221, 39, 255);
-    border-right-color: rgba(59, 221, 39, 255);
-    border-top-color: rgba(59, 221, 39, 255);
-    border-bottom-color: rgba(59, 221, 39, 255);
+    border-left-color: rgb(59, 221, 39);
+    border-right-color: rgb(59, 221, 39);
+    border-top-color: rgb(59, 221, 39);
+    border-bottom-color: rgb(59, 221, 39);
 }

@@ -13,11 +13,13 @@
         "Unity.ResourceManager",
         "RPG.Gameplay.Dialog",
         "RPG",
-        "Unity.Physics"
+        "Unity.Physics",
+        "RPG.Gameplay.Inventory",
+        "Unity.Mathematics.Extensions"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": true,
     "precompiledReferences": [
         "nunit.framework.dll"
