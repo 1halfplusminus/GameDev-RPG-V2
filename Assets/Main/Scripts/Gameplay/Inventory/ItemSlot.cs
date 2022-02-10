@@ -36,7 +36,7 @@ namespace RPG.Gameplay.Inventory
 
             var size = new float3(Size.x, Size.y, 1f);
             var scaledSize = size * new float3(Scale.x - 0.1f, Scale.y - 0.1f, 1f);
-            var boxGeometry = new BoxGeometry { Center = scaledSize / 2.0f, Orientation = quaternion.identity, Size = size * new float3(Scale.x - 0.1f, Scale.y - 0.1f, 1f) };
+            var boxGeometry = new BoxGeometry { Center = scaledSize / 2.0f, Orientation = quaternion.identity, Size = scaledSize };
             var mat = new Unity.Physics.Material();
             mat.CollisionResponse = CollisionResponsePolicy.CollideRaiseCollisionEvents;
             var boxBlob = Unity.Physics.BoxCollider.Create(boxGeometry, CollisionFilter.Default, mat);
@@ -58,12 +58,27 @@ namespace RPG.Gameplay.Inventory
         {
             world.Dispose();
         }
+        public Aabb GetAabb(int index)
+        {
+            var body = world.CollisionWorld.Bodies[index];
+            return body.CalculateAabb();
+        }
+        public NativeList<int> ColliderCast(int2 position, int2 size)
+        {
+            var aabb = new SlotGUI { Coordinate = position, Size = itemSize, Scale = size }.getAabb();
+            var hits = new NativeList<int>(Allocator.Temp);
+            world.CollisionWorld.OverlapAabb(new OverlapAabbInput { Aabb = aabb, Filter = CollisionFilter.Default }, ref hits);
+            hits.Sort();
+            return hits;
+        }
         public NativeList<int> GetSlots(int index)
         {
             unsafe
             {
                 var hits = new NativeList<int>(Allocator.Temp);
-                world.CollisionWorld.OverlapAabb(new OverlapAabbInput { Aabb = slots[index].getAabb(), Filter = CollisionFilter.Default }, ref hits);
+                var body = GetAabb(index);
+                world.CollisionWorld.OverlapAabb(new OverlapAabbInput { Aabb = body, Filter = CollisionFilter.Default }, ref hits);
+                hits.Sort();
                 return hits;
             }
         }
@@ -180,7 +195,7 @@ namespace RPG.Gameplay.Inventory
         }
         public NativeArray<bool> CalculeOverlapse()
         {
-            world.CollisionWorld.UpdateDynamicTree(ref world, 1.0f, -9.81f * math.up());
+
             // world.CollisionWorld.BuildBroadphase(ref world, 1.0f, -9.81f * math.up());
             var overlapses = new NativeArray<bool>(slots.Length, Allocator.Temp);
             // var dynamicStream = new NativeStream(slots.Length, Allocator.TempJob);
@@ -263,17 +278,17 @@ namespace RPG.Gameplay.Inventory
             rigid.WorldFromBody = slots[index].GetRigidTransform();
             rigid.Collider = slots[index].GetCollider();
             bodies[index] = rigid;
-
+            world.CollisionWorld.UpdateDynamicTree(ref world, 1.0f, -9.81f * math.up());
 
         }
         public SlotGUI GetSlot(int index)
         {
             return slots[index];
         }
-        public Aabb GetAabb(int index)
-        {
-            return world.DynamicBodies[index].Collider.Value.CalculateAabb(world.DynamicBodies[index].WorldFromBody);
-        }
+        // public Aabb GetAabb(int index)
+        // {
+        //     return world.DynamicBodies[index].Collider.Value.CalculateAabb(world.DynamicBodies[index].WorldFromBody);
+        // }
         public void AddItem(InventoryItem item)
         {
             var itemAabb = item.GetAabb();
@@ -449,9 +464,7 @@ namespace RPG.Gameplay.Inventory
             imageBackground.AddToClassList("slot-background-container");
             Add(imageBackground);
             RegisterCallback<MouseUpEvent>(OnMouseEventUp);
-
             //DEBUG TEXT
-
             var text = new Label();
             text.style.flexGrow = 1;
             OnChange += () =>
@@ -601,26 +614,55 @@ namespace RPG.Gameplay.Inventory
 
         private void PlaceInNewslotIfValid()
         {
-            if (nextSlot != null && nextSlot != draggedItem && nextSlot.IsEmpty())
+            if (nextSlot != null && !IsSameSlot(nextSlot.Index, draggedItem.Index) && !nextSlot.ClassListContains("slot-highlight"))
             {
                 RemoveItemSlot(draggedItem.Index);
                 SetItemAtSlot(nextSlot.Index, telegraph.ItemSlotDescription);
             }
             else
             {
+                // RemoveItemSlot(draggedItem.Index);
                 SetItemAtSlot(draggedItem.Index, telegraph.ItemSlotDescription);
             }
+        }
+        private bool IsSameSlot(int firstSlotIndex, int secondSlotIndex)
+        {
+            if (firstSlotIndex == secondSlotIndex)
+            {
+                return true;
+            }
+            using var firstSlots = inventoryGUI.GetSlots(firstSlotIndex);
+            using var secondSlots = inventoryGUI.GetSlots(secondSlotIndex);
+            firstSlots.Sort();
+            secondSlots.Sort();
+            for (int i = 1; i < firstSlots.Length; i++)
+            {
+                for (int j = 0; j < secondSlots.Length; j++)
+                {
+                    if (firstSlots[i] == secondSlots[j])
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
         void SetItemAtSlot(int index, ItemSlotDescription itemSlotDescription)
         {
             var slots = GetItemSlotsQuery();
             inventoryGUI.ResizeSlot(index, itemSlotDescription.Dimension);
             using var hits = inventoryGUI.GetSlots(index);
+            hits.Sort();
             for (var i = 0; i < hits.Length; i++)
             {
                 Debug.Log($"item {index} take slot {hits[i]} ");
                 var overlapsSlot = slots.AtIndex(hits[i]);
                 overlapsSlot.SetItem(itemSlotDescription);
+                if (i != 0)
+                {
+                    inventoryGUI.ResizeSlot(hits[i], 1);
+                }
+
             }
         }
         void ClearSize(ItemSlot slot)
@@ -643,12 +685,51 @@ namespace RPG.Gameplay.Inventory
             }
 
         }
+        public bool IsEmpty(int slotIndex)
+        {
+            var uiSlots = GetItemSlotsQuery();
+            var slots = inventoryGUI.GetSlots(slotIndex);
+            for (int i = 0; i < slots.Length; i++)
+            {
+                if (!uiSlots.AtIndex(slots[i]).IsEmpty())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+        // public void AddToClassList(int slotIndex, string[] classNames)
+        // {
+        //     var uiSlots = GetItemSlotsQuery();
+        //     var slots = inventoryGUI.GetSlots(slotIndex);
+        //     for (int i = 0; i < slots.Length; i++)
+        //     {
+        //         var slot = uiSlots.AtIndex(i)
+        //         foreach (var className in classNames)
+        //         {
+        //             slot.AddToClassList(className);
+        //         }
+        //     }
+        // }
+        // public void RemoveClassList(int slotIndex, string[] classNames)
+        // {
+        //     var uiSlots = GetItemSlotsQuery();
+        //     var slots = inventoryGUI.GetSlots(slotIndex);
+        //     for (int i = 0; i < slots.Length; i++)
+        //     {
+        //         var slot = uiSlots.AtIndex(i)
+        //         foreach (var className in classNames)
+        //         {
+        //             slot.RemoveFromClassList(className);
+        //         }
+        //     }
+        // }
         public void OnMouseMove(MouseMoveEvent mouseMoveEvent)
         {
             if (draggedItem == null) { return; }
             if (nextSlot != null)
             {
-                if (nextSlot.IsEmpty())
+                if (IsEmpty(nextSlot.Index))
                 {
                     inventoryGUI.ResizeSlot(nextSlot.Index, 1);
                 }
@@ -656,20 +737,49 @@ namespace RPG.Gameplay.Inventory
                 nextSlot.RemoveFromClassList("slot-highlight");
             }
             // Debug.Log($"Mouse Event From Grid x: {(int)(mouseMoveEvent.localMousePosition.x / ItemSize.x) } y: {(int)(mouseMoveEvent.localMousePosition.y / ItemSize.y)} ");
-            telegraph.SetLocalMouseEventPosition(mouseMoveEvent);
-            var slotIndex = inventory.GetIndex((int)(mouseMoveEvent.localMousePosition.x / ItemSize.x), (int)(mouseMoveEvent.localMousePosition.y / ItemSize.y));
-            var slot = GetItemSlotAtIndex(slotIndex);
-            // Debug.Log($"slot index {slotIndex}");
-            nextSlot = slot;
-            if (slot.IsEmpty())
+            var slots = GetItemSlotsQuery();
+            var coordinate = new int2
             {
-                inventoryGUI.ResizeSlot(slotIndex, telegraph.ItemSlotDescription.Dimension);
-                nextSlot.AddToClassList("slot-highlight-empty");
+                x = (int)(mouseMoveEvent.localMousePosition.x / ItemSize.x),
+                y = (int)(mouseMoveEvent.localMousePosition.y / ItemSize.y),
+            };
+            telegraph.SetLocalMouseEventPosition(mouseMoveEvent);
+            using var result = inventoryGUI.ColliderCast(coordinate, telegraph.ItemSlotDescription.Dimension);
+            bool isEmpty = true;
+            for (int i = 0; i < result.Length; i++)
+            {
+                if (!slots.AtIndex(result[i]).IsEmpty())
+                {
+
+                    isEmpty = false;
+                    break;
+                }
+            }
+            nextSlot = slots.AtIndex(result[0]);
+            if (!isEmpty)
+            {
+                nextSlot.AddToClassList("slot-highlight");
             }
             else
             {
-                slot.AddToClassList("slot-highlight");
+                nextSlot.AddToClassList("slot-highlight-empty");
             }
+            // var slotIndex = inventory.GetIndex((int)(mouseMoveEvent.localMousePosition.x / ItemSize.x), (int)(mouseMoveEvent.localMousePosition.y / ItemSize.y));
+            // var slotSizeBefore = GetItemSlotAtIndex(slotIndex).ItemSlotDescription.Dimension;
+            // // inventoryGUI.ResizeSlot(slotIndex, telegraph.ItemSlotDescription.Dimension);
+            // var slots = inventoryGUI.GetSlots(slotIndex);
+            // nextSlot = GetItemSlotAtIndex(slots[0]);
+            // Debug.Log($"slot index {nextSlot.Index}");
+            // if (IsEmpty(nextSlot.Index))
+            // {
+            //     nextSlot.AddToClassList("slot-highlight-empty");
+            // }
+            // else
+            // {
+            //     nextSlot.AddToClassList("slot-highlight");
+            // }
+            // // inventoryGUI.ResizeSlot(slotIndex, slotSizeBefore);
+            // slots.Dispose();
 
             ReDraw();
         }
@@ -682,13 +792,13 @@ namespace RPG.Gameplay.Inventory
             {
                 var uiElementSlot = slots.AtIndex(i);
                 var currentSlot = inventoryGUI.GetSlot(i);
-                // var collider = currentSlot.getAabb();
-                // uiElementSlot.SetPosition(new float2(collider.Min.x, collider.Min.y));
-                // uiElementSlot.style.position = Position.Absolute;
-                // uiElementSlot.style.width = collider.Extents.x;
-                // uiElementSlot.style.height = collider.Extents.y;
-                // uiElementSlot.style.minWidth = collider.Extents.x;
-                // uiElementSlot.style.minHeight = collider.Extents.y;
+                var collider = inventoryGUI.GetAabb(i);
+                uiElementSlot.SetPosition(new float2(collider.Min.x, collider.Min.y));
+                uiElementSlot.style.position = Position.Absolute;
+                uiElementSlot.style.width = collider.Extents.x;
+                uiElementSlot.style.height = collider.Extents.y;
+                uiElementSlot.style.minWidth = collider.Extents.x;
+                uiElementSlot.style.minHeight = collider.Extents.y;
                 if (overlapses[i])
                 {
                     uiElementSlot.style.display = DisplayStyle.None;
@@ -705,12 +815,15 @@ namespace RPG.Gameplay.Inventory
         {
             if (itemSlot.StartDrag())
             {
-                draggedItem = itemSlot;
+
                 telegraph.SetItem(itemSlot.ItemSlotDescription);
                 telegraph.StartDrag();
                 telegraph.SetPosition(position);
-                RemoveItemSlot(draggedItem.Index);
+                RemoveItemSlot(itemSlot.Index);
+                draggedItem = itemSlot;
+
                 ReDraw();
+
             }
         }
         public void StopDrag(ItemSlot itemSlot)
