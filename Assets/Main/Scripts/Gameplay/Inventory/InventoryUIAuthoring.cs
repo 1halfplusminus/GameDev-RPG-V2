@@ -5,6 +5,9 @@ using RPG.Gameplay;
 using UnityEngine;
 using UnityEngine.UIElements;
 using RPG.Stats;
+using RPG.Gameplay.Inventory;
+using Unity.Collections;
+using System.Collections.Generic;
 
 namespace RPG.UI
 {
@@ -13,11 +16,14 @@ namespace RPG.UI
         Label Level;
         Label ExperiencePoint;
         VisualElement ExperiencePointBar;
+
+        public ItemGrid ItemGrid;
         public void Init(VisualElement root)
         {
             Level = root.Q<Label>("Level_Value");
             ExperiencePoint = root.Q<Label>("ExperiencePoint");
             ExperiencePointBar = root.Q<VisualElement>("Bar_Inner");
+            ItemGrid = root.Q<ItemGrid>();
         }
 
         public void SetLevel(int level)
@@ -47,13 +53,19 @@ namespace RPG.UI
         public Entity Entity;
 
     }
+    public struct InventoryInitTag : IComponentData
+    {
+
+    }
     [UpdateInGroup(typeof(UISystemGroup))]
+    [ExecuteAlways]
     public class InventoryUISystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()
         {
             base.OnCreate();
+            Debug.Log("Create Inventory UI System");
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
@@ -86,10 +98,11 @@ namespace RPG.UI
 
             Entities
             .WithNone<InventoryUIController>()
-            .WithAll<InventoryUI, UIReady>().ForEach((Entity e, UIDocument document, InventoryParent inventoryParent) =>
+            .WithAll<InventoryUI, UIReady>().ForEach((Entity e, in UIDocument document, in InventoryParent inventoryParent, in Inventory inventory) =>
             {
                 var controller = new InventoryUIController();
                 controller.Init(document.rootVisualElement);
+
                 cb.AddComponent(e, controller);
                 if (inventoryParent.Entity != Entity.Null)
                 {
@@ -100,13 +113,58 @@ namespace RPG.UI
             .Run();
 
             Entities
-            .ForEach((Entity e, InventoryUIController uIController, BaseStats baseStats, ExperiencePoint experiencePoint) =>
+            .WithNone<InventoryInitTag>()
+            .ForEach((Entity entity, in InventoryUIController controller, in Inventory inventory) =>
+            {
+                Debug.Log("Init Inventory");
+                controller.ItemGrid.InitInventory(inventory);
+                cb.AddComponent<InventoryInitTag>(entity);
+            })
+            .WithoutBurst()
+            .Run();
+
+            Entities
+            .WithAll<InventoryInitTag>()
+            .ForEach((Entity entity, in InventoryUIController controller) =>
+            {
+                var handle = controller.ItemGrid.inventoryGUI.ScheduleCalculeOverlapse();
+                handle.Complete();
+                controller.ItemGrid.ReDraw();
+            })
+            .WithoutBurst()
+            .Run();
+
+            Entities
+            .WithAll<InventoryInitTag>()
+            .ForEach((Entity entity, in DynamicBuffer<InventoryItem> items, in InventoryUIController controller) =>
+            {
+
+                var itemSlotDescriptions = new List<ItemSlotDescription>();
+                var textures = GetSharedComponentTypeHandle<ItemTexture>();
+                for (int i = 0; i < items.Length; i++)
+                {
+                    var itemSlotDescription = new ItemSlotDescription();
+                    var itemTexture = EntityManager.GetSharedComponentData<ItemTexture>(items[i].Item);
+                    itemSlotDescription.Dimension = items[i].ItemDefinitionAsset.Value.Dimension;
+                    itemSlotDescription.GUID = items[i].ItemDefinitionAsset.Value.GUID.ToString();
+                    itemSlotDescription.Texture = itemTexture.Texture;
+                    itemSlotDescriptions.Add(itemSlotDescription);
+                }
+                controller.ItemGrid.DrawItems(itemSlotDescriptions.ToArray());
+
+            })
+            .WithoutBurst()
+            .Run();
+
+            Entities
+            .ForEach((Entity e, in InventoryUIController uIController, in BaseStats baseStats, in ExperiencePoint experiencePoint) =>
             {
                 uIController.SetLevel(baseStats.Level);
                 uIController.SetExperiencePoint((int)experiencePoint.Value, (int)baseStats.ProgressionAsset.Value.GetStat(Stats.Stats.ExperiencePointToLevelUp, baseStats.Level));
             })
             .WithoutBurst()
             .Run();
+
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }

@@ -311,7 +311,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 142956689}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cda8a81bff362688a42891a72d39800, type: 3}
+  m_Script: {fileID: 11500000, guid: c95d788e4a22b895da082e067b3d23e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Prefab: {fileID: 2880122618339188124, guid: 00b5fb09c9accdcb995f18d739da1ff8, type: 3}
@@ -329,6 +329,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DialogInteractionPressedThisFrame: 0
   OpenInventoryPressedThisFrame: 0
+  CloseInventoryPressedThisFrame: 0
 --- !u!1 &340277813
 GameObject:
   m_ObjectHideFlags: 0

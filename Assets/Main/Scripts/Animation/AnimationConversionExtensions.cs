@@ -6,7 +6,6 @@ namespace RPG.Animation
 {
 #if UNITY_EDITOR
     using Unity.Animation.Hybrid;
-    using Unity.Collections;
 #endif
     static class AnimationConversionExtensions
     {
