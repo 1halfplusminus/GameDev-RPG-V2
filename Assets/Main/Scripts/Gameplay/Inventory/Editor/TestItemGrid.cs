@@ -76,13 +76,15 @@ namespace RPG.Gameplay.Inventory
 
             AddToClassList("inventory-grid");
             name = "Grid";
+            var world = World.DefaultGameObjectInjectionWorld;
+
             RegisterCallback<AttachToPanelEvent>((e) =>
             {
                 var inventoryHandle = Addressables.LoadAssetAsync<GameObject>("Gameplay/Inventory/Prefabs/Example Inventory.prefab");
                 inventoryHandle.Completed += (r) =>
                 {
                     var inventoryGO = r.Result;
-                    var world = World.DefaultGameObjectInjectionWorld;
+
                     if (world != null)
                     {
                         var em = world.EntityManager;
@@ -94,8 +96,8 @@ namespace RPG.Gameplay.Inventory
                         var controller = new InventoryUIController();
                         controller.Init(root);
                         em.AddComponentObject(inventoryEntity, controller);
-                        em.AddComponent<TestGridTag>(inventoryEntityPrefab);
-                        em.AddComponent<TestGridTag>(inventoryEntity);
+                        world.EntityManager.AddComponent<TestGridTag>(inventoryEntity);
+                        world.EntityManager.AddComponent<TestGridTag>(inventoryEntityPrefab);
                         Addressables.Release(inventoryGO);
                     }
 
@@ -104,10 +106,9 @@ namespace RPG.Gameplay.Inventory
             });
             RegisterCallback<DetachFromPanelEvent>((e) =>
             {
-                var world = World.DefaultGameObjectInjectionWorld;
                 if (world != null)
                 {
-                    // world.EntityManager.DestroyEntity(world.EntityManager.CreateEntityQuery(typeof(TestGridTag)));
+                    world.EntityManager.DestroyEntity(world.EntityManager.CreateEntityQuery(typeof(TestGridTag)));
                 }
             });
         }

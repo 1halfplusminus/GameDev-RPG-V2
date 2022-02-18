@@ -5,3 +5,4 @@
 *.meta binary
 *.asset binary
 *.scene binary
+*.fbx binary

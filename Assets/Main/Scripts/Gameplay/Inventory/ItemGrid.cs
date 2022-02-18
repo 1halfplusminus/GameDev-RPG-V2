@@ -121,45 +121,92 @@ namespace RPG.Gameplay.Inventory
             SetPosition(0f);
         }
     }
+    public class ItemDetail : VisualElement
+    {
+        public Label Name;
+        public Label Description;
+        public new class UxmlFactory : UxmlFactory<ItemDetail, ItemDetail.UxmlTraits>
+        {
+
+        }
+
+        public ItemDetail()
+        {
+            RegisterCallback<AttachToPanelEvent>((cb) =>
+            {
+                Name = this.Q<Label>("FriendlyName");
+
+                Description = this.Q<Label>("Description");
+
+                Name.text = "";
+
+                Description.text = "";
+            });
+
+        }
+
+        public void ShowItem(ItemSlotDescription itemSlotDescription)
+        {
+            Name.text = itemSlotDescription.FriendlyName;
+            Description.text = itemSlotDescription.Description;
+        }
+    }
     public class ItemSlot : VisualElement
     {
+        public new class UxmlFactory : UxmlFactory<ItemSlot, ItemSlot.UxmlTraits>
+        {
 
+        }
         public int _index;
 
         public int Index { get => _index; set { _index = value; OnChange(); } }
 
-        event Action OnChange;
+        event Action OnChange = () => { };
         float height;
         float width;
-        bool isDragging;
+        bool isDragging = false;
         Label indexLabel;
         public ItemSlotDescription ItemSlotDescription { get; private set; }
 
         protected VisualElement imageBackground;
 
-        public new class UxmlFactory : UxmlFactory<ItemSlot, ItemSlot.UxmlTraits>
-        {
 
-        }
         public ItemSlot()
         {
 
             AddToClassList("slot-icon");
-            height = resolvedStyle.height;
-            width = resolvedStyle.width;
             imageBackground = new VisualElement();
             imageBackground.AddToClassList("slot-background-container");
             Add(imageBackground);
             RegisterCallback<MouseUpEvent>(OnMouseEventUp);
+            RegisterCallback(OnMouseEnterEvent(this));
             //DEBUG TEXT
-            var text = new Label();
-            text.style.flexGrow = 1;
-            OnChange += () =>
-            {
-                text.text = $"{Index}";
-            };
-            Add(text);
+            // var text = new Label();
+            // text.style.flexGrow = 1;
+            // OnChange += () =>
+            // {
+            //     text.text = $"{Index}";
+            // };
+            // Add(text);
         }
+
+        private static EventCallback<MouseEnterEvent> OnMouseEnterEvent(ItemSlot v)
+        {
+            return (e) =>
+            {
+                if (!v.IsEmpty())
+                {
+                    Debug.Log("Hover on item");
+                    var itemDetail = v.GetFirstAncestorOfType<InventoryRootController>().Q<ItemDetail>();
+                    if (itemDetail != null)
+                    {
+                        itemDetail.ShowItem(v.ItemSlotDescription);
+                    }
+                }
+
+            };
+        }
+
         public void SetSize(float Width, float Height)
         {
             height = Height;
@@ -189,7 +236,9 @@ namespace RPG.Gameplay.Inventory
         }
         virtual public bool StartDrag()
         {
+
             if (IsEmpty()) { return false; }
+            Debug.Log("Start Drag");
             imageBackground.style.visibility = Visibility.Hidden;
             isDragging = true;
             return true;
@@ -227,20 +276,20 @@ namespace RPG.Gameplay.Inventory
             if (haveItem)
             {
 
-                this.ItemSlotDescription = newItemSlotDescription;
+                ItemSlotDescription = newItemSlotDescription;
                 Resize(newItemSlotDescription.Dimension);
                 imageBackground.style.backgroundImage = new StyleBackground(newItemSlotDescription.Texture);
             }
             else
             {
                 ClearItem();
-                this.ItemSlotDescription = newItemSlotDescription;
+                ItemSlotDescription = newItemSlotDescription;
             }
 
         }
         public void ClearItem()
         {
-            this.ItemSlotDescription = default;
+            ItemSlotDescription = default;
             imageBackground.style.backgroundImage = default;
             style.height = height;
             style.width = width;
@@ -303,7 +352,8 @@ namespace RPG.Gameplay.Inventory
             RegisterCallback<MouseUpEvent>(OnMouseUp);
             RegisterCallback<DetachFromPanelEvent>((e) =>
             {
-                inventoryGUI.Dispose();
+                Debug.Log("Destroy iventory GUI");
+                this.inventoryGUI.Dispose();
             });
         }
         void ClearHighlight()
@@ -355,28 +405,7 @@ namespace RPG.Gameplay.Inventory
             }
             return false;
         }
-        void SetItemAtSlot(int index, ItemSlotDescription itemSlotDescription)
-        {
-            if (!String.IsNullOrEmpty(itemSlotDescription.GUID))
-            {
-                var slots = GetItemSlotsQuery();
-                inventoryGUI.ResizeSlot(index, itemSlotDescription.Dimension);
-                using var hits = inventoryGUI.GetSlots(index);
-                hits.Sort();
-                for (var i = 0; i < hits.Length; i++)
-                {
-                    Debug.Log($"item {index} take slot {hits[i]} ");
-                    var overlapsSlot = slots.AtIndex(hits[i]);
-                    overlapsSlot.SetItem(itemSlotDescription);
-                    if (i != 0)
-                    {
-                        inventoryGUI.ResizeSlot(hits[i], 1);
-                    }
 
-                }
-            }
-
-        }
         void RemoveItemSlot(int index)
         {
             var slots = GetItemSlotsQuery();
@@ -389,19 +418,7 @@ namespace RPG.Gameplay.Inventory
             }
 
         }
-        public bool IsEmpty(int slotIndex)
-        {
-            var uiSlots = GetItemSlotsQuery();
-            var slots = inventoryGUI.GetSlots(slotIndex);
-            for (int i = 0; i < slots.Length; i++)
-            {
-                if (!uiSlots.AtIndex(slots[i]).IsEmpty())
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
+
         public void OnMouseMove(MouseMoveEvent mouseMoveEvent)
         {
             if (draggedItem == null) { return; }
@@ -471,21 +488,11 @@ namespace RPG.Gameplay.Inventory
             telegraph.StopDrag();
         }
 
-        public void AddItem(ItemSlotDescription item)
-        {
-            var itemSlot = GetItemSlotsQuery();
-            var slot = GetItemSlotsQuery().Where((i) => i.IsEmpty()).First();
-            if (slot != null)
-            {
-                SetItemAtSlot(slot.Index, item);
-            }
-        }
         public void DrawItems(ItemSlotDescription[] items)
         {
             var itemSlot = GetItemSlotsQuery();
             for (int i = 0; i < items.Length; i++)
             {
-
                 itemSlot.AtIndex(i).SetItem(items[i]);
                 inventoryGUI.ResizeSlot(i, items[i].Dimension);
             }
@@ -525,8 +532,8 @@ namespace RPG.Gameplay.Inventory
 
         public void InitInventory(Inventory inventory)
         {
-            this.style.minWidth = inventory.Width * ItemSize.x;
-            this.style.minHeight = inventory.Height * ItemSize.y;
+            style.minWidth = inventory.Width * ItemSize.x;
+            style.minHeight = inventory.Height * ItemSize.y;
             this.inventory = inventory;
             inventoryGUI = new InventoryGUI();
             inventoryGUI.Init(inventory, ItemSize);

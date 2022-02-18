@@ -349,7 +349,11 @@ MonoBehaviour:
   Dimension:
     x: 8
     y: 6
-  Items: []
+  Items:
+  - m_AssetGUID: 8c217ba578b7891898d562652e3b6e19
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
 --- !u!1 &340277813
 GameObject:
   m_ObjectHideFlags: 0

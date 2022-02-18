@@ -29,7 +29,7 @@ namespace RPG.Test
             Assert.IsTrue(itemsBuffer[0].ItemDefinition != Entity.Null);
             Assert.IsFalse(itemsBuffer[1].IsEmpty);
             Assert.IsFalse(String.IsNullOrEmpty(itemsBuffer[2].ItemDefinitionAsset.Value.GUID.ToString()));
-            Assert.IsTrue(itemsBuffer[2].ItemDefinitionAsset.Value.GUID != itemsBuffer[1].ItemDefinitionAsset.Value.GUID);
+            Assert.IsTrue(itemsBuffer[2].ItemDefinitionAsset.Value.GUID.ToString() != itemsBuffer[1].ItemDefinitionAsset.Value.GUID.ToString());
         }
         [Test]
         public void TestItemDefinitionConversion()

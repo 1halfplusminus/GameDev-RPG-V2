@@ -80,7 +80,6 @@ namespace RPG.UI
 
     }
     [UpdateInGroup(typeof(UISystemGroup))]
-    // [ExecuteAlways]
     public class InventoryUISystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
@@ -90,7 +89,19 @@ namespace RPG.UI
             Debug.Log("Create Inventory UI System");
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
+        protected override void OnDestroy()
+        {
+            Entities
+            .WithAll<InventoryInitTag>()
+            .ForEach((in InventoryUIController controller) =>
+            {
+                controller.ItemGrid.inventoryGUI.Dispose();
+            })
+            .WithoutBurst()
+            .Run();
+            base.OnDestroy();
 
+        }
         protected override void OnUpdate()
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
@@ -110,13 +121,18 @@ namespace RPG.UI
             }).ScheduleParallel();
 
             Entities
-            .ForEach((int entityInQueryIndex, Entity e, in GameplayInput gameplayInput, in InventoryUIInstance inventoryUiInstance) =>
+            .ForEach((int entityInQueryIndex,
+            Entity e,
+            in GameplayInput gameplayInput,
+            in InventoryUIInstance inventoryUiInstance
+            ) =>
             {
                 if (gameplayInput.OpenInventoryPressedThisFrame)
                 {
                     cbp.RemoveComponent<InventoryInitTag>(entityInQueryIndex, e);
                     cbp.RemoveComponent<InventoryUIController>(entityInQueryIndex, e);
                     cbp.RemoveComponent<InventoryUIInstance>(entityInQueryIndex, e);
+                    cbp.RemoveComponent<InventoryUIController>(entityInQueryIndex, inventoryUiInstance.Entity);
                     cbp.DestroyEntity(entityInQueryIndex, inventoryUiInstance.Entity);
                 }
             }).ScheduleParallel();
@@ -137,8 +153,9 @@ namespace RPG.UI
             .Run();
 
             Entities
+            .WithAll<InventoryUIInstance>()
             .WithNone<InventoryInitTag>()
-            .ForEach((Entity entity, ref DynamicBuffer<InventoryItem> items, in InventoryUIController controller, in Inventory inventory) =>
+            .ForEach((Entity entity, in InventoryUIController controller, in Inventory inventory) =>
             {
                 controller.ItemGrid.InitInventory(inventory);
                 cb.AddComponent<InventoryInitTag>(entity);
@@ -161,6 +178,7 @@ namespace RPG.UI
             .ForEach((Entity entity, ref DynamicBuffer<InventoryItem> items, in InventoryUIController controller) =>
             {
                 controller.MoveItem(items.AsNativeArray());
+                var length = items.Length;
                 var itemSlotDescriptions = Array.CreateInstance(typeof(ItemSlotDescription), items.Length);
                 var textures = GetSharedComponentTypeHandle<ItemTexture>();
                 for (int i = 0; i < items.Length; i++)
@@ -173,6 +191,9 @@ namespace RPG.UI
                         var itemTexture = EntityManager.GetSharedComponentData<ItemTexture>(items[i].ItemDefinition);
                         itemSlotDescription.Dimension = items[i].ItemDefinitionAsset.Value.Dimension;
                         itemSlotDescription.GUID = items[i].ItemDefinitionAsset.Value.GUID.ToString();
+                        Debug.Log($"Put GUID {itemSlotDescription.GUID} at index {items[i].Index} ");
+                        itemSlotDescription.Description = items[i].ItemDefinitionAsset.Value.Description.ToString();
+                        itemSlotDescription.FriendlyName = items[i].ItemDefinitionAsset.Value.FriendlyName.ToString();
                         itemSlotDescription.Texture = itemTexture.Texture;
                     }
                     itemSlotDescriptions.SetValue(itemSlotDescription, items[i].Index);

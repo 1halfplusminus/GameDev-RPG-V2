@@ -61,7 +61,11 @@ namespace RPG.Gameplay.Inventory
             {
                 slots.Dispose();
             }
-            simulation.Dispose();
+            if (simulation != null)
+            {
+                simulation.Dispose();
+            }
+
         }
         public static InventoryGUI Build(Inventory inventory, NativeArray<InventoryItem> items)
         {
@@ -106,7 +110,7 @@ namespace RPG.Gameplay.Inventory
                     currentItem.Index = slot;
                     items[slot] = currentItem;
                 }
-                Debug.Log($"Insert at slot {takenSlots[0]} item {item.ItemDefinitionAsset.Value.GUID}");
+                Debug.Log($"Insert at slot {takenSlots[0]} item {item.ItemDefinitionAsset.Value.GUID.ToString()}");
                 ResizeSlot(takenSlots[0], item.ItemDefinitionAsset.Value.Dimension);
                 takenSlots.Dispose();
                 return true;

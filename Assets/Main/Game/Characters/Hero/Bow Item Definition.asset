@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Bow Item Definition
   m_EditorClassIdentifier: 
   ID: 9d6931ce-4ef7-4097-a53b-0241d01a57da
-  FriendlyName: Bow
-  Description: Bow
+  FriendlyName: Shitty Bow
+  Description: A Really Basic Bow
   Icon: {fileID: 21300000, guid: 00dc0d7459ef5cffd8e629b9c3a0f657, type: 3}
   SlotDimension:
     Height: 2

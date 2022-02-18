@@ -13,9 +13,17 @@ MonoBehaviour:
   m_Name: Test Item 1
   m_EditorClassIdentifier: 
   ID: bd2e600a-6c96-4000-b3a2-4962360e2625
-  FriendlyName: Test
-  Description: Test item
-  Icon: {fileID: 21300000, guid: 9967dc9c6c023804490a2f656ff50533, type: 3}
+  FriendlyName: Exaliburn
+  Description: "Excalibur (/\u025Bk\u02C8sk\xE6l\u026Ab\u0259r/) is the legendary
+    sword of King Arthur, sometimes also attributed with magical powers or associated
+    with the rightful sovereignty of Britain. It was associated with the Arthurian
+    legend very early on. Excalibur and the Sword in the Stone (the proof of Arthur's
+    lineage) are in some versions said to be different, though in other incarnations
+    they are either the same or at least share their name. In Welsh, it is called
+    Caledfwlch; in Cornish, Calesvol (in Modern Cornish: Kalesvolgh); in Breton,
+    Kaledvoulc'h; and in Latin, Caliburnus. Several similar swords and other weapons
+    also appear in this and other legends.\n\n"
+  Icon: {fileID: 21300000, guid: 31c60dc34687db2929fc4f6b63bd2537, type: 3}
   SlotDimension:
-    Height: 2
+    Height: 4
     Width: 2

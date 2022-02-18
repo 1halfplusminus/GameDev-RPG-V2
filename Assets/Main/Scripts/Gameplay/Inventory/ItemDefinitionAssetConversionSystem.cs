@@ -33,7 +33,7 @@ namespace RPG.Gameplay.Inventory
     {
         public BlobString Description;
         public BlobString FriendlyName;
-        public Unity.Entities.Hash128 GUID;
+        public BlobString GUID;
         public int2 Dimension;
     }
     [Serializable]
@@ -97,10 +97,10 @@ namespace RPG.Gameplay.Inventory
 
             blobBuilder.AllocateString(ref itemDefinitionAssetBlob.Description, itemDefinitionAsset.Description);
             blobBuilder.AllocateString(ref itemDefinitionAssetBlob.FriendlyName, itemDefinitionAsset.FriendlyName);
+            blobBuilder.AllocateString(ref itemDefinitionAssetBlob.GUID, itemDefinitionAsset.ID);
             itemDefinitionAssetBlob.Dimension = new int2 { x = itemDefinitionAsset.SlotDimension.Width, y = itemDefinitionAsset.SlotDimension.Height };
             UnityEngine.Hash128 GUID = new UnityEngine.Hash128();
             GUID.Append(itemDefinitionAsset.ID);
-            itemDefinitionAssetBlob.GUID = GUID;
             var blobAssetReferenceItemDefinition = blobBuilder.CreateBlobAssetReference<ItemDefinitionAssetBlob>(Allocator.Persistent);
             blobBuilder.Dispose();
             return blobAssetReferenceItemDefinition;
