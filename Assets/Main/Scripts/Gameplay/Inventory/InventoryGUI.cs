@@ -71,7 +71,7 @@ namespace RPG.Gameplay.Inventory
             {
                 var item = InventoryItem.Empty;
                 item.Index = i;
-                item.Item = Entity.Null;
+                item.ItemDefinition = Entity.Null;
                 item.IsEmpty = true;
                 items[i] = item;
             }

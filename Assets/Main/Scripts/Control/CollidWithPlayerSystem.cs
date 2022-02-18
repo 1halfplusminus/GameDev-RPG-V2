@@ -14,17 +14,22 @@ namespace RPG.Control
     public class CollidWithPlayerSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
-
+        EntityQuery collidWithPlayerQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
-            entityCommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            collidWithPlayerQuery = EntityManager.CreateEntityQuery(typeof(CollidWithPlayer));
         }
         protected override void OnUpdate()
         {
-            var commandBufferP = entityCommandBufferSystem
-            .CreateCommandBuffer()
+            var commandBuffer = entityCommandBufferSystem
+            .CreateCommandBuffer();
+            var commandBufferP = commandBuffer
             .AsParallelWriter();
+
+            commandBuffer.RemoveComponentForEntityQuery<CollidWithPlayer>(collidWithPlayerQuery);
+
             Entities.ForEach((int entityInQueryIndex, Entity e, DynamicBuffer<StatefulTriggerEvent> triggerEvents) =>
             {
                 foreach (var triggerEvent in triggerEvents)

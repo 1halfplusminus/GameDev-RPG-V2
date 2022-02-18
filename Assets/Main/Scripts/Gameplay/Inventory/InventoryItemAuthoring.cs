@@ -1,6 +1,5 @@
 using UnityEngine;
 using Unity.Entities;
-using RPG.Gameplay.Inventory;
 
 namespace RPG.Gameplay.Inventory
 {
@@ -13,6 +12,9 @@ namespace RPG.Gameplay.Inventory
         {
 
             conversionSystem.DeclareAssetDependency(gameObject, ItemDefinitionAsset);
+            var blobAssetReference = conversionSystem.BlobAssetStore.GetItemDefinitionAssetBlob(ItemDefinitionAsset);
+            var assetEntity = conversionSystem.GetPrimaryEntity(ItemDefinitionAsset);
+            dstManager.AddComponentData(entity, new ItemDefinitionReference { ItemDefinitionAssetBlob = blobAssetReference, AssetEntity = assetEntity });
         }
 
 
@@ -26,6 +28,7 @@ namespace RPG.Gameplay.Inventory
             {
                 Debug.Log($"Declare item definition {itemDefinitionAssetAuthoring.ItemDefinitionAsset.ID}");
                 DeclareReferencedAsset(itemDefinitionAssetAuthoring.ItemDefinitionAsset);
+
             });
         }
     }

@@ -168,9 +168,9 @@ namespace RPG.UI
                     var itemSlotDescription = new ItemSlotDescription();
                     itemSlotDescription.Dimension = 1;
                     itemSlotDescription.IsEmpty = items[i].IsEmpty;
-                    if (items[i].Item != Entity.Null && items[i].ItemDefinitionAsset.IsCreated)
+                    if (items[i].ItemDefinition != Entity.Null && items[i].ItemDefinitionAsset.IsCreated)
                     {
-                        var itemTexture = EntityManager.GetSharedComponentData<ItemTexture>(items[i].Item);
+                        var itemTexture = EntityManager.GetSharedComponentData<ItemTexture>(items[i].ItemDefinition);
                         itemSlotDescription.Dimension = items[i].ItemDefinitionAsset.Value.Dimension;
                         itemSlotDescription.GUID = items[i].ItemDefinitionAsset.Value.GUID.ToString();
                         itemSlotDescription.Texture = itemTexture.Texture;

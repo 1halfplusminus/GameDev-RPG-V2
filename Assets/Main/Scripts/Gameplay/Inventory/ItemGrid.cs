@@ -489,7 +489,40 @@ namespace RPG.Gameplay.Inventory
                 itemSlot.AtIndex(i).SetItem(items[i]);
                 inventoryGUI.ResizeSlot(i, items[i].Dimension);
             }
+            PlaceSlots();
         }
+        public void PlaceSlots()
+        {
+            var slots = GetItemSlotsQuery();
+            var overlapses = inventoryGUI.Overlapses;
+            for (int i = 0; i < inventory.Size; i++)
+            {
+                PlaceSlot(slots.AtIndex(i), ref overlapses, i);
+            }
+        }
+
+        private void PlaceSlot(ItemSlot uiElementSlot, ref NativeArray<bool> overlapses, int i)
+        {
+            var currentSlot = inventoryGUI.GetSlot(i);
+            // var currentSlot = inventoryGUI.GetSlot(i);
+            var collider = inventoryGUI.GetAabb(i);
+            uiElementSlot.SetPosition(new float2(collider.Min.x, collider.Min.y));
+            uiElementSlot.style.position = Position.Absolute;
+            uiElementSlot.style.width = collider.Extents.x;
+            uiElementSlot.style.height = collider.Extents.y;
+            uiElementSlot.style.minWidth = collider.Extents.x;
+            uiElementSlot.style.minHeight = collider.Extents.y;
+            if (overlapses[i])
+            {
+                uiElementSlot.style.display = DisplayStyle.None;
+            }
+            else
+            {
+                uiElementSlot.style.display = DisplayStyle.Flex;
+                uiElementSlot.Resize(currentSlot.Scale);
+            }
+        }
+
         public void InitInventory(Inventory inventory)
         {
             this.style.minWidth = inventory.Width * ItemSize.x;

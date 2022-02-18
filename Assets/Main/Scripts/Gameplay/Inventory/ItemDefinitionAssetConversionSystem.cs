@@ -9,6 +9,11 @@ using UnityEngine;
 
 namespace RPG.Gameplay.Inventory
 {
+    public struct ItemDefinitionReference : IComponentData
+    {
+        public BlobAssetReference<ItemDefinitionAssetBlob> ItemDefinitionAssetBlob;
+        public Entity AssetEntity;
+    }
     public struct ItemTexture : ISharedComponentData, IEquatable<ItemTexture>
     {
         public Texture2D Texture;
@@ -38,14 +43,15 @@ namespace RPG.Gameplay.Inventory
 
         public BlobAssetReference<ItemDefinitionAssetBlob> ItemDefinitionAsset;
 
-        public Entity Item;
+        public Entity ItemDefinition;
 
         public bool IsFull;
 
         public bool IsEmpty { get { return !IsFull; } set { IsFull = !value; } }
-        public static InventoryItem Empty => new InventoryItem { IsFull = false, Item = Entity.Null };
+        public static InventoryItem Empty => new InventoryItem { IsFull = false, ItemDefinition = Entity.Null };
 
         public bool HaveItem { get { return ItemDefinitionAsset.IsCreated; } }
+
         public int CompareTo(InventoryItem other)
         {
             return other.Index - Index;
@@ -80,6 +86,7 @@ namespace RPG.Gameplay.Inventory
                 var entity = GetPrimaryEntity(itemDefinitionAsset);
                 var blobAssetReferenceItemDefinition = BlobAssetStore.GetItemDefinitionAssetBlob(itemDefinitionAsset);
                 DstEntityManager.AddSharedComponentData(entity, new ItemTexture { Texture = itemDefinitionAsset.Icon.texture });
+
             });
         }
 

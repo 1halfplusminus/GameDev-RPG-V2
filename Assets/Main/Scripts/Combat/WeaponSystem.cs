@@ -184,6 +184,7 @@ namespace RPG.Combat
         }
 
     }
+
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class CollidWithPickableWeaponSystem : SystemBase
     {
@@ -205,16 +206,18 @@ namespace RPG.Combat
             Entities
             .WithNone<Picked>()
             .WithStoreEntityQueryInField(ref collidWithPickableweaponQuery)
-            .WithChangeFilter<CollidWithPlayer>()
             .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer collidWithPlayer, in PickableWeapon picked) =>
             {
-                cbp.AddComponent(entityInQueryIndex, collidWithPlayer.Entity, new Equip { Equipable = picked.Entity, SocketType = picked.SocketType });
                 cbp.AddComponent<Picked>(entityInQueryIndex, e);
                 cbp.AddComponent(entityInQueryIndex, e, new HideForSecond { Time = 5f });
+                // cbp.AddComponent(entityInQueryIndex, collidWithPlayer.Entity, new Equip { Equipable = picked.Entity, SocketType = picked.SocketType });
+                cbp.RemoveComponent<StatefulTriggerEvent>(entityInQueryIndex, e);
+
             }).ScheduleParallel();
 
             Entities
-            .WithAll<Picked, StatefulTriggerEvent>()
+            .WithAll<Picked>()
+            .WithNone<DisableRendering>()
             .ForEach((int entityInQueryIndex, Entity e, in LocalToWorld localToWorld) =>
             {
                 Debug.Log($"{e.Index} was picked");
@@ -255,7 +258,6 @@ namespace RPG.Combat
         }
 
     }
-
     [UpdateInGroup(typeof(CombatSystemGroup))]
     public class EquipPickedWeaponSystem : SystemBase
     {

@@ -66,7 +66,7 @@ namespace RPG.Gameplay.Inventory
                         {
                             inventoryGUI.Add
                             (
-                                new InventoryItem { ItemDefinitionAsset = itemDefinitionBlobAsset, Item = itemEntity },
+                                new InventoryItem { ItemDefinitionAsset = itemDefinitionBlobAsset, ItemDefinition = itemEntity, },
                                 itemsBuffer.AsNativeArray()
                             );
                         }
@@ -77,6 +77,42 @@ namespace RPG.Gameplay.Inventory
 
         }
     }
+    public struct AddItem : IComponentData
+    {
+        public BlobAssetReference<ItemDefinitionAssetBlob> ItemDefinitionAsset;
+        public Entity ItemDefinition;
 
+        public Entity ItemPrefab;
+    }
+    [UpdateInGroup(typeof(GameplaySystemGroup))]
+    public class InventorySystem : SystemBase
+    {
+        EntityCommandBufferSystem entityCommandBufferSystem;
 
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        }
+        protected override void OnUpdate()
+        {
+            var cb = entityCommandBufferSystem.CreateCommandBuffer();
+            Entities.ForEach((Entity entity, ref DynamicBuffer<InventoryItem> items, in Inventory inventory, in AddItem addItem) =>
+            {
+                var inventoryGUI = new InventoryGUI { };
+                inventoryGUI.Init(inventory, 1f);
+                var iventoryItem = new InventoryItem
+                {
+                    ItemDefinitionAsset = addItem.ItemDefinitionAsset,
+                    ItemDefinition = addItem.ItemDefinition
+                };
+                inventoryGUI.Add(iventoryItem, items.AsNativeArray());
+                inventoryGUI.Dispose();
+                cb.RemoveComponent<AddItem>(entity);
+            })
+            .WithoutBurst()
+            .Run();
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+        }
+    }
 }

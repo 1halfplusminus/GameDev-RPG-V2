@@ -9,7 +9,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8030578473187684595, guid: 119bdfc092696fa73bdf07c7f35a73c1, type: 3}
       propertyPath: m_Name
-      value: Bow Authoring
+      value: Bow Authoring Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8030578473187684604, guid: 119bdfc092696fa73bdf07c7f35a73c1, type: 3}
       propertyPath: m_RootOrder
@@ -61,3 +61,21 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: 05f68aec6972d1e5f995e03bfed1d50d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 119bdfc092696fa73bdf07c7f35a73c1, type: 3}
+--- !u!1 &1534983870361134157 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8030578473187684595, guid: 119bdfc092696fa73bdf07c7f35a73c1, type: 3}
+  m_PrefabInstance: {fileID: 8808762833670263998}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3334947597631191098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1534983870361134157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc513fd9424ec02d6b1db9700905b9a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ItemDefinitionAsset: {fileID: 11400000, guid: 73654df3459989ac292f6487e23429b4, type: 2}
