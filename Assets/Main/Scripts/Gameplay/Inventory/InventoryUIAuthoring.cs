@@ -114,6 +114,8 @@ namespace RPG.UI
             {
                 if (gameplayInput.OpenInventoryPressedThisFrame)
                 {
+                    cbp.RemoveComponent<InventoryInitTag>(entityInQueryIndex, e);
+                    cbp.RemoveComponent<InventoryUIController>(entityInQueryIndex, e);
                     cbp.RemoveComponent<InventoryUIInstance>(entityInQueryIndex, e);
                     cbp.DestroyEntity(entityInQueryIndex, inventoryUiInstance.Entity);
                 }
@@ -121,11 +123,10 @@ namespace RPG.UI
 
             Entities
             .WithNone<InventoryUIController>()
-            .WithAll<InventoryUI, UIReady>().ForEach((Entity e, in UIDocument document, in InventoryParent inventoryParent, in Inventory inventory) =>
+            .WithAll<InventoryUI, UIReady>().ForEach((Entity e, in UIDocument document, in InventoryParent inventoryParent) =>
             {
                 var controller = new InventoryUIController();
                 controller.Init(document.rootVisualElement);
-
                 cb.AddComponent(e, controller);
                 if (inventoryParent.Entity != Entity.Null)
                 {
@@ -151,7 +152,6 @@ namespace RPG.UI
             {
                 var handle = controller.ItemGrid.inventoryGUI.ScheduleCalculeOverlapse();
                 handle.Complete();
-                controller.ItemGrid.ReDraw();
             })
             .WithoutBurst()
             .Run();

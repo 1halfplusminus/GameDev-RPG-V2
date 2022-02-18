@@ -301,6 +301,10 @@ namespace RPG.Gameplay.Inventory
             Add(telegraph);
             RegisterCallback<MouseMoveEvent>(OnMouseMove);
             RegisterCallback<MouseUpEvent>(OnMouseUp);
+            RegisterCallback<DetachFromPanelEvent>((e) =>
+            {
+                inventoryGUI.Dispose();
+            });
         }
         void ClearHighlight()
         {
@@ -318,7 +322,6 @@ namespace RPG.Gameplay.Inventory
                 StopDrag(draggedItem);
                 ClearHighlight();
                 nextSlot = null;
-                ReDraw();
             }
         }
 
@@ -326,16 +329,9 @@ namespace RPG.Gameplay.Inventory
         {
             if (nextSlot != null && !IsSameSlot(nextSlot.Index, draggedItem.Index) && !nextSlot.ClassListContains("slot-highlight"))
             {
-                // RemoveItemSlot(draggedItem.Index);
-                // SetItemAtSlot(nextSlot.Index, telegraph.ItemSlotDescription);
                 ItemMoved.MovedThisFrame = true;
-                // OnItemMove(oldSlots.ToArray(), newSlots.ToArray());
             }
-            else
-            {
-                // RemoveItemSlot(draggedItem.Index);
-                // SetItemAtSlot(draggedItem.Index, telegraph.ItemSlotDescription);
-            }
+
         }
         private bool IsSameSlot(int firstSlotIndex, int secondSlotIndex)
         {
@@ -453,34 +449,6 @@ namespace RPG.Gameplay.Inventory
 
         }
 
-        public void ReDraw()
-        {
-            // inventoryGUI.ScheduleCalculeOverlapse();
-            // var slots = GetItemSlotsQuery();
-            // var overlapses = inventoryGUI.Overlapses;
-            // for (int i = 0; i < inventory.Size; i++)
-            // {
-            //     var uiElementSlot = slots.AtIndex(i);
-            //     var currentSlot = inventoryGUI.GetSlot(i);
-            //     // var currentSlot = inventoryGUI.GetSlot(i);
-            //     // var collider = inventoryGUI.GetAabb(i);
-            //     // uiElementSlot.SetPosition(new float2(collider.Min.x, collider.Min.y));
-            //     // uiElementSlot.style.position = Position.Absolute;
-            //     // uiElementSlot.style.width = collider.Extents.x;
-            //     // uiElementSlot.style.height = collider.Extents.y;
-            //     // uiElementSlot.style.minWidth = collider.Extents.x;
-            //     // uiElementSlot.style.minHeight = collider.Extents.y;
-            //     if (overlapses[i])
-            //     {
-            //         uiElementSlot.style.display = DisplayStyle.None;
-            //     }
-            //     else
-            //     {
-            //         uiElementSlot.style.display = DisplayStyle.Flex;
-            //         uiElementSlot.Resize(currentSlot.Scale);
-            //     }
-            // }
-        }
 
         public void StartDrag(ItemSlot itemSlot, float2 position)
         {
@@ -494,8 +462,6 @@ namespace RPG.Gameplay.Inventory
                 RemoveItemSlot(itemSlot.Index);
                 draggedItem = itemSlot;
                 oldSlots.Dispose();
-                // ReDraw();
-
             }
         }
         public void StopDrag(ItemSlot itemSlot)
