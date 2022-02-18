@@ -8,10 +8,11 @@ using RPG.Stats;
 using RPG.Gameplay.Inventory;
 using Unity.Collections;
 using System.Collections.Generic;
+using System;
 
 namespace RPG.UI
 {
-    public class InventoryUIController : Object, IUIController, IComponentData
+    public class InventoryUIController : UnityEngine.Object, IUIController, IComponentData
     {
         Label Level;
         Label ExperiencePoint;
@@ -37,6 +38,27 @@ namespace RPG.UI
             ExperiencePoint.text = $"{currentPoint}/{toLevel}";
             ExperiencePointBar.style.width = lenght;
         }
+
+        public void MoveItem(NativeArray<InventoryItem> items)
+        {
+            if (ItemGrid.ItemMoved.MovedThisFrame)
+            {
+                for (int i = 0; i < ItemGrid.ItemMoved.OldIndex.Length; i++)
+                {
+                    var oldIndex = ItemGrid.ItemMoved.OldIndex[i];
+                    var newIndex = ItemGrid.ItemMoved.NewIndex[i];
+                    Debug.Log($"Move {oldIndex} to {newIndex}");
+                    var movedValue = items[oldIndex];
+                    movedValue.Index = newIndex;
+                    items[newIndex] = movedValue;
+
+                    var resetSlot = InventoryItem.Empty;
+                    resetSlot.Index = oldIndex;
+                    items[oldIndex] = resetSlot;
+                }
+                ItemGrid.ItemMoved.MovedThisFrame = false;
+            }
+        }
     }
     [GenerateAuthoringComponent]
     public struct InventoryFactory : IComponentData
@@ -58,7 +80,7 @@ namespace RPG.UI
 
     }
     [UpdateInGroup(typeof(UISystemGroup))]
-    [ExecuteAlways]
+    // [ExecuteAlways]
     public class InventoryUISystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
@@ -68,18 +90,20 @@ namespace RPG.UI
             Debug.Log("Create Inventory UI System");
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
+
         protected override void OnUpdate()
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
             Entities
             .WithNone<InventoryUIInstance>()
-            .ForEach((int entityInQueryIndex, Entity e, in InventoryFactory inventoryPrefab, in GameplayInput input) =>
+            .ForEach((int entityInQueryIndex, Entity e, in InventoryFactory inventoryPrefab, in GameplayInput input, in Inventory inventory) =>
             {
                 if (input.OpenInventoryPressedThisFrame)
                 {
 
                     var instance = cbp.Instantiate(entityInQueryIndex, inventoryPrefab.Prefab);
+                    cbp.AddComponent(entityInQueryIndex, instance, inventory);
                     cbp.AddComponent(entityInQueryIndex, e, new InventoryUIInstance { Entity = instance });
                     cbp.AddComponent(entityInQueryIndex, instance, new InventoryParent { Entity = e });
                 }
@@ -88,7 +112,6 @@ namespace RPG.UI
             Entities
             .ForEach((int entityInQueryIndex, Entity e, in GameplayInput gameplayInput, in InventoryUIInstance inventoryUiInstance) =>
             {
-                Debug.Log($"Close Inventory {gameplayInput.CloseInventoryPressedThisFrame}");
                 if (gameplayInput.OpenInventoryPressedThisFrame)
                 {
                     cbp.RemoveComponent<InventoryUIInstance>(entityInQueryIndex, e);
@@ -114,9 +137,8 @@ namespace RPG.UI
 
             Entities
             .WithNone<InventoryInitTag>()
-            .ForEach((Entity entity, in InventoryUIController controller, in Inventory inventory) =>
+            .ForEach((Entity entity, ref DynamicBuffer<InventoryItem> items, in InventoryUIController controller, in Inventory inventory) =>
             {
-                Debug.Log("Init Inventory");
                 controller.ItemGrid.InitInventory(inventory);
                 cb.AddComponent<InventoryInitTag>(entity);
             })
@@ -136,21 +158,27 @@ namespace RPG.UI
 
             Entities
             .WithAll<InventoryInitTag>()
-            .ForEach((Entity entity, in DynamicBuffer<InventoryItem> items, in InventoryUIController controller) =>
+            .ForEach((Entity entity, ref DynamicBuffer<InventoryItem> items, in InventoryUIController controller) =>
             {
-
-                var itemSlotDescriptions = new List<ItemSlotDescription>();
+                controller.MoveItem(items.AsNativeArray());
+                var itemSlotDescriptions = Array.CreateInstance(typeof(ItemSlotDescription), items.Length);
                 var textures = GetSharedComponentTypeHandle<ItemTexture>();
                 for (int i = 0; i < items.Length; i++)
                 {
                     var itemSlotDescription = new ItemSlotDescription();
-                    var itemTexture = EntityManager.GetSharedComponentData<ItemTexture>(items[i].Item);
-                    itemSlotDescription.Dimension = items[i].ItemDefinitionAsset.Value.Dimension;
-                    itemSlotDescription.GUID = items[i].ItemDefinitionAsset.Value.GUID.ToString();
-                    itemSlotDescription.Texture = itemTexture.Texture;
-                    itemSlotDescriptions.Add(itemSlotDescription);
+                    itemSlotDescription.Dimension = 1;
+                    itemSlotDescription.IsEmpty = items[i].IsEmpty;
+                    if (items[i].Item != Entity.Null && items[i].ItemDefinitionAsset.IsCreated)
+                    {
+                        var itemTexture = EntityManager.GetSharedComponentData<ItemTexture>(items[i].Item);
+                        itemSlotDescription.Dimension = items[i].ItemDefinitionAsset.Value.Dimension;
+                        itemSlotDescription.GUID = items[i].ItemDefinitionAsset.Value.GUID.ToString();
+                        itemSlotDescription.Texture = itemTexture.Texture;
+                    }
+                    itemSlotDescriptions.SetValue(itemSlotDescription, items[i].Index);
                 }
-                controller.ItemGrid.DrawItems(itemSlotDescriptions.ToArray());
+
+                controller.ItemGrid.DrawItems((ItemSlotDescription[])itemSlotDescriptions);
 
             })
             .WithoutBurst()
@@ -168,5 +196,7 @@ namespace RPG.UI
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
+
+
     }
 }

@@ -31,19 +31,32 @@ namespace RPG.Gameplay.Inventory
         public Unity.Entities.Hash128 GUID;
         public int2 Dimension;
     }
-    public struct InventoryItem : IBufferElementData
+    [Serializable]
+    public struct InventoryItem : IBufferElementData, IEquatable<InventoryItem>, IComparable<InventoryItem>
     {
-        public int2 Coordinate;
+        public int Index;
 
         public BlobAssetReference<ItemDefinitionAssetBlob> ItemDefinitionAsset;
 
         public Entity Item;
 
+        public bool IsFull;
+
+        public bool IsEmpty { get { return !IsFull; } set { IsFull = !value; } }
+        public static InventoryItem Empty => new InventoryItem { IsFull = false, Item = Entity.Null };
+
+        public bool HaveItem { get { return ItemDefinitionAsset.IsCreated; } }
+        public int CompareTo(InventoryItem other)
+        {
+            return other.Index - Index;
+        }
+
+        public bool Equals(InventoryItem other)
+        {
+            return other.Index == Index;
+        }
     }
-    public struct InventorySlot : IBufferElementData
-    {
-        public Entity Item;
-    }
+
     public static class ItemDefinitionAssetBlobAssetStoreExtension
     {
         public static BlobAssetReference<ItemDefinitionAssetBlob> GetItemDefinitionAssetBlob(this BlobAssetStore blobAssetStore, ItemDefinitionAsset itemDefinitionAsset)

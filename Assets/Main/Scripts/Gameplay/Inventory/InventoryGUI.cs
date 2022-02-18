@@ -63,6 +63,70 @@ namespace RPG.Gameplay.Inventory
             }
             simulation.Dispose();
         }
+        public static InventoryGUI Build(Inventory inventory, NativeArray<InventoryItem> items)
+        {
+            var inventoryGUI = new InventoryGUI { };
+            inventoryGUI.Init(inventory, 1f);
+            for (int i = 0; i < inventory.Size; i++)
+            {
+                var item = InventoryItem.Empty;
+                item.Index = i;
+                item.Item = Entity.Null;
+                item.IsEmpty = true;
+                items[i] = item;
+            }
+            return inventoryGUI;
+        }
+        public bool Insert(int i, InventoryItem item, NativeArray<InventoryItem> items)
+        {
+            if (!items[i].IsEmpty || i >= slots.Length)
+            {
+                return false;
+            }
+            var allEmpty = true;
+            var takenSlots = ColliderCast(slots[i].Coordinate, item.ItemDefinitionAsset.Value.Dimension);
+            for (int j = 0; j < takenSlots.Length; j++)
+            {
+                var slot = takenSlots[j];
+                var inventoryItem = items[slot];
+                if (!inventoryItem.IsEmpty)
+                {
+                    allEmpty = false;
+                }
+
+            }
+            if (allEmpty)
+            {
+                for (int j = 0; j < takenSlots.Length; j++)
+                {
+                    var slot = takenSlots[j];
+                    var inventoryItem = items[slot];
+                    var currentItem = j == 0 ? item : items[slot];
+                    currentItem.IsEmpty = false;
+                    currentItem.Index = slot;
+                    items[slot] = currentItem;
+                }
+                Debug.Log($"Insert at slot {takenSlots[0]} item {item.ItemDefinitionAsset.Value.GUID}");
+                ResizeSlot(takenSlots[0], item.ItemDefinitionAsset.Value.Dimension);
+                takenSlots.Dispose();
+                return true;
+            }
+            takenSlots.Dispose();
+            return false;
+        }
+        public bool Add(InventoryItem item, NativeArray<InventoryItem> items)
+        {
+            bool inserted = false;
+            for (int i = 0; i < items.Length; i++)
+            {
+                inserted = Insert(i, item, items);
+                if (inserted)
+                {
+                    break;
+                }
+            }
+            return inserted;
+        }
         public Aabb GetAabb(int index)
         {
             var body = world.CollisionWorld.Bodies[index];
@@ -75,6 +139,7 @@ namespace RPG.Gameplay.Inventory
             var hits = new NativeList<int>(Allocator.Temp);
             world.CollisionWorld.OverlapAabb(new OverlapAabbInput { Aabb = aabb, Filter = CollisionFilter.Default }, ref hits);
             hits.Sort();
+
             return hits;
         }
         public NativeList<int> GetSlots(int index)
@@ -108,6 +173,7 @@ namespace RPG.Gameplay.Inventory
         }
         void InitSimulation()
         {
+
             simulation = new Simulation();
             // // var context = new SimulationContext();
             // var input = ;
@@ -170,8 +236,8 @@ namespace RPG.Gameplay.Inventory
                         CustomTags = 0
                     };
                 }
-                InitSimulation();
             }
+            InitSimulation();
             CheckCollision();
         }
         public void CheckCollision()
@@ -248,7 +314,13 @@ namespace RPG.Gameplay.Inventory
         public JobHandle ScheduleCalculeOverlapse()
         {
             ResetOverlapses();
+            UpdateDynamicTree();
             SimulationCallbacks callbacks = new SimulationCallbacks();
+            if (simulation != null)
+            {
+                simulation.Dispose();
+            }
+            InitSimulation();
             var _simulation = simulation;
             var _overlaps = Overlapses;
             var _world = world;
@@ -263,9 +335,10 @@ namespace RPG.Gameplay.Inventory
                 }
                 return handle;
             }, handle);
-            UpdateDynamicTree();
+
             var simulationJobHandle = simulation.ScheduleStepJobs(CreateStepInput(), callbacks, handle, false);
-            handle = simulation.FinalSimulationJobHandle;
+            handle = simulation.FinalJobHandle;
+
             return handle;
         }
 

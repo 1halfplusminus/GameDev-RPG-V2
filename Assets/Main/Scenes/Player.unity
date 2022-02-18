@@ -198,6 +198,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 7979986417888468897, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
+      propertyPath: UniqueIdentifier
+      value: 48c60fc6-2065-476e-8140-ed7757bdafd1
+      objectReference: {fileID: 0}
     - target: {fileID: 8090751460004143902, guid: 071a777f06f715e4b8e2b7205c8be1d9, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -330,6 +334,26 @@ MonoBehaviour:
   DialogInteractionPressedThisFrame: 0
   OpenInventoryPressedThisFrame: 0
   CloseInventoryPressedThisFrame: 0
+--- !u!114 &142956692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 142956689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29a3fc9fdf937412280dd9f11a838ac3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Dimension:
+    x: 8
+    y: 6
+  Items:
+  - m_AssetGUID: e84056739fb3609d48026f24fd0d7c6e
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
 --- !u!1 &340277813
 GameObject:
   m_ObjectHideFlags: 0

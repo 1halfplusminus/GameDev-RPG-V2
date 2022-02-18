@@ -5,10 +5,8 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Unity.Entities;
-using Unity.Physics;
 using Unity.Collections;
 using System.Collections.Generic;
-using RPG.UI;
 
 namespace RPG.Gameplay.Inventory
 {
@@ -63,46 +61,7 @@ namespace RPG.Gameplay.Inventory
     }
     public static class InventoryExtensions
     {
-        public static void CreateInventorySlots(EntityManager em, Entity e, Inventory inventory)
-        {
-            var buffer = em.AddBuffer<InventorySlot>(e);
-            buffer.Capacity = inventory.Size;
-        }
-        public static void MoveItemInInventory(
-           Inventory inventory,
-           DynamicBuffer<InventorySlot> inventorySlots,
-           ref InventoryItem item,
-           Entity itemEntity,
-           int2 newPosition)
-        {
-            RemoveItemInInventory(inventory, inventorySlots, item);
-            item.Coordinate = newPosition;
-            AddItemInInventory(inventory, inventorySlots, item, itemEntity);
-        }
-        public static void RemoveItemInInventory(
-            Inventory inventory,
-            DynamicBuffer<InventorySlot> inventorySlots,
-            InventoryItem item)
-        {
-            // var itemSlots = inventory.GetSlotForItem(item);
-            // for (int i = 0; i < inventorySlots.Length; i++)
-            // {
-            //     inventorySlots[i] = new InventorySlot { Item = Entity.Null };
-            // }
-        }
-        public static void AddItemInInventory(
-            Inventory inventory,
-            DynamicBuffer<InventorySlot> inventorySlots,
-            InventoryItem item,
-            Entity itemEntity
-        )
-        {
-            // var itemSlots = inventory.GetSlotForItem(item);
-            // for (int i = 0; i < inventorySlots.Length; i++)
-            // {
-            //     inventorySlots[i] = new InventorySlot { Item = itemEntity };
-            // }
-        }
+
     }
 
 
@@ -139,6 +98,8 @@ namespace RPG.Gameplay.Inventory
         public int2 Dimension;
 
         public Texture2D Texture;
+
+        public bool IsEmpty;
     }
     public class Telegraph : ItemSlot
     {
@@ -254,9 +215,28 @@ namespace RPG.Gameplay.Inventory
         }
         public void SetItem(ItemSlotDescription newItemSlotDescription)
         {
-            this.ItemSlotDescription = newItemSlotDescription;
-            Resize(newItemSlotDescription.Dimension);
-            imageBackground.style.backgroundImage = new StyleBackground(newItemSlotDescription.Texture);
+            var haveItem = !String.IsNullOrEmpty(newItemSlotDescription.GUID);
+            if (newItemSlotDescription.IsEmpty || haveItem)
+            {
+                style.display = DisplayStyle.Flex;
+            }
+            else
+            {
+                style.display = DisplayStyle.None;
+            }
+            if (haveItem)
+            {
+
+                this.ItemSlotDescription = newItemSlotDescription;
+                Resize(newItemSlotDescription.Dimension);
+                imageBackground.style.backgroundImage = new StyleBackground(newItemSlotDescription.Texture);
+            }
+            else
+            {
+                ClearItem();
+                this.ItemSlotDescription = newItemSlotDescription;
+            }
+
         }
         public void ClearItem()
         {
@@ -303,6 +283,10 @@ namespace RPG.Gameplay.Inventory
         ItemSlot nextSlot;
 
         Inventory inventory;
+
+        public (bool MovedThisFrame, int[] OldIndex, int[] NewIndex) ItemMoved;
+        public Action<int[], int[]> OnItemMove;
+
         public new class UxmlFactory : UxmlFactory<ItemGrid, ItemGrid.UxmlTraits>
         {
 
@@ -342,13 +326,15 @@ namespace RPG.Gameplay.Inventory
         {
             if (nextSlot != null && !IsSameSlot(nextSlot.Index, draggedItem.Index) && !nextSlot.ClassListContains("slot-highlight"))
             {
-                RemoveItemSlot(draggedItem.Index);
-                SetItemAtSlot(nextSlot.Index, telegraph.ItemSlotDescription);
+                // RemoveItemSlot(draggedItem.Index);
+                // SetItemAtSlot(nextSlot.Index, telegraph.ItemSlotDescription);
+                ItemMoved.MovedThisFrame = true;
+                // OnItemMove(oldSlots.ToArray(), newSlots.ToArray());
             }
             else
             {
                 // RemoveItemSlot(draggedItem.Index);
-                SetItemAtSlot(draggedItem.Index, telegraph.ItemSlotDescription);
+                // SetItemAtSlot(draggedItem.Index, telegraph.ItemSlotDescription);
             }
         }
         private bool IsSameSlot(int firstSlotIndex, int secondSlotIndex)
@@ -375,21 +361,25 @@ namespace RPG.Gameplay.Inventory
         }
         void SetItemAtSlot(int index, ItemSlotDescription itemSlotDescription)
         {
-            var slots = GetItemSlotsQuery();
-            inventoryGUI.ResizeSlot(index, itemSlotDescription.Dimension);
-            using var hits = inventoryGUI.GetSlots(index);
-            hits.Sort();
-            for (var i = 0; i < hits.Length; i++)
+            if (!String.IsNullOrEmpty(itemSlotDescription.GUID))
             {
-                Debug.Log($"item {index} take slot {hits[i]} ");
-                var overlapsSlot = slots.AtIndex(hits[i]);
-                overlapsSlot.SetItem(itemSlotDescription);
-                if (i != 0)
+                var slots = GetItemSlotsQuery();
+                inventoryGUI.ResizeSlot(index, itemSlotDescription.Dimension);
+                using var hits = inventoryGUI.GetSlots(index);
+                hits.Sort();
+                for (var i = 0; i < hits.Length; i++)
                 {
-                    inventoryGUI.ResizeSlot(hits[i], 1);
-                }
+                    Debug.Log($"item {index} take slot {hits[i]} ");
+                    var overlapsSlot = slots.AtIndex(hits[i]);
+                    overlapsSlot.SetItem(itemSlotDescription);
+                    if (i != 0)
+                    {
+                        inventoryGUI.ResizeSlot(hits[i], 1);
+                    }
 
+                }
             }
+
         }
         void RemoveItemSlot(int index)
         {
@@ -457,6 +447,7 @@ namespace RPG.Gameplay.Inventory
             }
             else
             {
+                ItemMoved.NewIndex = result.ToArray();
                 nextSlot.AddToClassList("slot-highlight-empty");
             }
 
@@ -464,44 +455,45 @@ namespace RPG.Gameplay.Inventory
 
         public void ReDraw()
         {
-            inventoryGUI.ScheduleCalculeOverlapse();
-            var slots = GetItemSlotsQuery();
-            var overlapses = inventoryGUI.Overlapses;
-            for (int i = 0; i < inventory.Size; i++)
-            {
-                var uiElementSlot = slots.AtIndex(i);
-                var currentSlot = inventoryGUI.GetSlot(i);
-                // var currentSlot = inventoryGUI.GetSlot(i);
-                // var collider = inventoryGUI.GetAabb(i);
-                // uiElementSlot.SetPosition(new float2(collider.Min.x, collider.Min.y));
-                // uiElementSlot.style.position = Position.Absolute;
-                // uiElementSlot.style.width = collider.Extents.x;
-                // uiElementSlot.style.height = collider.Extents.y;
-                // uiElementSlot.style.minWidth = collider.Extents.x;
-                // uiElementSlot.style.minHeight = collider.Extents.y;
-                if (overlapses[i])
-                {
-                    uiElementSlot.style.display = DisplayStyle.None;
-                }
-                else
-                {
-                    uiElementSlot.style.display = DisplayStyle.Flex;
-                    uiElementSlot.Resize(currentSlot.Scale);
-                }
-            }
+            // inventoryGUI.ScheduleCalculeOverlapse();
+            // var slots = GetItemSlotsQuery();
+            // var overlapses = inventoryGUI.Overlapses;
+            // for (int i = 0; i < inventory.Size; i++)
+            // {
+            //     var uiElementSlot = slots.AtIndex(i);
+            //     var currentSlot = inventoryGUI.GetSlot(i);
+            //     // var currentSlot = inventoryGUI.GetSlot(i);
+            //     // var collider = inventoryGUI.GetAabb(i);
+            //     // uiElementSlot.SetPosition(new float2(collider.Min.x, collider.Min.y));
+            //     // uiElementSlot.style.position = Position.Absolute;
+            //     // uiElementSlot.style.width = collider.Extents.x;
+            //     // uiElementSlot.style.height = collider.Extents.y;
+            //     // uiElementSlot.style.minWidth = collider.Extents.x;
+            //     // uiElementSlot.style.minHeight = collider.Extents.y;
+            //     if (overlapses[i])
+            //     {
+            //         uiElementSlot.style.display = DisplayStyle.None;
+            //     }
+            //     else
+            //     {
+            //         uiElementSlot.style.display = DisplayStyle.Flex;
+            //         uiElementSlot.Resize(currentSlot.Scale);
+            //     }
+            // }
         }
 
         public void StartDrag(ItemSlot itemSlot, float2 position)
         {
             if (itemSlot.StartDrag())
             {
-
+                var oldSlots = inventoryGUI.GetSlots(itemSlot.Index);
                 telegraph.SetItem(itemSlot.ItemSlotDescription);
                 telegraph.StartDrag();
                 telegraph.SetPosition(position);
+                ItemMoved.OldIndex = oldSlots.ToArray();
                 RemoveItemSlot(itemSlot.Index);
                 draggedItem = itemSlot;
-
+                oldSlots.Dispose();
                 // ReDraw();
 
             }
@@ -521,18 +513,15 @@ namespace RPG.Gameplay.Inventory
             {
                 SetItemAtSlot(slot.Index, item);
             }
-            // ReDraw();
         }
         public void DrawItems(ItemSlotDescription[] items)
         {
             var itemSlot = GetItemSlotsQuery();
-            itemSlot.ForEach((i) =>
-            {
-                i.ClearItem();
-            });
             for (int i = 0; i < items.Length; i++)
             {
-                SetItemAtSlot(i, items[i]);
+
+                itemSlot.AtIndex(i).SetItem(items[i]);
+                inventoryGUI.ResizeSlot(i, items[i].Dimension);
             }
         }
         public void InitInventory(Inventory inventory)

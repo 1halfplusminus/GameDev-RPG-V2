@@ -1,7 +1,6 @@
 
 
 using System;
-using System.Collections.Generic;
 using RPG.Core;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -17,44 +16,65 @@ namespace RPG.Gameplay.Inventory
         {
         }
     }
+    [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
+    public class InventoryDeclareConversionSystem : GameObjectConversionSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach((InventoryAuthoring inventoryAuthoring) =>
+            {
+                foreach (var item in inventoryAuthoring.Items)
+                {
+                    item.ReleaseAsset();
+                    AsyncOperationHandle<GameObject> handle = item.LoadAssetAsync<GameObject>();
+                    var r = handle.WaitForCompletion();
+                    DeclareReferencedPrefab(r);
+                }
+            });
+        }
+    }
 
-    public class InventoryAuthoring : MonoBehaviour, IConvertGameObjectToEntity, IDeclareReferencedPrefabs
+    public class InventoryAuthoring : MonoBehaviour, IConvertGameObjectToEntity
     {
         [SerializeField]
         int2 Dimension;
 
         [SerializeField]
-        InventoryItemAuthoringReference[] Items;
+        public InventoryItemAuthoringReference[] Items;
 
-        public void DeclareReferencedPrefabs(List<GameObject> referencedPrefabs)
-        {
-            foreach (var item in Items)
-            {
-                item.ReleaseAsset();
-                AsyncOperationHandle<GameObject> handle = item.LoadAssetAsync<GameObject>();
-                handle.WaitForCompletion();
-                referencedPrefabs.Add(handle.Result);
-            }
-        }
+
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
-            dstManager.AddComponentData(entity, new Inventory { Height = Dimension.y, Width = Dimension.x });
-            var itemsBuffer = dstManager.AddBuffer<InventoryItem>(entity);
-            foreach (var itemHandle in Items)
+            var inventory = new Inventory { Height = Dimension.y, Width = Dimension.x };
+            if (inventory.Size > 0)
             {
-                var itemAuthoringGO = (GameObject)itemHandle.OperationHandle.Result;
-                var itemAuthoring = itemAuthoringGO.GetComponent<InventoryItemAuthoring>();
-                if (itemAuthoring != null)
+                dstManager.AddComponentData(entity, inventory);
+                var itemsBuffer = dstManager.AddBuffer<InventoryItem>(entity);
+                itemsBuffer.Capacity = inventory.Size;
+                itemsBuffer.ResizeUninitialized(inventory.Size);
+                var inventoryGUI = InventoryGUI.Build(inventory, itemsBuffer.AsNativeArray());
+                foreach (var itemHandle in Items)
                 {
-                    var itemEntity = conversionSystem.GetPrimaryEntity(itemAuthoring.ItemDefinitionAsset);
-                    var itemDefinitionBlobAsset = conversionSystem.BlobAssetStore.GetItemDefinitionAssetBlob(itemAuthoring.ItemDefinitionAsset);
-                    if (itemDefinitionBlobAsset.IsCreated)
+                    var itemAuthoringGO = (GameObject)itemHandle.OperationHandle.Result;
+                    var itemAuthoring = itemAuthoringGO.GetComponent<InventoryItemAuthoring>();
+                    if (itemAuthoring != null)
                     {
-                        itemsBuffer.Add(new InventoryItem { ItemDefinitionAsset = itemDefinitionBlobAsset, Item = itemEntity });
+                        var itemEntity = conversionSystem.GetPrimaryEntity(itemAuthoring.ItemDefinitionAsset);
+                        var itemDefinitionBlobAsset = conversionSystem.BlobAssetStore.GetItemDefinitionAssetBlob(itemAuthoring.ItemDefinitionAsset);
+                        if (itemDefinitionBlobAsset.IsCreated)
+                        {
+                            inventoryGUI.Add
+                            (
+                                new InventoryItem { ItemDefinitionAsset = itemDefinitionBlobAsset, Item = itemEntity },
+                                itemsBuffer.AsNativeArray()
+                            );
+                        }
                     }
                 }
+                inventoryGUI.Dispose();
             }
+
         }
     }
 

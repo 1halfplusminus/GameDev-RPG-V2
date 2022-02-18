@@ -4,6 +4,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using RPG.Gameplay.Inventory;
 using UnityEngine.AddressableAssets;
+using System;
 
 namespace RPG.Test
 {
@@ -23,6 +24,12 @@ namespace RPG.Test
             var inventoryEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(exampleInventoryGO, conversionSetting);
             var itemsBuffer = em.GetBuffer<InventoryItem>(inventoryEntity);
             Assert.IsTrue(itemsBuffer.Length >= 1);
+            Assert.IsTrue(itemsBuffer[2].Index == 2);
+            Assert.IsFalse(itemsBuffer[0].IsEmpty);
+            Assert.IsTrue(itemsBuffer[0].Item != Entity.Null);
+            Assert.IsFalse(itemsBuffer[1].IsEmpty);
+            Assert.IsFalse(String.IsNullOrEmpty(itemsBuffer[2].ItemDefinitionAsset.Value.GUID.ToString()));
+            Assert.IsTrue(itemsBuffer[2].ItemDefinitionAsset.Value.GUID != itemsBuffer[1].ItemDefinitionAsset.Value.GUID);
         }
         [Test]
         public void TestItemDefinitionConversion()

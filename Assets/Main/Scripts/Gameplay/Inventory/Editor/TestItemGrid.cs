@@ -12,6 +12,7 @@ using Unity.Jobs;
 namespace RPG.Gameplay.Inventory
 {
 
+    struct TestGridTag : IComponentData { }
     public class TestItemGrid : ItemGrid
     {
 
@@ -70,8 +71,6 @@ namespace RPG.Gameplay.Inventory
                 return base.ToString();
             }
         }
-        Entity inventoryEntityPrefab;
-        Entity inventoryEntity;
         public TestItemGrid()
         {
 
@@ -89,26 +88,26 @@ namespace RPG.Gameplay.Inventory
                         var em = world.EntityManager;
                         var convertToEntitySystem = world.GetOrCreateSystem<ConvertToEntitySystem>();
                         var convertionSettings = GameObjectConversionSettings.FromWorld(world, convertToEntitySystem.BlobAssetStore);
-                        inventoryEntityPrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(inventoryGO, convertionSettings);
-                        inventoryEntity = em.Instantiate(inventoryEntityPrefab);
+                        var inventoryEntityPrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(inventoryGO, convertionSettings);
+                        var inventoryEntity = em.Instantiate(inventoryEntityPrefab);
                         var root = GetFirstAncestorOfType<InventoryRootController>();
                         var controller = new InventoryUIController();
                         controller.Init(root);
                         em.AddComponentObject(inventoryEntity, controller);
+                        em.AddComponent<TestGridTag>(inventoryEntityPrefab);
+                        em.AddComponent<TestGridTag>(inventoryEntity);
                         Addressables.Release(inventoryGO);
                     }
 
                 };
-                inventoryHandle.WaitForCompletion();
+
             });
             RegisterCallback<DetachFromPanelEvent>((e) =>
             {
                 var world = World.DefaultGameObjectInjectionWorld;
-                if (world != null && inventoryEntity != Entity.Null)
+                if (world != null)
                 {
-                    var em = world.EntityManager;
-                    em.DestroyEntity(inventoryEntityPrefab);
-                    em.DestroyEntity(inventoryEntity);
+                    // world.EntityManager.DestroyEntity(world.EntityManager.CreateEntityQuery(typeof(TestGridTag)));
                 }
             });
         }
