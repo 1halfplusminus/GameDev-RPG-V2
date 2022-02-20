@@ -43,16 +43,6 @@ namespace RPG.Gameplay.Inventory
             {
 
                 var result = base.Create(bag, cc);
-                var root = cc.target;
-                // cc.slotInsertionPoints.TryGetValue("Container", out var parent);
-                // if (parent != null)
-                // {
-                //     var world = World.DefaultGameObjectInjectionWorld;
-                //     var controller = new InventoryUIController();
-                //     controller.Init(result);
-                //     Debug.Log($"Here {parent.name} ");
-                // }
-
                 return result;
             }
 
@@ -96,8 +86,9 @@ namespace RPG.Gameplay.Inventory
                         var controller = new InventoryUIController();
                         controller.Init(root);
                         em.AddComponentObject(inventoryEntity, controller);
-                        world.EntityManager.AddComponent<TestGridTag>(inventoryEntity);
-                        world.EntityManager.AddComponent<TestGridTag>(inventoryEntityPrefab);
+                        em.AddComponent<InventoryUIInstance>(inventoryEntity);
+                        em.AddComponent<TestGridTag>(inventoryEntity);
+                        em.AddComponent<TestGridTag>(inventoryEntityPrefab);
                         Addressables.Release(inventoryGO);
                     }
 
@@ -112,6 +103,7 @@ namespace RPG.Gameplay.Inventory
                 }
             });
         }
+
 
     }
 

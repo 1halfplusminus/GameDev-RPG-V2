@@ -52,7 +52,10 @@ namespace RPG.Gameplay.Inventory
 
         public void Dispose()
         {
-            world.Dispose();
+            if (world.Bodies.IsCreated)
+            {
+                world.Dispose();
+            }
             if (Overlapses.IsCreated)
             {
                 Overlapses.Dispose();

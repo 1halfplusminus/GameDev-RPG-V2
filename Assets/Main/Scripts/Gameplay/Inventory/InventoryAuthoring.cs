@@ -84,6 +84,7 @@ namespace RPG.Gameplay.Inventory
 
         public Entity ItemPrefab;
     }
+
     [UpdateInGroup(typeof(GameplaySystemGroup))]
     public class InventorySystem : SystemBase
     {

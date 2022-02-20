@@ -114,7 +114,7 @@ Label {
     border-bottom-width: 1px;
 }
 
-.slot-highlight-empty {
+.slot-highlight-empty, .slot-selected {
     border-left-color: rgb(59, 221, 39);
     border-right-color: rgb(59, 221, 39);
     border-top-color: rgb(59, 221, 39);

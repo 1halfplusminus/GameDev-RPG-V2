@@ -147,6 +147,7 @@ namespace RPG.Gameplay.Inventory
 
         public void ShowItem(ItemSlotDescription itemSlotDescription)
         {
+            this.visible = true;
             Name.text = itemSlotDescription.FriendlyName;
             Description.text = itemSlotDescription.Description;
         }
@@ -165,6 +166,8 @@ namespace RPG.Gameplay.Inventory
         float height;
         float width;
         bool isDragging = false;
+
+        public bool IsSelected { get; private set; }
         Label indexLabel;
         public ItemSlotDescription ItemSlotDescription { get; private set; }
 
@@ -200,6 +203,7 @@ namespace RPG.Gameplay.Inventory
                     var itemDetail = v.GetFirstAncestorOfType<InventoryRootController>().Q<ItemDetail>();
                     if (itemDetail != null)
                     {
+
                         itemDetail.ShowItem(v.ItemSlotDescription);
                     }
                 }
@@ -218,15 +222,33 @@ namespace RPG.Gameplay.Inventory
         }
         protected void OnMouseEventUp(MouseUpEvent mouseUpEvent)
         {
-            Debug.Log("On Mouse Event Up e");
-            if (!isDragging)
+
+            if (!isDragging && mouseUpEvent.clickCount == 1 && !IsSelected)
             {
+                AddToClassList("slot-selected");
+                IsSelected = true;
+                var grid = GetGrid();
+                if (grid != null)
+                {
+                    grid.OnSelectSlot(this);
+                }
+                return;
+            }
+            if (!isDragging && (mouseUpEvent.clickCount >= 2 || IsSelected))
+            {
+                Debug.Log("Double Click pick item");
                 var rect = layout;
                 var mousePosition = new float2(rect.xMin, rect.yMin);
                 GetGrid().StartDrag(this, mousePosition);
                 mouseUpEvent.StopPropagation();
                 return;
             }
+        }
+
+        public void UnSelect()
+        {
+            RemoveFromClassList("slot-selected");
+            IsSelected = false;
         }
         virtual public void StopDrag()
         {
@@ -332,7 +354,7 @@ namespace RPG.Gameplay.Inventory
         ItemSlot nextSlot;
 
         Inventory inventory;
-
+        bool Selected;
         public (bool MovedThisFrame, int[] OldIndex, int[] NewIndex) ItemMoved;
         public Action<int[], int[]> OnItemMove;
 
@@ -355,6 +377,31 @@ namespace RPG.Gameplay.Inventory
                 Debug.Log("Destroy iventory GUI");
                 this.inventoryGUI.Dispose();
             });
+
+            RegisterCallback<AttachToPanelEvent>((e) =>
+            {
+                SetItemDetailVisibility(false);
+            });
+        }
+        public void OnSelectSlot(ItemSlot slot = null)
+        {
+            GetItemSlotsQuery().Where((i) => (slot == null || i != slot) && i.IsSelected).ForEach((s) =>
+            {
+                s.UnSelect();
+
+            });
+        }
+        public void OnSlotHover(ItemSlot slot)
+        {
+
+        }
+        private void SetItemDetailVisibility(bool visibility)
+        {
+            var itemDetail = this.GetFirstAncestorOfType<InventoryRootController>().Q<ItemDetail>();
+            if (itemDetail != null)
+            {
+                itemDetail.visible = visibility;
+            }
         }
         void ClearHighlight()
         {
@@ -486,6 +533,7 @@ namespace RPG.Gameplay.Inventory
             draggedItem = null;
             itemSlot.StopDrag();
             telegraph.StopDrag();
+            OnSelectSlot();
         }
 
         public void DrawItems(ItemSlotDescription[] items)

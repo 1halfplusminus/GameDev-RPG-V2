@@ -79,6 +79,7 @@ namespace RPG.UI
     {
 
     }
+    [ExecuteAlways]
     [UpdateInGroup(typeof(UISystemGroup))]
     public class InventoryUISystem : SystemBase
     {

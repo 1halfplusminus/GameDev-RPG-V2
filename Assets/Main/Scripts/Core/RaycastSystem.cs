@@ -56,7 +56,7 @@ namespace RPG.Core
         }
         protected override void OnUpdate()
         {
-            if (!EventSystem.current.IsPointerOverGameObject())
+            if (EventSystem.current && !EventSystem.current.IsPointerOverGameObject())
             {
                 EntityManager.RemoveComponent<InteractWithUI>(interactionWithUIEntityQuery);
                 var physicsWorld = buildPhysicsWorld.PhysicsWorld;
