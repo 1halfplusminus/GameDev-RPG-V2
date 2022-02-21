@@ -40,7 +40,7 @@ namespace RPG.Gameplay.Inventory
                 {
                     ItemDefinitionAsset = itemDefinitionReference.ItemDefinitionAssetBlob,
                     ItemDefinition = itemDefinitionReference.AssetEntity,
-                    ItemPrefab = picked.Entity
+                    ItemPrefab = itemDefinitionReference.ItemPrefab
                 });
             }).Schedule();
 

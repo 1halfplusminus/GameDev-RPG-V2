@@ -125,6 +125,9 @@ namespace RPG.Gameplay.Inventory
     {
         public Label Name;
         public Label Description;
+
+        public Button ActionButton;
+
         public new class UxmlFactory : UxmlFactory<ItemDetail, ItemDetail.UxmlTraits>
         {
 
@@ -132,19 +135,48 @@ namespace RPG.Gameplay.Inventory
 
         public ItemDetail()
         {
-            RegisterCallback<AttachToPanelEvent>((cb) =>
+            RegisterCallback((EventCallback<AttachToPanelEvent>)((cb) =>
             {
                 Name = this.Q<Label>("FriendlyName");
 
                 Description = this.Q<Label>("Description");
 
+                ActionButton = this.Q<Button>("btn_Equip");
+
                 Name.text = "";
 
                 Description.text = "";
-            });
+
+                ActionButton.clicked += OnActionButton();
+            }));
 
         }
 
+        private Action OnActionButton()
+        {
+            return () =>
+            {
+                GetGrid((grid) =>
+                {
+                    grid.OnActionButton();
+                });
+            };
+        }
+
+        public ItemGrid GetGrid(Action<ItemGrid> callback)
+        {
+            var root = this.GetFirstAncestorOfType<InventoryRootController>();
+            if (root != null)
+            {
+                var grid = root.Q<ItemGrid>();
+                if (grid != null)
+                {
+                    callback(grid);
+                    return grid;
+                }
+            }
+            return null;
+        }
         public void ShowItem(ItemSlotDescription itemSlotDescription)
         {
             this.visible = true;
@@ -173,6 +205,7 @@ namespace RPG.Gameplay.Inventory
 
         protected VisualElement imageBackground;
 
+        public static void Empty<T>(T value) { }
 
         public ItemSlot()
         {
@@ -183,14 +216,19 @@ namespace RPG.Gameplay.Inventory
             Add(imageBackground);
             RegisterCallback<MouseUpEvent>(OnMouseEventUp);
             RegisterCallback(OnMouseEnterEvent(this));
+
+        }
+
+        private void ShowDebugText()
+        {
             //DEBUG TEXT
-            // var text = new Label();
-            // text.style.flexGrow = 1;
-            // OnChange += () =>
-            // {
-            //     text.text = $"{Index}";
-            // };
-            // Add(text);
+            var text = new Label();
+            text.style.flexGrow = 1;
+            OnChange += () =>
+            {
+                text.text = $"{Index}";
+            };
+            Add(text);
         }
 
         private static EventCallback<MouseEnterEvent> OnMouseEnterEvent(ItemSlot v)
@@ -199,7 +237,6 @@ namespace RPG.Gameplay.Inventory
             {
                 if (!v.IsEmpty())
                 {
-                    Debug.Log("Hover on item");
                     var itemDetail = v.GetFirstAncestorOfType<InventoryRootController>().Q<ItemDetail>();
                     if (itemDetail != null)
                     {
@@ -222,7 +259,17 @@ namespace RPG.Gameplay.Inventory
         }
         protected void OnMouseEventUp(MouseUpEvent mouseUpEvent)
         {
-
+            if (IsEmpty())
+            {
+                if (mouseUpEvent.clickCount >= 2)
+                {
+                    GetGrid((grid) =>
+                    {
+                        grid.OnSelectSlot();
+                    });
+                }
+                return;
+            }
             if (!isDragging && mouseUpEvent.clickCount == 1 && !IsSelected)
             {
                 AddToClassList("slot-selected");
@@ -260,7 +307,6 @@ namespace RPG.Gameplay.Inventory
         {
 
             if (IsEmpty()) { return false; }
-            Debug.Log("Start Drag");
             imageBackground.style.visibility = Visibility.Hidden;
             isDragging = true;
             return true;
@@ -316,9 +362,15 @@ namespace RPG.Gameplay.Inventory
             style.height = height;
             style.width = width;
         }
-        public ItemGrid GetGrid()
+        public ItemGrid GetGrid(Action<ItemGrid> callback = null)
         {
-            return GetFirstAncestorOfType<ItemGrid>();
+            var grid = GetFirstAncestorOfType<ItemGrid>();
+            if (grid != null)
+            {
+                if (callback != null)
+                    callback(grid);
+            }
+            return grid;
         }
 
         public string GetGUID()
@@ -356,6 +408,8 @@ namespace RPG.Gameplay.Inventory
         Inventory inventory;
         bool Selected;
         public (bool MovedThisFrame, int[] OldIndex, int[] NewIndex) ItemMoved;
+
+        public (bool SelectedThisFrame, int Index) ItemSelected;
         public Action<int[], int[]> OnItemMove;
 
         public new class UxmlFactory : UxmlFactory<ItemGrid, ItemGrid.UxmlTraits>
@@ -374,7 +428,6 @@ namespace RPG.Gameplay.Inventory
             RegisterCallback<MouseUpEvent>(OnMouseUp);
             RegisterCallback<DetachFromPanelEvent>((e) =>
             {
-                Debug.Log("Destroy iventory GUI");
                 this.inventoryGUI.Dispose();
             });
 
@@ -382,6 +435,16 @@ namespace RPG.Gameplay.Inventory
             {
                 SetItemDetailVisibility(false);
             });
+        }
+
+        public void OnActionButton()
+        {
+            var selectedSlot = GetItemSlotsQuery().Where((s) => s.IsSelected).First();
+            if (selectedSlot != null)
+            {
+                ItemSelected.SelectedThisFrame = true;
+                ItemSelected.Index = selectedSlot.Index;
+            }
         }
         public void OnSelectSlot(ItemSlot slot = null)
         {
@@ -391,10 +454,7 @@ namespace RPG.Gameplay.Inventory
 
             });
         }
-        public void OnSlotHover(ItemSlot slot)
-        {
 
-        }
         private void SetItemDetailVisibility(bool visibility)
         {
             var itemDetail = this.GetFirstAncestorOfType<InventoryRootController>().Q<ItemDetail>();
@@ -481,7 +541,6 @@ namespace RPG.Gameplay.Inventory
                     nextSlot.RemoveFromClassList("slot-highlight");
                 }
             }
-            // Debug.Log($"Mouse Event From Grid x: {(int)(mouseMoveEvent.localMousePosition.x / ItemSize.x) } y: {(int)(mouseMoveEvent.localMousePosition.y / ItemSize.y)} ");
             var slots = GetItemSlotsQuery();
             var coordinate = new int2
             {
@@ -500,16 +559,20 @@ namespace RPG.Gameplay.Inventory
                     break;
                 }
             }
-            nextSlot = slots.AtIndex(result[0]);
-            if (!isEmpty)
+            if (result.Length > 0)
             {
-                nextSlot.AddToClassList("slot-highlight");
+                nextSlot = slots.AtIndex(result[0]);
+                if (!isEmpty)
+                {
+                    nextSlot.AddToClassList("slot-highlight");
+                }
+                else
+                {
+                    ItemMoved.NewIndex = result.ToArray();
+                    nextSlot.AddToClassList("slot-highlight-empty");
+                }
             }
-            else
-            {
-                ItemMoved.NewIndex = result.ToArray();
-                nextSlot.AddToClassList("slot-highlight-empty");
-            }
+
 
         }
 

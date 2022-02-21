@@ -2328,6 +2328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ItemDefinitionAsset: {fileID: 11400000, guid: 73654df3459989ac292f6487e23429b4, type: 2}
+  Item: {fileID: 1534983870361134157, guid: 86645b7615d58430ba7f1d48e295c68b, type: 3}
 --- !u!4 &1631718462331212392 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8114863896370154103, guid: 2f3fbf68fb7d0d305ae2d75ec2df0cd9, type: 3}

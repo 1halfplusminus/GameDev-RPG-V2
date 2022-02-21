@@ -8,13 +8,16 @@ namespace RPG.Gameplay.Inventory
     {
         public ItemDefinitionAsset ItemDefinitionAsset;
 
+        public GameObject Item;
+
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
 
             conversionSystem.DeclareAssetDependency(gameObject, ItemDefinitionAsset);
             var blobAssetReference = conversionSystem.BlobAssetStore.GetItemDefinitionAssetBlob(ItemDefinitionAsset);
             var assetEntity = conversionSystem.GetPrimaryEntity(ItemDefinitionAsset);
-            dstManager.AddComponentData(entity, new ItemDefinitionReference { ItemDefinitionAssetBlob = blobAssetReference, AssetEntity = assetEntity });
+            var itemPrefab = conversionSystem.GetPrimaryEntity(Item);
+            dstManager.AddComponentData(entity, new ItemDefinitionReference { ItemDefinitionAssetBlob = blobAssetReference, AssetEntity = assetEntity, ItemPrefab = itemPrefab });
         }
 
 
@@ -26,9 +29,12 @@ namespace RPG.Gameplay.Inventory
         {
             Entities.ForEach((InventoryItemAuthoring itemDefinitionAssetAuthoring) =>
             {
-                Debug.Log($"Declare item definition {itemDefinitionAssetAuthoring.ItemDefinitionAsset.ID}");
+                if (itemDefinitionAssetAuthoring.Item == null)
+                {
+                    itemDefinitionAssetAuthoring.Item = itemDefinitionAssetAuthoring.gameObject;
+                }
+                DeclareReferencedPrefab(itemDefinitionAssetAuthoring.Item);
                 DeclareReferencedAsset(itemDefinitionAssetAuthoring.ItemDefinitionAsset);
-
             });
         }
     }

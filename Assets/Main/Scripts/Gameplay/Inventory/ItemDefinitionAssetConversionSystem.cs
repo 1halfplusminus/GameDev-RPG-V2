@@ -13,6 +13,8 @@ namespace RPG.Gameplay.Inventory
     {
         public BlobAssetReference<ItemDefinitionAssetBlob> ItemDefinitionAssetBlob;
         public Entity AssetEntity;
+
+        public Entity ItemPrefab;
     }
     public struct ItemTexture : ISharedComponentData, IEquatable<ItemTexture>
     {
@@ -45,6 +47,7 @@ namespace RPG.Gameplay.Inventory
 
         public Entity ItemDefinition;
 
+        public Entity ItemPrefab;
         public bool IsFull;
 
         public bool IsEmpty { get { return !IsFull; } set { IsFull = !value; } }

@@ -106,21 +106,4 @@ namespace RPG.Gameplay.Inventory
 
 
     }
-
-    // public struct InitConversionSystem : IJob
-    // {
-
-    //     public void Execute()
-    //     {
-    //         while (World.DefaultGameObjectInjectionWorld == null)
-    //         {
-    //             Debug.Log("Wolrd Is null");
-    //         };
-    //         var world = World.DefaultGameObjectInjectionWorld;
-    //         var em = world.EntityManager;
-    //         var convertToEntitySystem = world.GetOrCreateSystem<ConvertToEntitySystem>();
-    //         var convertionSettings = GameObjectConversionSettings.FromWorld(world, convertToEntitySystem.BlobAssetStore);
-    //         Debug.Log("Here");
-    //     }
-    // }
 }

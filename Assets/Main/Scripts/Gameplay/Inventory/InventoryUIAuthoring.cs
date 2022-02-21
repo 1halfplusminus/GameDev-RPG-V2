@@ -38,7 +38,26 @@ namespace RPG.UI
             ExperiencePoint.text = $"{currentPoint}/{toLevel}";
             ExperiencePointBar.style.width = lenght;
         }
-
+        public void ActionItem(EntityCommandBuffer cb, Entity user, NativeArray<InventoryItem> items)
+        {
+            if (ItemGrid.ItemSelected.SelectedThisFrame)
+            {
+                if (ItemGrid.ItemSelected.Index < items.Length)
+                {
+                    var item = items[ItemGrid.ItemSelected.Index];
+                    ItemGrid.ItemSelected.SelectedThisFrame = false;
+                    if (item.ItemPrefab != Entity.Null)
+                    {
+                        var instance = cb.Instantiate(item.ItemPrefab);
+                        var usedItem = new UsedItem { Index = ItemGrid.ItemSelected.Index, UsedBy = user, Item = instance };
+                        cb.AddComponent(user, usedItem);
+                        cb.AddComponent(instance, usedItem);
+                        Debug.Log("Instanciate Item");
+                    }
+                    Debug.Log($"Start action for item {item.ItemDefinitionAsset.Value.FriendlyName.ToString()}");
+                }
+            }
+        }
         public void MoveItem(NativeArray<InventoryItem> items)
         {
             if (ItemGrid.ItemMoved.MovedThisFrame)
@@ -179,29 +198,9 @@ namespace RPG.UI
             .ForEach((Entity entity, ref DynamicBuffer<InventoryItem> items, in InventoryUIController controller) =>
             {
                 controller.MoveItem(items.AsNativeArray());
-                var length = items.Length;
-                var itemSlotDescriptions = Array.CreateInstance(typeof(ItemSlotDescription), items.Length);
-                var textures = GetSharedComponentTypeHandle<ItemTexture>();
-                for (int i = 0; i < items.Length; i++)
-                {
-                    var itemSlotDescription = new ItemSlotDescription();
-                    itemSlotDescription.Dimension = 1;
-                    itemSlotDescription.IsEmpty = items[i].IsEmpty;
-                    if (items[i].ItemDefinition != Entity.Null && items[i].ItemDefinitionAsset.IsCreated)
-                    {
-                        var itemTexture = EntityManager.GetSharedComponentData<ItemTexture>(items[i].ItemDefinition);
-                        itemSlotDescription.Dimension = items[i].ItemDefinitionAsset.Value.Dimension;
-                        itemSlotDescription.GUID = items[i].ItemDefinitionAsset.Value.GUID.ToString();
-                        Debug.Log($"Put GUID {itemSlotDescription.GUID} at index {items[i].Index} ");
-                        itemSlotDescription.Description = items[i].ItemDefinitionAsset.Value.Description.ToString();
-                        itemSlotDescription.FriendlyName = items[i].ItemDefinitionAsset.Value.FriendlyName.ToString();
-                        itemSlotDescription.Texture = itemTexture.Texture;
-                    }
-                    itemSlotDescriptions.SetValue(itemSlotDescription, items[i].Index);
-                }
-
+                controller.ActionItem(cb, entity, items.AsNativeArray());
+                Array itemSlotDescriptions = GetItemSlotsDescriptions(ref items);
                 controller.ItemGrid.DrawItems((ItemSlotDescription[])itemSlotDescriptions);
-
             })
             .WithoutBurst()
             .Run();
@@ -219,6 +218,28 @@ namespace RPG.UI
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 
+        private Array GetItemSlotsDescriptions(ref DynamicBuffer<InventoryItem> items)
+        {
+            var itemSlotDescriptions = Array.CreateInstance(typeof(ItemSlotDescription), items.Length);
+            var textures = GetSharedComponentTypeHandle<ItemTexture>();
+            for (int i = 0; i < items.Length; i++)
+            {
+                var itemSlotDescription = new ItemSlotDescription();
+                itemSlotDescription.Dimension = 1;
+                itemSlotDescription.IsEmpty = items[i].IsEmpty;
+                if (items[i].ItemDefinition != Entity.Null && items[i].ItemDefinitionAsset.IsCreated)
+                {
+                    var itemTexture = EntityManager.GetSharedComponentData<ItemTexture>(items[i].ItemDefinition);
+                    itemSlotDescription.Dimension = items[i].ItemDefinitionAsset.Value.Dimension;
+                    itemSlotDescription.GUID = items[i].ItemDefinitionAsset.Value.GUID.ToString();
+                    itemSlotDescription.Description = items[i].ItemDefinitionAsset.Value.Description.ToString();
+                    itemSlotDescription.FriendlyName = items[i].ItemDefinitionAsset.Value.FriendlyName.ToString();
+                    itemSlotDescription.Texture = itemTexture.Texture;
+                }
+                itemSlotDescriptions.SetValue(itemSlotDescription, items[i].Index);
+            }
 
+            return itemSlotDescriptions;
+        }
     }
 }

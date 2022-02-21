@@ -39,7 +39,7 @@ namespace RPG.Gameplay.Inventory
     }
     public struct InventoryGUI : System.IDisposable
     {
-        Unity.Physics.Aabb aabb;
+        Unity.Physics.Aabb inventoryAabb;
         float2 itemSize;
         Inventory inventory;
         NativeArray<SlotGUI> slots;
@@ -90,8 +90,8 @@ namespace RPG.Gameplay.Inventory
             {
                 return false;
             }
-            var allEmpty = true;
             var takenSlots = ColliderCast(slots[i].Coordinate, item.ItemDefinitionAsset.Value.Dimension);
+            var allEmpty = takenSlots.Length > 0;
             for (int j = 0; j < takenSlots.Length; j++)
             {
                 var slot = takenSlots[j];
@@ -113,7 +113,6 @@ namespace RPG.Gameplay.Inventory
                     currentItem.Index = slot;
                     items[slot] = currentItem;
                 }
-                Debug.Log($"Insert at slot {takenSlots[0]} item {item.ItemDefinitionAsset.Value.GUID.ToString()}");
                 ResizeSlot(takenSlots[0], item.ItemDefinitionAsset.Value.Dimension);
                 takenSlots.Dispose();
                 return true;
@@ -144,9 +143,11 @@ namespace RPG.Gameplay.Inventory
             UpdateDynamicTree();
             var aabb = new SlotGUI { Coordinate = position, Size = itemSize, Scale = size }.CalculateAabb();
             var hits = new NativeList<int>(Allocator.Temp);
-            world.CollisionWorld.OverlapAabb(new OverlapAabbInput { Aabb = aabb, Filter = CollisionFilter.Default }, ref hits);
-            hits.Sort();
-
+            if (inventoryAabb.Contains(aabb))
+            {
+                world.CollisionWorld.OverlapAabb(new OverlapAabbInput { Aabb = aabb, Filter = CollisionFilter.Default }, ref hits);
+                hits.Sort();
+            }
             return hits;
         }
         public NativeList<int> GetSlots(int index)
@@ -180,18 +181,18 @@ namespace RPG.Gameplay.Inventory
         }
         void InitSimulation()
         {
-
+            if (simulation != null)
+            {
+                simulation.Dispose();
+                simulation = null;
+            }
             simulation = new Simulation();
-            // // var context = new SimulationContext();
-            // var input = ;
-            // context.Reset(input);
-
         }
         public void Init(Inventory inventory, float2 itemSize)
         {
             Overlapses = new NativeArray<bool>(inventory.Size, Allocator.Persistent);
             slots = new NativeArray<SlotGUI>(inventory.Size, Allocator.Persistent);
-            aabb = new Aabb { Min = float3.zero, Max = new float3(inventory.Width * itemSize.x, inventory.Height * itemSize.y, 0) };
+            CreateInventoryAabb(inventory, itemSize);
             this.itemSize = itemSize;
             this.inventory = inventory;
             world = new PhysicsWorld(0, inventory.Size, 0);
@@ -247,59 +248,18 @@ namespace RPG.Gameplay.Inventory
             InitSimulation();
             CheckCollision();
         }
+
+        private void CreateInventoryAabb(Inventory inventory, float2 itemSize)
+        {
+            var slot = new SlotGUI { Coordinate = new int2(0, 0), Scale = new int2(inventory.Width, inventory.Height), Size = itemSize };
+            inventoryAabb = slot.CalculateAabb();
+        }
+
         public void CheckCollision()
         {
             world.CollisionWorld.BuildBroadphase(ref world, 1.0f, -9.81f * math.up());
         }
-        public NativeList<int> GetNeighborsIndex(int2 coordinate)
-        {
-            return GetNeighborsIndex(inventory.GetIndex(coordinate));
-        }
-        public NativeList<int> GetNeighborsIndex(int index)
-        {
-            var slot = slots[index];
-            var list = new NativeList<int>(Allocator.Temp);
-            var neighborCoordinates = new int2[] {
-                slot.Coordinate + new int2(1,0),
-                slot.Coordinate + new int2(0,1),
-                slot.Coordinate + new int2(1,1),
-                slot.Coordinate + new int2(-1,0),
-                slot.Coordinate + new int2(0,-1),
-                slot.Coordinate + new int2(-1,-1),
-                slot.Coordinate + new int2(-1,1),
-                slot.Coordinate + new int2(1,-1),
-            };
-            for (int i = 0; i < neighborCoordinates.Length; i++)
-            {
-                var neighborCoordinate = neighborCoordinates[i];
-                if (neighborCoordinate.x >= 0 && neighborCoordinate.y >= 0)
-                {
-                    var neighborIndex = inventory.GetIndex(neighborCoordinate);
-                    if (neighborIndex < slots.Length && neighborIndex >= 0)
-                    {
-                        list.Add(neighborIndex);
-                    }
-                }
-            }
-            return list;
-        }
-        public bool IsVisible(int index)
-        {
-            var slot = slots[index];
-            var neighborIndexes = GetNeighborsIndex(index);
-            for (int i = 0; i < neighborIndexes.Length; i++)
-            {
-                var neightborIndex = neighborIndexes[i];
-                var neighbor = slots[neightborIndex];
-                if (slot.CalculateAabb().Overlaps(neighbor.CalculateAabb()))
-                {
-                    Debug.Log($"Index {index} overlap with {neightborIndex}");
-                    return false;
-                }
-            }
-            neighborIndexes.Dispose();
-            return true;
-        }
+
         public NativeArray<bool> CalculeOverlapse()
         {
             ResetOverlapses();
@@ -323,10 +283,6 @@ namespace RPG.Gameplay.Inventory
             ResetOverlapses();
             UpdateDynamicTree();
             SimulationCallbacks callbacks = new SimulationCallbacks();
-            if (simulation != null)
-            {
-                simulation.Dispose();
-            }
             InitSimulation();
             var _simulation = simulation;
             var _overlaps = Overlapses;
@@ -337,7 +293,7 @@ namespace RPG.Gameplay.Inventory
                 handle.Complete();
                 foreach (var cEvent in _simulation.CollisionEvents)
                 {
-                    Debug.Log($"body {cEvent.BodyIndexA} collid with {cEvent.BodyIndexB}");
+                    // Debug.Log($"body {cEvent.BodyIndexA} collid with {cEvent.BodyIndexB}");
                     _overlaps[cEvent.BodyIndexB] = true;
                 }
                 return handle;

@@ -9,6 +9,13 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace RPG.Gameplay.Inventory
 {
+    public struct UsedItem : IComponentData
+    {
+        public int Index;
+        public Entity UsedBy;
+
+        public Entity Item;
+    }
     [Serializable]
     public class InventoryItemAuthoringReference : ComponentReference<InventoryItemAuthoring>
     {
@@ -60,13 +67,19 @@ namespace RPG.Gameplay.Inventory
                     var itemAuthoring = itemAuthoringGO.GetComponent<InventoryItemAuthoring>();
                     if (itemAuthoring != null)
                     {
+                        var itemPrefab = conversionSystem.GetPrimaryEntity(itemAuthoring.Item);
                         var itemEntity = conversionSystem.GetPrimaryEntity(itemAuthoring.ItemDefinitionAsset);
                         var itemDefinitionBlobAsset = conversionSystem.BlobAssetStore.GetItemDefinitionAssetBlob(itemAuthoring.ItemDefinitionAsset);
                         if (itemDefinitionBlobAsset.IsCreated)
                         {
                             inventoryGUI.Add
                             (
-                                new InventoryItem { ItemDefinitionAsset = itemDefinitionBlobAsset, ItemDefinition = itemEntity, },
+                                new InventoryItem
+                                {
+                                    ItemDefinitionAsset = itemDefinitionBlobAsset,
+                                    ItemDefinition = itemEntity,
+                                    ItemPrefab = itemPrefab,
+                                },
                                 itemsBuffer.AsNativeArray()
                             );
                         }
@@ -105,7 +118,8 @@ namespace RPG.Gameplay.Inventory
                 var iventoryItem = new InventoryItem
                 {
                     ItemDefinitionAsset = addItem.ItemDefinitionAsset,
-                    ItemDefinition = addItem.ItemDefinition
+                    ItemDefinition = addItem.ItemDefinition,
+                    ItemPrefab = addItem.ItemPrefab
                 };
                 inventoryGUI.Add(iventoryItem, items.AsNativeArray());
                 inventoryGUI.Dispose();
