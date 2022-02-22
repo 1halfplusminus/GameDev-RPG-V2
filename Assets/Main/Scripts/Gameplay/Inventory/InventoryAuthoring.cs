@@ -1,6 +1,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using RPG.Core;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -28,16 +29,21 @@ namespace RPG.Gameplay.Inventory
     {
         protected override void OnUpdate()
         {
-            Entities.ForEach((InventoryAuthoring inventoryAuthoring) =>
+            var query = EntityManager.CreateEntityQuery(typeof(InventoryAuthoring));
+            var inventoryAuthorings = query.ToComponentArray<InventoryAuthoring>();
+            foreach (var inventoryAuthoring in inventoryAuthorings)
             {
                 foreach (var item in inventoryAuthoring.Items)
                 {
                     item.ReleaseAsset();
-                    AsyncOperationHandle<GameObject> handle = item.LoadAssetAsync<GameObject>();
-                    var r = handle.WaitForCompletion();
-                    DeclareReferencedPrefab(r);
+                    AsyncOperationHandle<GameObject> handle = item.LoadAsset<GameObject>();
+                    handle.Completed += (r) =>
+                    {
+                        DeclareReferencedPrefab(r.Result);
+                    };
+                    handle.WaitForCompletion();
                 }
-            });
+            }
         }
     }
 
@@ -113,7 +119,7 @@ namespace RPG.Gameplay.Inventory
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             Entities.ForEach((Entity entity, ref DynamicBuffer<InventoryItem> items, in Inventory inventory, in AddItem addItem) =>
             {
-                var inventoryGUI = new InventoryGUI { };
+                var inventoryGUI = new InventoryGUI { Created = false };
                 inventoryGUI.Init(inventory, 1f);
                 var iventoryItem = new InventoryItem
                 {

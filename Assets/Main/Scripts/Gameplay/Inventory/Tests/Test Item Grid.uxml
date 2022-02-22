@@ -2,8 +2,11 @@
     <ui:Template name="ItemDetails" src="project://database/Assets/Main/Scripts/Gameplay/Inventory/ItemDetails.uxml?fileID=9197481963319205126&amp;guid=d007165a654b84c379cb9647dddbf104&amp;type=3#ItemDetails" />
     <Style src="project://database/Assets/Main/UI/In%20Game%20HUD%20Style.uss?fileID=7433441132597879392&amp;guid=d337463dc0df7fbe3b8a9edd5971530f&amp;type=3#In Game HUD Style" />
     <Style src="project://database/Assets/Main/Scripts/Gameplay/Inventory/InventoryStyles.uss?fileID=7433441132597879392&amp;guid=3bc7d5e765806190093ade03306c930b&amp;type=3#InventoryStyles" />
-    <RPG.Gameplay.Inventory.InventoryRootController style="flex-grow: 1; flex-direction: row;">
-        <RPG.Gameplay.Inventory.TestItemGrid name="TestItemGrid" style="flex-grow: 1;" />
+    <RPG.Gameplay.Inventory.InventoryRootController style="flex-grow: 1; flex-direction: row; flex-wrap: wrap;">
+        <RPG.Gameplay.Inventory.ItemGrid name="TestItemGrid" style="flex-grow: 1; height: 894px;" />
         <ui:Instance template="ItemDetails" name="ItemDetails" style="flex-grow: 1; justify-content: flex-start; flex-basis: 20%;" />
+        <ui:VisualElement style="flex-grow: 1; flex-basis: 100%; flex-shrink: 0; flex-direction: row; justify-content: center; align-items: center; margin-top: 30px;">
+            <RPG.Gameplay.Inventory.TestItemGrid name="TestItemGrid" text="Test" style="flex-grow: 0;" />
+        </ui:VisualElement>
     </RPG.Gameplay.Inventory.InventoryRootController>
 </ui:UXML>

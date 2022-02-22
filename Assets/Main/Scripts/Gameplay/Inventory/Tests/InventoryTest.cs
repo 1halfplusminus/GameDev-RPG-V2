@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using RPG.Gameplay.Inventory;
 using UnityEngine.AddressableAssets;
 using System;
+using Unity.Physics;
 
 namespace RPG.Test
 {
@@ -63,19 +64,21 @@ namespace RPG.Test
             var inventory = new Inventory { Height = 1, Width = 3 };
             var inventoryGUI = new InventoryGUI { };
             inventoryGUI.Init(inventory, 150f);
-            var visibilities = inventoryGUI.CalculeOverlapse();
+            var simulation = new Simulation();
+            var visibilities = inventoryGUI.CalculeOverlapse(simulation);
             for (int i = 0; i < visibilities.Length; i++)
             {
                 Assert.IsFalse(visibilities[i]);
             }
             inventoryGUI.ResizeSlot(0, 2);
-            visibilities = inventoryGUI.CalculeOverlapse();
+            visibilities = inventoryGUI.CalculeOverlapse(simulation);
             Assert.IsTrue(visibilities[1]);
             Assert.IsFalse(visibilities[2]);
             inventoryGUI.ResizeSlot(0, 3);
-            visibilities = inventoryGUI.CalculeOverlapse();
+            visibilities = inventoryGUI.CalculeOverlapse(simulation);
             Assert.IsTrue(visibilities[1]);
             Assert.IsTrue(visibilities[2]);
+            simulation.Dispose();
             inventoryGUI.Dispose();
         }
     }

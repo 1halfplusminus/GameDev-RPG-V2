@@ -9,6 +9,7 @@ using RPG.Gameplay.Inventory;
 using Unity.Collections;
 using System.Collections.Generic;
 using System;
+using Unity.Physics;
 
 namespace RPG.UI
 {
@@ -18,7 +19,7 @@ namespace RPG.UI
         Label ExperiencePoint;
         VisualElement ExperiencePointBar;
 
-        public ItemGrid ItemGrid;
+        public ItemGrid ItemGrid { get; private set; }
         public void Init(VisualElement root)
         {
             Level = root.Q<Label>("Level_Value");
@@ -98,8 +99,10 @@ namespace RPG.UI
     {
 
     }
+
     [ExecuteAlways]
     [UpdateInGroup(typeof(UISystemGroup))]
+
     public class InventoryUISystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
@@ -161,8 +164,9 @@ namespace RPG.UI
             .WithNone<InventoryUIController>()
             .WithAll<InventoryUI, UIReady>().ForEach((Entity e, in UIDocument document, in InventoryParent inventoryParent) =>
             {
+                var root = document.rootVisualElement.Q<InventoryRootController>();
                 var controller = new InventoryUIController();
-                controller.Init(document.rootVisualElement);
+                controller.Init(root);
                 cb.AddComponent(e, controller);
                 if (inventoryParent.Entity != Entity.Null)
                 {
@@ -184,17 +188,19 @@ namespace RPG.UI
             .Run();
 
             Entities
-            .WithAll<InventoryInitTag>()
+            .WithAll<InventoryInitTag, InventoryUIInstance>()
             .ForEach((Entity entity, in InventoryUIController controller) =>
             {
-                var handle = controller.ItemGrid.inventoryGUI.ScheduleCalculeOverlapse();
+                var simulation = new Simulation();
+                var handle = controller.ItemGrid.inventoryGUI.ScheduleCalculeOverlapse(simulation);
                 handle.Complete();
+                simulation.Dispose();
             })
             .WithoutBurst()
             .Run();
 
             Entities
-            .WithAll<InventoryInitTag>()
+            .WithAll<InventoryInitTag, InventoryUIInstance>()
             .ForEach((Entity entity, ref DynamicBuffer<InventoryItem> items, in InventoryUIController controller) =>
             {
                 controller.MoveItem(items.AsNativeArray());

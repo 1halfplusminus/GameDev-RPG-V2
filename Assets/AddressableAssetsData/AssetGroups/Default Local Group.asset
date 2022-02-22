@@ -21,18 +21,6 @@ MonoBehaviour:
     m_Address: Assets/Main/Game/Characters/Progression.asset
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: b714c273d90a233c2a5fd01be208f967
-    m_Address: Assets/Main/Scripts/Gameplay/Inventory/Tests/Test Item Grid.uxml
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: e84056739fb3609d48026f24fd0d7c6e
-    m_Address: Gameplay/Inventory/Prefabs/Example Inventory Item 1.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 8c217ba578b7891898d562652e3b6e19
-    m_Address: Gameplay/Inventory/Prefabs/Example Inventory Item 2.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 789d5733da6e0ca849db077a8751b187, type: 2}
   m_SchemaSet:

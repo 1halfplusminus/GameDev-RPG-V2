@@ -18,7 +18,9 @@
         "Unity.Mathematics.Extensions"
     ],
     "includePlatforms": [],
-    "excludePlatforms": [],
+    "excludePlatforms": [
+        "Editor"
+    ],
     "allowUnsafeCode": true,
     "overrideReferences": true,
     "precompiledReferences": [

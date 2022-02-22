@@ -46,16 +46,27 @@ namespace RPG.Gameplay.Inventory
 
         PhysicsWorld world;
 
-        Simulation simulation;
+        // Simulation simulation;
         JobHandle handle;
         public NativeArray<bool> Overlapses;
 
+        public bool Created;
+
+
+
+
         public void Dispose()
         {
-            if (world.Bodies.IsCreated)
+            if (Created)
             {
                 world.Dispose();
             }
+            Reset();
+            Created = false;
+        }
+
+        private void Reset()
+        {
             if (Overlapses.IsCreated)
             {
                 Overlapses.Dispose();
@@ -64,15 +75,12 @@ namespace RPG.Gameplay.Inventory
             {
                 slots.Dispose();
             }
-            if (simulation != null)
-            {
-                simulation.Dispose();
-            }
 
         }
+
         public static InventoryGUI Build(Inventory inventory, NativeArray<InventoryItem> items)
         {
-            var inventoryGUI = new InventoryGUI { };
+            var inventoryGUI = new InventoryGUI { Created = false };
             inventoryGUI.Init(inventory, 1f);
             for (int i = 0; i < inventory.Size; i++)
             {
@@ -179,23 +187,24 @@ namespace RPG.Gameplay.Inventory
                 Gravity = -9.81f * math.up()
             };
         }
-        void InitSimulation()
-        {
-            if (simulation != null)
-            {
-                simulation.Dispose();
-                simulation = null;
-            }
-            simulation = new Simulation();
-        }
+
         public void Init(Inventory inventory, float2 itemSize)
         {
-            Overlapses = new NativeArray<bool>(inventory.Size, Allocator.Persistent);
-            slots = new NativeArray<SlotGUI>(inventory.Size, Allocator.Persistent);
+            if (!Created)
+            {
+                world = new PhysicsWorld(0, inventory.Size, 0);
+                Created = true;
+            }
+            else
+            {
+                Reset();
+                world.Reset(0, inventory.Size, 0);
+            }
+            Overlapses = new NativeArray<bool>(inventory.Size, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+            slots = new NativeArray<SlotGUI>(inventory.Size, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
             CreateInventoryAabb(inventory, itemSize);
             this.itemSize = itemSize;
             this.inventory = inventory;
-            world = new PhysicsWorld(0, inventory.Size, 0);
             NativeArray<RigidBody> bodies = world.DynamicBodies;
             var MotionVelocities = world.MotionVelocities;
 
@@ -245,7 +254,7 @@ namespace RPG.Gameplay.Inventory
                     };
                 }
             }
-            InitSimulation();
+            // InitSimulation();
             CheckCollision();
         }
 
@@ -260,7 +269,7 @@ namespace RPG.Gameplay.Inventory
             world.CollisionWorld.BuildBroadphase(ref world, 1.0f, -9.81f * math.up());
         }
 
-        public NativeArray<bool> CalculeOverlapse()
+        public NativeArray<bool> CalculeOverlapse(Simulation simulation)
         {
             ResetOverlapses();
             world.CollisionWorld.UpdateDynamicTree(ref world, 1.0f, -9.81f * math.up());
@@ -278,20 +287,19 @@ namespace RPG.Gameplay.Inventory
 
             return Overlapses;
         }
-        public JobHandle ScheduleCalculeOverlapse()
+        public JobHandle ScheduleCalculeOverlapse(Simulation simulation)
         {
+            if (!Created) { new JobHandle(); }
             ResetOverlapses();
             UpdateDynamicTree();
             SimulationCallbacks callbacks = new SimulationCallbacks();
-            InitSimulation();
-            var _simulation = simulation;
             var _overlaps = Overlapses;
             var _world = world;
 
             callbacks.Enqueue(SimulationCallbacks.Phase.PostSolveJacobians, (ref ISimulation iSimulation, ref PhysicsWorld world, JobHandle handle) =>
             {
                 handle.Complete();
-                foreach (var cEvent in _simulation.CollisionEvents)
+                foreach (var cEvent in simulation.CollisionEvents)
                 {
                     // Debug.Log($"body {cEvent.BodyIndexA} collid with {cEvent.BodyIndexB}");
                     _overlaps[cEvent.BodyIndexB] = true;
