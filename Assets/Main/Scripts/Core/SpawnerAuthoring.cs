@@ -8,7 +8,7 @@ using System.IO;
 
 namespace RPG.Core
 {
-    [ExecuteAlways]
+    // [ways]
     public class SpawnerAuthoring : MonoBehaviour, IConvertGameObjectToEntity
     {
         public bool HasHybridComponent;

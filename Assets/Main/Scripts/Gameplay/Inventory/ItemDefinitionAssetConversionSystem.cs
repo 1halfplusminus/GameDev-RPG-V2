@@ -89,7 +89,6 @@ namespace RPG.Gameplay.Inventory
                 var entity = GetPrimaryEntity(itemDefinitionAsset);
                 var blobAssetReferenceItemDefinition = BlobAssetStore.GetItemDefinitionAssetBlob(itemDefinitionAsset);
                 DstEntityManager.AddSharedComponentData(entity, new ItemTexture { Texture = itemDefinitionAsset.Icon.texture });
-
             });
         }
 

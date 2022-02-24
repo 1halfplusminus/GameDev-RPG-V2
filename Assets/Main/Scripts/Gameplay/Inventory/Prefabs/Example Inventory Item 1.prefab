@@ -59,3 +59,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ItemDefinitionAsset: {fileID: 11400000, guid: 9c015c8425ed0584c8d47eeac7313d6d, type: 2}
+  Item: {fileID: 0}

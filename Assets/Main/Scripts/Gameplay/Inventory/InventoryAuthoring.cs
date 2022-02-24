@@ -117,10 +117,20 @@ namespace RPG.Gameplay.Inventory
         protected override void OnUpdate()
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
-            Entities.ForEach((Entity entity, ref DynamicBuffer<InventoryItem> items, in Inventory inventory, in AddItem addItem) =>
+            Entities.ForEach((Entity entity,
+            ref DynamicBuffer<InventoryItem> items,
+            in Inventory inventory,
+            in AddItem addItem,
+            in SceneSection sceneSection,
+            in SceneTag sceneTag) =>
             {
                 var inventoryGUI = new InventoryGUI { Created = false };
                 inventoryGUI.Init(inventory, 1f);
+                cb.AddSharedComponent(addItem.ItemDefinition, sceneSection);
+                cb.AddSharedComponent(addItem.ItemPrefab, sceneSection);
+
+                cb.AddSharedComponent(addItem.ItemPrefab, sceneTag);
+                cb.AddSharedComponent(addItem.ItemDefinition, sceneTag);
                 var iventoryItem = new InventoryItem
                 {
                     ItemDefinitionAsset = addItem.ItemDefinitionAsset,

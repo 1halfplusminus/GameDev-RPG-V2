@@ -100,9 +100,8 @@ namespace RPG.UI
 
     }
 
-    [ExecuteAlways]
+    // [ExecuteAlways]
     [UpdateInGroup(typeof(UISystemGroup))]
-
     public class InventoryUISystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;

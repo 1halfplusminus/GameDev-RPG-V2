@@ -25,6 +25,8 @@ namespace RPG.Combat
         public Weapon Weapon;
 
         public BlobArray<float> HitEvents;
+
+        public Hash128 GUID;
         public Entity Entity;
         public Entity Prefab;
         public Entity ProjectileEntity;
@@ -56,6 +58,7 @@ namespace RPG.Combat
                     // Take note of the "ref" keywords. Unity will throw an error without them, since we're working with structs.
                     ref var weaponBlobAsset = ref blobBuilder.ConstructRoot<WeaponBlobAsset>();
                     weaponBlobAsset.Weapon = Convert(r);
+                    weaponBlobAsset.GUID = hash;
                     blobBuilder.Construct(ref weaponBlobAsset.HitEvents, weaponBlobAsset.Weapon.HitEvents.ToArray());
                     // Store the created reference to the memory location of the blob asset
                     weaponBlobAssetRef = blobBuilder.CreateBlobAssetReference<WeaponBlobAsset>(Allocator.Persistent);
@@ -112,7 +115,7 @@ namespace RPG.Combat
                     DstEntityManager.AddComponentData(weaponEntity, new ChangeAttackAnimation { Animation = blobAssetReferenceClip });
                 }
                 DstEntityManager.AddComponentData(weaponEntity, new WeaponAssetData() { Weapon = weaponBlobAssetRef });
-
+                // DstEntityManager.AddComponent<Asset>(weaponEntity);
             });
         }
         private static FixedList32<float> CreateHitEvent(WeaponAsset weapon)
@@ -177,7 +180,11 @@ namespace RPG.Combat
                 DstEntityManager.AddComponentData(entity, equipableSockets);
                 foreach (var socket in equipableSockets.All())
                 {
-                    DstEntityManager.AddComponentData(socket, new EquippedBy { Entity = entity });
+                    if (socket != Entity.Null)
+                    {
+                        DstEntityManager.AddComponentData(socket, new EquippedBy { Entity = entity });
+                    }
+
                 }
                 var weapon = fighter.Weapon;
                 if (weapon != null)
@@ -248,7 +255,11 @@ namespace RPG.Combat
             Entities.ForEach((WeaponAuthoring weaponAuthoring) =>
             {
                 var weaponAuthoringEntity = GetPrimaryEntity(weaponAuthoring);
-
+                var weaponAssetEntity = GetPrimaryEntity(weaponAuthoring.WeaponAsset);
+                var hash = new UnityEngine.Hash128();
+                hash.Append(weaponAuthoring.WeaponAsset.GUID);
+                BlobAssetStore.TryGet<WeaponAssetData>(hash, out var weaponBlobAssetRef);
+                DstEntityManager.AddComponentData(weaponAuthoringEntity, new WeaponAssetReference { GUID = hash, Weapon = weaponBlobAssetRef });
             });
         }
 
@@ -261,6 +272,7 @@ namespace RPG.Combat
             Entities.ForEach((WeaponAuthoring weaponAuthoring) =>
             {
                 DeclareReferencedAsset(weaponAuthoring.WeaponAsset);
+                DeclareAssetDependency(weaponAuthoring.gameObject, weaponAuthoring.WeaponAsset);
             });
         }
 

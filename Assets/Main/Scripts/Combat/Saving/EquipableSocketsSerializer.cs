@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using RPG.Control;
-using RPG.Core;
 using RPG.Saving;
 using Unity.Entities;
 using UnityEngine;
@@ -8,6 +7,7 @@ using UnityEngine.AddressableAssets;
 
 namespace RPG.Combat
 {
+
     public struct EquipableSocketsSerializer : ISerializer
     {
 

@@ -432,7 +432,10 @@ namespace RPG.Gameplay.Inventory
             Add(telegraph);
             RegisterCallback<MouseMoveEvent>(OnMouseMove);
             RegisterCallback<MouseUpEvent>(OnMouseUp);
-
+            RegisterCallback<DetachFromPanelEvent>((e) =>
+           {
+               inventoryGUI.Dispose();
+           });
             RegisterCallback<AttachToPanelEvent>((e) =>
             {
                 SetItemDetailVisibility(false);
@@ -687,7 +690,10 @@ namespace RPG.Gameplay.Inventory
         {
             return GetItemSlotsQuery().AtIndex(index);
         }
-
+        public void OnDestroy()
+        {
+            Debug.Log("Destroy Item Grid");
+        }
         public void Dispose()
         {
             inventoryGUI.Dispose();

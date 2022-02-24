@@ -21,6 +21,10 @@ MonoBehaviour:
     m_Address: Assets/Main/Game/Characters/Progression.asset
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: e7ae59fb1efa7167f91700ae624b587b
+    m_Address: Characters/Hero/ItemDefinition.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 789d5733da6e0ca849db077a8751b187, type: 2}
   m_SchemaSet:

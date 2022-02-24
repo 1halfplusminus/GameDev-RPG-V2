@@ -33,6 +33,8 @@ namespace RPG.Test
                var controller = new DialogController();
                controller.Init(this);
                controller.ShowNode(dialog, dialog.Value.StartIndex);
+               store.Dispose();
+
            };
             handle.WaitForCompletion();
         }
