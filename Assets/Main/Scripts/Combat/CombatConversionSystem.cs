@@ -247,7 +247,7 @@ namespace RPG.Combat
         }
 
     }
-
+    [UpdateAfter(typeof(WeaponConversionSystem))]
     public class WeaponAuthoringConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()
@@ -258,8 +258,14 @@ namespace RPG.Combat
                 var weaponAssetEntity = GetPrimaryEntity(weaponAuthoring.WeaponAsset);
                 var hash = new UnityEngine.Hash128();
                 hash.Append(weaponAuthoring.WeaponAsset.GUID);
-                BlobAssetStore.TryGet<WeaponAssetData>(hash, out var weaponBlobAssetRef);
-                DstEntityManager.AddComponentData(weaponAuthoringEntity, new WeaponAssetReference { GUID = hash, Weapon = weaponBlobAssetRef });
+                // BlobAssetStore.TryGet<WeaponAssetData>(hash, out var weaponBlobAssetRef);
+                DstEntityManager.AddComponentData(weaponAuthoringEntity, new WeaponAssetReference
+                {
+                    GUID = hash,
+                    Address = weaponAuthoring.WeaponAsset.GUID,
+
+                });
+
             });
         }
 

@@ -108,7 +108,6 @@ namespace RPG.UI
         protected override void OnCreate()
         {
             base.OnCreate();
-            Debug.Log("Create Inventory UI System");
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
         protected override void OnDestroy()

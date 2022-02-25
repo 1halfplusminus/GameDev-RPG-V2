@@ -124,6 +124,7 @@ namespace RPG.Gameplay.Inventory
                 ConvertPrefab(World, handle.Result);
                 CopyEntities(World, shadowWorld, out createdEntity);
                 shadowWorld.EntityManager.DestroyAndResetAllEntities();
+                Addressables.Release(handle);
             }
 
 

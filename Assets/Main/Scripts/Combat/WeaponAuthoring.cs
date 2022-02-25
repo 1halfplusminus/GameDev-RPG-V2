@@ -1,3 +1,4 @@
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
@@ -7,7 +8,8 @@ namespace RPG.Combat
     {
         public Unity.Entities.Hash128 GUID;
 
-        public BlobAssetReference<WeaponAssetData> Weapon;
+        public FixedString64 Address;
+
     }
     public class WeaponAuthoring : MonoBehaviour
     {

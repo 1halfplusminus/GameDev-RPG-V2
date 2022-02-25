@@ -23,7 +23,7 @@ MonoBehaviour:
   SocketType: 0
   HitEvents:
   - 0.5833333
-  GUID: Bow
+  GUID: Hero/Bow
   Clip: {fileID: 9031739870185340572}
 --- !u!114 &9031739870185340572
 MonoBehaviour:

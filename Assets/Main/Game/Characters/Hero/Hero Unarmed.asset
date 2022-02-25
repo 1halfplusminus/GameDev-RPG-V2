@@ -42,5 +42,5 @@ MonoBehaviour:
   - 1.5588025
   - 1.7261906
   - 1.9877346
-  GUID: Unarmed
+  GUID: Hero/Unarmed
   Clip: {fileID: -3813024612379105557}

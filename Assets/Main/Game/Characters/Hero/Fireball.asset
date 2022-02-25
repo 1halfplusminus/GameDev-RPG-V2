@@ -23,7 +23,7 @@ MonoBehaviour:
   SocketType: 1
   HitEvents:
   - 1.3396369
-  GUID: Fireball
+  GUID: Hero/Fireball
   Clip: {fileID: 1075358232851325110}
 --- !u!114 &1075358232851325110
 MonoBehaviour:

@@ -5,6 +5,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.VFX;
 
 namespace RPG.Gameplay
@@ -36,21 +37,6 @@ namespace RPG.Gameplay
                     DeclareReferencedPrefab(handle.Result);
                 };
                 handle.WaitForCompletion();
-                // handle.WaitForCompletion();
-                // if (!handle.IsDone)
-                // {
-                //     Debug.Log("Load handle");
-                //     handle = levelEffectAuthoring.Effect.LoadAssetAsync();
-                //     // handle.WaitForCompletion();
-                // }
-                // Debug.Log($"DeclareReferencedPrefab {handle.Result.GetType()}");
-                // if (handle.IsValid())
-                // {
-
-
-                //     // DeclareReferencedPrefab(handle.Result as GameObject);
-                // }
-                // var prefabEntity = GetPrimaryEntity(visualEffectHandle.Result.gameObject);
             });
         }
     }
@@ -64,6 +50,7 @@ namespace RPG.Gameplay
                 var entity = GetPrimaryEntity(levelEffectAuthoring);
                 var prefabEntity = GetPrimaryEntity(levelEffectAuthoring.Effect.OperationHandle.Result as GameObject);
                 DstEntityManager.AddComponentData(entity, new LevelUpEffect { Prefab = prefabEntity });
+                Addressables.Release(levelEffectAuthoring.Effect.OperationHandle);
             });
         }
     }

@@ -70,7 +70,7 @@ namespace RPG.Gameplay.Inventory
                 for (int i = 0; i < weaponAssetDatas.Length; i++)
                 {
                     var weaponAssetData = weaponAssetDatas[i];
-                    if (weaponAssetData.Weapon.Value.GUID == weaponAssetReference.GUID)
+                    if (weaponAssetData.Weapon.Value.Weapon.GUID.ToString() == weaponAssetReference.Address.ToString())
                     {
                         cbp.AddComponent(entityInQueryIndex, usedItem.UsedBy, new Equip { Equipable = weaponEntities[i], SocketType = weaponAssetData.Weapon.Value.Weapon.SocketType });
                         Debug.Log($"Equip Weapon From Inventory {weaponAssetData.Weapon.Value.Weapon.GUID}");
@@ -78,7 +78,7 @@ namespace RPG.Gameplay.Inventory
                     }
                 }
 
-            }).ScheduleParallel();
+            }).WithoutBurst().ScheduleParallel();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }

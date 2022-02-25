@@ -53,7 +53,7 @@ namespace RPG.Combat
                 Debug.Log($"State is list of weapon {weapons.Count}");
                 foreach (var weaponAddress in weapons)
                 {
-                    var weaponAuthoringHandle = Addressables.LoadAssetAsync<GameObject>("Hero/" + weaponAddress);
+                    var weaponAuthoringHandle = Addressables.LoadAssetAsync<GameObject>(weaponAddress);
                     var weaponAuthoring = weaponAuthoringHandle.WaitForCompletion();
                     var weaponPrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(weaponAuthoring.gameObject, conversionSetting);
                     Debug.Log($"Unserialize weapon at address {weaponAddress} , prefab {weaponPrefab.Index}");
@@ -68,7 +68,7 @@ namespace RPG.Combat
                         var socket = equipableSockets.GetSocketForWeapon(weapon);
                         em.AddComponentData(socket, new EquipInSocket { Socket = socket, Weapon = weaponEntity });
                     }
-
+                    Addressables.Release(weaponAuthoringHandle);
                 }
 
             }

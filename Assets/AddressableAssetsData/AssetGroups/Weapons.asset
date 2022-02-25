@@ -18,12 +18,12 @@ MonoBehaviour:
   m_GUID: 9acdaebfd749671cab82f3ab52fd0d17
   m_SerializeEntries:
   - m_GUID: e0920a9e507411df4b007d6b2443ecbd
-    m_Address: Fireball
+    m_Address: Hero/Fireball
     m_ReadOnly: 0
     m_SerializedLabels:
     - Weapon
   - m_GUID: 15095ef48d7c0185baaa99991293c2af
-    m_Address: Unarmed
+    m_Address: Hero/Unarmed
     m_ReadOnly: 0
     m_SerializedLabels:
     - Weapon
@@ -33,12 +33,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Weapon
   - m_GUID: 34f568bb0a11f4465bbab12cbf085563
-    m_Address: Sword
+    m_Address: Hero/Sword
     m_ReadOnly: 0
     m_SerializedLabels:
     - Weapon
   - m_GUID: 05f68aec6972d1e5f995e03bfed1d50d
-    m_Address: Bow
+    m_Address: Hero/Bow
     m_ReadOnly: 0
     m_SerializedLabels:
     - Weapon

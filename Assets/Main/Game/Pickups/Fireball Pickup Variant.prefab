@@ -417,3 +417,17 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &1717361803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483838191851020857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc513fd9424ec02d6b1db9700905b9a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ItemDefinitionAsset: {fileID: 11400000, guid: e7ae59fb1efa7167f91700ae624b587b, type: 2}
+  Item: {fileID: 1799252509170060772, guid: 145b5a93f1e6151b1afb0129083e7ea7, type: 3}

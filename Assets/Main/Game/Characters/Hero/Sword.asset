@@ -36,5 +36,5 @@ MonoBehaviour:
   SocketType: 1
   HitEvents:
   - 0.6363636
-  GUID: Sword
+  GUID: Hero/Sword
   Clip: {fileID: -1575151672450255520}

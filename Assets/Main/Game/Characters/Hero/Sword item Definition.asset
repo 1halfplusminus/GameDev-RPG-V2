@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d540027cdf0d08208d021a5e513e294, type: 3}
+  m_Name: Sword item Definition
+  m_EditorClassIdentifier: 
+  ID: c33ca217-18cf-4b66-9f83-ad0e18ed4c64
+  FriendlyName: Low Quality Sword
+  Description: Can that thing cut anithing ?
+  Icon: {fileID: 21300000, guid: cf78b15c6fa74412694506e0bdfd1898, type: 3}
+  SlotDimension:
+    Height: 2
+    Width: 1
