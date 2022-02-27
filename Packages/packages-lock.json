@@ -112,6 +112,19 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.dots.runtime": {
+      "version": "0.32.0-preview.54",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.4.1",
+        "com.unity.entities": "0.17.0-preview.41",
+        "com.unity.platforms": "0.10.0-preview.10",
+        "com.unity.nuget.mono-cecil": "0.1.6-preview.2",
+        "nuget.moq": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.entities": {
       "version": "0.17.0-preview.42",
       "depth": 0,

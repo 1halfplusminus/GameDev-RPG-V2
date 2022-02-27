@@ -10,18 +10,6 @@ namespace RPG.Gameplay.Inventory
 
         public GameObject Item;
 
-        // public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
-        // {
-        //     if (ItemDefinitionAsset != null)
-        //     {
-        //         conversionSystem.DeclareAssetDependency(gameObject, ItemDefinitionAsset);
-        //         var blobAssetReference = conversionSystem.BlobAssetStore.GetItemDefinitionAssetBlob(ItemDefinitionAsset);
-        //         var assetEntity = conversionSystem.GetPrimaryEntity(ItemDefinitionAsset);
-        //         var itemPrefab = conversionSystem.GetPrimaryEntity(Item);
-        //         dstManager.AddComponentData(entity, new ItemDefinitionReference { ItemDefinitionAssetBlob = blobAssetReference, AssetEntity = assetEntity, ItemPrefab = itemPrefab });
-        //     }
-
-        // }
 
     }
     class InventoryItemConversionSystem : GameObjectConversionSystem
@@ -49,6 +37,7 @@ namespace RPG.Gameplay.Inventory
                 {
                     itemDefinitionAssetAuthoring.Item = itemDefinitionAssetAuthoring.gameObject;
                 }
+
                 DeclareReferencedPrefab(itemDefinitionAssetAuthoring.Item);
                 DeclareReferencedAsset(itemDefinitionAssetAuthoring.ItemDefinitionAsset);
                 DeclareAssetDependency(itemDefinitionAssetAuthoring.gameObject, itemDefinitionAssetAuthoring.ItemDefinitionAsset);

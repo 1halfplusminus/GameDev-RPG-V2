@@ -7,9 +7,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7257013383831640446, guid: 119bdfc092696fa73bdf07c7f35a73c1, type: 3}
+      propertyPath: ItemDefinitionAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 84992d54d95551852adf15692dde2432, type: 2}
+    - target: {fileID: -268063800459965529, guid: 119bdfc092696fa73bdf07c7f35a73c1, type: 3}
+      propertyPath: Address
+      value: 91a2bca7b1cf09a5983fa4fa884ac72e
+      objectReference: {fileID: 0}
     - target: {fileID: 8030578473187684595, guid: 119bdfc092696fa73bdf07c7f35a73c1, type: 3}
       propertyPath: m_Name
-      value: Unarmed Authoring
+      value: Unarmed Authoring Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8030578473187684604, guid: 119bdfc092696fa73bdf07c7f35a73c1, type: 3}
       propertyPath: m_RootOrder

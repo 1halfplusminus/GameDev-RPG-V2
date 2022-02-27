@@ -7,6 +7,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7257013383831640446, guid: 119bdfc092696fa73bdf07c7f35a73c1, type: 3}
+      propertyPath: ItemDefinitionAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: e7ae59fb1efa7167f91700ae624b587b, type: 2}
+    - target: {fileID: -268063800459965529, guid: 119bdfc092696fa73bdf07c7f35a73c1, type: 3}
+      propertyPath: Address
+      value: 145b5a93f1e6151b1afb0129083e7ea7
+      objectReference: {fileID: 0}
     - target: {fileID: 8030578473187684595, guid: 119bdfc092696fa73bdf07c7f35a73c1, type: 3}
       propertyPath: m_Name
       value: Fireball Authoring Variant
@@ -66,20 +74,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8030578473187684595, guid: 119bdfc092696fa73bdf07c7f35a73c1, type: 3}
   m_PrefabInstance: {fileID: 8613805045761178903}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7696412554993769179
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1799252509170060772}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc513fd9424ec02d6b1db9700905b9a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ItemDefinitionAsset: {fileID: 11400000, guid: e7ae59fb1efa7167f91700ae624b587b, type: 2}
-  Item: {fileID: 1799252509170060772}
 --- !u!114 &8507580241824913619
 MonoBehaviour:
   m_ObjectHideFlags: 0

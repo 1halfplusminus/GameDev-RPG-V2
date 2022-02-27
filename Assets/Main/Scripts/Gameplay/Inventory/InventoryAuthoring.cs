@@ -126,11 +126,6 @@ namespace RPG.Gameplay.Inventory
             {
                 var inventoryGUI = new InventoryGUI { Created = false };
                 inventoryGUI.Init(inventory, 1f);
-                cb.AddSharedComponent(addItem.ItemDefinition, sceneSection);
-                cb.AddSharedComponent(addItem.ItemPrefab, sceneSection);
-
-                cb.AddSharedComponent(addItem.ItemPrefab, sceneTag);
-                cb.AddSharedComponent(addItem.ItemDefinition, sceneTag);
                 var iventoryItem = new InventoryItem
                 {
                     ItemDefinitionAsset = addItem.ItemDefinitionAsset,
