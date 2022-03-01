@@ -58,7 +58,7 @@ namespace RPG.Gameplay.Inventory
             {
                 Marshal.Copy((IntPtr)memoryWriter.Data, arr, 0, memoryWriter.Length);
             }
-
+            world.Dispose();
             return arr;
         }
 
@@ -107,6 +107,7 @@ namespace RPG.Gameplay.Inventory
                 }
 
             }
+            world.Dispose();
             inventoryGUI.Dispose();
 
         }

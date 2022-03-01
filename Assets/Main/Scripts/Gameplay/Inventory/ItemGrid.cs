@@ -100,7 +100,7 @@ namespace RPG.Gameplay.Inventory
         public string GUID;
         public string FriendlyName;
         public string Description;
-
+        public string Action;
         public int2 Dimension;
 
         public Texture2D Texture;
@@ -188,6 +188,7 @@ namespace RPG.Gameplay.Inventory
             this.visible = true;
             Name.text = itemSlotDescription.FriendlyName;
             Description.text = itemSlotDescription.Description;
+            ActionButton.text = itemSlotDescription.Action;
         }
     }
     public class ItemSlot : VisualElement

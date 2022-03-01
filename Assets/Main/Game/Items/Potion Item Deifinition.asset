@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d540027cdf0d08208d021a5e513e294, type: 3}
-  m_Name: ItemDefinition
+  m_Name: Potion Item Deifinition
   m_EditorClassIdentifier: 
   ID: ef2c6711-87d3-4fcc-8dfd-4cfb4d2e90b7
   FriendlyName: Low Health Potion
+  ActionText: Use
   Description: A Badly Crafted Health Potion
-  Icon: {fileID: 21300000, guid: d3590afc6b555c44d8fcd6c5241012ab, type: 3}
+  Icon: {fileID: 21300000, guid: 0e3dbf598ddba3b818dc85c22054dfce, type: 3}
   SlotDimension:
     Height: 1
     Width: 1

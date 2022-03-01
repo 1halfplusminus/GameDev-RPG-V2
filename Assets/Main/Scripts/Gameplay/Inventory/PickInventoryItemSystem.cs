@@ -30,7 +30,6 @@ namespace RPG.Gameplay.Inventory
             .ForEach((int entityInQueryIndex,
             Entity e,
             in CollidWithPlayer collidWithPlayer,
-            in PickableWeapon picked,
             in ItemDefinitionReference itemDefinitionReference) =>
             {
 

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: c33ca217-18cf-4b66-9f83-ad0e18ed4c64
   FriendlyName: Low Quality Sword
+  ActionText: Equip
   Description: Can that thing cut anithing ?
   Icon: {fileID: 21300000, guid: cf78b15c6fa74412694506e0bdfd1898, type: 3}
   SlotDimension:

@@ -4,6 +4,10 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using UnityEngine;
+using Unity.Burst;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using Unity.Collections.LowLevel.Unsafe;
 
 namespace RPG.Gameplay.Inventory
 {
@@ -37,6 +41,7 @@ namespace RPG.Gameplay.Inventory
             return boxBlob;
         }
     }
+    [NativeContainer]
     public struct InventoryGUI : System.IDisposable
     {
         Unity.Physics.Aabb inventoryAabb;
@@ -47,7 +52,7 @@ namespace RPG.Gameplay.Inventory
         PhysicsWorld world;
 
         // Simulation simulation;
-        JobHandle handle;
+        // JobHandle handle;
         public NativeArray<bool> Overlapses;
 
         public bool Created;
@@ -188,7 +193,7 @@ namespace RPG.Gameplay.Inventory
             };
         }
 
-        public void Init(Inventory inventory, float2 itemSize)
+        public void Init(Inventory inventory, float2 itemSize, Allocator allocator = Allocator.Persistent)
         {
             if (!Created)
             {
@@ -200,8 +205,8 @@ namespace RPG.Gameplay.Inventory
                 Reset();
                 world.Reset(0, inventory.Size, 0);
             }
-            Overlapses = new NativeArray<bool>(inventory.Size, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-            slots = new NativeArray<SlotGUI>(inventory.Size, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+            Overlapses = new NativeArray<bool>(inventory.Size, allocator, NativeArrayOptions.UninitializedMemory);
+            slots = new NativeArray<SlotGUI>(inventory.Size, allocator, NativeArrayOptions.UninitializedMemory);
             CreateInventoryAabb(inventory, itemSize);
             this.itemSize = itemSize;
             this.inventory = inventory;
@@ -289,7 +294,9 @@ namespace RPG.Gameplay.Inventory
         }
         public JobHandle ScheduleCalculeOverlapse(Simulation simulation)
         {
-            if (!Created) { new JobHandle(); }
+            var handle = new JobHandle();
+            if (!Created) { return handle; }
+
             ResetOverlapses();
             UpdateDynamicTree();
             SimulationCallbacks callbacks = new SimulationCallbacks();
@@ -340,7 +347,7 @@ namespace RPG.Gameplay.Inventory
         }
         void UpdateDynamicTree()
         {
-            handle.Complete();
+            // handle.Complete();
             world.CollisionWorld.UpdateDynamicTree(ref world, 1.0f, -9.81f * math.up());
         }
         public SlotGUI GetSlot(int index)

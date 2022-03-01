@@ -25,6 +25,10 @@ MonoBehaviour:
     m_Address: Characters/Hero/Fireball Icon.asset
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 543226d0d5d04f7b5a44fc7193cbc1e9
+    m_Address: Items/Heal Potion.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 789d5733da6e0ca849db077a8751b187, type: 2}
   m_SchemaSet:

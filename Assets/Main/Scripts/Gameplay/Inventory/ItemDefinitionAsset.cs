@@ -11,6 +11,7 @@ namespace RPG.Gameplay.Inventory
     {
         public string ID = Guid.NewGuid().ToString();
         public string FriendlyName;
+        public string ActionText;
         [TextArea(3, 10)]
         public string Description;
         public Sprite Icon;

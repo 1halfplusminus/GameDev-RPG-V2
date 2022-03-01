@@ -239,6 +239,7 @@ namespace RPG.UI
                     itemSlotDescription.Description = items[i].ItemDefinitionAsset.Value.Description.ToString();
                     itemSlotDescription.FriendlyName = items[i].ItemDefinitionAsset.Value.FriendlyName.ToString();
                     itemSlotDescription.Texture = itemTexture.Texture;
+                    itemSlotDescription.Action = items[i].ItemDefinitionAsset.Value.Action.ToString();
                 }
                 itemSlotDescriptions.SetValue(itemSlotDescription, items[i].Index);
             }

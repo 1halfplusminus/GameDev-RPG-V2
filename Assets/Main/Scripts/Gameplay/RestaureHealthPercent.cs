@@ -50,30 +50,23 @@ namespace RPG.Gameplay
             cb.RemoveComponentForEntityQuery<Picking>(pickingEntityQuery);
             Entities
             .WithNone<Picked>()
-            .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer collidWithPlayer, in RestaureHealthPercent restaureHealthPercent) =>
+            .WithAll<HealthPickup>()
+            .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer collidWithPlayer) =>
             {
                 if (HasComponent<Health>(collidWithPlayer.Entity) && HasComponent<BaseStats>(collidWithPlayer.Entity))
                 {
-                    var basestats = GetComponent<BaseStats>(collidWithPlayer.Entity);
-                    var health = GetComponent<Health>(collidWithPlayer.Entity);
-                    restaureHealthPercent.RestaureHealth(ref health, basestats);
-                    cbp.AddComponent(entityInQueryIndex, collidWithPlayer.Entity, health);
+                    // var basestats = GetComponent<BaseStats>(collidWithPlayer.Entity);
+                    // var health = GetComponent<Health>(collidWithPlayer.Entity);
+                    // restaureHealthPercent.RestaureHealth(ref health, basestats);
+                    // cbp.AddComponent(entityInQueryIndex, collidWithPlayer.Entity, health);
                     cbp.AddComponent<Picked>(entityInQueryIndex, e);
                     cbp.AddComponent<Picking>(entityInQueryIndex, e);
-                    Log(e, health.Value);
+                    // Log(e, health.Value);
                 }
 
             }).ScheduleParallel();
 
-            Entities
-            .WithAll<Picking, HealthPickup>()
-            .ForEach((in HealingAudio healingAudio) =>
-            {
-                var audioSourceEntity = EntityManager.GetComponentObject<AudioSource>(healingAudio.Entity);
-                audioSourceEntity.Play();
-            })
-            .WithoutBurst()
-            .Run();
+
 
             Entities
             .WithAll<Picked>()
@@ -115,9 +108,5 @@ namespace RPG.Gameplay
         }
 
 
-        private static void Log(Entity e, float newHealth)
-        {
-            Debug.Log($"Restaure {newHealth} health for ${e.Index}");
-        }
     }
 }
