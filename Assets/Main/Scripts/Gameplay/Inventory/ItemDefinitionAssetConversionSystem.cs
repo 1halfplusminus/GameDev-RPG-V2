@@ -88,18 +88,6 @@ namespace RPG.Gameplay.Inventory
             return blobAssetReference;
         }
     }
-    [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
-    public class ItemDefinitionAssetDeclareConversionSystem : GameObjectConversionSystem
-    {
-        protected override void OnUpdate()
-        {
-            Entities.ForEach((ItemDefinitionAsset itemDefinitionAsset) =>
-           {
-               DeclareReferencedAsset(itemDefinitionAsset.Icon);
-               DeclareReferencedAsset(itemDefinitionAsset.Icon.texture);
-           });
-        }
-    }
     public class ItemDefinitionAssetConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()

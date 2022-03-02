@@ -336,6 +336,10 @@ namespace RPG.Gameplay.Inventory
         {
             style.height = dimension.y * height;
             style.width = dimension.x * width;
+            style.maxHeight = style.height;
+            style.minHeight = style.height;
+            style.maxWidth = style.width;
+            style.minWidth = style.width;
         }
         public void SetItem(ItemSlotDescription newItemSlotDescription)
         {
@@ -402,7 +406,7 @@ namespace RPG.Gameplay.Inventory
         ItemSlot[] items;
 
         public InventoryGUI inventoryGUI = new InventoryGUI() { Created = false };
-        public float2 ItemSize = new float2(150, 150);
+        public float2 ItemSize = new float2(60, 80);
         bool isDragging;
         ItemSlot originalSlot;
 
@@ -430,13 +434,14 @@ namespace RPG.Gameplay.Inventory
             name = "Grid";
             telegraph = new Telegraph();
             telegraph.SetSize(ItemSize);
+            telegraph.Resize(1);
             Add(telegraph);
             RegisterCallback<MouseMoveEvent>(OnMouseMove);
             RegisterCallback<MouseUpEvent>(OnMouseUp);
             RegisterCallback<DetachFromPanelEvent>((e) =>
-           {
-               inventoryGUI.Dispose();
-           });
+            {
+                inventoryGUI.Dispose();
+            });
             RegisterCallback<AttachToPanelEvent>((e) =>
             {
                 SetItemDetailVisibility(false);
