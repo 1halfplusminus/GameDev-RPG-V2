@@ -16,18 +16,25 @@ namespace RPG.Gameplay.Inventory
 
         public Entity ItemPrefab;
     }
+    [Serializable]
     public struct ItemTexture : ISharedComponentData, IEquatable<ItemTexture>
     {
         public Texture2D Texture;
 
+        public Unity.Entities.Hash128 GUID;
+
+        public override bool Equals(object obj)
+        {
+            return obj is ItemTexture other && Equals(other);
+        }
         public bool Equals(ItemTexture other)
         {
-            return other.Texture == Texture;
+            return GUID == other.GUID;
         }
         public override int GetHashCode()
         {
 
-            return Texture.GetHashCode();
+            return GUID.GetHashCode();
         }
 
     }
@@ -81,6 +88,18 @@ namespace RPG.Gameplay.Inventory
             return blobAssetReference;
         }
     }
+    [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
+    public class ItemDefinitionAssetDeclareConversionSystem : GameObjectConversionSystem
+    {
+        protected override void OnUpdate()
+        {
+            Entities.ForEach((ItemDefinitionAsset itemDefinitionAsset) =>
+           {
+               DeclareReferencedAsset(itemDefinitionAsset.Icon);
+               DeclareReferencedAsset(itemDefinitionAsset.Icon.texture);
+           });
+        }
+    }
     public class ItemDefinitionAssetConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()
@@ -89,7 +108,12 @@ namespace RPG.Gameplay.Inventory
             {
                 var entity = GetPrimaryEntity(itemDefinitionAsset);
                 var blobAssetReferenceItemDefinition = BlobAssetStore.GetItemDefinitionAssetBlob(itemDefinitionAsset);
-                DstEntityManager.AddSharedComponentData(entity, new ItemTexture { Texture = itemDefinitionAsset.Icon.texture });
+                var hash = new UnityEngine.Hash128();
+                hash.Append(blobAssetReferenceItemDefinition.Value.GUID.ToString());
+                var texture = new Texture2D(itemDefinitionAsset.Icon.texture.width, itemDefinitionAsset.Icon.texture.height, itemDefinitionAsset.Icon.texture.format, false);
+                Graphics.CopyTexture(itemDefinitionAsset.Icon.texture, texture);
+                DstEntityManager.AddComponentObject(entity, texture);
+                // DstEntityManager.AddSharedComponentData(entity, new ItemTexture { Texture = texture, GUID = hash });
             });
         }
 

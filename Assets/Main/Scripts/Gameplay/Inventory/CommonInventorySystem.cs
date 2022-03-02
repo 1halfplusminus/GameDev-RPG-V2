@@ -115,7 +115,6 @@ namespace RPG.Gameplay.Inventory
                    var health = GetComponent<Health>(target);
                    restaureHealthPercent.RestaureHealth(ref health, basestats);
                    cbp.AddComponent(entityInQueryIndex, target, health);
-                   //    cbp.DestroyEntity(entityInQueryIndex, e);
                    cbp.RemoveComponent<UsedItem>(entityInQueryIndex, e);
                    Log(e, health.Value);
                }
@@ -159,7 +158,6 @@ namespace RPG.Gameplay.Inventory
                     if (weaponAssetData.Weapon.Value.Weapon.GUID == weaponAssetReference.Address)
                     {
                         cbp.AddComponent(entityInQueryIndex, usedItem.UsedBy, new Equip { Equipable = weaponEntities[i], SocketType = weaponAssetData.Weapon.Value.Weapon.SocketType });
-                        Debug.Log($"Equip Weapon From Inventory {weaponAssetData.Weapon.Value.Weapon.GUID}");
                         break;
                     }
                 }

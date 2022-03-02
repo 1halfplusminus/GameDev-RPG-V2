@@ -4,9 +4,6 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using UnityEngine;
-using Unity.Burst;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using Unity.Collections.LowLevel.Unsafe;
 
 namespace RPG.Gameplay.Inventory
@@ -120,13 +117,12 @@ namespace RPG.Gameplay.Inventory
                 for (int j = 0; j < takenSlots.Length; j++)
                 {
                     var slot = takenSlots[j];
-                    var inventoryItem = items[slot];
-                    var currentItem = j == 0 ? item : items[slot];
+                    var currentItem = slot == i ? item : items[slot];
                     currentItem.IsEmpty = false;
                     currentItem.Index = slot;
                     items[slot] = currentItem;
                 }
-                ResizeSlot(takenSlots[0], item.ItemDefinitionAsset.Value.Dimension);
+                ResizeSlot(i, item.ItemDefinitionAsset.Value.Dimension);
                 takenSlots.Dispose();
                 return true;
             }

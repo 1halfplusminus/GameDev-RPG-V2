@@ -203,8 +203,8 @@ namespace RPG.UI
             {
                 controller.MoveItem(items.AsNativeArray());
                 controller.ActionItem(cb, entity, items.AsNativeArray());
-                Array itemSlotDescriptions = GetItemSlotsDescriptions(ref items);
-                controller.ItemGrid.DrawItems((ItemSlotDescription[])itemSlotDescriptions);
+                var itemSlotDescriptions = GetItemSlotsDescriptions(ref items);
+                controller.ItemGrid.DrawItems(itemSlotDescriptions);
             })
             .WithoutBurst()
             .Run();
@@ -222,7 +222,7 @@ namespace RPG.UI
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
 
-        private Array GetItemSlotsDescriptions(ref DynamicBuffer<InventoryItem> items)
+        private ItemSlotDescription[] GetItemSlotsDescriptions(ref DynamicBuffer<InventoryItem> items)
         {
             var itemSlotDescriptions = Array.CreateInstance(typeof(ItemSlotDescription), items.Length);
             var textures = GetSharedComponentTypeHandle<ItemTexture>();
@@ -233,18 +233,18 @@ namespace RPG.UI
                 itemSlotDescription.IsEmpty = items[i].IsEmpty;
                 if (items[i].ItemDefinition != Entity.Null && items[i].ItemDefinitionAsset.IsCreated)
                 {
-                    var itemTexture = EntityManager.GetSharedComponentData<ItemTexture>(items[i].ItemDefinition);
+                    var itemTexture = EntityManager.GetComponentObject<Texture2D>(items[i].ItemDefinition);
                     itemSlotDescription.Dimension = items[i].ItemDefinitionAsset.Value.Dimension;
                     itemSlotDescription.GUID = items[i].ItemDefinitionAsset.Value.GUID.ToString();
                     itemSlotDescription.Description = items[i].ItemDefinitionAsset.Value.Description.ToString();
                     itemSlotDescription.FriendlyName = items[i].ItemDefinitionAsset.Value.FriendlyName.ToString();
-                    itemSlotDescription.Texture = itemTexture.Texture;
+                    itemSlotDescription.Texture = itemTexture;
                     itemSlotDescription.Action = items[i].ItemDefinitionAsset.Value.Action.ToString();
                 }
                 itemSlotDescriptions.SetValue(itemSlotDescription, items[i].Index);
             }
 
-            return itemSlotDescriptions;
+            return (ItemSlotDescription[])itemSlotDescriptions;
         }
     }
 }

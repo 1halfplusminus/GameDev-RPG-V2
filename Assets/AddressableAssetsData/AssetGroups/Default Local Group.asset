@@ -21,12 +21,24 @@ MonoBehaviour:
     m_Address: Assets/Main/Game/Characters/Progression.asset
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: e7ae59fb1efa7167f91700ae624b587b
-    m_Address: Characters/Hero/Fireball Icon.asset
+  - m_GUID: 31c60dc34687db2929fc4f6b63bd2537
+    m_Address: Assets/Main/Assets Packs/sword.png
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 543226d0d5d04f7b5a44fc7193cbc1e9
-    m_Address: Items/Heal Potion.prefab
+  - m_GUID: a62dd8a617dd85f42a01fba12febf78e
+    m_Address: Assets/Main/Assets Packs/Fireball Icon.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 00dc0d7459ef5cffd8e629b9c3a0f657
+    m_Address: Assets/Main/Assets Packs/Bow Item Icon.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: cf78b15c6fa74412694506e0bdfd1898
+    m_Address: Assets/Main/Assets Packs/Sword Icon.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 0e3dbf598ddba3b818dc85c22054dfce
+    m_Address: Assets/Main/Assets Packs/potion icon.png
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

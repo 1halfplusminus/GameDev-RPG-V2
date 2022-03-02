@@ -98,8 +98,8 @@ namespace RPG.Gameplay.Inventory
                             var items = em.GetBuffer<InventoryItem>(e);
                             inventoryGUI.Insert(i, restoredItem, items.AsNativeArray());
                             Debug.Log("Restore item at address " + addressable.Address);
-                            assetRef.ReleaseInstance(resultHandle.Result);
-                            assetRef.ReleaseAsset();
+                            Addressables.Release(resultHandle);
+                            // assetRef.ReleaseInstance(resultHandle.Result);
 
                         }
 
