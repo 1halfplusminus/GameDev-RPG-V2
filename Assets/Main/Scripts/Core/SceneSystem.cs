@@ -103,7 +103,8 @@ namespace RPG.Core
                 var sceneEntity = _sceneSystem.GetSceneEntity(triggerSceneLoad.SceneGUID);
                 if (sceneEntity == Entity.Null || !_sceneSystem.IsSceneLoaded(sceneEntity))
                 {
-                    sceneEntity = _sceneSystem.LoadSceneAsync(triggerSceneLoad.SceneGUID);
+                    var loadParameters = new SceneSystem.LoadParameters { Flags = SceneLoadFlags.LoadAdditive };
+                    sceneEntity = _sceneSystem.LoadSceneAsync(triggerSceneLoad.SceneGUID, loadParameters);
                     var newSceneRef = em.GetComponentData<SceneReference>(sceneEntity);
                     Debug.Log($"Loading Scene {newSceneRef.SceneGUID}");
                     commandBuffer.AddComponent(e, new LoadSceneAsync() { SceneEntity = sceneEntity, SceneGUID = newSceneRef.SceneGUID });
@@ -222,7 +223,7 @@ namespace RPG.Core
                 }
                 else
                 {
-                    Debug.Log($"Scene {loadingScenesData[i].SceneGUID} is still loading");
+                    // Debug.Log($"Scene {loadingScenesData[i].SceneGUID} is still loading");
                 }
             }
             var sceneLoaded = sceneLoadedList.GetKeyArray(Allocator.Temp);
