@@ -122,6 +122,20 @@ namespace RPG.UI
             Entities
             .WithAll<DialogInteraction>()
             .WithNone<InDialog>()
+            .ForEach((Entity e, InteractWithUIDialogController interactWithUIDialogController, ref GameplayInput gameplayInput) =>
+            {
+                if (interactWithUIDialogController.ClickedThisFrame)
+                {
+                    gameplayInput.DialogInteractionPressedThisFrame = true;
+                    interactWithUIDialogController.ClickedThisFrame = false;
+                }
+            })
+            .WithoutBurst()
+            .Run();
+
+            Entities
+            .WithAll<DialogInteraction>()
+            .WithNone<InDialog>()
             .ForEach((int entityInQueryIndex, Entity e, in GameplayInput gameplayInput, in DialogAsset dialogAsset) =>
             {
                 if (gameplayInput.DialogInteractionPressedThisFrame)

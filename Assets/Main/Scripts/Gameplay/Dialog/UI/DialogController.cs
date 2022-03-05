@@ -13,10 +13,17 @@ namespace RPG.UI
     public class InteractWithUIDialogController : IComponentData
     {
         VisualElement container;
+        Button Button;
+
+        public bool ClickedThisFrame;
         public void Init(VisualElement root)
         {
             container = root;
-
+            Button = root.Q<Button>();
+            Button.clicked += () =>
+            {
+                ClickedThisFrame = true;
+            };
         }
         public void SetPosition(Camera camera, Vector3 position)
         {
