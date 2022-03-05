@@ -151,29 +151,29 @@ namespace RPG.Core
             {
                 // Check if any scene is loading
                 var sceneLoadingCount = sceneLoadingQuery.CalculateEntityCount();
-                var nativeListTrigger = new NativeList<Entity>(sceneLoadingCount, Allocator.TempJob);
-                var nativeListTriggerWriter = nativeListTrigger.AsParallelWriter();
+                // var nativeListTrigger = new NativeList<Entity>(sceneLoadingCount, Allocator.TempJob);
+                // var nativeListTriggerWriter = nativeListTrigger.AsParallelWriter();
                 Entities
                 .WithStoreEntityQueryInField(ref sceneLoadingQuery)
                 .ForEach((Entity e, in LoadSceneAsync loadSceneAsync) =>
                 {
-                    nativeListTriggerWriter.AddNoResize(e);
+                    // nativeListTriggerWriter.AddNoResize(e);
                 }).ScheduleParallel();
 
-                Entities
-                .WithReadOnly(nativeListTrigger)
-                .WithDisposeOnCompletion(nativeListTrigger)
-                .WithAny<SceneLoadingListener>()
-                .ForEach((int entityInQueryIndex, Entity e) =>
-                {
-                    var triggers = new FixedList128<Entity>();
-                    foreach (var trigger in nativeListTrigger)
-                    {
-                        triggers.Add(trigger);
-                    }
-                    commandBufferP.AddComponent(entityInQueryIndex, e, new AnySceneLoading { Triggers = triggers });
-                })
-                .ScheduleParallel();
+                // Entities
+                // .WithReadOnly(nativeListTrigger)
+                // .WithDisposeOnCompletion(nativeListTrigger)
+                // .WithAny<SceneLoadingListener>()
+                // .ForEach((int entityInQueryIndex, Entity e) =>
+                // {
+                //     var triggers = new FixedList128<Entity>();
+                //     foreach (var trigger in nativeListTrigger)
+                //     {
+                //         triggers.Add(trigger);
+                //     }
+                //     commandBufferP.AddComponent(entityInQueryIndex, e, new AnySceneLoading { Triggers = triggers });
+                // })
+                // .ScheduleParallel();
                 CheckIfSceneFinisLoading(sceneLoadingCount, out NativeArray<Entity> loadingScenes, out NativeArray<LoadSceneAsync> loadingScenesData, out NativeHashMap<Entity, TriggeredSceneLoaded> sceneLoadedList);
                 loadingScenes.Dispose();
                 loadingScenesData.Dispose();
@@ -216,7 +216,7 @@ namespace RPG.Core
                     }
                     else
                     {
-                        Debug.Log($"Scene section for {loadingScenesData[i].SceneGUID} is still loading");
+                        // Debug.Log($"Scene section for {loadingScenesData[i].SceneGUID} is still loading");
                     }
 
                 }

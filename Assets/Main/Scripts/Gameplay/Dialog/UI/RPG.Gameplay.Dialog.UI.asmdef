@@ -8,7 +8,8 @@
         "RPG",
         "Unity.Entities.Hybrid",
         "Unity.Transforms",
-        "Unity.Mathematics"
+        "Unity.Mathematics",
+        "Unity.Physics"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

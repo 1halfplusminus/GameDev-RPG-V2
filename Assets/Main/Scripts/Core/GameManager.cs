@@ -18,6 +18,7 @@ namespace RPG.Core
 
         }
     }
+
     public class GameSettingsConversionSystem : GameObjectConversionSystem
     {
         protected override void OnUpdate()

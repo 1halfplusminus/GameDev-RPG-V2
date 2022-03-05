@@ -120,18 +120,18 @@ namespace RPG.Saving
                 //FIXME: Shouldn't know the default file path
                 Load(SaveSystem.GetPathFromSaveFile("test.save"));
 
-            }).WithStructuralChanges().WithoutBurst().Run();
+            }).WithStructuralChanges().Run();
             Entities.ForEach((Entity e, in SceneSaveCheckpoint sceneLoaded) =>
            {
                //FIXME: Shouldn't know the default file path
                Save(SaveSystem.GetPathFromSaveFile("test.save"));
                EntityManager.RemoveComponent<SceneSaveCheckpoint>(e);
-           }).WithStructuralChanges().WithoutBurst().Run();
+           }).WithStructuralChanges().Run();
             Entities.ForEach((in TriggerUnloadScene sceneUnLoad) =>
             {
                 //FIXME: Shouldn't know the default file path
                 Save(SaveSystem.GetPathFromSaveFile("test.save"));
-            }).WithStructuralChanges().WithoutBurst().Run();
+            }).WithStructuralChanges().Run();
 
         }
         public override bool LoadLastScene(string savePath)

@@ -14,7 +14,11 @@ namespace RPG.UI
         private Label EnemyHealth;
         private Label Level;
 
+        private Button Inventory;
+        private Button Setting;
         private VisualElement EnemyContainer;
+        public bool InventoryClicked;
+        public bool SettingClicked;
         public void Init(VisualElement root)
         {
             PlayerHealth = root.Q<Label>("Health");
@@ -22,6 +26,16 @@ namespace RPG.UI
             PlayerExperiencePoint = root.Q<Label>("Experience");
             Level = root.Q<Label>("Level");
             EnemyContainer = root.Q<VisualElement>("EnemyContainer");
+            Inventory = root.Q<Button>("InventoryButton");
+            Setting = root.Q<Button>("SettingButton");
+            Setting.clicked += () =>
+            {
+                SettingClicked = true;
+            };
+            Inventory.clicked += () =>
+            {
+                InventoryClicked = true;
+            };
         }
         public void SetLevel(BaseStats baseStats)
         {

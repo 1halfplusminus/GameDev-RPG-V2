@@ -10,6 +10,7 @@ using Unity.Collections;
 using System.Collections.Generic;
 using System;
 using Unity.Physics;
+using RPG.Control;
 
 namespace RPG.UI
 {
@@ -127,8 +128,21 @@ namespace RPG.UI
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
+
             Entities
-            .WithNone<InventoryUIInstance>()
+            .ForEach((Entity e, InGameUIController c, ref GameplayInput input) =>
+            {
+                if (c.InventoryClicked)
+                {
+                    Debug.Log("Here");
+                    input.OpenInventoryPressedThisFrame = true;
+                    c.InventoryClicked = false;
+                }
+            })
+            .WithoutBurst().Run();
+
+            Entities
+            .WithNone<InventoryUIInstance, DisabledControl>()
             .ForEach((int entityInQueryIndex, Entity e, in InventoryFactory inventoryPrefab, in GameplayInput input, in Inventory inventory) =>
             {
                 if (input.OpenInventoryPressedThisFrame)

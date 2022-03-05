@@ -25,7 +25,8 @@
         "Unity.InputSystem",
         "Unity.Animation.DefaultGraphPipeline.Hybrid",
         "StylizedWaterForURP",
-        "Unity.Timeline"
+        "Unity.Timeline",
+        "Unity.Entities.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

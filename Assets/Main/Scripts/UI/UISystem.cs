@@ -137,82 +137,93 @@ namespace RPG.UI
         }
     }
 
+    public struct InGameUIFor : IComponentData
+    {
+        public Entity Entity;
+    }
+    public struct InGameUIInstance : IComponentData
+    {
+        public Entity Entity;
+    }
     [UpdateInGroup(typeof(UISystemGroup))]
     public class InGameUISystem : SystemBase
     {
+        EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery displayInGameUIQuery;
 
         EntityQuery playerQuery;
 
+        EntityQuery prefabQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
-
-            playerQuery = GetEntityQuery(new EntityQueryDesc()
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            prefabQuery = GetEntityQuery(new EntityQueryDesc()
             {
-                All = new ComponentType[]{
-                    ReadOnly<PlayerControlled>(),
-                    ReadOnly<Health>(),
-                    ReadOnly<Fighter>(),
-                    ReadOnly<ExperiencePoint>(),
-                    ReadOnly<BaseStats>()
+                All = new ComponentType[] {
+                    ReadOnly<InGameUI>(),
+                    ReadOnly<Prefab>()
                 }
             });
-            playerQuery.SetChangedVersionFilter(ReadOnly<Health>());
-            playerQuery.SetChangedVersionFilter(ReadOnly<Fighter>());
+
             displayInGameUIQuery = GetEntityQuery(new EntityQueryDesc()
             {
                 Any = new ComponentType[] {
                     ReadOnly<InGameUI>()
                 }
             });
-
+            RequireForUpdate(prefabQuery);
         }
         protected override void OnUpdate()
         {
-            if (playerQuery.CalculateEntityCount() == 1)
+            var cb = entityCommandBufferSystem.CreateCommandBuffer();
+            var prefab = prefabQuery.GetSingletonEntity();
+            Entities
+            .WithNone<InGameUIInstance>()
+            .WithAll<PlayerControlled>()
+            .ForEach((Entity e) =>
             {
-                var playerHealth = playerQuery.GetSingleton<Health>();
-                var fighter = playerQuery.GetSingleton<Fighter>();
-                var experience = playerQuery.GetSingleton<ExperiencePoint>();
-                var baseStats = playerQuery.GetSingleton<BaseStats>();
-                Entities
-                .ForEach((InGameUIController c) =>
-                {
-                    c.SetPlayerHealth(playerHealth, baseStats.Level, baseStats.ProgressionAsset);
-                    // c.SetEnemyHealth(fighter.Target, EntityManager);
-                    c.SetExperiencePoint(experience.Value);
-                    c.SetLevel(baseStats);
-                })
-                .WithoutBurst().Run();
-            }
+                var instance = cb.Instantiate(prefab);
+                cb.AddComponent(instance, new InGameUIFor { Entity = e });
+                cb.AddComponent(e, new InGameUIInstance { Entity = instance });
+            })
+            .WithoutBurst()
+            .Run();
+            Entities
+            .ForEach((in InGameUIController c, in Health playerHealth, in BaseStats baseStats, in ExperiencePoint experience) =>
+            {
+                c.SetPlayerHealth(playerHealth, baseStats.Level, baseStats.ProgressionAsset);
+                c.SetExperiencePoint(experience.Value);
+                c.SetLevel(baseStats);
+            })
+            .WithoutBurst()
+            .Run();
 
             Entities
             .WithAll<UIReady, InGameUI>()
             .WithNone<InGameUIController>()
-            .ForEach((Entity e, UIDocument uiDocument) =>
+            .ForEach((Entity e, UIDocument uiDocument, InGameUIFor ingameUIFor) =>
             {
                 var controller = new InGameUIController();
                 controller.Init(uiDocument.rootVisualElement);
-                EntityManager.AddComponentObject(e, controller);
+                cb.AddComponent(e, controller);
+                cb.AddComponent(ingameUIFor.Entity, controller);
             })
-            .WithStructuralChanges()
             .WithoutBurst()
             .Run();
 
-            if (displayInGameUIQuery.CalculateEntityCount() == 0)
-            {
-                Entities
-                .WithAll<InGameUI, Prefab, InGame>()
-                .WithNone<InGameUIController>()
-                .ForEach((Entity e) =>
-                {
-                    EntityManager.Instantiate(e);
-                })
-                .WithStructuralChanges()
-                .WithoutBurst()
-                .Run();
-            }
+
+            Entities
+            // .WithReadOnly(em)
+           .ForEach((Entity e, in InGameUIFor uiFor) =>
+           {
+               var componentDataFromEntity = GetComponentDataFromEntity<InGameUIInstance>(true);
+               if (!componentDataFromEntity.HasComponent(uiFor.Entity))
+               {
+                   cb.DestroyEntity(e);
+               }
+           })
+           .Schedule();
 
         }
 
@@ -276,7 +287,17 @@ namespace RPG.UI
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var input = inputSystem.Input;
-            if (input.UI.TogglePauseMenu.WasPressedThisFrame())
+            var inGameHUDControllerPausePressed = false;
+            Entities.ForEach((InGameUIController inGameHUDController) =>
+            {
+                if (inGameHUDController.SettingClicked)
+                {
+                    inGameHUDController.SettingClicked = false;
+                    inGameHUDControllerPausePressed = true;
+                }
+            }).WithoutBurst().Run();
+            var pausePressed = inGameHUDControllerPausePressed || input.UI.TogglePauseMenu.WasPressedThisFrame();
+            if (pausePressed)
             {
                 if (pauseUIQuery.CalculateEntityCount() == 0)
                 {

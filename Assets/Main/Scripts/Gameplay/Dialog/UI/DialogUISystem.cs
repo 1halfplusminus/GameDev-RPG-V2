@@ -6,6 +6,10 @@ using RPG.Control;
 using UnityEngine;
 using Unity.Transforms;
 using System;
+using Unity.Physics.Systems;
+using Unity.Jobs;
+using Unity.Physics;
+using Unity.Collections;
 
 namespace RPG.UI
 {
@@ -28,6 +32,7 @@ namespace RPG.UI
     public struct DialogInteractionUIInstance : IComponentData
     {
         public Entity Instance;
+        public Entity Player;
     }
     public struct InDialog : IComponentData
     {
@@ -37,14 +42,21 @@ namespace RPG.UI
     public class DialogInteractionUISystem : SystemBase
     {
         EndSimulationEntityCommandBufferSystem commandBufferSystem;
+        BuildPhysicsWorld buildPhysicsWorld;
 
+        StepPhysicsWorld stepPhysicsWorld;
         protected override void OnCreate()
         {
             base.OnCreate();
             commandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            buildPhysicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
+            stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
         }
         protected override void OnUpdate()
         {
+            Dependency = JobHandle.CombineDependencies(buildPhysicsWorld.GetOutputDependency(), stepPhysicsWorld.GetOutputDependency(), Dependency);
+            var physicWorld = buildPhysicsWorld.PhysicsWorld;
+            var collisionWorld = buildPhysicsWorld.PhysicsWorld.CollisionWorld;
             var cb = commandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
             Entities
@@ -52,16 +64,38 @@ namespace RPG.UI
             .ForEach((int entityInQueryIndex, Entity e, in LocalToWorld localToWorld, in CollidWithPlayer collidWithPlayer, in DialogInteractionUI dialogInteractionUI, in DialogAsset dialogAsset) =>
             {
 
-                if (collidWithPlayer.State == Core.EventOverlapState.Enter)
+                if (collidWithPlayer.State != Core.EventOverlapState.Exit)
                 {
                     var instance = cbp.Instantiate(entityInQueryIndex, dialogInteractionUI.Prefab);
-                    cbp.AddComponent(entityInQueryIndex, e, new DialogInteractionUIInstance { Instance = instance });
+                    cbp.AddComponent(entityInQueryIndex, e, new DialogInteractionUIInstance { Instance = instance, Player = collidWithPlayer.Entity });
                     cbp.AddComponent(entityInQueryIndex, instance, new GameplayInput());
                     cbp.AddComponent(entityInQueryIndex, instance, dialogAsset);
                     cbp.AddComponent(entityInQueryIndex, instance, new Translation { Value = localToWorld.Position });
                 }
             }).ScheduleParallel();
 
+            Entities
+            .WithReadOnly(collisionWorld)
+            .ForEach((int entityInQueryIndex, Entity e, in DialogInteractionUIInstance dialogInteractionUIInstance, in LocalToWorld localToWorld) =>
+            {
+                var distanceCast = new PointDistanceInput { Filter = CollisionFilter.Default, Position = localToWorld.Position, MaxDistance = 3 };
+                var hits = new NativeList<DistanceHit>(Allocator.Temp);
+                collisionWorld.CalculateDistance(distanceCast, ref hits);
+                var playerFound = false;
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    var hit = hits[i];
+                    if (hit.Entity == dialogInteractionUIInstance.Player && !HasComponent<DisabledControl>(dialogInteractionUIInstance.Player))
+                    {
+                        playerFound = true;
+                    }
+                }
+                if (!playerFound)
+                {
+                    cbp.RemoveComponent<DialogInteractionUIInstance>(entityInQueryIndex, e);
+                    cbp.DestroyEntity(entityInQueryIndex, dialogInteractionUIInstance.Instance);
+                }
+            }).ScheduleParallel();
             Entities
             .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer collidWithPlayer, in DialogInteractionUIInstance dialogInteractionUIInstance) =>
             {

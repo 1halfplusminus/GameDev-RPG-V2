@@ -73,7 +73,7 @@ namespace RPG.UI
             anySceneLoadingQuery = GetEntityQuery(new EntityQueryDesc
             {
                 Any = new ComponentType[] {
-                    typeof(TriggerSceneLoad)
+                    typeof(TriggerSceneLoad), typeof(LoadSceneAsync)
                 },
                 None = new ComponentType[]{
                     typeof(TriggeredSceneLoaded)
@@ -112,13 +112,12 @@ namespace RPG.UI
                 EntityManager.AddComponent<IsLoading>(instance);
                 EntityManager.AddComponent<AnySceneLoading>(instance);
             }
-
-            if (sceneLoadingCount == 0)
+            Entities
+            .WithAny<IsLoading>()
+            .WithAll<LoadingUI>()
+            .ForEach((Entity e) =>
             {
-                Entities
-                .WithAny<IsLoading>()
-                .WithAll<LoadingUI>()
-                .ForEach((Entity e, UIDocument uiDocument, in AnySceneFinishLoading anySceneLoading) =>
+                if (sceneLoadingCount == 0)
                 {
                     Debug.Log("Hide UI when Loading finish");
                     commandBuffer.RemoveComponent<IsLoading>(e);
@@ -129,11 +128,10 @@ namespace RPG.UI
                         From = 100f,
                         Duration = 1f
                     });
-                })
-                .WithoutBurst()
-                .Run();
-            }
+                }
 
+            })
+            .Schedule();
 
             Entities
             .WithNone<Fade, IsLoading, Hide>()
@@ -141,13 +139,13 @@ namespace RPG.UI
             .ForEach((Entity e) =>
             {
                 Debug.Log("Destroy Loading UI LoadingUI");
-                EntityManager.DestroyEntity(e);
+                commandBuffer.DestroyEntity(e);
             })
-            .WithStructuralChanges()
-            .WithoutBurst()
+            // .WithStructuralChanges()
+            // .WithoutBurst()
             .Run();
 
-            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+
         }
     }
     [UpdateInGroup(typeof(UISystemGroup))]

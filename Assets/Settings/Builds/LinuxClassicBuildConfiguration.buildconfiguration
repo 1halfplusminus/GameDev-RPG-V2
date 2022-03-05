@@ -10,19 +10,13 @@
         {
             "$type": "Unity.Build.Common.SceneList, Unity.Build",
             "$version": 1,
-            "BuildCurrentScene": true,
+            "BuildCurrentScene": false,
             "SceneInfos": [
                 {
                     "Scene": "GlobalObjectId_V1-1-58620b0a30e260b43ac1c2cd9e3e8e1b-102900000-0",
                     "AutoLoad": true
                 }
             ]
-        },
-        {
-            "$type": "Unity.Build.Classic.ClassicBuildProfile, Unity.Build.Classic",
-            "$version": 1,
-            "Platform": "linux",
-            "Configuration": 2
         },
         {
             "$type": "Unity.Build.Classic.ClassicCodeStrippingOptions, Unity.Build.Classic",
@@ -33,7 +27,7 @@
             "$type": "Unity.Build.Classic.ClassicScriptingSettings, Unity.Build.Classic",
             "ScriptingBackend": 0,
             "Il2CppCompilerConfiguration": 0,
-            "UseIncrementalGC": false
+            "UseIncrementalGC": true
         },
         {
             "$type": "Unity.Build.Common.ScriptingDebuggerSettings, Unity.Build",
@@ -45,6 +39,12 @@
                 "ENABLE_COMPUTE_DEFORMATIONS",
                 "ENABLE_HYBRID_RENDERER_V2"
             ]
+        },
+        {
+            "$type": "Unity.Build.Classic.ClassicBuildProfile, Unity.Build.Classic",
+            "$version": 1,
+            "Platform": "linux",
+            "Configuration": 2
         }
     ]
 }
