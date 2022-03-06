@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RPG.UI
 {
-    // [ExecuteAlways]
+    [ExecuteAlways]
     [UpdateAfter(typeof(GameplaySystemGroup))]
     public class UISystemGroup : ComponentSystemGroup { }
 }

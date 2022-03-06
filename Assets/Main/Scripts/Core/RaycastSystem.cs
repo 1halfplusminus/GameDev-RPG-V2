@@ -77,9 +77,9 @@ namespace RPG.Core
                             End = raycast.Ray.Displacement * raycast.Distance,
                             Filter = raycast.CollisionFilter
                         };
-                        var hits = new NativeList<RaycastHit>(Allocator.Temp);
-                        collisionWorld.CastRay(input, ref hits);
-                        // collisionWorld.SphereCastAll(raycast.Ray.Origin, raycast.Radius, raycast.Ray.Displacement, raycast.Distance, ref hits, raycast.CollisionFilter);
+                        var hits = new NativeList<ColliderCastHit>(Allocator.Temp);
+                        // collisionWorld.CastRay(input, ref hits);
+                        collisionWorld.SphereCastAll(raycast.Ray.Origin, raycast.Radius, raycast.Ray.Displacement, raycast.Distance, ref hits, raycast.CollisionFilter);
                         for (int i = 0; i < hits.Length; i++)
                         {
                             var hittedEntity = physicsWorld.Bodies[hits[i].RigidBodyIndex].Entity;

@@ -290,7 +290,6 @@ namespace RPG.Gameplay.Inventory
             }
             if (!isDragging && (mouseUpEvent.clickCount >= 2 || IsSelected))
             {
-                Debug.Log("Double Click pick item");
                 var rect = layout;
                 var mousePosition = new float2(rect.xMin, rect.yMin);
                 GetGrid().StartDrag(this, mousePosition);
@@ -406,7 +405,7 @@ namespace RPG.Gameplay.Inventory
         ItemSlot[] items;
 
         public InventoryGUI inventoryGUI = new InventoryGUI() { Created = false };
-        public float2 ItemSize = new float2(60, 80);
+        public float2 ItemSize = new float2(120, 110);
         bool isDragging;
         ItemSlot originalSlot;
 
@@ -445,7 +444,10 @@ namespace RPG.Gameplay.Inventory
             RegisterCallback<AttachToPanelEvent>((e) =>
             {
                 SetItemDetailVisibility(false);
+                // var inventory = new Inventory { Height = 8, Width = 6 };
+                // InitInventory(inventory);
             });
+
         }
 
         public void OnActionButton()
@@ -539,8 +541,16 @@ namespace RPG.Gameplay.Inventory
 
         public void OnMouseMove(MouseMoveEvent mouseMoveEvent)
         {
-            if (draggedItem == null) { return; }
             var slots = GetItemSlotsQuery();
+            var selectedSlot = GetItemSlotsQuery().Where((s) => s.IsSelected).First();
+            if (selectedSlot != null && draggedItem == null)
+            {
+                var rect = selectedSlot.layout;
+                var mousePosition = new float2(rect.xMin, rect.yMin);
+                StartDrag(selectedSlot, mousePosition);
+            }
+            if (draggedItem == null) { return; }
+
             if (nextSlot != null)
             {
                 if (nextSlot.ClassListContains("slot-highlight-empty"))
@@ -559,7 +569,7 @@ namespace RPG.Gameplay.Inventory
                 x = (int)(mouseMoveEvent.localMousePosition.x / ItemSize.x),
                 y = (int)(mouseMoveEvent.localMousePosition.y / ItemSize.y),
             };
-            telegraph.SetLocalMouseEventPosition(mouseMoveEvent);
+            telegraph.SetLocalMousePosition(mouseMoveEvent.localMousePosition);
             using var result = inventoryGUI.ColliderCast(coordinate, telegraph.ItemSlotDescription.Dimension);
             bool isEmpty = result.Length > 0;
             for (int i = 0; i < result.Length; i++)
@@ -683,6 +693,7 @@ namespace RPG.Gameplay.Inventory
                     var itemSlot = new ItemSlot();
                     itemSlot.SetSize(ItemSize);
                     itemSlot.Index = inventory.GetIndex(i, j);
+                    itemSlot.Resize(1);
                     Add(itemSlot);
                 }
             }
