@@ -104,6 +104,7 @@ namespace RPG.Combat
             .WithNone<ProjectileHitted>()
             .ForEach((int entityInQueryIndex, Entity e, in Projectile p, in DynamicBuffer<StatefulTriggerEvent> ste) =>
             {
+                var targetHit = 0;
                 for (int i = 0; i < ste.Length; i++)
                 {
                     var other = ste[i].GetOtherEntity(e);
@@ -118,6 +119,11 @@ namespace RPG.Combat
                             cbp.AddComponent<IsProjectile>(entityInQueryIndex, hitEntity);
                             Debug.Log($"Projectile {e} destroyed by {other.Index}  ");
                             cbp.AddComponent<ProjectileHitted>(entityInQueryIndex, e);
+                            targetHit++;
+                            if (targetHit >= p.MaxTargetHit)
+                            {
+                                break;
+                            }
                         }
                     }
 
@@ -210,7 +216,13 @@ namespace RPG.Combat
                             Angular = new float3(lookRotation.value.x, 0, 0),
                             Linear = linearVelocity
                         });
-                        cbp.AddComponent(entityInQueryIndex, projectileEntity, new Projectile { Target = hit.Hitted, Speed = projectile.Speed, ShootBy = hit.Hitter });
+                        cbp.AddComponent(entityInQueryIndex, projectileEntity, new Projectile
+                        {
+                            Target = hit.Hitted,
+                            Speed = projectile.Speed,
+                            ShootBy = hit.Hitter,
+                            MaxTargetHit = projectile.MaxTargetHit
+                        });
                         cbp.AddComponent(entityInQueryIndex, projectileEntity, new Rotation { Value = lookRotation });
                         cbp.AddComponent<ProjectileShooted>(entityInQueryIndex, projectileEntity);
                         hit.Damage = 0;

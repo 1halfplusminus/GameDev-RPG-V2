@@ -1,0 +1,124 @@
+<linker>
+  <assembly fullname="RPG, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="RPG.Animation.ClipAsset" preserve="all" />
+    <type fullname="RPG.Combat.OnDestroyOnHitAuthoring" preserve="all" />
+    <type fullname="RPG.Combat.ProjectileAuthoring" preserve="all" />
+    <type fullname="RPG.Combat.SetAttributeDestroyOnHitAuthoring" preserve="all" />
+    <type fullname="RPG.Combat.WeaponAsset" preserve="all" />
+    <type fullname="RPG.Combat.WeaponAuthoring" preserve="all" />
+    <type fullname="RPG.Core.AddressableAuthoring" preserve="all" />
+    <type fullname="RPG.Core.MaxLifeTimeAuthoring" preserve="all" />
+    <type fullname="RPG.Gameplay.HealthPickupAuthoring" preserve="all" />
+    <type fullname="RPG.Gameplay.ProjectileAudioAuthoring" preserve="all" />
+    <type fullname="RPG.Gameplay.RestaureHealthPercentAuthoring" preserve="all" />
+    <type fullname="RPG.Gameplay.WeaponAudioAuthoring" preserve="all" />
+    <type fullname="RPG.Stats.ProgressionAsset" preserve="all" />
+    <type fullname="RPG.UI.AutoInstantiateUIAuthoring" preserve="all" />
+    <type fullname="RPG.UI.GameEventListenerAuthoring" preserve="all" />
+    <type fullname="RPG.UI.GameOverUIAuthoring" preserve="all" />
+    <type fullname="RPG.UI.GameUIAuthoring" preserve="all" />
+    <type fullname="RPG.UI.InGameUIAuthoring" preserve="all" />
+    <type fullname="RPG.UI.LoadingUIAuthoring" preserve="all" />
+    <type fullname="RPG.UI.NewGameUIAuthoring" preserve="all" />
+    <type fullname="RPG.UI.PauseUIAuthoring" preserve="all" />
+    <type fullname="RPG.Stats.CharacterClass" preserve="nothing" serialized="true" />
+    <type fullname="RPG.Stats.ProgressionAsset/ClassProgression" preserve="nothing" serialized="true" />
+    <type fullname="RPG.Stats.ProgressionAsset/ProgressionCurve" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="RPG.Gameplay.Dialog.UI, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="RPG.UI.DialogUIAuthoring" preserve="all" />
+  </assembly>
+  <assembly fullname="RPG.Gameplay.Inventory, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="RPG.Gameplay.Inventory.InventoryItemAuthoring" preserve="all" />
+    <type fullname="RPG.Gameplay.Inventory.ItemDefinitionAsset" preserve="all" />
+    <type fullname="RPG.Gameplay.Inventory.RemoveFromInventoryWhenUsedAuthoring" preserve="all" />
+    <type fullname="RPG.Gameplay.Inventory.ItemDefinitionDimensions" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.Entities.Hybrid, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="Unity.Entities.ConvertToEntity" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.Physics.Hybrid, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="Unity.Physics.Authoring.PhysicsBodyAuthoring" preserve="all" />
+    <type fullname="Unity.Physics.Authoring.PhysicsShapeAuthoring" preserve="all" />
+    <type fullname="Unity.Physics.Authoring.CustomPhysicsBodyTags" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Physics.Authoring.CustomPhysicsMaterialTags" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Physics.Authoring.EulerAngles" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Physics.Authoring.OverridableCategoryTags" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Physics.Authoring.OverridableCollisionResponse" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Physics.Authoring.OverridableCustomMaterialTags" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Physics.Authoring.OverridableMaterialCoefficient" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Physics.Authoring.PhysicsCategoryTags" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Physics.Authoring.PhysicsMaterialCoefficient" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Physics.Authoring.PhysicsMaterialProperties" preserve="nothing" serialized="true" />
+    <type fullname="Unity.Physics.Authoring.PhysicsShapeAuthoring/CylindricalProperties" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.LegacyResourcesProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.Transforms.Hybrid, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="Unity.Transforms.CopyTransformToGameObjectAuthoring" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.AnimationClip" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.AudioClip" preserve="all" />
+    <type fullname="UnityEngine.AudioSource" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.ComputeShader" preserve="all" />
+    <type fullname="UnityEngine.GameObject" preserve="all" />
+    <type fullname="UnityEngine.Material" preserve="all" />
+    <type fullname="UnityEngine.Mesh" preserve="all" />
+    <type fullname="UnityEngine.MeshFilter" preserve="all" />
+    <type fullname="UnityEngine.MeshRenderer" preserve="all" />
+    <type fullname="UnityEngine.Object" preserve="all" />
+    <type fullname="UnityEngine.Shader" preserve="all" />
+    <type fullname="UnityEngine.Sprite" preserve="all" />
+    <type fullname="UnityEngine.Texture2D" preserve="all" />
+    <type fullname="UnityEngine.Texture3D" preserve="all" />
+    <type fullname="UnityEngine.TrailRenderer" preserve="all" />
+    <type fullname="UnityEngine.Transform" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.Font" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.UIElementsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.UIElements.PanelSettings" preserve="all" />
+    <type fullname="UnityEngine.UIElements.StyleSheet" preserve="all" />
+    <type fullname="UnityEngine.UIElements.ThemeStyleSheet" preserve="all" />
+    <type fullname="UnityEngine.UIElements.UIDocument" preserve="all" />
+    <type fullname="UnityEngine.UIElements.VisualTreeAsset" preserve="all" />
+    <type fullname="UnityEngine.UIElements.DynamicAtlasSettings" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UIElements.StyleComplexSelector" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UIElements.StyleProperty" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UIElements.StyleRule" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UIElements.StyleSelector" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UIElements.StyleSelectorPart" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UIElements.StyleSheet/ImportStruct" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UIElements.StyleSheets.Dimension" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UIElements.StyleSheets.ScalableImage" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UIElements.StyleValueHandle" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UIElements.TemplateAsset" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UIElements.VisualElementAsset" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.UIElements.VisualTreeAsset/UsingEntry" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="UnityEngine.VFXModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.VFX.VFXRenderer" preserve="all" />
+    <type fullname="UnityEngine.VFX.VisualEffect" preserve="all" />
+    <type fullname="UnityEngine.VFX.VisualEffectAsset" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.Mathematics">
+    <type fullname="Unity.Mathematics.float3" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="Unity.Physics">
+    <type fullname="Unity.Physics.ConvexHullGenerationParameters" preserve="nothing" serialized="true" />
+  </assembly>
+</linker>

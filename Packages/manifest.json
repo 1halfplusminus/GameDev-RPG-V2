@@ -24,6 +24,7 @@
     "com.unity.ide.visualstudio": "2.0.12",
     "com.unity.ide.vscode": "1.2.5",
     "com.unity.inputsystem": "1.2.0",
+    "com.unity.mobile.android-logcat": "1.2.3",
     "com.unity.nuget.mono-cecil": "1.10.2",
     "com.unity.physics": "0.6.0-preview.3",
     "com.unity.platforms": "0.10.0-preview.10",

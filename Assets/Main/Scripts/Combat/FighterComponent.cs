@@ -40,6 +40,7 @@ namespace RPG.Combat
         public float Speed;
         public bool IsHoming;
         public Entity ShootBy;
+        public int MaxTargetHit;
     }
     public struct EquipableSockets : IComponentData
     {

@@ -54,9 +54,7 @@ namespace RPG.UI
                         var usedItem = new UsedItem { Index = ItemGrid.ItemSelected.Index, UsedBy = user, Item = instance };
                         cb.AddComponent(user, usedItem);
                         cb.AddComponent(instance, usedItem);
-                        Debug.Log("Instanciate Item");
                     }
-                    Debug.Log($"Start action for item {item.ItemDefinitionAsset.Value.FriendlyName.ToString()}");
                 }
             }
         }

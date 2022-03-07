@@ -32,6 +32,7 @@ namespace RPG.Core
                     ecb.DestroyEntity(entityInQueryIndex, e);
                 }
             }).ScheduleParallel();
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
 }

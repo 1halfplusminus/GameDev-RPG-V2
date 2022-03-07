@@ -59,6 +59,7 @@ MonoBehaviour:
   Target: {fileID: 0}
   Speed: 17
   IsHoming: 0
+  MaxHitTarget: 1
 --- !u!114 &8316335778128769561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,9 +78,9 @@ MonoBehaviour:
     y: 0.000000022351742
     z: 0.48
   m_PrimitiveSize:
-    x: 0.36
+    x: 0.09
     y: 0.13816255
-    z: 0.9228847
+    z: 0.96
   m_PrimitiveOrientation:
     Value:
       x: -0
@@ -87,15 +88,15 @@ MonoBehaviour:
       z: 0
     RotationOrder: 4
   m_Capsule:
-    Height: 0.9228847
-    Radius: 0.18
+    Height: 0.96
+    Radius: 0.06908128
     Axis: 2
   m_Cylinder:
-    Height: 0.9228847
-    Radius: 0.18
+    Height: 0.96
+    Radius: 0.06908128
     Axis: 2
   m_CylinderSideCount: 20
-  m_SphereRadius: 0.46144235
+  m_SphereRadius: 0.48
   m_MinimumSkinnedVertexWeight: 0.1
   m_ConvexHullGenerationParameters:
     m_SimplificationTolerance: 0.02365482
@@ -166,7 +167,7 @@ MonoBehaviour:
         Category06: 0
         Category07: 0
         Category08: 1
-        Category09: 0
+        Category09: 1
         Category10: 0
         Category11: 0
         Category12: 0
@@ -214,7 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccea9ea98e38942e0b0938c27ed1903e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MotionType: 0
+  m_MotionType: 1
   m_Smoothing: 0
   m_Mass: 1
   m_LinearDamping: 0.01

@@ -146,7 +146,13 @@ namespace RPG.Combat
                     DstEntityManager.AddComponent<IsHomingProjectile>(entity);
                 }
                 DstEntityManager.AddComponent<StatefulTriggerEvent>(entity);
-                DstEntityManager.AddComponentData(entity, new Projectile { Target = target, Speed = p.Speed, IsHoming = p.IsHoming });
+                DstEntityManager.AddComponentData(entity, new Projectile
+                {
+                    Target = target,
+                    Speed = p.Speed,
+                    IsHoming = p.IsHoming,
+                    MaxTargetHit = p.MaxHitTarget
+                });
                 DstEntityManager.AddComponent<Spawned>(entity);
                 DstEntityManager.AddComponent<DeltaTime>(entity);
             });

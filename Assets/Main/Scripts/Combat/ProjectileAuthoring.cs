@@ -9,6 +9,8 @@ namespace RPG.Combat
         public float Speed;
 
         public bool IsHoming;
+
+        public int MaxHitTarget = 1;
     }
 
 }
