@@ -19,12 +19,6 @@
             ]
         },
         {
-            "$type": "Unity.Build.Classic.ClassicBuildProfile, Unity.Build.Classic",
-            "$version": 1,
-            "Platform": "android",
-            "Configuration": 3
-        },
-        {
             "$type": "Unity.Build.Classic.ClassicCodeStrippingOptions, Unity.Build.Classic",
             "StripEngineCode": true,
             "ManagedStrippingLevel": 0
@@ -46,6 +40,16 @@
             "$type": "Unity.Build.Android.AndroidAPILevels, Unity.Build.Android",
             "MinAPILevel": 22,
             "TargetAPILevel": 0
+        },
+        {
+            "$type": "Unity.Build.Android.AndroidArchitectures, Unity.Build.Android",
+            "Architectures": 3
+        },
+        {
+            "$type": "Unity.Build.Classic.ClassicBuildProfile, Unity.Build.Classic",
+            "$version": 1,
+            "Platform": "android",
+            "Configuration": 2
         }
     ]
 }
