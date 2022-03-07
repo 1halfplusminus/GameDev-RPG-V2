@@ -2,6 +2,7 @@ using RPG.Core;
 using Unity.Animation;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Physics;
 
 namespace RPG.Combat
 {
@@ -31,6 +32,7 @@ namespace RPG.Combat
             {
                 if (health.Value <= 0)
                 {
+                    cbp.AddComponent<PhysicsExclude>(entityInQueryIndex, e);
                     cbp.AddComponent<IsDeadTag>(entityInQueryIndex, e);
                     cbp.AddComponent<Died>(entityInQueryIndex, e);
                 }
@@ -39,7 +41,6 @@ namespace RPG.Combat
             Entities.WithAll<IsDeadTag, Hittable>()
             .ForEach((Entity e, int entityInQueryIndex) =>
             {
-
                 cbp.RemoveComponent<Hittable>(entityInQueryIndex, e);
             })
             .ScheduleParallel();

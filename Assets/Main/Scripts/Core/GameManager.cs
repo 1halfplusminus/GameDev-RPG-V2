@@ -1,6 +1,6 @@
 using Unity.Entities;
 using UnityEngine;
-using UnityEditor;
+
 using Hash128 = Unity.Entities.Hash128;
 
 namespace RPG.Core
@@ -8,6 +8,7 @@ namespace RPG.Core
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
     public class GameManagerDeclareReferenceConversionSystem : GameObjectConversionSystem
     {
+
         protected override void OnUpdate()
         {
             Entities.ForEach((GameManager gm) =>

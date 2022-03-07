@@ -28,7 +28,7 @@ MonoBehaviour:
     x: -158
     y: -400
     width: 2566
-    height: 3104
+    height: 3084
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -556,7 +556,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614794}
   - {fileID: 8926484042661614922}
   dataType: 0
-  capacity: 100000
+  capacity: 1000
   stripCapacity: 16
   particlePerStripCount: 16
   needsComputeBounds: 0

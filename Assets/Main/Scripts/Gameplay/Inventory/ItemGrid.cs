@@ -542,6 +542,7 @@ namespace RPG.Gameplay.Inventory
         public void OnMouseMove(MouseMoveEvent mouseMoveEvent)
         {
             var slots = GetItemSlotsQuery();
+#if UNITY_ANDROID
             var selectedSlot = GetItemSlotsQuery().Where((s) => s.IsSelected).First();
             if (selectedSlot != null && draggedItem == null)
             {
@@ -549,6 +550,7 @@ namespace RPG.Gameplay.Inventory
                 var mousePosition = new float2(rect.xMin, rect.yMin);
                 StartDrag(selectedSlot, mousePosition);
             }
+#endif
             if (draggedItem == null) { return; }
 
             if (nextSlot != null)
