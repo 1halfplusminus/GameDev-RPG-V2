@@ -35,52 +35,16 @@
             ]
         },
         {
-            "$type": "Unity.Build.Web.DotsRuntime.WasmMemorySettings, Unity.Build.Web.DotsRuntime",
-            "WasmStackSize": "512KB",
-            "WasmMemorySize": "128MB",
-            "AllowWasmMemoryGrowth": true
-        },
-        {
-            "$type": "Unity.Build.Web.DotsRuntime.WasmOutputSettings, Unity.Build.Web.DotsRuntime",
-            "OutputSingleHTMLFile": false,
-            "MinifyHTMLFile": true,
-            "MinifyOutputWithClosure": false,
-            "EmbedCpuProfiler": false,
-            "EmbedMemoryProfiler": false,
-            "IncludeSymbolsForBrowserCallstacks": false,
-            "EmitRuntimeMemoryDebugChecks": false,
-            "EmitRuntimeAllocationDebugChecks": false,
-            "WebTemplateFolder": ""
-        },
-        {
-            "$type": "Unity.Build.DotsRuntime.DotsRuntimeRootAssembly, Unity.Build.DotsRuntime",
-            "BeeTargetOverride": null,
-            "RootAssembly": "GlobalObjectId_V1-1-4836d2d95d187d5ffbc37f56dc6c1e4d-5897886265953266890-0"
-        },
-        {
-            "$type": "Unity.Build.DotsRuntime.IL2CPPSettings, Unity.Build.DotsRuntime",
-            "ScriptDebugging": 0,
-            "WaitForDebugger": false
-        },
-        {
-            "$type": "Unity.Entities.Runtime.Build.DotsRuntimeBurstSettings, Unity.Entities.Runtime.Build",
-            "EnableBurst": true
-        },
-        {
-            "$type": "Unity.Entities.Runtime.Build.DotsRuntimeScriptingSettings, Unity.Entities.Runtime.Build",
-            "EnableSafetyChecks": 0,
-            "EnableProfiler": 0,
-            "ScriptingDefines": [
-                "ENABLE_COMPUTE_DEFORMATIONS",
-                "ENABLE_HYBRID_RENDERER_V2"
-            ],
-            "EnableMultithreading": false
-        },
-        {
             "$type": "Unity.Build.Classic.ClassicBuildProfile, Unity.Build.Classic",
             "$version": 1,
             "Platform": "webgl",
             "Configuration": 2
+        },
+        {
+            "$type": "Unity.Build.Classic.ClassicScriptingSettings, Unity.Build.Classic",
+            "ScriptingBackend": 1,
+            "Il2CppCompilerConfiguration": 1,
+            "UseIncrementalGC": false
         }
     ]
 }
