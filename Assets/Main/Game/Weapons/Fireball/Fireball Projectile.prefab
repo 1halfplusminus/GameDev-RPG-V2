@@ -265,6 +265,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6304312062807790747}
+  - component: {fileID: 8719579931359401934}
   - component: {fileID: 6297639575179916486}
   - component: {fileID: 8556372285381960692}
   - component: {fileID: 674711774935001398}
@@ -298,6 +299,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8719579931359401934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6303497545802866673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c38c2c2acd95a009393209945d349ebe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Radius: 2
 --- !u!114 &6297639575179916486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -313,7 +327,7 @@ MonoBehaviour:
   Target: {fileID: 0}
   Speed: 5
   IsHoming: 0
-  MaxHitTarget: 5
+  MaxHitTarget: 1
 --- !u!114 &8556372285381960692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,10 +344,10 @@ MonoBehaviour:
   m_PrimitiveCenter:
     x: 0
     y: 0
-    z: 0
+    z: -0.93
   m_PrimitiveSize:
-    x: 2.3191125
-    y: 1.0024269
+    x: 0.6759609
+    y: 0.7591693
     z: 0.87792265
   m_PrimitiveOrientation:
     Value:
@@ -342,15 +356,15 @@ MonoBehaviour:
       z: 0
     RotationOrder: 4
   m_Capsule:
-    Height: 2.3191125
-    Radius: 0.50121343
-    Axis: 0
+    Height: 0.87792265
+    Radius: 0.37958464
+    Axis: 2
   m_Cylinder:
-    Height: 2.3191125
-    Radius: 0.50121343
-    Axis: 0
+    Height: 0.87792265
+    Radius: 0.37958464
+    Axis: 2
   m_CylinderSideCount: 20
-  m_SphereRadius: 1.1595563
+  m_SphereRadius: 0.43896133
   m_MinimumSkinnedVertexWeight: 0.1
   m_ConvexHullGenerationParameters:
     m_SimplificationTolerance: 0.015
