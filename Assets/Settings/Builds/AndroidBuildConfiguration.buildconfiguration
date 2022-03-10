@@ -27,7 +27,7 @@
             "$type": "Unity.Build.Classic.ClassicScriptingSettings, Unity.Build.Classic",
             "ScriptingBackend": 0,
             "Il2CppCompilerConfiguration": 0,
-            "UseIncrementalGC": false
+            "UseIncrementalGC": true
         },
         {
             "$type": "Unity.Build.Common.PlayerScriptingDefines, Unity.Build",
@@ -49,7 +49,7 @@
             "$type": "Unity.Build.Classic.ClassicBuildProfile, Unity.Build.Classic",
             "$version": 1,
             "Platform": "android",
-            "Configuration": 2
+            "Configuration": 3
         }
     ]
 }
