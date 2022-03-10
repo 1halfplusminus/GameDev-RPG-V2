@@ -1,7 +1,7 @@
 Modifier System:
-  ☐ Damage Progression
-  ☐ Percentage Modifiers
-  ☐ Extensible Modifier System
+  ✔ Damage Progression @done(22-03-10 14:51)
+  ✔ Percentage Modifiers @done(22-03-10 14:51)
+  ✔ Extensible Modifier System @done(22-03-10 14:51)
 LevelUp System:
   ✔ Restaure Health on Leveling up @done(21-12-30 17:36)
   ✔ Play effect on leveling up @done(21-12-30 17:36)
@@ -67,9 +67,12 @@ Animation System:@high @today
 AI System:
   ✔ Fix patrolling @high @done(21-12-04 08:15)
 Chore & Refractoring & Cleaning:
-  ☐ Update unity version
-    ☐ clone unity animation package & fix graph dependency
+  ✔ Update unity version @done(22-03-10 14:53)
+    ✔ clone unity animation package & fix graph dependency @done(22-03-10 14:53)
+  ☐ Clean up saving system
 Gameplay:
   Dialogue system:
-  
+    ✔ Player can interact with dialog @done(22-03-10 14:52)
   Inventory system:
+    ✔ Pickable should go in inventory @done(22-03-10 14:52)
+    ✔ Can use item from inventory @done(22-03-10 14:52)
