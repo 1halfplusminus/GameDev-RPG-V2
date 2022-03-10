@@ -5,7 +5,6 @@ using Unity.Transforms;
 using UnityEngine;
 namespace RPG.UI
 {
-
     public struct DamageText : IComponentData
     {
         public Entity Prefab;
@@ -29,7 +28,6 @@ namespace RPG.UI
             });
         }
     }
-
 
     public class DamageTextConversionSystem : GameObjectConversionSystem
     {
@@ -62,23 +60,21 @@ namespace RPG.UI
             {
                 if (hit.Damage > 0)
                 {
-                    if (EntityManager.HasComponent<DamageText>(hit.Hitted))
+                    if (HasComponent<DamageText>(hit.Hitted))
                     {
-                        var damageText = EntityManager.GetComponentData<DamageText>(hit.Hitted);
-                        var instance = EntityManager.Instantiate(damageText.Prefab);
-                        EntityManager.AddComponentData(instance, new DisplayDamage { Value = hit.Damage });
-                        EntityManager.AddComponentData(instance, new Parent { Value = hit.Hitted });
-                        EntityManager.AddComponent<LocalToParent>(instance);
+                        var damageText = GetComponent<DamageText>(hit.Hitted);
+                        var instance = cb.Instantiate(damageText.Prefab);
+                        cb.AddComponent(instance, new DisplayDamage { Value = hit.Damage });
+                        cb.AddComponent(instance, new Parent { Value = hit.Hitted });
+                        cb.AddComponent<LocalToParent>(instance);
                     }
                 }
-
             })
-            .WithStructuralChanges()
-            .WithoutBurst()
+            // .WithoutBurst()
             .Run();
 
             Entities
-            .ForEach((Entity e, int entityInQueryIndex, in DisplayDamage displayDamage, in DynamicBuffer<Child> children) =>
+            .ForEach((int entityInQueryIndex, in DisplayDamage displayDamage, in DynamicBuffer<Child> children) =>
             {
                 for (int i = 0; i < children.Length; i++)
                 {

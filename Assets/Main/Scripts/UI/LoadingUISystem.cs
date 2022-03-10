@@ -141,11 +141,7 @@ namespace RPG.UI
                 Debug.Log("Destroy Loading UI LoadingUI");
                 commandBuffer.DestroyEntity(e);
             })
-            // .WithStructuralChanges()
-            // .WithoutBurst()
             .Run();
-
-
         }
     }
     [UpdateInGroup(typeof(UISystemGroup))]

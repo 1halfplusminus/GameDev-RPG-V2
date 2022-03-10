@@ -56,7 +56,7 @@ namespace RPG.Gameplay
     public class TriggerAudioOnCollisionAuthoring : MonoBehaviour, IConvertGameObjectToEntity
     {
         [SerializeField]
-        readonly AudioSource AudioSource;
+        AudioSource AudioSource;
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {

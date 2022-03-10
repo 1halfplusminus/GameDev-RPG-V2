@@ -194,11 +194,10 @@ namespace RPG.UI
                 controller.onClose += OnClose(e);
                 controller.Init(document.rootVisualElement);
                 controller.ShowNode(displayDialog.DialogAsset, displayDialog.DialogAsset.Value.StartIndex);
-                EntityManager.AddComponentData(e, controller);
-                EntityManager.AddComponentData(displayDialog.DialogEntity, controller);
+                cb.AddComponent(e, controller);
+                cb.AddComponent(displayDialog.DialogEntity, controller);
             })
             .WithoutBurst()
-            .WithStructuralChanges()
             .Run();
 
             endSimulationEntityCommandBufferSystem.AddJobHandleForProducer(Dependency);

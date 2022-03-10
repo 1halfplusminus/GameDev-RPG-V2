@@ -2,7 +2,6 @@ using Unity.Entities;
 using RPG.Core;
 using Unity.Animation;
 
-
 namespace RPG.Saving
 {
     // FIXME: Refactor like in scene
@@ -17,10 +16,7 @@ namespace RPG.Saving
 
         protected override void OnUpdate()
         {
-            Entities.ForEach((Entity e, in Played played) =>
-            {
-                Convert(GetPrimaryEntity(e), e);
-            }).WithStructuralChanges().Run();
+            Entities.ForEach((Entity e, in Played _) => Convert(GetPrimaryEntity(e), e)).WithStructuralChanges().Run();
         }
         protected override void Convert(Entity dstEntity, Entity entity)
         {
@@ -30,7 +26,6 @@ namespace RPG.Saving
                 Debug.Log($"{savingState.Direction} played for {dstEntity}");
                 DstEntityManager.AddComponent<Played>(dstEntity);
             }
-
         }
     }
 }

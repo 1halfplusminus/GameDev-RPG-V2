@@ -103,12 +103,21 @@ namespace RPG.Core
                 var sceneEntity = _sceneSystem.GetSceneEntity(triggerSceneLoad.SceneGUID);
                 if (sceneEntity == Entity.Null || !_sceneSystem.IsSceneLoaded(sceneEntity))
                 {
-                    var loadParameters = new SceneSystem.LoadParameters { Flags = SceneLoadFlags.LoadAdditive };
-                    sceneEntity = _sceneSystem.LoadSceneAsync(triggerSceneLoad.SceneGUID, loadParameters);
                     var newSceneRef = em.GetComponentData<SceneReference>(sceneEntity);
                     Debug.Log($"Loading Scene {newSceneRef.SceneGUID}");
-                    commandBuffer.AddComponent(e, new LoadSceneAsync() { SceneEntity = sceneEntity, SceneGUID = newSceneRef.SceneGUID });
-                    commandBuffer.RemoveComponent<TriggerSceneLoad>(e);
+                    em.AddComponentData(e, new LoadSceneAsync() { SceneEntity = sceneEntity, SceneGUID = newSceneRef.SceneGUID });
+                    em.RemoveComponent<TriggerSceneLoad>(e);
+                    var loadParameters = new SceneSystem.LoadParameters { Flags = SceneLoadFlags.LoadAdditive, AutoLoad = false };
+                    sceneSystem.LoadSceneAsync(sceneEntity, loadParameters);
+                    var requestSceneLoaded = new RequestSceneLoaded { LoadFlags = loadParameters.Flags };
+                    if (em.HasComponent<ResolvedSectionEntity>(sceneEntity))
+                    {
+                        var length = EntityManager.GetBuffer<ResolvedSectionEntity>(sceneEntity).Length;
+                        for (int i = 0; i < length; i++)
+                        {
+                            em.AddComponentData(EntityManager.GetBuffer<ResolvedSectionEntity>(sceneEntity)[i].SectionEntity, requestSceneLoaded);
+                        }
+                    }
                 }
             })
             .WithStructuralChanges()
@@ -190,20 +199,22 @@ namespace RPG.Core
             {
                 if (sceneSystem.IsSceneLoaded(loadingScenesData[i].SceneEntity))
                 {
-                    var allSectionLoaded = false;
-                    var resolvedSections = EntityManager.GetBuffer<ResolvedSectionEntity>(loadingScenesData[i].SceneEntity);
-                    for (int j = 0; j < resolvedSections.Length; j++)
-                    {
-                        waitForSpawn.SetSharedComponentFilter(new SceneTag() { SceneEntity = resolvedSections[j].SectionEntity });
-                        var sectionLoaded = sceneSystem.IsSectionLoaded(resolvedSections[j].SectionEntity) && waitForSpawn.CalculateEntityCount() == 0;
-                        allSectionLoaded = j == 0 ? sectionLoaded : allSectionLoaded && sectionLoaded;
-                        waitForSpawn.ResetFilter();
-                        if (!sectionLoaded)
-                        {
-                            break;
-                        }
-                    }
-                    if (allSectionLoaded)
+
+                    waitForSpawn.SetSharedComponentFilter(new SceneTag() { SceneEntity = loadingScenesData[i].SceneEntity });
+                    // var allSectionLoaded = true;
+                    // var resolvedSections = EntityManager.GetBuffer<ResolvedSectionEntity>(loadingScenesData[i].SceneEntity);
+                    // for (int j = 0; j < resolvedSections.Length; j++)
+                    // {
+                    //     waitForSpawn.SetSharedComponentFilter(new SceneTag() { SceneEntity = resolvedSections[j].SectionEntity });
+                    //     var sectionLoaded = sceneSystem.IsSectionLoaded(resolvedSections[j].SectionEntity) && waitForSpawn.CalculateEntityCount() == 0;
+                    //     allSectionLoaded = j == 0 ? sectionLoaded : allSectionLoaded && sectionLoaded;
+                    //     waitForSpawn.ResetFilter();
+                    //     if (!sectionLoaded)
+                    //     {
+                    //         break;
+                    //     }
+                    // }
+                    if (waitForSpawn.CalculateEntityCount() == 0)
                     {
                         Debug.Log($"Scene {loadingScenesData[i].SceneGUID} is loaded");
                         EntityManager.AddComponentData(loadingScenesData[i].SceneEntity, new SceneLoaded { SceneGUID = loadingScenesData[i].SceneGUID });
@@ -214,6 +225,8 @@ namespace RPG.Core
                     {
                         // Debug.Log($"Scene section for {loadingScenesData[i].SceneGUID} is still loading");
                     }
+                    waitForSpawn.ResetFilter();
+
                 }
                 else
                 {

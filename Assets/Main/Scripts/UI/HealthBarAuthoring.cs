@@ -123,13 +123,12 @@ namespace RPG.UI
             {
                 var controller = new HealthBarController();
                 controller.Init(uiDocument.rootVisualElement);
-                EntityManager.AddComponentObject(e, controller);
-                EntityManager.AddComponentObject(owner.Value, controller);
-
-            }).WithStructuralChanges().WithoutBurst().Run();
+                cb.AddComponent(e, controller);
+                cb.AddComponent(owner.Value, controller);
+            }).WithoutBurst().Run();
 
             Entities
-            .ForEach((Entity e, HealthBarController controller, in Health health, in BaseStats baseStats, in Translation translation, in HealthBar healthBar) =>
+            .ForEach((HealthBarController controller, in Health health, in BaseStats baseStats, in Translation translation, in HealthBar healthBar) =>
             {
                 controller.SetHealh(health, baseStats);
                 controller.SetPosition(Camera.main, translation.Value + healthBar.Offset);
