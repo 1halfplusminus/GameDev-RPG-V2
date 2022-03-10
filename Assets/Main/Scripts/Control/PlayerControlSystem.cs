@@ -15,7 +15,6 @@ namespace RPG.Control
     [UpdateAfter(typeof(MovementClickInteractionSystem))]
     public class CombatClickInteractionSystem : SystemBase
     {
-
         protected override void OnCreate()
         {
             base.OnCreate();
@@ -27,7 +26,6 @@ namespace RPG.Control
             .WithAll<PlayerControlled>()
             .ForEach((Entity player, ref Fighter fighter, ref VisibleCursor visibleCursor, in WorldClick worldClick, in MouseClick mouseClick, in LocalToWorld localToWorld) =>
             {
-
                 if (mouseClick.CapturedThisFrame)
                 {
                     if (fighter.TargetFoundThisFrame == 0)
@@ -36,18 +34,15 @@ namespace RPG.Control
                     }
                     if (fighter.Target == Entity.Null)
                     {
-
                         fighter.MoveTowardTarget = false;
                     }
                     else
                     {
                         fighter.MoveTowardTarget = true;
-
                     }
                 }
                 if (fighter.TargetFoundThisFrame > 0)
                 {
-
                     if (HasComponent<HasPathToTarget>(player) || math.abs(math.distance(localToWorld.Position, worldClick.WorldPosition)) <= fighter.Range)
                     {
                         visibleCursor.Cursor = CursorType.Combat;
@@ -64,7 +59,6 @@ namespace RPG.Control
                 {
                     lookAt.Entity = fighter.Target;
                 }
-
             }).ScheduleParallel();
         }
     }
@@ -98,14 +92,13 @@ namespace RPG.Control
             .ForEach((ref MoveTo moveTo) =>
             {
                 moveTo.Stopped = true;
-
             }).ScheduleParallel();
 
             Entities
             .WithNone<InteractWithUI>()
             .WithChangeFilter<MouseClick>()
             .WithAll<PlayerControlled>()
-            .ForEach((Entity e, ref MoveTo moveTo, ref VisibleCursor cursor, ref WorldClick worldClick, in Raycast raycast, in LocalToWorld localToWorld) =>
+            .ForEach((Entity e, ref WorldClick worldClick, in Raycast raycast, in LocalToWorld localToWorld) =>
             {
                 var havePathToTarget = false;
                 NavMesh.SamplePosition(worldClick.WorldPosition, out var hit, raycast.MaxNavMeshProjectionDistance, NavMesh.AllAreas);
@@ -117,23 +110,21 @@ namespace RPG.Control
                     {
                         havePathToTarget = true;
                         worldClick.WorldPosition = hit.position;
-                        EntityManager.AddComponent<HasPathToTarget>(e);
-
+                        cb.AddComponent<HasPathToTarget>(e);
                     }
                 }
                 if (!havePathToTarget)
                 {
-                    EntityManager.RemoveComponent<HasPathToTarget>(e);
+                    cb.RemoveComponent<HasPathToTarget>(e);
                 }
             })
-            .WithStructuralChanges()
             .WithoutBurst()
             .Run();
 
             Entities
            .WithNone<InteractWithUI, DisabledControl>()
            .WithAll<PlayerControlled, HasPathToTarget>()
-           .ForEach((Entity e, ref MoveTo moveTo, ref VisibleCursor cursor, ref WorldClick worldClick, in Raycast raycast, in LocalToWorld localToWorld, in MouseClick mouseClick) =>
+           .ForEach((ref MoveTo moveTo, ref VisibleCursor cursor, ref WorldClick worldClick, in Raycast raycast, in LocalToWorld localToWorld, in MouseClick mouseClick) =>
            {
                if (mouseClick.CapturedThisFrame)
                {
@@ -151,10 +142,6 @@ namespace RPG.Control
     [UpdateInGroup(typeof(ControlSystemGroup))]
     public class RaycastOnMouseClick : SystemBase
     {
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-        }
         protected override void OnUpdate()
         {
             Entities
@@ -169,33 +156,23 @@ namespace RPG.Control
         }
     }
 
-
     [UpdateInGroup(typeof(ControlSystemGroup))]
     [UpdateAfter(typeof(MovementClickInteractionSystem))]
     public class NoInteractionSystem : SystemBase
     {
-
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-
-        }
         protected override void OnUpdate()
         {
-
             Entities
             .WithAny<DisabledControl, InteractWithUI, WorldClick>()
             .WithNone<HasPathToTarget>()
             .WithAll<PlayerControlled>()
-            .ForEach((int entityInQueryIndex, Entity e, ref VisibleCursor visibleCursor, in Fighter f) =>
+            .ForEach((ref VisibleCursor visibleCursor, in Fighter f) =>
             {
                 if (f.TargetFoundThisFrame == 0)
                 {
                     visibleCursor.Cursor = CursorType.None;
                 }
             }).ScheduleParallel();
-
         }
     }
 }
-

@@ -35,6 +35,7 @@ Spawner System:
   ✔ Finish new spawning system @done(21-12-01 11:15)
     ✔ Create a prefab in editor and use that prefab created on fly to spawn entity @done(21-12-01 11:15)
 Saving System:
+  ☐ Multi slot savin system
   ✔ State should be persisted between scene: @started(21-11-27 17:23) @done(21-11-28 16:44) @lasted(23h21m21s)
   ✔ Player should be able to save progression in save file @started(21-11-28 16:44) @done(21-11-28 16:44) @lasted(4s)
     ✔ Check if working in build mode @started(21-11-27 17:25) @done(21-11-28 16:44) @lasted(23h19m8s)
@@ -70,7 +71,15 @@ Chore & Refractoring & Cleaning:
   ✔ Update unity version @done(22-03-10 14:53)
     ✔ clone unity animation package & fix graph dependency @done(22-03-10 14:53)
   ☐ Clean up saving system
+  ☐ Fix package dependency flow
+UI Upgrade:
+  ☐ Should be able to load from pause menu
+  ☐ Shouldn't be able to open pause & inventory
+  ☐ Try again should launch loading screen
+  ☐ Should ask for confirmation before deleting save file
 Gameplay:
+  Pause system:
+    ☐ Pause menu should pause cutscene
   Dialogue system:
     ✔ Player can interact with dialog @done(22-03-10 14:52)
   Inventory system:

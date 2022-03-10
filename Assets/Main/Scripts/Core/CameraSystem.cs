@@ -2,6 +2,7 @@
 using RPG.Hybrid;
 using Unity.Entities;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace RPG.Core
 {
@@ -9,6 +10,7 @@ namespace RPG.Core
     [UpdateInGroup(typeof(CoreSystemGroup))]
     public class CameraFollowSystem : SystemBase
     {
+        EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()
         {
             base.OnCreate();
@@ -22,21 +24,23 @@ namespace RPG.Core
                     ComponentType.ReadOnly<IsFollowingTarget>()
                 }
             }));
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
         {
+            var cb = entityCommandBufferSystem.CreateCommandBuffer();
+            var thirdPersonCamera = GetSingletonEntity<ThirdPersonCamera>();
             Entities
-               .WithoutBurst()
-               .WithStructuralChanges()
-               .WithAll<FollowedByCamera>()
-               .ForEach((Entity target) =>
-               {
-                   var position = EntityManager.GetComponentData<LocalToWorld>(target);
-                   var thirdPersonCamera = GetSingletonEntity<ThirdPersonCamera>();
-                   EntityManager.AddComponentData(thirdPersonCamera, new Follow { Entity = target });
-                   EntityManager.AddComponentData(thirdPersonCamera, new LookAt { Entity = target });
-               }).Run();
-
+            .WithNone<Spawned>()
+            .WithAll<FollowedByCamera>()
+            .ForEach((Entity target) =>
+            {
+                Debug.Log("Followed by Camera");
+                cb.AddComponent(thirdPersonCamera, new Follow { Entity = target });
+                cb.AddComponent(thirdPersonCamera, new LookAt { Entity = target });
+                cb.AddComponent<Spawned>(thirdPersonCamera);
+            }).Schedule();
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
 }

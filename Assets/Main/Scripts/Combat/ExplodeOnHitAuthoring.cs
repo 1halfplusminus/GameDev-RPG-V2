@@ -1,6 +1,5 @@
 
-
-using RPG.Gameplay;
+using RPG.Core;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;

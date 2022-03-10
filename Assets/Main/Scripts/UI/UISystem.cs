@@ -16,18 +16,15 @@ namespace RPG.UI
 {
     public struct InGame : IComponentData
     {
-
     }
     public struct InPause : IComponentData
     {
-
     }
     public struct Initialized : IComponentData
     {
     }
     public struct Destroy : IComponentData
     {
-
     }
     [UpdateInGroup(typeof(UISystemGroup))]
     public class GameOverUISystem : SystemBase
@@ -38,7 +35,6 @@ namespace RPG.UI
         private EntityCommandBufferSystem entityCommandBufferSystem;
         private SavingWrapperSystem savingSystem;
         private MainGameUISystem mainGameUISystem;
-
 
         protected override void OnCreate()
         {
@@ -78,18 +74,11 @@ namespace RPG.UI
 
         private Action OnMainMenuReload(Entity e)
         {
-            return () =>
-            {
-                mainGameUISystem.ReloadMainMenu(e);
-            };
-
+            return () => mainGameUISystem.ReloadMainMenu(e);
         }
         private Action OnTryAgain(Entity e)
         {
-            return () =>
-            {
-                savingSystem.LoadDefaultSave(e);
-            };
+            return () => savingSystem.LoadDefaultSave(e);
         }
         protected override void OnUpdate()
         {
@@ -105,7 +94,6 @@ namespace RPG.UI
                     var instance = cb.Instantiate(gameOverPrefab);
                     cb.AddComponent<GameOverUI>(e);
                     unLoadScene = true;
-
                 }
             }).WithoutBurst().Run();
             if (unLoadScene)
@@ -128,10 +116,7 @@ namespace RPG.UI
 
             Entities
             .WithAll<GameOverUI, TriggeredSceneLoaded, UIReady>()
-            .ForEach((Entity e) =>
-            {
-                cb.DestroyEntity(e);
-            }).Schedule();
+            .ForEach((Entity e) => cb.DestroyEntity(e)).Schedule();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
@@ -202,7 +187,7 @@ namespace RPG.UI
             Entities
             .WithAll<UIReady, InGameUI>()
             .WithNone<InGameUIController>()
-            .ForEach((Entity e, UIDocument uiDocument, InGameUIFor ingameUIFor) =>
+            .ForEach((Entity e, in InGameUIFor ingameUIFor, in UIDocument uiDocument) =>
             {
                 var controller = new InGameUIController();
                 controller.Init(uiDocument.rootVisualElement);
@@ -211,7 +196,6 @@ namespace RPG.UI
             })
             .WithoutBurst()
             .Run();
-
 
             Entities
             // .WithReadOnly(em)
@@ -224,10 +208,7 @@ namespace RPG.UI
                }
            })
            .Schedule();
-
         }
-
-
     }
     [UpdateInGroup(typeof(UISystemGroup))]
     public class InPauseUISystem : SystemBase
@@ -276,7 +257,6 @@ namespace RPG.UI
                 SetPause(false);
                 button.SetEnabled(true);
             };
-
         }
         private void Save()
         {
@@ -334,7 +314,6 @@ namespace RPG.UI
     [UpdateInGroup(typeof(UISystemGroup))]
     public class MainGameUISystem : SystemBase
     {
-
         SavingWrapperSystem savingWrapperSystem;
 
         EntityCommandBufferSystem entityCommandBufferSystem;
@@ -363,7 +342,6 @@ namespace RPG.UI
                 All = new ComponentType[] {
                   ReadOnly<GameEventListener>(),ReadOnly<Prefab>()
                 },
-
             });
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
             RequireForUpdate(GetEntityQuery(new EntityQueryDesc()
@@ -407,10 +385,7 @@ namespace RPG.UI
             Entities
             .WithAll<UIReady>()
             .WithAny<TriggeredSceneLoaded>()
-            .ForEach((int entityInQueryIndex, Entity e, UIDocument uiDocument) =>
-            {
-                ec.DestroyEntity(e);
-            })
+            .ForEach((Entity e, UIDocument _) => ec.DestroyEntity(e))
             .WithoutBurst()
             .Run();
 
@@ -437,10 +412,7 @@ namespace RPG.UI
             var button = visualElement
             .Q<Button>("Exit");
             button
-            .clicked += () =>
-            {
-                QuitGame();
-            };
+            .clicked += () => QuitGame();
         }
 
         private void InitLoadButton(Entity uiDocumentEntity, VisualElement visualElement)
@@ -448,7 +420,7 @@ namespace RPG.UI
             var loadButton = visualElement
             .Q<Button>("Load");
             loadButton
-            .clicked += () => { LoadSave(uiDocumentEntity); };
+            .clicked += () => LoadSave(uiDocumentEntity);
             if (!savingWrapperSystem.HasSave())
             {
                 loadButton.SetEnabled(false);
@@ -468,18 +440,24 @@ namespace RPG.UI
     [UpdateInGroup(typeof(UISystemGroup))]
     public class AutoInstantiateGameUISystem : SystemBase
     {
+        EntityCommandBufferSystem entityCommandBufferSystem;
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+
+        }
         protected override void OnUpdate()
         {
-            var em = EntityManager;
+            var cb = entityCommandBufferSystem.CreateCommandBuffer();
             Entities.WithAll<GameUI, Prefab, AutoInstantiateUI>().ForEach((Entity e) =>
             {
                 Debug.Log($"Instanciate {e.Index}");
-                em.Instantiate(e);
-                em.RemoveComponent<AutoInstantiateUI>(e);
-            }).WithStructuralChanges()
-            .WithoutBurst()
+                cb.Instantiate(e);
+                cb.RemoveComponent<AutoInstantiateUI>(e);
+            })
             .Run();
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
-
 }

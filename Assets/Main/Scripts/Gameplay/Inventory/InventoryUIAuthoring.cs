@@ -99,7 +99,7 @@ namespace RPG.UI
 
     }
 
-    [ExecuteAlways]
+
     [UpdateInGroup(typeof(UISystemGroup))]
     public class InventoryUISystem : SystemBase
     {
@@ -113,14 +113,10 @@ namespace RPG.UI
         {
             Entities
             .WithAll<InventoryInitTag>()
-            .ForEach((in InventoryUIController controller) =>
-            {
-                controller.ItemGrid.inventoryGUI.Dispose();
-            })
+            .ForEach((in InventoryUIController controller) => controller.ItemGrid.inventoryGUI.Dispose())
             .WithoutBurst()
             .Run();
             base.OnDestroy();
-
         }
         protected override void OnUpdate()
         {
@@ -128,7 +124,7 @@ namespace RPG.UI
             var cbp = cb.AsParallelWriter();
 
             Entities
-            .ForEach((Entity e, InGameUIController c, ref GameplayInput input) =>
+            .ForEach((Entity _, InGameUIController c, ref GameplayInput input) =>
             {
                 if (c.InventoryClicked)
                 {
@@ -199,7 +195,7 @@ namespace RPG.UI
 
             Entities
             .WithAll<InventoryInitTag, InventoryUIInstance>()
-            .ForEach((Entity entity, in InventoryUIController controller) =>
+            .ForEach((Entity _, in InventoryUIController controller) =>
             {
                 var simulation = new Simulation();
                 var handle = controller.ItemGrid.inventoryGUI.ScheduleCalculeOverlapse(simulation);
@@ -237,12 +233,13 @@ namespace RPG.UI
         private ItemSlotDescription[] GetItemSlotsDescriptions(ref DynamicBuffer<InventoryItem> items)
         {
             var itemSlotDescriptions = Array.CreateInstance(typeof(ItemSlotDescription), items.Length);
-            var textures = GetSharedComponentTypeHandle<ItemTexture>();
             for (int i = 0; i < items.Length; i++)
             {
-                var itemSlotDescription = new ItemSlotDescription();
-                itemSlotDescription.Dimension = 1;
-                itemSlotDescription.IsEmpty = items[i].IsEmpty;
+                var itemSlotDescription = new ItemSlotDescription
+                {
+                    Dimension = 1,
+                    IsEmpty = items[i].IsEmpty
+                };
                 if (items[i].ItemDefinition != Entity.Null && items[i].ItemDefinitionAsset.IsCreated)
                 {
                     var itemTexture = EntityManager.GetComponentObject<Texture2D>(items[i].ItemDefinition);

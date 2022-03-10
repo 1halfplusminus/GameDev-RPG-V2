@@ -2,7 +2,6 @@ using RPG.Combat;
 using RPG.Core;
 using RPG.Stats;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -17,28 +16,17 @@ namespace RPG.Gameplay
     public class LevelUpEffectAuthoring : MonoBehaviour
     {
         public VisualEffectReference Effect;
-
     }
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
     public class LevelUpDeclareReferencedObjectsConversionSystem : GameObjectConversionSystem
     {
-        protected override void OnUpdate()
+        protected override void OnUpdate() => Entities.ForEach((LevelUpEffectAuthoring levelEffectAuthoring) =>
         {
-            Entities.ForEach((LevelUpEffectAuthoring levelEffectAuthoring) =>
-            {
-                if (levelEffectAuthoring.Effect.IsValid())
-                {
-
-                }
-                levelEffectAuthoring.Effect.ReleaseAsset();
-                var handle = levelEffectAuthoring.Effect.LoadAssetAsync<GameObject>();
-                levelEffectAuthoring.Effect.OperationHandle.Completed += (r) =>
-                {
-                    DeclareReferencedPrefab(handle.Result);
-                };
-                handle.WaitForCompletion();
-            });
-        }
+            levelEffectAuthoring.Effect.ReleaseAsset();
+            var handle = levelEffectAuthoring.Effect.LoadAssetAsync<GameObject>();
+            levelEffectAuthoring.Effect.OperationHandle.Completed += (_) => DeclareReferencedPrefab(handle.Result);
+            handle.WaitForCompletion();
+        });
     }
 
     public class LevelUpEffectConversionSystem : GameObjectConversionSystem
@@ -82,12 +70,12 @@ namespace RPG.Gameplay
             .WithAll<DestroyIfNoParticule>()
             .WithNone<Spawned>()
             .WithAll<Playing>()
-            .ForEach((int entityInQueryIndex, Entity e, VisualEffect effect, in DeltaTime deltaTime) =>
+            .ForEach((Entity e, VisualEffect effect) =>
             {
                 effect.AdvanceOneFrame();
                 if (effect.aliveParticleCount == 0)
                 {
-                    Debug.Log($"Destroying visual effect");
+                    Debug.Log("Destroying visual effect");
                     cb.DestroyEntity(e);
                 }
             }).WithoutBurst().Run();
@@ -109,5 +97,4 @@ namespace RPG.Gameplay
             }).ScheduleParallel();
         }
     }
-
 }

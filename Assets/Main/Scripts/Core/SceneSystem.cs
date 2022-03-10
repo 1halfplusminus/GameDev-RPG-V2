@@ -6,7 +6,6 @@ using RPG.Gameplay;
 
 namespace RPG.Core
 {
-
     public struct TriggerSceneLoad : IComponentData
     {
         public Unity.Entities.Hash128 SceneGUID;
@@ -17,7 +16,6 @@ namespace RPG.Core
     }
     public struct LoadingScene : IComponentData
     {
-
     }
     public struct TriggeredSceneLoaded : IComponentData
     {
@@ -53,7 +51,6 @@ namespace RPG.Core
     {
         SceneSystem sceneSystem;
 
-
         EntityCommandBufferSystem entityCommandBufferSystem;
 
         EntityQuery sceneLoadingQuery;
@@ -75,7 +72,6 @@ namespace RPG.Core
                     dstManager.AddComponentData(loadedScenes[i], new UnloadScene() { SceneEntity = loadedScenes[i] });
                 }
             }
-
         }
         protected override void OnCreate()
         {
@@ -87,6 +83,10 @@ namespace RPG.Core
             {
                 All = new ComponentType[] { typeof(Spawn), typeof(SceneTag) },
                 None = new ComponentType[] { typeof(HasSpawn) }
+            });
+            sceneLoadingQuery = GetEntityQuery(new EntityQueryDesc
+            {
+                All = new ComponentType[] { typeof(LoadSceneAsync) }
             });
             anySceneFinishLoadingQuery = GetEntityQuery(typeof(AnySceneFinishLoading));
         }
@@ -110,10 +110,8 @@ namespace RPG.Core
                     commandBuffer.AddComponent(e, new LoadSceneAsync() { SceneEntity = sceneEntity, SceneGUID = newSceneRef.SceneGUID });
                     commandBuffer.RemoveComponent<TriggerSceneLoad>(e);
                 }
-
             })
             .WithStructuralChanges()
-            .WithoutBurst()
             .Run();
 
             Entities.ForEach((Entity e, in TriggerUnloadScene unloadScene) =>
@@ -134,7 +132,6 @@ namespace RPG.Core
                 commandBuffer.RemoveComponent<UnloadScene>(e);
             })
             .WithStructuralChanges()
-            .WithoutBurst()
             .Run();
             // Delete scene finish loading notification
             commandBuffer.RemoveComponentForEntityQuery<AnySceneFinishLoading>(anySceneFinishLoadingQuery);
@@ -154,12 +151,12 @@ namespace RPG.Core
                 var sceneLoadingCount = sceneLoadingQuery.CalculateEntityCount();
                 // var nativeListTrigger = new NativeList<Entity>(sceneLoadingCount, Allocator.TempJob);
                 // var nativeListTriggerWriter = nativeListTrigger.AsParallelWriter();
-                Entities
-                .WithStoreEntityQueryInField(ref sceneLoadingQuery)
-                .ForEach((Entity e, in LoadSceneAsync loadSceneAsync) =>
-                {
-                    // nativeListTriggerWriter.AddNoResize(e);
-                }).ScheduleParallel();
+                // Entities
+                // .WithStoreEntityQueryInField(ref sceneLoadingQuery)
+                // .ForEach((Entity e, in LoadSceneAsync loadSceneAsync) =>
+                // {
+                //     // nativeListTriggerWriter.AddNoResize(e);
+                // }).ScheduleParallel();
 
                 // Entities
                 // .WithReadOnly(nativeListTrigger)
@@ -175,18 +172,16 @@ namespace RPG.Core
                 //     commandBufferP.AddComponent(entityInQueryIndex, e, new AnySceneLoading { Triggers = triggers });
                 // })
                 // .ScheduleParallel();
-                CheckIfSceneFinisLoading(sceneLoadingCount, out NativeArray<Entity> loadingScenes, out NativeArray<LoadSceneAsync> loadingScenesData, out NativeHashMap<Entity, TriggeredSceneLoaded> sceneLoadedList);
+                CheckIfSceneFinishLoading(sceneLoadingCount, out NativeArray<Entity> loadingScenes, out NativeArray<LoadSceneAsync> loadingScenesData, out NativeHashMap<Entity, TriggeredSceneLoaded> sceneLoadedList);
                 loadingScenes.Dispose();
                 loadingScenesData.Dispose();
                 sceneLoadedList.Dispose();
             }
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
-
-
         }
 
-        private void CheckIfSceneFinisLoading(int sceneLoadingCount, out NativeArray<Entity> loadingScenes, out NativeArray<LoadSceneAsync> loadingScenesData, out NativeHashMap<Entity, TriggeredSceneLoaded> sceneLoadedList)
+        private void CheckIfSceneFinishLoading(int sceneLoadingCount, out NativeArray<Entity> loadingScenes, out NativeArray<LoadSceneAsync> loadingScenesData, out NativeHashMap<Entity, TriggeredSceneLoaded> sceneLoadedList)
         {
             loadingScenes = sceneLoadingQuery.ToEntityArray(Allocator.Temp);
             loadingScenesData = sceneLoadingQuery.ToComponentDataArray<LoadSceneAsync>(Allocator.Temp);
@@ -203,7 +198,7 @@ namespace RPG.Core
                         var sectionLoaded = sceneSystem.IsSectionLoaded(resolvedSections[j].SectionEntity) && waitForSpawn.CalculateEntityCount() == 0;
                         allSectionLoaded = j == 0 ? sectionLoaded : allSectionLoaded && sectionLoaded;
                         waitForSpawn.ResetFilter();
-                        if (sectionLoaded == false)
+                        if (!sectionLoaded)
                         {
                             break;
                         }
@@ -219,7 +214,6 @@ namespace RPG.Core
                     {
                         // Debug.Log($"Scene section for {loadingScenesData[i].SceneGUID} is still loading");
                     }
-
                 }
                 else
                 {
@@ -232,4 +226,3 @@ namespace RPG.Core
         }
     }
 }
-

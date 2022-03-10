@@ -25,13 +25,11 @@ namespace RPG.Saving
         {
             var lastScenesBuffer = em.GetBuffer<LastScene>(e);
             using var nativeArray = lastScenesBuffer.ToNativeArray(Allocator.Temp);
-            var array = nativeArray.ToArray();
-            return array;
+            return nativeArray.ToArray();
         }
 
         public void UnSerialize(EntityManager em, Entity e, object state)
         {
-
             if (state is LastScene[] lastScenes)
             {
                 var lastScene = lastScenes.LastOrDefault();
@@ -42,9 +40,7 @@ namespace RPG.Saving
                     var trigger = hasTrigger ? em.GetComponentData<LoadSceneTrigger>(e).Entity : e;
                     em.AddComponentData(trigger, new TriggerSceneLoad { SceneGUID = lastScene.SceneGUID });
                 }
-
             }
-
         }
     }
     public struct LoadSceneTrigger : IComponentData
@@ -58,6 +54,7 @@ namespace RPG.Saving
     {
         public Hash128 SceneGUID;
     }
+    [UpdateBefore(typeof(TriggerSavingSystem))]
     [UpdateInGroup(typeof(SavingSystemGroup))]
     public class UdemySaveSystem : SaveSystemBase
     {
@@ -69,7 +66,6 @@ namespace RPG.Saving
         EntityQuery sceneLoadedQuery;
 
         const string LastSceneEntityIdentifier = "LastSceneBuildIndex";
-
 
         protected EntityQueryDesc LastSceneBuildEntityQueryDesc()
         {
@@ -108,31 +104,9 @@ namespace RPG.Saving
             Entities
             .WithStoreEntityQueryInField(ref sceneLoadedQuery)
             .WithChangeFilter<SceneLoaded>()
-            .ForEach((in SceneLoaded sceneLoaded) =>
-            {
-                lastSceneBuildBuffer.Add(new LastScene { SceneGUID = sceneLoaded.SceneGUID });
-            }).Schedule();
-
-            Entities
-            .WithNone<DontLoadSave>()
-            .ForEach((in TriggeredSceneLoaded sceneLoaded) =>
-            {
-                //FIXME: Shouldn't know the default file path
-                Load(SaveSystem.GetPathFromSaveFile("test.save"));
-
-            }).WithStructuralChanges().Run();
-            Entities.ForEach((Entity e, in SceneSaveCheckpoint sceneLoaded) =>
-           {
-               //FIXME: Shouldn't know the default file path
-               Save(SaveSystem.GetPathFromSaveFile("test.save"));
-               EntityManager.RemoveComponent<SceneSaveCheckpoint>(e);
-           }).WithStructuralChanges().Run();
-            Entities.ForEach((in TriggerUnloadScene sceneUnLoad) =>
-            {
-                //FIXME: Shouldn't know the default file path
-                Save(SaveSystem.GetPathFromSaveFile("test.save"));
-            }).WithStructuralChanges().Run();
-
+            .ForEach((in SceneLoaded sceneLoaded) => lastSceneBuildBuffer
+            .Add(new LastScene { SceneGUID = sceneLoaded.SceneGUID }))
+            .Schedule();
         }
         public override bool LoadLastScene(string savePath)
         {
@@ -170,7 +144,6 @@ namespace RPG.Saving
 
         private Dictionary<string, object> LoadFile(string fileName)
         {
-
             if (File.Exists(fileName))
             {
                 using var stream = File.Open(fileName, FileMode.Open);
@@ -180,8 +153,7 @@ namespace RPG.Saving
                 {
                     return formatter.Deserialize(stream) as Dictionary<string, object>;
                 }
-                catch (Exception) { };
-
+                catch (Exception) { }
             }
             var state = new Dictionary<string, object>();
             return state;
@@ -199,7 +171,6 @@ namespace RPG.Saving
                 var id = identified.Id.ToString();
                 rootState[id] = CaptureSerializersState(entity);
             }
-
         }
 
         private Dictionary<string, object> CaptureSerializersState(Entity entity)
@@ -231,7 +202,6 @@ namespace RPG.Saving
                 {
                     RestoreSerializersState(rootState[id] as Dictionary<string, object>, entity);
                 }
-
             }
         }
 
@@ -276,13 +246,9 @@ namespace RPG.Saving
                 var serializer = Activator.CreateInstance(serializerType);
                 if (serializer is ISerializer casted)
                 {
-
                     serializers.Add(casted);
                 }
-
             }
         }
-
     }
 }
-

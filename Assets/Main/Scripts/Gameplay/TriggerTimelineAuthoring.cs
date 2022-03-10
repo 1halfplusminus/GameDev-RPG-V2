@@ -16,18 +16,6 @@ namespace RPG.Gameplay
     {
         public Entity Entity;
     }
-    public struct Playing : IComponentData
-    {
-
-    }
-    public struct Play : IComponentData
-    {
-
-    }
-    public struct Played : IComponentData
-    {
-
-    }
     [DisableAutoCreation]
     [UpdateInGroup(typeof(GameObjectDeclareReferencedObjectsGroup))]
     public class PlayableDeclareReferencedDirectorConversionSystem : GameObjectConversionSystem
@@ -41,11 +29,7 @@ namespace RPG.Gameplay
         protected override void OnUpdate()
         {
             dones.Clear();
-            Entities.ForEach((PlayableDirector playableDirector) =>
-           {
-               DeclareAssetDependencyRecurse(playableDirector, playableDirector.playableAsset);
-           });
-
+            Entities.ForEach((PlayableDirector playableDirector) => DeclareAssetDependencyRecurse(playableDirector, playableDirector.playableAsset));
         }
         protected void DeclareAssetDependencyRecurse(PlayableDirector playableDirector, PlayableAsset asset)
         {
@@ -63,7 +47,6 @@ namespace RPG.Gameplay
                 if (output.sourceObject is PlayableAsset playableAsset)
                 {
                     DeclareAssetDependencyRecurse(playableDirector, playableAsset);
-
                 }
             }
         }
@@ -106,11 +89,9 @@ namespace RPG.Gameplay
         }
         private void LinkBrain(PlayableDirector playableDirector, CinemachineBrain brain, Entity entity)
         {
-
             var outputs = playableDirector.playableAsset.outputs;
             foreach (var output in outputs)
             {
-
                 if (output.sourceObject is CinemachineTrack)
                 {
                     if (brain != null)
@@ -123,10 +104,8 @@ namespace RPG.Gameplay
                         DstEntityManager.AddComponent<LinkCinemachineBrain>(entity);
                         break;
                     }
-
                 }
             }
-
         }
         private void ConvertOutputRecurse(PlayableDirector playableDirector, PlayableAsset asset)
         {
@@ -146,9 +125,7 @@ namespace RPG.Gameplay
                         DstEntityManager.AddComponentObject(outputEntity, playableAsset);
                         ConvertOutputRecurse(playableDirector, playableAsset);
                     }
-
                 }
-
             }
         }
     }
@@ -167,20 +144,16 @@ namespace RPG.Gameplay
                 var outputs = playableDirector.playableAsset.outputs;
                 foreach (var output in outputs)
                 {
-
                     if (output.sourceObject is CinemachineTrack cinemachineTrack)
                     {
                         Debug.Log("Link cinemachineBrain");
                         playableDirector.SetGenericBinding(output.sourceObject, cinemachineBrain);
                     }
-
                 }
-
             }).WithoutBurst().Run();
         }
     }
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    [UpdateAfter(typeof(FixedStepSimulationSystemGroup))]
     public class TriggerTimelineSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
@@ -244,5 +217,4 @@ namespace RPG.Gameplay
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
-
 }

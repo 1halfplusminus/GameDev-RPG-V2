@@ -36,7 +36,6 @@ namespace RPG.UI
     }
     public struct InDialog : IComponentData
     {
-
     }
     [UpdateInGroup(typeof(UISystemGroup))]
     public class DialogInteractionUISystem : SystemBase
@@ -63,7 +62,6 @@ namespace RPG.UI
             .WithNone<DialogInteractionUIInstance>()
             .ForEach((int entityInQueryIndex, Entity e, in LocalToWorld localToWorld, in CollidWithPlayer collidWithPlayer, in DialogInteractionUI dialogInteractionUI, in DialogAsset dialogAsset) =>
             {
-
                 if (collidWithPlayer.State != Core.EventOverlapState.Exit)
                 {
                     var instance = cbp.Instantiate(entityInQueryIndex, dialogInteractionUI.Prefab);
@@ -99,7 +97,6 @@ namespace RPG.UI
             Entities
             .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer collidWithPlayer, in DialogInteractionUIInstance dialogInteractionUIInstance) =>
             {
-
                 if (collidWithPlayer.State == Core.EventOverlapState.Exit)
                 {
                     cbp.RemoveComponent<DialogInteractionUIInstance>(entityInQueryIndex, e);
@@ -204,9 +201,7 @@ namespace RPG.UI
             .WithStructuralChanges()
             .Run();
 
-
             endSimulationEntityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
-
 }

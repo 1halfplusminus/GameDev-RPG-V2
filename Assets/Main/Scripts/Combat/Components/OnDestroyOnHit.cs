@@ -4,7 +4,5 @@ namespace RPG.Combat
 {
     [GenerateAuthoringComponent]
     public struct OnDestroyOnHit : IComponentData
-    {
-
-    }
+    { }
 }

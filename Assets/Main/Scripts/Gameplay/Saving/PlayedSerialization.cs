@@ -1,6 +1,6 @@
-using RPG.Gameplay;
 using Unity.Entities;
 using UnityEngine;
+using RPG.Core;
 
 namespace RPG.Saving
 {

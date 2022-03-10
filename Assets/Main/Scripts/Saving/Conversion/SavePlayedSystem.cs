@@ -1,5 +1,5 @@
 using Unity.Entities;
-using RPG.Gameplay;
+using RPG.Core;
 using Unity.Animation;
 
 

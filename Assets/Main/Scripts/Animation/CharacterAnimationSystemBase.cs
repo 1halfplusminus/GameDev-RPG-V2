@@ -219,20 +219,25 @@ namespace RPG.Animation
         }
         protected override void OnUpdate()
         {
-            var set = animationSystem.Set;
+
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
-            Entities.WithChangeFilter<ChangeAttackAnimation>().ForEach((Entity e, in ChangeAttackAnimation attackAnimation, in CharacterAnimationData characterAnimation) =>
-            {
-
-                Debug.Log($"Change attack animation");
-                if (attackAnimation.Animation.IsCreated)
-                {
-                    set.SendMessage(characterAnimation.AttackClipPlayerNode, ClipPlayerNode.SimulationPorts.Clip, attackAnimation.Animation);
-                }
-                cb.RemoveComponent<ChangeAttackAnimation>(e);
-            }).WithoutBurst().Run();
-
+            Entities
+            .WithChangeFilter<ChangeAttackAnimation>()
+            .ForEach((Entity e, in ChangeAttackAnimation attackAnimation, in CharacterAnimationData characterAnimation) => ChangeAnimation(e, attackAnimation, characterAnimation, cb))
+            .WithoutBurst()
+            .Run();
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+        }
+        [BurstCompile]
+        private void ChangeAnimation(Entity e, ChangeAttackAnimation attackAnimation, CharacterAnimationData characterAnimation, EntityCommandBuffer cb)
+        {
+            var set = animationSystem.Set;
+            Debug.Log("Change attack animation");
+            if (attackAnimation.Animation.IsCreated)
+            {
+                set.SendMessage(characterAnimation.AttackClipPlayerNode, ClipPlayerNode.SimulationPorts.Clip, attackAnimation.Animation);
+            }
+            cb.RemoveComponent<ChangeAttackAnimation>(e);
         }
     }
 }

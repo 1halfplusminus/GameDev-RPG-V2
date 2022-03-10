@@ -1,5 +1,4 @@
 
-
 using System;
 using Unity.Mathematics;
 using UnityEngine;
@@ -10,14 +9,10 @@ using System.Collections.Generic;
 using RPG.UI;
 namespace RPG.Gameplay.Inventory
 {
-
     public class InventoryRootController : VisualElement
     {
-
         public InventoryRootController()
         {
-
-
         }
         public new class UxmlFactory : UxmlFactory<InventoryRootController, InventoryRootController.UxmlTraits>
         {
@@ -67,9 +62,7 @@ namespace RPG.Gameplay.Inventory
     }
     public static class InventoryExtensions
     {
-
     }
-
 
     public struct Inventory : IComponentData
     {
@@ -86,14 +79,11 @@ namespace RPG.Gameplay.Inventory
         public int GetIndex(int x, int y)
         {
             return (y * Width) + x;
-
         }
         public int GetIndex(int2 coordinate)
         {
             return GetIndex(coordinate.x, coordinate.y);
-
         }
-
     }
     public struct ItemSlotDescription
     {
@@ -136,7 +126,6 @@ namespace RPG.Gameplay.Inventory
 
         public new class UxmlFactory : UxmlFactory<ItemDetail, ItemDetail.UxmlTraits>
         {
-
         }
 
         public ItemDetail()
@@ -155,7 +144,6 @@ namespace RPG.Gameplay.Inventory
 
                 ActionButton.clicked += OnActionButton();
             }));
-
         }
 
         private Action OnActionButton()
@@ -195,7 +183,6 @@ namespace RPG.Gameplay.Inventory
     {
         public new class UxmlFactory : UxmlFactory<ItemSlot, ItemSlot.UxmlTraits>
         {
-
         }
         public int _index;
 
@@ -216,14 +203,12 @@ namespace RPG.Gameplay.Inventory
 
         public ItemSlot()
         {
-
             AddToClassList("slot-icon");
             imageBackground = new VisualElement();
             imageBackground.AddToClassList("slot-background-container");
             Add(imageBackground);
             RegisterCallback<MouseUpEvent>(OnMouseEventUp);
             RegisterCallback(OnMouseEnterEvent(this));
-
         }
 
         private void ShowDebugText()
@@ -247,11 +232,9 @@ namespace RPG.Gameplay.Inventory
                     var itemDetail = v.GetFirstAncestorOfType<InventoryRootController>().Q<ItemDetail>();
                     if (itemDetail != null)
                     {
-
                         itemDetail.ShowItem(v.ItemSlotDescription);
                     }
                 }
-
             };
         }
 
@@ -307,11 +290,9 @@ namespace RPG.Gameplay.Inventory
         {
             isDragging = false;
             imageBackground.style.visibility = Visibility.Visible;
-
         }
         virtual public bool StartDrag()
         {
-
             if (IsEmpty()) { return false; }
             imageBackground.style.visibility = Visibility.Hidden;
             isDragging = true;
@@ -353,7 +334,6 @@ namespace RPG.Gameplay.Inventory
             }
             if (haveItem)
             {
-
                 ItemSlotDescription = newItemSlotDescription;
                 Resize(newItemSlotDescription.Dimension);
                 imageBackground.style.backgroundImage = new StyleBackground(newItemSlotDescription.Texture);
@@ -363,7 +343,6 @@ namespace RPG.Gameplay.Inventory
                 ClearItem();
                 ItemSlotDescription = newItemSlotDescription;
             }
-
         }
         public void ClearItem()
         {
@@ -397,7 +376,6 @@ namespace RPG.Gameplay.Inventory
         {
             return new int2((int)(layout.x / width), (int)(layout.y / height));
         }
-
     }
 
     public class ItemGrid : VisualElement, IDisposable
@@ -424,7 +402,6 @@ namespace RPG.Gameplay.Inventory
 
         public new class UxmlFactory : UxmlFactory<ItemGrid, ItemGrid.UxmlTraits>
         {
-
         }
         public ItemGrid()
         {
@@ -447,7 +424,6 @@ namespace RPG.Gameplay.Inventory
                 // var inventory = new Inventory { Height = 8, Width = 6 };
                 // InitInventory(inventory);
             });
-
         }
 
         public void OnActionButton()
@@ -464,7 +440,6 @@ namespace RPG.Gameplay.Inventory
             GetItemSlotsQuery().Where((i) => (slot == null || i != slot) && i.IsSelected).ForEach((s) =>
             {
                 s.UnSelect();
-
             });
         }
 
@@ -501,7 +476,6 @@ namespace RPG.Gameplay.Inventory
             {
                 ItemMoved.MovedThisFrame = true;
             }
-
         }
         private bool IsSameSlot(int firstSlotIndex, int secondSlotIndex)
         {
@@ -536,7 +510,6 @@ namespace RPG.Gameplay.Inventory
                 inventoryGUI.ResizeSlot(hits[i], 1);
                 slotFound.ClearItem();
             }
-
         }
 
         public void OnMouseMove(MouseMoveEvent mouseMoveEvent)
@@ -558,7 +531,6 @@ namespace RPG.Gameplay.Inventory
                 if (nextSlot.ClassListContains("slot-highlight-empty"))
                 {
                     inventoryGUI.ResizeSlot(nextSlot.Index, 1);
-
                 }
                 for (int i = 0; i < ItemMoved.NewIndex.Length; i++)
                 {
@@ -600,7 +572,6 @@ namespace RPG.Gameplay.Inventory
                     {
                         slots.AtIndex(result[i]).AddToClassList("slot-highlight-empty");
                     }
-
                 }
             }
             if (result.Length == 0 && nextSlot != null)
@@ -612,10 +583,7 @@ namespace RPG.Gameplay.Inventory
                 }
                 nextSlot = null;
             }
-
-
         }
-
 
         public void StartDrag(ItemSlot itemSlot, float2 position)
         {
@@ -699,7 +667,6 @@ namespace RPG.Gameplay.Inventory
                     Add(itemSlot);
                 }
             }
-
         }
         public UQueryBuilder<ItemSlot> GetItemSlotsQuery()
         {

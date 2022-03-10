@@ -35,10 +35,7 @@ namespace RPG.Combat
             var weaponsWriter = weapons.AsParallelWriter();
             Entities
             .WithStoreEntityQueryInField(ref weaponDataQuery)
-            .ForEach((in WeaponAssetData weaponData) =>
-            {
-                weaponsWriter.TryAdd(weaponData.Weapon.Value.Weapon.GUID, weaponData);
-            })
+            .ForEach((in WeaponAssetData weaponData) => weaponsWriter.TryAdd(weaponData.Weapon.Value.Weapon.GUID, weaponData))
             .ScheduleParallel();
             var _weapons = weapons;
             Entities
@@ -46,22 +43,19 @@ namespace RPG.Combat
             .WithAll<Prefab>()
             .WithStoreEntityQueryInField(ref weaponReferenceQuery)
             .WithNone<Loaded>()
-            .ForEach((int entityInQueryIndex, Entity e, in WeaponAssetReference weaponAssetReference) =>
+            .ForEach((Entity _, in WeaponAssetReference weaponAssetReference) =>
             {
                 if (!_weapons.ContainsKey(weaponAssetReference.Address))
                 {
                     LoadWeapon(weaponAssetReference.Address);
                 }
-
-                // cb.AddComponent<Loaded>(e);
-            }).WithStructuralChanges().WithoutBurst().Run();
+            }).WithoutBurst().Run();
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
         public AsyncOperationHandle<GameObject> LoadAssetAsync(FixedString64 address)
         {
-            var weaponAuthoringHandle = Addressables.LoadAssetAsync<GameObject>(address.ToString());
-            return weaponAuthoringHandle;
+            return Addressables.LoadAssetAsync<GameObject>(address.ToString());
         }
         public Entity LoadWeapon(FixedString64 address)
         {
@@ -77,8 +71,7 @@ namespace RPG.Combat
         {
             var convertToEntitySystem = World.GetExistingSystem<ConvertToEntitySystem>();
             var conversionSetting = GameObjectConversionSettings.FromWorld(World, convertToEntitySystem.BlobAssetStore);
-            var weaponPrefab = GameObjectConversionUtility.ConvertGameObjectHierarchy(weaponAuthoring.gameObject, conversionSetting);
-            return weaponPrefab;
+            return GameObjectConversionUtility.ConvertGameObjectHierarchy(weaponAuthoring.gameObject, conversionSetting);
         }
 
         protected override void OnDestroy()

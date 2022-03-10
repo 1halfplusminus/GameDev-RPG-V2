@@ -8,7 +8,6 @@ using UnityEngine;
 namespace RPG.Gameplay.Inventory
 {
 
-    [ExecuteAlways]
     [UpdateInGroup(typeof(GameplaySystemGroup))]
     public class CommonInventorySystem : SystemBase
     {

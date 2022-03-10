@@ -10,54 +10,65 @@ namespace RPG.Saving
     public struct GameLoaded : IComponentData { }
     public struct TriggerNewGame : IComponentData
     {
-
     }
     public struct TriggerSave : IComponentData { }
 
     public struct TriggerLoad : IComponentData
     {
-
     }
+    [UpdateInGroup(typeof(SavingSystemGroup))]
     public class TriggerSavingSystem : SystemBase
     {
-        SavingWrapperSystem savingDebugSystem;
+        SaveSystemBase saveSystem;
+        SavingWrapperSystem savingWrapperSystem;
         EntityQuery triggerNewGameQuery;
         EntityQuery triggerLoadQuery;
         EntityQuery triggerSaveQuery;
         protected override void OnCreate()
         {
             base.OnCreate();
-            savingDebugSystem = World.GetOrCreateSystem<SavingWrapperSystem>();
+            savingWrapperSystem = World.GetOrCreateSystem<SavingWrapperSystem>();
+            saveSystem = World.GetOrCreateSystem<SaveSystemBase>();
         }
         protected override void OnUpdate()
         {
             Entities
+             .WithNone<DontLoadSave>()
+             .ForEach((in TriggeredSceneLoaded _) =>
+             {
+                 //FIXME: Shouldn't know the default file path
+                 Load();
+             }).WithStructuralChanges().Run();
+
+            Entities.ForEach((Entity e, in SceneSaveCheckpoint _) =>
+           {
+               //FIXME: Shouldn't know the default file path
+               Save();
+               EntityManager.RemoveComponent<SceneSaveCheckpoint>(e);
+           }).WithStructuralChanges().Run();
+            Entities.ForEach((in TriggerUnloadScene _) =>
+            {
+                //FIXME: Shouldn't know the default file path
+                Save();
+            }).WithStructuralChanges().Run();
+            Entities
             .WithStoreEntityQueryInField(ref triggerNewGameQuery)
             .WithAny<TriggerNewGame>()
-            .ForEach((Entity e) =>
-            {
-                savingDebugSystem.NewGame(e);
-            })
+            .ForEach((Entity e) => savingWrapperSystem.NewGame(e))
             .WithStructuralChanges()
             .Run();
             Entities
             .WithAll<TriggerLoad>()
             .WithNone<LoadingScene>()
             .WithStoreEntityQueryInField(ref triggerLoadQuery)
-            .ForEach((Entity e) =>
-            {
-                savingDebugSystem.LoadDefaultSave(e);
-            })
+            .ForEach((Entity e) => savingWrapperSystem.LoadDefaultSave(e))
             .WithStructuralChanges()
             .Run();
 
             Entities
             .WithAll<TriggerSave>()
             .WithStoreEntityQueryInField(ref triggerSaveQuery)
-            .ForEach((Entity e) =>
-            {
-                savingDebugSystem.Save();
-            })
+            .ForEach((Entity _) => savingWrapperSystem.Save())
             .WithStructuralChanges()
             .Run();
             EntityManager.RemoveComponent<TriggerNewGame>(triggerNewGameQuery);
@@ -65,12 +76,20 @@ namespace RPG.Saving
             EntityManager.RemoveComponent<TriggerSave>(triggerSaveQuery);
         }
 
+        private void Load()
+        {
+            saveSystem.Load(savingWrapperSystem.GetSavePath());
+        }
+
+        private void Save()
+        {
+            saveSystem.Save(savingWrapperSystem.GetSavePath());
+        }
     }
 
     [UpdateInGroup(typeof(SavingSystemGroup))]
     public class SavingWrapperSystem : SystemBase
     {
-
         BeginPresentationEntityCommandBufferSystem entityCommandBufferSystem;
         SaveSystemBase saveSystem;
         EntityQuery requestForUpdateQuery;
@@ -98,12 +117,15 @@ namespace RPG.Saving
             newGameQuery = GetEntityQuery(ComponentType.ReadOnly<NewGame>());
             savePath = SaveSystem.GetPathFromSaveFile("test.save");
             RequireForUpdate(requestForUpdateQuery);
-
         }
 
         public bool HasSave()
         {
             return File.Exists(savePath);
+        }
+        public string GetSavePath()
+        {
+            return savePath;
         }
         public void Save()
         {
@@ -121,7 +143,6 @@ namespace RPG.Saving
         }
         public void NewGame(Entity triggerEntity)
         {
-
             if (HasSave())
             {
                 File.Delete(savePath);
@@ -136,7 +157,6 @@ namespace RPG.Saving
 
         private void TriggerSceneLoad(Entity sceneLoadEventEntity, Unity.Entities.Hash128 sceneGUID)
         {
-
             EntityManager.AddComponent<DontLoadSave>(sceneLoadEventEntity);
             EntityManager.AddComponentData(sceneLoadEventEntity, new TriggerSceneLoad() { SceneGUID = sceneGUID });
         }
@@ -168,7 +188,5 @@ namespace RPG.Saving
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
-
     }
 }
-

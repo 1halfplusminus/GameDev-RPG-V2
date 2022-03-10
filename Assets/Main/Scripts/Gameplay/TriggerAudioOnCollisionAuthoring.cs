@@ -1,5 +1,4 @@
 
-
 using RPG.Core;
 using Unity.Entities;
 using UnityEngine;
@@ -8,15 +7,12 @@ namespace RPG.Gameplay
 {
     public struct PlayingAudio : IComponentData
     {
-
     }
     public struct PlayAudio : IComponentData
     {
-
     }
     public struct StopAudio : IComponentData
     {
-
     }
     [UpdateInGroup(typeof(GameplaySystemGroup))]
     public class AudioSourceSystem : SystemBase
@@ -44,7 +40,6 @@ namespace RPG.Gameplay
             Entities
             .WithAll<PlayingAudio, StopAudio>().ForEach((Entity e, AudioSource audioSource) =>
             {
-
                 audioSource.Stop();
                 cb.RemoveComponent<StopAudio>(e);
                 cb.RemoveComponent<PlayingAudio>(e);
@@ -61,8 +56,7 @@ namespace RPG.Gameplay
     public class TriggerAudioOnCollisionAuthoring : MonoBehaviour, IConvertGameObjectToEntity
     {
         [SerializeField]
-        AudioSource AudioSource;
-
+        readonly AudioSource AudioSource;
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
