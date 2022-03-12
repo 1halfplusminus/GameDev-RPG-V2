@@ -37,7 +37,7 @@ namespace RPG.Mouvement
                     characterAnimation.Move = math.max(characterAnimation.Move - 0.1f, 0.0f);
                 }
 
-            }).ScheduleParallel();
+            }).WithoutBurst().ScheduleParallel();
             Entities
            .WithNone<IsMoving>()
            .ForEach((ref CharacterAnimation characterAnimation, in Mouvement mouvement) =>

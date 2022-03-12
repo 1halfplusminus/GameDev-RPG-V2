@@ -25,6 +25,7 @@
     <type fullname="RPG.Stats.CharacterClass" preserve="nothing" serialized="true" />
     <type fullname="RPG.Stats.ProgressionAsset/ClassProgression" preserve="nothing" serialized="true" />
     <type fullname="RPG.Stats.ProgressionAsset/ProgressionCurve" preserve="nothing" serialized="true" />
+    <type fullname="RPG.UI.Joystick/UxmlFactory" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="RPG.Gameplay.Dialog.UI, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="RPG.UI.DialogUIAuthoring" preserve="all" />
@@ -84,7 +85,6 @@
     <type fullname="UnityEngine.Shader" preserve="all" />
     <type fullname="UnityEngine.Sprite" preserve="all" />
     <type fullname="UnityEngine.Texture2D" preserve="all" />
-    <type fullname="UnityEngine.Texture3D" preserve="all" />
     <type fullname="UnityEngine.TrailRenderer" preserve="all" />
     <type fullname="UnityEngine.Transform" preserve="all" />
   </assembly>

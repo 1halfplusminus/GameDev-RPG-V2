@@ -1119,6 +1119,27 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7130374545739419174, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
   m_PrefabInstance: {fileID: 844137821}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &844137823 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6354086139607555010, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+  m_PrefabInstance: {fileID: 844137821}
+  m_PrefabAsset: {fileID: 0}
+--- !u!208 &844137824
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 844137823}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 9.556001, y: 6.932, z: 10.095}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -1.4810001, y: 6.4470005, z: 2.8590002}
+  m_TimeToStationary: 0.5
 --- !u!1 &926227601
 GameObject:
   m_ObjectHideFlags: 0
@@ -1650,13 +1671,13 @@ MonoBehaviour:
   CollidWith:
     Category00: 1
     Category01: 0
-    Category02: 0
+    Category02: 1
     Category03: 0
     Category04: 0
     Category05: 0
     Category06: 0
     Category07: 0
-    Category08: 0
+    Category08: 1
     Category09: 0
     Category10: 0
     Category11: 0
@@ -1899,6 +1920,27 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7130374545739419174, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
   m_PrefabInstance: {fileID: 1653517430}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1653517432 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6354086139607555010, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+  m_PrefabInstance: {fileID: 1653517430}
+  m_PrefabAsset: {fileID: 0}
+--- !u!208 &1653517433
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1653517432}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 9.556001, y: 6.932, z: 10.095}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -1.4810001, y: 6.4470005, z: 2.8590002}
+  m_TimeToStationary: 0.5
 --- !u!1 &1663465539
 GameObject:
   m_ObjectHideFlags: 0

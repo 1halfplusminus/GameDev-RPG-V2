@@ -62,12 +62,16 @@ namespace RPG.Mouvement
             .WithAny<IsMoving>()
             .ForEach((int entityInQueryIndex, Entity e, ref MoveTo moveTo, in LocalToWorld localToWorld) =>
             {
-                moveTo.Distance = math.distance(moveTo.Position, localToWorld.Position);
-                if (moveTo.Distance <= moveTo.StoppingDistance)
+                if (!moveTo.UseDirection)
                 {
-                    moveTo.Stopped = true;
-                    moveTo.Position = localToWorld.Position;
+                    moveTo.Distance = math.distance(moveTo.Position, localToWorld.Position);
+                    if (moveTo.Distance <= moveTo.StoppingDistance)
+                    {
+                        moveTo.Stopped = true;
+                        moveTo.Position = localToWorld.Position;
+                    }
                 }
+
             }).ScheduleParallel();
 
             Entities
@@ -145,24 +149,49 @@ namespace RPG.Mouvement
             .WithChangeFilter<MoveTo>()
             .WithReadOnly(lookAts)
             .WithStoreEntityQueryInField(ref navMeshAgentQueries)
-            .ForEach((Entity e, NavMeshAgent agent, ref Translation position, ref Mouvement mouvement, ref MoveTo moveTo, ref Rotation rotation) =>
+            .ForEach((Entity e, NavMeshAgent agent, ref Translation position, ref Mouvement mouvement, ref MoveTo moveTo, ref Rotation rotation, in LocalToWorld localToWorld) =>
             {
                 if (agent.isOnNavMesh)
                 {
+                    bool isDirection = moveTo.UseDirection;
                     agent.speed = moveTo.CalculeSpeed(in mouvement);
-                    agent.SetDestination(moveTo.Position);
-                    position.Value = agent.transform.position;
-                    mouvement.Velocity = new Velocity
+                    if (!isDirection)
                     {
-                        Linear = agent.transform.InverseTransformDirection(agent.velocity),
-                        Angular = agent.angularSpeed
+                        agent.SetDestination(moveTo.Position);
+                        if (!lookAts.HasComponent(e) || lookAts[e].Entity == Entity.Null)
+                        {
+                            rotation.Value = agent.transform.rotation;
+                        }
+                        mouvement.Velocity = new Velocity
+                        {
+                            Linear = agent.transform.InverseTransformDirection(agent.velocity),
+                            Angular = agent.angularSpeed
 
-                    };
-                    if (!lookAts.HasComponent(e) || lookAts[e].Entity == Entity.Null)
-                    {
-                        rotation.Value = agent.transform.rotation;
+                        };
                     }
+                    else
+                    {
+                        // agent.CalculatePath((float3)agent.transform.position + moveTo.Direction, agent.path);
+                        var newPosition = moveTo.Direction + (agent.stoppingDistance * 2f * math.sign(moveTo.Direction));
+                        moveTo.Position = newPosition;
+                        agent.SetDestination((float3)agent.transform.position + newPosition);
+                        rotation.Value = agent.transform.rotation;
+                        // agent.Move(moveTo.Direction);
+                        // rotation.Value = quaternion.LookRotationSafe(heading, math.up());
+                        moveTo.Direction = float3.zero;
+                        moveTo.UseDirection = false;
+                        mouvement.Velocity = new Velocity
+                        {
+                            Linear = new float3(0, 0, 1f) * mouvement.Speed,
+                            Angular = agent.angularSpeed
+                        };
+                    }
+
+                    position.Value = agent.transform.position;
+
+
                 }
+
             }).WithoutBurst().Run();
 
         }

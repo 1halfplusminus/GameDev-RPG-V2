@@ -1,5 +1,5 @@
 {
-    "useBuildCacheServer": false,
+    "useBuildCacheServer": true,
     "cacheServerHost": "",
     "cacheServerPort": 8126,
     "threadedArchiving": true,

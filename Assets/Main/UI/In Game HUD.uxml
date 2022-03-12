@@ -1,8 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Template name="Joystick" src="project://database/Assets/Main/UI/Joystick.uxml?fileID=9197481963319205126&amp;guid=2a54b520cd70041f688e4da78729e9d5&amp;type=3#Joystick" />
     <Style src="project://database/Assets/Main/UI/In%20Game%20HUD%20Style.uss?fileID=7433441132597879392&amp;guid=d337463dc0df7fbe3b8a9edd5971530f&amp;type=3#In Game HUD Style" />
     <Style src="project://database/Assets/Main/UI/Theme.uss?fileID=7433441132597879392&amp;guid=b6ef91ffcee331072a844b6b0db17d13&amp;type=3#Theme" />
     <ui:VisualElement picking-mode="Ignore" style="flex-grow: 0; align-items: flex-start; flex-direction: column; justify-content: flex-start; height: 100%; flex-wrap: nowrap; flex-shrink: 0; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px; cursor: initial;">
-        <ui:VisualElement picking-mode="Ignore" style="flex-direction: row; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-grow: 1; align-items: flex-start; flex-shrink: 1; justify-content: flex-end;">
+        <ui:VisualElement picking-mode="Ignore" style="flex-direction: row-reverse; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-grow: 1; align-items: flex-start; flex-shrink: 1; justify-content: flex-end; flex-wrap: wrap;">
             <ui:VisualElement picking-mode="Ignore" style="flex-direction: row; flex-grow: 1; align-items: stretch; min-height: 200px; min-width: auto; justify-content: center;">
                 <ui:VisualElement class="Box" style="align-items: flex-start; justify-content: center;">
                     <ui:VisualElement class="Interactive" style="flex-direction: row; padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px;">
@@ -20,20 +21,23 @@
                 </ui:VisualElement>
                 <ui:VisualElement picking-mode="Ignore" style="flex-grow: 1; align-items: center; flex-direction: row; justify-content: flex-end;">
                     <ui:VisualElement name="InventoryButton" style="flex-grow: 0; align-items: stretch; min-width: 100px; min-height: 150px; background-image: none; flex-direction: column; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; width: 15%; height: 18%; cursor: resource(&apos;Icons/WaterEffects&apos;); background-color: rgba(0, 0, 0, 0);">
-                        <ui:Button display-tooltip-when-elided="true" name="SettingButton" style="flex-grow: 1; background-image: url(&apos;project://database/Assets/Main/Assets%20Packs/Clean%20Vector%20Icons/T_23_gear_.png?fileID=2800000&amp;guid=9a58f5069a59d1644b55a5aadc5dd58b&amp;type=3#T_23_gear_&apos;); cursor: resource(&apos;Icons/WaterEffects&apos;); -unity-background-image-tint-color: rgb(255, 255, 255); background-color: rgba(0, 0, 0, 0); border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0);" />
+                        <ui:Button display-tooltip-when-elided="true" name="SettingButton" style="flex-grow: 1; background-image: url(&apos;project://database/Assets/Main/Editor/Assets%20Packs/Clean%20Vector%20Icons/T_23_gear_.png?fileID=2800000&amp;guid=9a58f5069a59d1644b55a5aadc5dd58b&amp;type=3#T_23_gear_&apos;); cursor: resource(&apos;Icons/WaterEffects&apos;); -unity-background-image-tint-color: rgb(255, 255, 255); background-color: rgba(0, 0, 0, 0); border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0);" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
+            <ui:VisualElement class="Interactive Box" style="flex-direction: row; align-items: center; flex-basis: auto; margin-left: 0; margin-right: 0; margin-top: 2%; margin-bottom: 2%;">
+                <ui:Label text="Experience:" display-tooltip-when-elided="true" class="Text" style="font-size: 40%; -unity-text-align: middle-left; color: rgb(255, 255, 255); -unity-font-style: normal;" />
+                <ui:Label text="0" display-tooltip-when-elided="true" name="Experience" class="Text" style="-unity-font-style: bold; color: rgb(255, 208, 95); font-size: 40%; -unity-text-align: middle-left;" />
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement picking-mode="Ignore" style="flex-direction: row; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-grow: 1; align-items: flex-end; flex-shrink: 1; justify-content: flex-end;">
+            <ui:VisualElement style="flex-grow: 1;">
+                <ui:Instance template="Joystick" name="Joystick" style="min-width: 250px; min-height: 250px;" />
+            </ui:VisualElement>
             <ui:VisualElement picking-mode="Ignore" style="flex-direction: row; flex-grow: 1; align-items: stretch; min-height: 200px; min-width: auto; justify-content: center;">
-                <ui:VisualElement class="Interactive Box" style="flex-direction: row; align-items: center; flex-basis: auto; margin-left: 0; margin-right: 0; margin-top: 2%; margin-bottom: 2%;">
-                    <ui:Label text="Experience:" display-tooltip-when-elided="true" class="Text" style="font-size: 40%; -unity-text-align: middle-left; color: rgb(255, 255, 255); -unity-font-style: normal;" />
-                    <ui:Label text="0" display-tooltip-when-elided="true" name="Experience" class="Text" style="-unity-font-style: bold; color: rgb(255, 208, 95); font-size: 40%; -unity-text-align: middle-left;" />
-                </ui:VisualElement>
                 <ui:VisualElement picking-mode="Ignore" style="flex-grow: 1; align-items: center; flex-direction: row; justify-content: flex-end;">
                     <ui:VisualElement name="InventoryButton" style="flex-grow: 0; align-items: stretch; min-width: 100px; min-height: 150px; background-image: none; flex-direction: column; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; width: 15%; height: 18%; cursor: resource(&apos;Icons/WaterEffects&apos;); background-color: rgba(0, 0, 0, 0);">
-                        <ui:Button display-tooltip-when-elided="true" name="InventoryButton" style="flex-grow: 1; background-image: url(&apos;project://database/Assets/Main/Assets%20Packs/Clean%20Vector%20Icons/T_4_coin_bag1_.png?fileID=2800000&amp;guid=73b277da837c0874893f6123d5842ca0&amp;type=3#T_4_coin_bag1_&apos;); cursor: resource(&apos;Icons/WaterEffects&apos;); -unity-background-image-tint-color: rgb(255, 255, 255); background-color: rgba(0, 0, 0, 0); border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0);" />
+                        <ui:Button display-tooltip-when-elided="true" name="InventoryButton" style="flex-grow: 1; background-image: url(&apos;project://database/Assets/Main/Editor/Assets%20Packs/Clean%20Vector%20Icons/T_4_coin_bag1_.png?fileID=2800000&amp;guid=73b277da837c0874893f6123d5842ca0&amp;type=3#T_4_coin_bag1_&apos;); cursor: resource(&apos;Icons/WaterEffects&apos;); -unity-background-image-tint-color: rgb(255, 255, 255); background-color: rgba(0, 0, 0, 0); border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0);" />
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5882237509425270188}
   - component: {fileID: 7130374545739419172}
   - component: {fileID: 7130374545739419173}
+  - component: {fileID: 6131978153201818764}
   m_Layer: 0
   m_Name: Montain
   m_TagString: Untagged
@@ -278,3 +279,19 @@ MonoBehaviour:
     Tag05: 0
     Tag06: 0
     Tag07: 0
+--- !u!208 &6131978153201818764
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6354086139607555010}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 9.556001, y: 6.932, z: 10.095}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -1.4810001, y: 6.4470005, z: 2.8590002}
+  m_TimeToStationary: 0.5

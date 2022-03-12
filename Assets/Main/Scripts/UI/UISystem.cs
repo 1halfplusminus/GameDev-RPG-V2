@@ -11,6 +11,8 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UIElements;
 using static Unity.Entities.ComponentType;
 using static RPG.UI.UIExtensions;
+using RPG.Mouvement;
+using Unity.Transforms;
 
 namespace RPG.UI
 {
@@ -134,9 +136,6 @@ namespace RPG.UI
     public class InGameUISystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
-        EntityQuery displayInGameUIQuery;
-
-        EntityQuery playerQuery;
 
         EntityQuery prefabQuery;
         protected override void OnCreate()
@@ -151,12 +150,6 @@ namespace RPG.UI
                 }
             });
 
-            displayInGameUIQuery = GetEntityQuery(new EntityQueryDesc()
-            {
-                Any = new ComponentType[] {
-                    ReadOnly<InGameUI>()
-                }
-            });
             RequireForUpdate(prefabQuery);
         }
         protected override void OnUpdate()
@@ -175,11 +168,12 @@ namespace RPG.UI
             .WithoutBurst()
             .Run();
             Entities
-            .ForEach((in InGameUIController c, in Health playerHealth, in BaseStats baseStats, in ExperiencePoint experience) =>
+            .ForEach((ref MoveTo moveTo, ref Translation translation, in DeltaTime deltaTime, in Mouvement.Mouvement mouvement, in InGameUIController c, in Health playerHealth, in BaseStats baseStats, in ExperiencePoint experience) =>
             {
                 c.SetPlayerHealth(playerHealth, baseStats.Level, baseStats.ProgressionAsset);
                 c.SetExperiencePoint(experience.Value);
                 c.SetLevel(baseStats);
+                c.ProcessMouvement(ref moveTo, ref translation, deltaTime, mouvement);
             })
             .WithoutBurst()
             .Run();
