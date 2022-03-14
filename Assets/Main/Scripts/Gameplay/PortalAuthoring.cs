@@ -73,8 +73,6 @@ namespace RPG.Gameplay
 
         EntityQuery needWarpQuery;
 
-        PauseSystem pauseSystem;
-
         protected override void OnCreate()
         {
             base.OnCreate();

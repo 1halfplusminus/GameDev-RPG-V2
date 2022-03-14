@@ -53,7 +53,7 @@ namespace RPG.UI
                 if (Circle != null && boxCollider.IsCreated)
                 {
                     var transform = new RigidTransform { pos = new float3(Circle.layout.position, 0f), rot = quaternion.identity };
-                    if (boxCollider.Value.CalculateAabb().Contains(circleCollider.Value.CalculateAabb(transform)))
+                    if (boxCollider.Value.CalculateAabb().Overlaps(circleCollider.Value.CalculateAabb(transform)))
                     {
                         var unclampledMouvement = (Center - (float2)e.localMousePosition) / (new float2(this.layout.width, this.layout.height) / 2f);
                         Mouvement = math.clamp(unclampledMouvement, -1f, 1f);

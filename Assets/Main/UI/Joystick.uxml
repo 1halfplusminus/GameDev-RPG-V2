@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <RPG.UI.Joystick style="flex-grow: 1; background-color: rgba(243, 226, 226, 0.16); justify-content: center; align-items: stretch; min-width: 200px; min-height: 200px;">
-        <ui:VisualElement name="Circle" style="border-top-left-radius: 100%; border-bottom-left-radius: 100%; border-top-right-radius: 100%; border-bottom-right-radius: 100%; width: auto; height: auto; flex-grow: 1; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-color: rgb(147, 147, 147); margin-left: 25%; margin-right: 25%; margin-top: 25%; margin-bottom: 25%;" />
+        <ui:VisualElement name="Circle" style="border-top-left-radius: 100%; border-bottom-left-radius: 100%; border-top-right-radius: 100%; border-bottom-right-radius: 100%; width: auto; height: auto; flex-grow: 1; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; background-color: rgb(147, 147, 147); margin-left: 35%; margin-right: 35%; margin-top: 35%; margin-bottom: 35%;" />
     </RPG.UI.Joystick>
 </ui:UXML>

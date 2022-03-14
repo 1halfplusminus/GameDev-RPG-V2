@@ -1573,7 +1573,7 @@ TerrainCollider:
   m_Material: {fileID: 0}
   m_Enabled: 1
   m_TerrainData: {fileID: 15600000, guid: 1ee6e2d4239a11668b52b74edc7af1af, type: 2}
-  m_EnableTreeColliders: 1
+  m_EnableTreeColliders: 0
 --- !u!218 &1255288397
 Terrain:
   m_ObjectHideFlags: 0
@@ -2846,21 +2846,25 @@ PrefabInstance:
       propertyPath: m_NavMeshData
       value: 
       objectReference: {fileID: 23800000, guid: 730916781e6584278a1c55a260a9d93b, type: 2}
+    - target: {fileID: 7839285736255231638, guid: 5f0ed456db0002bd086c168ff2a85a9c, type: 3}
+      propertyPath: m_LayerMask.m_Bits
+      value: 39
+      objectReference: {fileID: 0}
     - target: {fileID: 7839285736255231639, guid: 5f0ed456db0002bd086c168ff2a85a9c, type: 3}
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7839285736255231639, guid: 5f0ed456db0002bd086c168ff2a85a9c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 73.37501
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7839285736255231639, guid: 5f0ed456db0002bd086c168ff2a85a9c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.0054388046
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7839285736255231639, guid: 5f0ed456db0002bd086c168ff2a85a9c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 30.226685
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7839285736255231639, guid: 5f0ed456db0002bd086c168ff2a85a9c, type: 3}
       propertyPath: m_LocalRotation.w

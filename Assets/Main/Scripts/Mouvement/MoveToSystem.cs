@@ -172,7 +172,7 @@ namespace RPG.Mouvement
                     else
                     {
                         // agent.CalculatePath((float3)agent.transform.position + moveTo.Direction, agent.path);
-                        var newPosition = moveTo.Direction + (agent.stoppingDistance * 2f * math.sign(moveTo.Direction));
+                        var newPosition = moveTo.Direction + (agent.stoppingDistance * 1.1f * math.sign(moveTo.Direction));
                         moveTo.Position = newPosition;
                         agent.SetDestination((float3)agent.transform.position + newPosition);
                         rotation.Value = agent.transform.rotation;

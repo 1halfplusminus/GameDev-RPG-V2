@@ -168,6 +168,7 @@ namespace RPG.UI
             .WithoutBurst()
             .Run();
             Entities
+            .WithNone<DisabledControl>()
             .ForEach((ref MoveTo moveTo, ref Translation translation, in DeltaTime deltaTime, in Mouvement.Mouvement mouvement, in InGameUIController c, in Health playerHealth, in BaseStats baseStats, in ExperiencePoint experience) =>
             {
                 c.SetPlayerHealth(playerHealth, baseStats.Level, baseStats.ProgressionAsset);

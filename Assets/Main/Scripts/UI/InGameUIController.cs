@@ -49,24 +49,13 @@ namespace RPG.UI
             if (!Joystick.Mouvement.Equals(float2.zero))
             {
 
-                // var rotation = quaternion.Euler(0f, Camera.main.transform.rotation.y, 0f);
-                var direction = new float3(-Joystick.Mouvement.x, 0f, Joystick.Mouvement.y);
-                // direction = math.rotate(rotation, direction);
-                var right = math.sign(Camera.main.transform.right);
-                var forward = math.sign(Camera.main.transform.forward);
-                direction = (-Joystick.Mouvement.x * right) + (Joystick.Mouvement.y * forward);
+                var right = math.normalize(Camera.main.transform.right);
+                var forward = math.normalize(Camera.main.transform.forward);
+                var direction = (-Joystick.Mouvement.x * right) + (Joystick.Mouvement.y * forward);
                 moveTo.Direction = direction;
                 moveTo.UseDirection = true;
                 moveTo.SpeedPercent = 1f;
                 moveTo.Stopped = false;
-                // var worldPosition = translation.Value + (direction * mouvement.Speed) + moveTo.StoppingDistance;
-                // NavMesh.SamplePosition(worldPosition, out var hit, 5f, NavMesh.AllAreas);
-                // if (hit.hit)
-                // {
-                //     moveTo.SpeedPercent = 1f;
-                //     moveTo.Position = hit.position;
-                // }
-
             }
         }
         public void SetLevel(BaseStats baseStats)
