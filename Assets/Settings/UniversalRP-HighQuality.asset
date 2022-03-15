@@ -66,6 +66,6 @@ MonoBehaviour:
   m_LocalShadowsAtlasResolution: 256
   m_MaxPixelLights: 0
   m_ShadowAtlasResolution: 256
-  m_ShaderVariantLogLevel: 1
+  m_ShaderVariantLogLevel: 0
   m_VolumeFrameworkUpdateMode: 0
   m_ShadowCascades: 1

@@ -171,34 +171,39 @@ namespace RPG.Combat
 
     }
     [UpdateAfter(typeof(MoveTowardTargetSystem))]
-    // [UpdateAfter(typeof(PlayerControlledCombatTargettingSystem))]
     [UpdateInGroup(typeof(CombatSystemGroup))]
-
     public class FightSystem : SystemBase
     {
-        EntityCommandBufferSystem beginPresentationEntityCommandBufferSystem;
+        EntityCommandBufferSystem entityCommandBufferSystem;
 
         protected override void OnCreate()
         {
             base.OnCreate();
-            beginPresentationEntityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
         {
-            var commandBuffer = beginPresentationEntityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
-            Entities.ForEach((int entityInQueryIndex, Entity e, ref Fighter fighter) =>
+            var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
+            Entities
+            .WithNone<IsFighting>()
+            .ForEach((int entityInQueryIndex, Entity e, ref Fighter fighter) =>
             {
                 if (fighter.Target != Entity.Null)
                 {
                     commandBuffer.AddComponent<IsFighting>(entityInQueryIndex, e);
                 }
-                else
-                {
-                    fighter.TargetInRange = false;
-                    commandBuffer.RemoveComponent<IsFighting>(entityInQueryIndex, e);
-                }
             }).ScheduleParallel();
-            beginPresentationEntityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+            Entities
+            .WithAll<IsFighting>()
+           .ForEach((int entityInQueryIndex, Entity e, ref Fighter fighter) =>
+           {
+               if (fighter.Target == Entity.Null)
+               {
+                   fighter.TargetInRange = false;
+                   commandBuffer.RemoveComponent<IsFighting>(entityInQueryIndex, e);
+               }
+           }).ScheduleParallel();
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
             ThrottleAttack();
 
         }

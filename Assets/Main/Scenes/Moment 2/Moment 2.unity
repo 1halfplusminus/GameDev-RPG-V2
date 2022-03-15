@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1289632737544587522, guid: f677d908c5893e8d292b07de062d8f50, type: 3}
-  m_IndirectSpecularColor: {r: 0.15896629, g: 0.5175354, b: 1.0392404, a: 1}
+  m_IndirectSpecularColor: {r: 0.1605202, g: 0.5180438, b: 1.0452659, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 07912a823ee0ce458932c78522629250, type: 2}
+  m_LightingDataAsset: {fileID: 112000002, guid: 1461cb6589db9c93ca8b06e4f6ce1205, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 3e141999f5a9e3bd5b89939bff17fff8, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -371,6 +371,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2045958737}
     m_Modifications:
+    - target: {fileID: 6131978153201818764, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6354086139607555010, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
       propertyPath: m_Name
       value: Montain (6)
@@ -469,9 +473,61 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2045958737}
     m_Modifications:
+    - target: {fileID: 6131978153201818764, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Carve
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6131978153201818764, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Shape
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6131978153201818764, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Extents.x
+      value: 10.095
+      objectReference: {fileID: 0}
     - target: {fileID: 6354086139607555010, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
       propertyPath: m_Name
       value: Montain (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6354086139607555010, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130374545739419172, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_ShapeType
+      value: 31
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130374545739419172, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Capsule.Axis
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130374545739419172, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_SphereRadius
+      value: 9.555686
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130374545739419172, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Cylinder.Axis
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130374545739419172, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Capsule.Height
+      value: 8.412849
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130374545739419172, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Capsule.Radius
+      value: 9.555686
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130374545739419172, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Cylinder.Height
+      value: 8.412849
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130374545739419172, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Cylinder.Radius
+      value: 9.555686
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130374545739419172, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_PrimitiveSize.z
+      value: 8.412849
       objectReference: {fileID: 0}
     - target: {fileID: 7130374545739419174, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
       propertyPath: m_RootOrder
@@ -521,7 +577,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6131978153201818764, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
 --- !u!4 &122503296 stripped
 Transform:
@@ -597,6 +654,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2045958737}
     m_Modifications:
+    - target: {fileID: 6131978153201818764, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6354086139607555010, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
       propertyPath: m_Name
       value: Montain (2)
@@ -667,6 +728,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2045958737}
     m_Modifications:
+    - target: {fileID: 6131978153201818764, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6354086139607555010, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
       propertyPath: m_Name
       value: Montain (3)
@@ -1131,7 +1196,7 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 844137823}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 1
   m_Extents: {x: 9.556001, y: 6.932, z: 10.095}
@@ -1708,6 +1773,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2045958737}
     m_Modifications:
+    - target: {fileID: 6131978153201818764, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6354086139607555010, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
       propertyPath: m_Name
       value: Montain (7)
@@ -1932,7 +2001,7 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1653517432}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 1
   m_Extents: {x: 9.556001, y: 6.932, z: 10.095}
@@ -2695,9 +2764,29 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2045958737}
     m_Modifications:
+    - target: {fileID: 6131978153201818764, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6354086139607555010, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
       propertyPath: m_Name
       value: Montain
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130374545739419172, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_ShapeType
+      value: 31
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130374545739419172, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Cylinder.Axis
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130374545739419172, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Cylinder.Height
+      value: 20.190088
+      objectReference: {fileID: 0}
+    - target: {fileID: 7130374545739419172, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
+      propertyPath: m_Cylinder.Radius
+      value: 9.555686
       objectReference: {fileID: 0}
     - target: {fileID: 7130374545739419174, guid: d27c13e5c29e439ad9b7103427babede, type: 3}
       propertyPath: m_RootOrder
@@ -2846,10 +2935,6 @@ PrefabInstance:
       propertyPath: m_NavMeshData
       value: 
       objectReference: {fileID: 23800000, guid: 730916781e6584278a1c55a260a9d93b, type: 2}
-    - target: {fileID: 7839285736255231638, guid: 5f0ed456db0002bd086c168ff2a85a9c, type: 3}
-      propertyPath: m_LayerMask.m_Bits
-      value: 39
-      objectReference: {fileID: 0}
     - target: {fileID: 7839285736255231639, guid: 5f0ed456db0002bd086c168ff2a85a9c, type: 3}
       propertyPath: m_RootOrder
       value: 0

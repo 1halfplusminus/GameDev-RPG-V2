@@ -169,12 +169,13 @@ namespace RPG.UI
             .Run();
             Entities
             .WithNone<DisabledControl>()
-            .ForEach((ref MoveTo moveTo, ref Translation translation, in DeltaTime deltaTime, in Mouvement.Mouvement mouvement, in InGameUIController c, in Health playerHealth, in BaseStats baseStats, in ExperiencePoint experience) =>
+            .ForEach((Entity e, ref MoveTo moveTo, ref Fighter fighter, in InGameUIController c, in Health playerHealth, in BaseStats baseStats, in ExperiencePoint experience) =>
             {
                 c.SetPlayerHealth(playerHealth, baseStats.Level, baseStats.ProgressionAsset);
                 c.SetExperiencePoint(experience.Value);
                 c.SetLevel(baseStats);
-                c.ProcessMouvement(ref moveTo, ref translation, deltaTime, mouvement);
+                c.ProcessMouvement(ref moveTo, ref fighter);
+                c.ProcessAtackButton(cb, e);
             })
             .WithoutBurst()
             .Run();
@@ -203,6 +204,8 @@ namespace RPG.UI
                }
            })
            .Schedule();
+
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
     [UpdateInGroup(typeof(UISystemGroup))]

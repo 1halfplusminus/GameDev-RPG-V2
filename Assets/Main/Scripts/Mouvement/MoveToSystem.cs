@@ -149,7 +149,7 @@ namespace RPG.Mouvement
             .WithChangeFilter<MoveTo>()
             .WithReadOnly(lookAts)
             .WithStoreEntityQueryInField(ref navMeshAgentQueries)
-            .ForEach((Entity e, NavMeshAgent agent, ref Translation position, ref Mouvement mouvement, ref MoveTo moveTo, ref Rotation rotation, in LocalToWorld localToWorld) =>
+            .ForEach((Entity e, DeltaTime dt, NavMeshAgent agent, ref Translation position, ref Mouvement mouvement, ref MoveTo moveTo, ref Rotation rotation, in LocalToWorld localToWorld) =>
             {
                 if (agent.isOnNavMesh)
                 {
@@ -171,13 +171,18 @@ namespace RPG.Mouvement
                     }
                     else
                     {
-                        // agent.CalculatePath((float3)agent.transform.position + moveTo.Direction, agent.path);
-                        var newPosition = moveTo.Direction + (agent.stoppingDistance * 1.1f * math.sign(moveTo.Direction));
-                        moveTo.Position = newPosition;
-                        agent.SetDestination((float3)agent.transform.position + newPosition);
+                        moveTo.Direction = math.normalizesafe(moveTo.Direction);
+                        // agent.destination = (float3)agent.transform.position + moveTo.Direction;
+                        var newPosition = moveTo.Direction + (agent.stoppingDistance * math.sign(moveTo.Direction));
+                        NavMesh.SamplePosition((float3)agent.transform.position + newPosition, out var hit, 10f, NavMesh.AllAreas);
+                        var path = new NavMeshPath();
+                        agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+                        agent.CalculatePath(hit.position, path);
+                        agent.path = path;
+                        agent.destination = agent.pathEndPosition;
+                        agent.Move((agent.transform.position - agent.nextPosition) * dt.Value);
+                        moveTo.Position = agent.transform.position;
                         rotation.Value = agent.transform.rotation;
-                        // agent.Move(moveTo.Direction);
-                        // rotation.Value = quaternion.LookRotationSafe(heading, math.up());
                         moveTo.Direction = float3.zero;
                         moveTo.UseDirection = false;
                         mouvement.Velocity = new Velocity

@@ -103,7 +103,6 @@ namespace RPG.Core
     [UpdateBefore(typeof(RaycastSystem))]
     public class EndSimulationRaycastHitSystem : SystemBase
     {
-        EndSimulationEntityCommandBufferSystem commandBufferSystem;
         protected override void OnCreate()
         {
             base.OnCreate();

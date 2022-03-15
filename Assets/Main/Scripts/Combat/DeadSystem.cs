@@ -3,6 +3,7 @@ using Unity.Animation;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
+using Unity.Transforms;
 
 namespace RPG.Combat
 {
@@ -32,7 +33,6 @@ namespace RPG.Combat
             {
                 if (health.Value <= 0)
                 {
-                    cbp.AddComponent<PhysicsExclude>(entityInQueryIndex, e);
                     cbp.AddComponent<IsDeadTag>(entityInQueryIndex, e);
                     cbp.AddComponent<Died>(entityInQueryIndex, e);
                 }
@@ -45,6 +45,26 @@ namespace RPG.Combat
             })
             .ScheduleParallel();
 
+            Entities
+            .WithAll<IsDeadTag>()
+            .WithNone<PhysicsExclude>()
+            .ForEach((Entity e, int entityInQueryIndex) =>
+            {
+                cbp.AddComponent<PhysicsExclude>(entityInQueryIndex, e);
+            })
+            .ScheduleParallel();
+            Entities
+            .WithAll<IsDeadTag>()
+            .WithNone<PhysicsExclude>()
+            .ForEach((Entity e, int entityInQueryIndex, DynamicBuffer<Child> children) =>
+            {
+                for (var i = 0; i < children.Length; i++)
+                {
+                    cbp.AddComponent<PhysicsExclude>(entityInQueryIndex, children[i].Value);
+                }
+
+            })
+            .ScheduleParallel();
             commandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }

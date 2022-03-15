@@ -1,4 +1,6 @@
 
+using RPG.Combat;
+using RPG.Control;
 using RPG.Core;
 using RPG.Mouvement;
 using RPG.Stats;
@@ -24,6 +26,9 @@ namespace RPG.UI
         public bool InventoryClicked;
         public bool SettingClicked;
         private Joystick Joystick;
+
+        private Button AttackClosestTargetButton;
+        private bool AttackClosestTargetClicked;
         public void Init(VisualElement root)
         {
             PlayerHealth = root.Q<Label>("Health");
@@ -34,6 +39,11 @@ namespace RPG.UI
             Inventory = root.Q<Button>("InventoryButton");
             Joystick = root.Q<Joystick>();
             Setting = root.Q<Button>("SettingButton");
+            AttackClosestTargetButton = root.Q<Button>("ActionButton");
+            AttackClosestTargetButton.clicked += () =>
+            {
+                AttackClosestTargetClicked = true;
+            };
             Setting.clicked += () =>
             {
                 SettingClicked = true;
@@ -43,19 +53,42 @@ namespace RPG.UI
                 InventoryClicked = true;
             };
         }
-        public void ProcessMouvement(ref MoveTo moveTo, ref Translation translation, in DeltaTime deltaTime, in Mouvement.Mouvement mouvement)
+        public void ProcessAtackButton(EntityCommandBuffer cb, Entity e)
         {
-            Debug.Log($"Move To {Joystick.Mouvement}");
+            if (AttackClosestTargetClicked)
+            {
+                cb.AddComponent<AttackClosestTarget>(e);
+                AttackClosestTargetClicked = false;
+            }
+        }
+        private float3 roundToClosestNighty(float3 vector)
+        {
+            Quaternion q = quaternion.LookRotationSafe(vector, math.up());
+            var vec = q.eulerAngles;
+            var x = Mathf.Round(vec.x / 90) * 90;
+            var y = Mathf.Round(vec.y / 90) * 90;
+            var z = Mathf.Round(vec.z / 90) * 90;
+            var closestAngle = quaternion.Euler(x, y, z);
+            var final = math.rotate(closestAngle, vector);
+            return vector - final;
+        }
+        public void ProcessMouvement(ref MoveTo moveTo, ref Fighter fighter)
+        {
             if (!Joystick.Mouvement.Equals(float2.zero))
             {
 
-                var right = math.normalize(Camera.main.transform.right);
-                var forward = math.normalize(Camera.main.transform.forward);
-                var direction = (-Joystick.Mouvement.x * right) + (Joystick.Mouvement.y * forward);
-                moveTo.Direction = direction;
+                var vec = Camera.main.transform.rotation.eulerAngles;
+                var y = Mathf.Round(vec.y / 90) * 90;
+                var direction = new float3(-Joystick.Mouvement.x, 0f, Joystick.Mouvement.y);
+                // var right = math.normalize(roundToClosestNighty(Camera.main.transform.right));
+                // var forward = math.normalize(roundToClosestNighty(Camera.main.transform.forward));
+                // var direction = (-Joystick.Mouvement.x * right) + (Joystick.Mouvement.y * forward);
+                moveTo.Direction = math.rotate(Quaternion.Euler(0, y, 0), direction);
                 moveTo.UseDirection = true;
                 moveTo.SpeedPercent = 1f;
                 moveTo.Stopped = false;
+                fighter.MoveTowardTarget = false;
+                fighter.Target = Entity.Null;
             }
         }
         public void SetLevel(BaseStats baseStats)

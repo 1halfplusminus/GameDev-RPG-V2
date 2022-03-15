@@ -5,12 +5,114 @@ using RPG.Combat;
 using UnityEngine.AI;
 using Unity.Transforms;
 using Unity.Mathematics;
+using Unity.Physics.Systems;
+using Unity.Jobs;
+using Unity.Physics;
+using Unity.Collections;
+using Unity.Physics.Authoring;
+using Unity.Assertions;
 
 namespace RPG.Control
 {
+    public struct ComponentClosestHitCollector<T, V> : ICollector<T> where T : struct, IQueryResult where V : struct, IComponentData
+    {
+        [ReadOnly]
+        public ComponentDataFromEntity<V> ComponentDataFromEntity;
+        public bool EarlyOutOnFirstHit => false;
+        public float MaxFraction { get; private set; }
+        public int NumHits { get; private set; }
+
+        private T m_ClosestHit;
+        public T ClosestHit => m_ClosestHit;
+
+        public ComponentClosestHitCollector(float maxFraction, [ReadOnly] ComponentDataFromEntity<V> datas)
+        {
+            ComponentDataFromEntity = datas;
+            MaxFraction = maxFraction;
+            m_ClosestHit = default(T);
+            NumHits = 0;
+        }
+
+        #region ICollector
+
+        public bool AddHit(T hit)
+        {
+            Assert.IsTrue(ComponentDataFromEntity.HasComponent(hit.Entity));
+            Assert.IsTrue(hit.Fraction <= MaxFraction);
+            MaxFraction = hit.Fraction;
+            m_ClosestHit = hit;
+            NumHits = 1;
+            return true;
+        }
+
+        #endregion
+    }
     public struct PlayerControlled : IComponentData { }
     public struct DisabledControl : IComponentData { }
     public struct HasPathToTarget : IComponentData { }
+    public struct AttackClosestTarget : IComponentData { }
+
+    [UpdateInGroup(typeof(ControlSystemGroup))]
+    // [UpdateBefore(typeof(NoInteractionSystem))]
+    public class AttackClosestTargetSystem : SystemBase
+    {
+        EntityCommandBufferSystem entityCommandBufferSystem;
+        BuildPhysicsWorld buildPhysicsWorld;
+        StepPhysicsWorld stepPhysicsWorld;
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
+            buildPhysicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
+            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        }
+        protected override void OnUpdate()
+        {
+            Dependency = JobHandle.CombineDependencies(Dependency, buildPhysicsWorld.GetOutputDependency(), stepPhysicsWorld.GetOutputDependency());
+            var cb = entityCommandBufferSystem.CreateCommandBuffer();
+            var cbp = cb.AsParallelWriter();
+            var physicsWorld = buildPhysicsWorld.PhysicsWorld;
+            var collisionWorld = physicsWorld.CollisionWorld;
+            var category0 = new PhysicsCategoryTags
+            {
+                Category00 = true
+            };
+            var category8 = new PhysicsCategoryTags
+            {
+                Category08 = true
+            };
+            var hittables = GetComponentDataFromEntity<Hittable>(true);
+            Entities
+            .WithNone<DisabledControl>()
+            .WithReadOnly(hittables)
+            .WithReadOnly(collisionWorld)
+            .WithAll<AttackClosestTarget>()
+            .ForEach((int entityInQueryIndex, Entity e, ref Fighter fighter, in Translation translation, in Raycast raycast) =>
+            {
+
+                var pointDistanceInput = new PointDistanceInput
+                {
+                    Position = translation.Value,
+                    MaxDistance = 12f,
+                    Filter = new CollisionFilter { BelongsTo = category0.Value, CollidesWith = category8.Value }
+                };
+                var hits = new ComponentClosestHitCollector<DistanceHit, Hittable>(100f, hittables);
+                collisionWorld.CalculateDistance(pointDistanceInput, ref hits);
+                var hit = hits.ClosestHit;
+                if (hit.Entity != Entity.Null)
+                {
+                    fighter.Target = hit.Entity;
+                    fighter.MoveTowardTarget = true;
+                    fighter.TargetFoundThisFrame = 1;
+                    // cbp.AddComponent<IsFighting>(entityInQueryIndex, e);
+                }
+                cbp.RemoveComponent<AttackClosestTarget>(entityInQueryIndex, e);
+            }).ScheduleParallel();
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+        }
+    }
+
     [UpdateInGroup(typeof(ControlSystemGroup))]
     [UpdateAfter(typeof(MovementClickInteractionSystem))]
     public class CombatClickInteractionSystem : SystemBase
@@ -88,7 +190,7 @@ namespace RPG.Control
             var cbp = cb.AsParallelWriter();
 
             Entities
-            .WithAny<DisabledControl, InteractWithUI>()
+            .WithAny<DisabledControl>()
             .ForEach((ref MoveTo moveTo) =>
             {
                 moveTo.Stopped = true;

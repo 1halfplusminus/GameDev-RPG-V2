@@ -31,7 +31,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement picking-mode="Ignore" style="flex-direction: row; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; flex-grow: 1; align-items: flex-end; flex-shrink: 1; justify-content: space-between; flex-wrap: nowrap;">
-            <ui:VisualElement style="flex-grow: 1; flex-direction: row; align-items: flex-end; justify-content: flex-start; flex-basis: 20%; flex-wrap: nowrap;">
+            <ui:VisualElement picking-mode="Ignore" style="flex-grow: 1; flex-direction: row; align-items: flex-end; justify-content: flex-start; flex-basis: 20%; flex-wrap: nowrap;">
                 <ui:VisualElement style="flex-grow: 0; flex-direction: row; align-items: stretch; min-width: 300px; min-height: 300px; max-width: 300px; max-height: 300px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;">
                     <ui:Instance template="Joystick" name="Joystick" style="min-width: auto; min-height: auto; flex-grow: 1; align-items: stretch; flex-direction: column;" />
                 </ui:VisualElement>

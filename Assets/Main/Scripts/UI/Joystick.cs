@@ -50,6 +50,11 @@ namespace RPG.UI
             RegisterCallback<MouseMoveEvent>((e) =>
             {
                 InitCollider();
+#if !UNITY_ANDROID
+                    if(e.clickCount == 0){
+                        break;
+                    }
+#endif
                 if (Circle != null && boxCollider.IsCreated)
                 {
                     var transform = new RigidTransform { pos = new float3(Circle.layout.position, 0f), rot = quaternion.identity };
@@ -59,7 +64,8 @@ namespace RPG.UI
                         Mouvement = math.clamp(unclampledMouvement, -1f, 1f);
                         Circle.style.left = e.localMousePosition.x - Circle.layout.xMax / 2f;
                         Circle.style.top = e.localMousePosition.y - Circle.layout.yMax / 2f;
-                        if (math.abs(Mouvement.x) < 0.1f)
+                        var ignoreValue = 0.4f;
+                        if (math.abs(Mouvement.x) < ignoreValue)
                         {
                             Mouvement.x = 0f;
                         }

@@ -3,7 +3,7 @@
     "Components": [
         {
             "$type": "Unity.Build.Common.GeneralSettings, Unity.Build",
-            "ProductName": "ProductName",
+            "ProductName": "Morie Aventure",
             "CompanyName": "CompanyName",
             "Version": "1.0.0"
         },

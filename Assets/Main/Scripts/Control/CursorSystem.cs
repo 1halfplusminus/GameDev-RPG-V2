@@ -105,13 +105,11 @@ namespace RPG.Control
     [UpdateInGroup(typeof(ControlSystemGroup))]
     public class PlayerControlledCombatTargettingSystem : SystemBase
     {
-
-
         protected override void OnUpdate()
         {
-            //FIXME: Should be in another system
 
             Entities
+            .WithNone<InteractWithUI>()
             .ForEach((Entity e, ref Fighter fighter, in DynamicBuffer<HittedByRaycastEvent> rayHits, in MouseClick mouseClick) =>
             {
                 fighter.TargetFoundThisFrame = 0;
@@ -135,19 +133,3 @@ namespace RPG.Control
         }
     }
 }
-// FIXME: To delete
-// if (!textures.ContainsKey(visibleCursor.Cursor))
-// {
-//     Texture2D texCopy = new Texture2D(
-//         cursorRef.Cursor.Value.Texture.Width,
-//         cursorRef.Cursor.Value.Texture.Height,
-//         cursorRef.Cursor.Value.Texture.Format,
-//         false
-//     );
-//     texCopy.SetPixelData(cursorRef.Cursor.Value.Texture.Data.ToArray(), 0);
-//     texCopy.Apply();
-//     textures.Add(visibleCursor.Cursor, texCopy);
-// }
-// var text = textures[visibleCursor.Cursor];
-// Cursor.SetCursor(text, cursorRef.Cursor.Value.HotSpot, CursorMode.Auto);
-// visibleCursor.CurrentCursor = visibleCursor.Cursor;
