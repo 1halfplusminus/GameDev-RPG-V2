@@ -174,7 +174,8 @@ namespace RPG.UI
                 c.SetPlayerHealth(playerHealth, baseStats.Level, baseStats.ProgressionAsset);
                 c.SetExperiencePoint(experience.Value);
                 c.SetLevel(baseStats);
-                c.ProcessMouvement(ref moveTo, ref fighter);
+                var lookAt = HasComponent<LookAt>(e) ? GetComponent<LookAt>(e) : default(LookAt);
+                c.ProcessMouvement(ref moveTo, ref fighter, lookAt, e, cb);
                 c.ProcessAtackButton(cb, e);
             })
             .WithoutBurst()

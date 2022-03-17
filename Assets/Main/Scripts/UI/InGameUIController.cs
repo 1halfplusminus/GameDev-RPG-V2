@@ -1,4 +1,4 @@
-
+using Unity.Collections.LowLevel.Unsafe;
 using RPG.Combat;
 using RPG.Control;
 using RPG.Core;
@@ -61,18 +61,8 @@ namespace RPG.UI
                 AttackClosestTargetClicked = false;
             }
         }
-        private float3 roundToClosestNighty(float3 vector)
-        {
-            Quaternion q = quaternion.LookRotationSafe(vector, math.up());
-            var vec = q.eulerAngles;
-            var x = Mathf.Round(vec.x / 90) * 90;
-            var y = Mathf.Round(vec.y / 90) * 90;
-            var z = Mathf.Round(vec.z / 90) * 90;
-            var closestAngle = quaternion.Euler(x, y, z);
-            var final = math.rotate(closestAngle, vector);
-            return vector - final;
-        }
-        public void ProcessMouvement(ref MoveTo moveTo, ref Fighter fighter)
+
+        public unsafe void ProcessMouvement(ref MoveTo moveTo, ref Fighter fighter, LookAt lookAt, Entity e, EntityCommandBuffer commandBuffer)
         {
             if (!Joystick.Mouvement.Equals(float2.zero))
             {
@@ -80,15 +70,14 @@ namespace RPG.UI
                 var vec = Camera.main.transform.rotation.eulerAngles;
                 var y = Mathf.Round(vec.y / 90) * 90;
                 var direction = new float3(-Joystick.Mouvement.x, 0f, Joystick.Mouvement.y);
-                // var right = math.normalize(roundToClosestNighty(Camera.main.transform.right));
-                // var forward = math.normalize(roundToClosestNighty(Camera.main.transform.forward));
-                // var direction = (-Joystick.Mouvement.x * right) + (Joystick.Mouvement.y * forward);
                 moveTo.Direction = math.rotate(Quaternion.Euler(0, y, 0), direction);
                 moveTo.UseDirection = true;
                 moveTo.SpeedPercent = 1f;
                 moveTo.Stopped = false;
                 fighter.MoveTowardTarget = false;
                 fighter.Target = Entity.Null;
+                lookAt.Entity = Entity.Null;
+                commandBuffer.AddComponent(e, lookAt);
             }
         }
         public void SetLevel(BaseStats baseStats)

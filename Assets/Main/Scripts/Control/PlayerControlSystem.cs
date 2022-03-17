@@ -29,7 +29,7 @@ namespace RPG.Control
         {
             ComponentDataFromEntity = datas;
             MaxFraction = maxFraction;
-            m_ClosestHit = default(T);
+            m_ClosestHit = default;
             NumHits = 0;
         }
 
@@ -37,11 +37,15 @@ namespace RPG.Control
 
         public bool AddHit(T hit)
         {
-            Assert.IsTrue(ComponentDataFromEntity.HasComponent(hit.Entity));
-            Assert.IsTrue(hit.Fraction <= MaxFraction);
-            MaxFraction = hit.Fraction;
-            m_ClosestHit = hit;
-            NumHits = 1;
+            var hasComponent = ComponentDataFromEntity.HasComponent(hit.Entity);
+            Assert.IsTrue(hasComponent);
+            if (hasComponent)
+            {
+                Assert.IsTrue(hit.Fraction <= MaxFraction);
+                MaxFraction = hit.Fraction;
+                m_ClosestHit = hit;
+                NumHits = 1;
+            }
             return true;
         }
 
@@ -82,22 +86,22 @@ namespace RPG.Control
             {
                 Category08 = true
             };
-            var hittables = GetComponentDataFromEntity<Hittable>(true);
+
             Entities
             .WithNone<DisabledControl>()
-            .WithReadOnly(hittables)
             .WithReadOnly(collisionWorld)
             .WithAll<AttackClosestTarget>()
             .ForEach((int entityInQueryIndex, Entity e, ref Fighter fighter, in Translation translation, in Raycast raycast) =>
             {
-
+                var hittables = GetComponentDataFromEntity<Hittable>(true);
+                var maxDistance = 8f;
                 var pointDistanceInput = new PointDistanceInput
                 {
                     Position = translation.Value,
-                    MaxDistance = 12f,
+                    MaxDistance = maxDistance,
                     Filter = new CollisionFilter { BelongsTo = category0.Value, CollidesWith = category8.Value }
                 };
-                var hits = new ComponentClosestHitCollector<DistanceHit, Hittable>(100f, hittables);
+                var hits = new ComponentClosestHitCollector<DistanceHit, Hittable>(maxDistance + 4f, hittables);
                 collisionWorld.CalculateDistance(pointDistanceInput, ref hits);
                 var hit = hits.ClosestHit;
                 if (hit.Entity != Entity.Null)
@@ -105,7 +109,12 @@ namespace RPG.Control
                     fighter.Target = hit.Entity;
                     fighter.MoveTowardTarget = true;
                     fighter.TargetFoundThisFrame = 1;
-                    // cbp.AddComponent<IsFighting>(entityInQueryIndex, e);
+                    if (HasComponent<LookAt>(e))
+                    {
+                        var lookAt = GetComponent<LookAt>(e);
+                        lookAt.Entity = hit.Entity;
+                        cbp.AddComponent(entityInQueryIndex, e, lookAt);
+                    }
                 }
                 cbp.RemoveComponent<AttackClosestTarget>(entityInQueryIndex, e);
             }).ScheduleParallel();
