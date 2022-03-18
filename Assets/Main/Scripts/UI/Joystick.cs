@@ -51,9 +51,10 @@ namespace RPG.UI
             {
                 InitCollider();
 #if !UNITY_ANDROID
-                    if(e.clickCount == 0){
-                        break;
-                    }
+                if (e.clickCount == 0)
+                {
+                    return;
+                }
 #endif
                 if (Circle != null && boxCollider.IsCreated)
                 {

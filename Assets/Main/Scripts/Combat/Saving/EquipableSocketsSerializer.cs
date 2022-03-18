@@ -68,7 +68,7 @@ namespace RPG.Combat
                         var socket = equipableSockets.GetSocketForWeapon(weapon);
                         em.AddComponentData(socket, new EquipInSocket { Socket = socket, Weapon = weaponEntity });
                     }
-                    Addressables.Release(weaponAuthoringHandle);
+                    // Addressables.Release(weaponAuthoringHandle);
                 }
 
             }
