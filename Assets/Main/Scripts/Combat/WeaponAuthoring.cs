@@ -8,7 +8,7 @@ namespace RPG.Combat
     {
         public Unity.Entities.Hash128 GUID;
 
-        public FixedString64 Address;
+        public FixedString64Bytes Address;
 
     }
     public class WeaponAuthoring : MonoBehaviour

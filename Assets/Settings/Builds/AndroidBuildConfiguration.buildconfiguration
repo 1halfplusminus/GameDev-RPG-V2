@@ -43,13 +43,13 @@
         },
         {
             "$type": "Unity.Build.Android.AndroidArchitectures, Unity.Build.Android",
-            "Architectures": 3
+            "Architectures": 4294967295
         },
         {
             "$type": "Unity.Build.Classic.ClassicBuildProfile, Unity.Build.Classic",
             "$version": 1,
             "Platform": "android",
-            "Configuration": 2
+            "Configuration": 3
         }
     ]
 }

@@ -37,7 +37,7 @@ namespace RPG.Combat
         }
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class ExplodeOnHitSystem : SystemBase
+    public partial class ExplodeOnHitSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         StepPhysicsWorld stepPhysicsWorld;
@@ -50,9 +50,12 @@ namespace RPG.Combat
             stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
             buildPhysicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
         }
+        protected override void OnStartRunning(){
+            base.OnStartRunning();
+            this.RegisterPhysicsRuntimeSystemReadOnly();
+        }
         protected override void OnUpdate()
         {
-            Dependency = JobHandle.CombineDependencies(stepPhysicsWorld.GetOutputDependency(), buildPhysicsWorld.GetOutputDependency(), Dependency);
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
             var collisionWorld = buildPhysicsWorld.PhysicsWorld.CollisionWorld;

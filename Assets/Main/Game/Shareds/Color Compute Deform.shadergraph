@@ -384,8 +384,6 @@
         "m_GuidSerialized": "236e4532-a418-4afa-a88c-a0adc75e6eb2"
     },
     "m_Name": "Color",
-    "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Color",
     "m_DefaultReferenceName": "_Color",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,

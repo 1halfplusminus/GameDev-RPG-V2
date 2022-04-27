@@ -13,7 +13,7 @@ namespace RPG.UI
 {
     public struct EnableControl : IComponentData
     {
-        public FixedList128<Entity> Entities;
+        public FixedList128Bytes<Entity> Entities;
     }
 
     public struct IsLoading : IComponentData { }
@@ -57,7 +57,7 @@ namespace RPG.UI
 
     }
     [UpdateInGroup(typeof(UISystemGroup))]
-    public class LoadingUISystem : SystemBase
+    public partial class LoadingUISystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery anySceneLoadingQuery;
@@ -145,7 +145,7 @@ namespace RPG.UI
         }
     }
     [UpdateInGroup(typeof(UISystemGroup))]
-    public class FadeSystem : SystemBase
+    public partial class FadeSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()
@@ -192,7 +192,7 @@ namespace RPG.UI
         }
     }
     [UpdateInGroup(typeof(UISystemGroup))]
-    public class ShowHideUISystem : SystemBase
+    public partial class ShowHideUISystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()

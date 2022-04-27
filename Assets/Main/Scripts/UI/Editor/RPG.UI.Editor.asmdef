@@ -2,9 +2,12 @@
     "name": "RPG.UI.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:4836d2d95d187d5ffbc37f56dc6c1e4d",
-        "GUID:d1ceffecba9e097059c6f1fbd2eaea83",
-        "GUID:69448af7b92c7f342b298e06a37122aa"
+        "RPG.Core.Editor",
+        "Unity.Addressables.Editor",
+        "RPG.Core",
+        "RPG.UI",
+        "UnityEngine.UIElementsModule",
+        "UnityEditor.UIElementsModule"
     ],
     "includePlatforms": [
         "Editor"

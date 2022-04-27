@@ -58,7 +58,7 @@ namespace RPG.Control
 
     [UpdateInGroup(typeof(ControlSystemGroup))]
     // [UpdateBefore(typeof(NoInteractionSystem))]
-    public class AttackClosestTargetSystem : SystemBase
+    public partial class AttackClosestTargetSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         BuildPhysicsWorld buildPhysicsWorld;
@@ -71,9 +71,13 @@ namespace RPG.Control
             buildPhysicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
+        protected override void OnStartRunning()
+        {
+            base.OnStartRunning();
+            this.RegisterPhysicsRuntimeSystemReadOnly();
+        }
         protected override void OnUpdate()
         {
-            Dependency = JobHandle.CombineDependencies(Dependency, buildPhysicsWorld.GetOutputDependency(), stepPhysicsWorld.GetOutputDependency());
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
             var physicsWorld = buildPhysicsWorld.PhysicsWorld;
@@ -124,7 +128,7 @@ namespace RPG.Control
 
     [UpdateInGroup(typeof(ControlSystemGroup))]
     [UpdateAfter(typeof(MovementClickInteractionSystem))]
-    public class CombatClickInteractionSystem : SystemBase
+    public partial class CombatClickInteractionSystem : SystemBase
     {
         protected override void OnCreate()
         {
@@ -174,7 +178,7 @@ namespace RPG.Control
         }
     }
     [UpdateInGroup(typeof(ControlSystemGroup))]
-    public class MovementClickInteractionSystem : SystemBase
+    public partial class MovementClickInteractionSystem : SystemBase
     {
         EntityCommandBufferSystem commandBufferSystem;
 
@@ -251,7 +255,7 @@ namespace RPG.Control
     }
 
     [UpdateInGroup(typeof(ControlSystemGroup))]
-    public class RaycastOnMouseClick : SystemBase
+    public partial class RaycastOnMouseClick : SystemBase
     {
         protected override void OnUpdate()
         {
@@ -269,7 +273,7 @@ namespace RPG.Control
 
     [UpdateInGroup(typeof(ControlSystemGroup))]
     [UpdateAfter(typeof(MovementClickInteractionSystem))]
-    public class NoInteractionSystem : SystemBase
+    public partial class NoInteractionSystem : SystemBase
     {
         protected override void OnUpdate()
         {

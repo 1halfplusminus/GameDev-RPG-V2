@@ -1,5 +1,5 @@
 using System;
-using RPG.Combat;
+// using RPG.Combat;
 using RPG.Core;
 using Unity.Entities;
 using UnityEngine;
@@ -9,7 +9,7 @@ namespace RPG.Stats
 {
     public struct FixedListStat
     {
-        public FixedListFloat32 Values;
+        public FixedList32Bytes<float> Values;
         public void Add(Stats stat, float value)
         {
             var currentStat = GetStat(stat);
@@ -120,7 +120,7 @@ namespace RPG.Stats
     }
 
     [UpdateInGroup(typeof(ResourceSystemGroup))]
-    public class BaseStatSystem : SystemBase
+    public partial class BaseStatSystem : SystemBase
     {
         EntityQuery modifiersQuery;
         protected override void OnUpdate()
@@ -182,56 +182,5 @@ namespace RPG.Stats
             }).ScheduleParallel();
         }
     }
-    [UpdateInGroup(typeof(ResourceSystemGroup))]
-    public class RewardExperiencePointSystem : SystemBase
-    {
-        private EntityCommandBufferSystem entityCommandBufferSystem;
-        private EntityQuery leveledUpEntityQuery;
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            leveledUpEntityQuery = GetEntityQuery(ComponentType.ReadOnly<LeveledUp>());
-            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-        }
-        protected override void OnUpdate()
-        {
-            EntityCommandBuffer cb = entityCommandBufferSystem.CreateCommandBuffer();
-            EntityCommandBuffer.ParallelWriter cbp = cb.AsParallelWriter();
-            cb.RemoveComponentForEntityQuery<LeveledUp>(leveledUpEntityQuery);
 
-            Entities
-            .WithAll<IsDeadTag>()
-            .WithNone<ExperiencePointRewarded>()
-            .ForEach((int entityInQueryIndex, Entity e, in DynamicBuffer<WasHitteds> wasHitteds, in GiveExperiencePoint experiencePoint) =>
-            {
-                for (int i = 0; i < wasHitteds.Length; i++)
-                {
-                    WasHitteds wasHitted = wasHitteds[i];
-                    Entity hitter = wasHitted.Hitter;
-                    if (HasComponent<ExperiencePoint>(hitter))
-                    {
-                        Debug.Log($"Reward {hitter.Index} with {experiencePoint.Value}");
-                        ExperiencePoint exp = GetComponent<ExperiencePoint>(hitter);
-                        exp.Value += experiencePoint.Value;
-                        cbp.AddComponent(entityInQueryIndex, hitter, exp);
-                        if (HasComponent<BaseStats>(hitter))
-                        {
-                            BaseStats baseStats = GetComponent<BaseStats>(hitter);
-                            int newLevel = exp.GetLevel(baseStats.ProgressionAsset);
-                            if (newLevel != baseStats.Level)
-                            {
-                                Debug.Log($"Entity {hitter.Index} Level up from level: {baseStats.Level} to level: {newLevel}");
-                                baseStats.Level = newLevel;
-                                cbp.AddComponent(entityInQueryIndex, hitter, baseStats);
-                                cbp.AddComponent<LeveledUp>(entityInQueryIndex, hitter);
-                            }
-                        }
-                        break;
-                    }
-                }
-                cbp.AddComponent<ExperiencePointRewarded>(entityInQueryIndex, e);
-            }).ScheduleParallel();
-            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
-        }
-    }
 }

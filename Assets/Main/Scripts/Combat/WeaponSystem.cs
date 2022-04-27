@@ -6,7 +6,7 @@ using UnityEngine;
 using RPG.Animation;
 using Unity.Rendering;
 using UnityEngine.VFX;
-using RPG.Control;
+
 using RPG.Stats;
 using Unity.Collections;
 
@@ -25,7 +25,7 @@ namespace RPG.Combat
 
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class FighterEquipWeaponSystem : SystemBase
+    public partial class FighterEquipWeaponSystem : SystemBase
     {
 
         EntityQuery fighterEquipWeaponQuery;
@@ -65,7 +65,7 @@ namespace RPG.Combat
 
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class SpawnWeaponSystem : SystemBase
+    public partial class SpawnWeaponSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery spawnWeaponQuery;
@@ -89,7 +89,8 @@ namespace RPG.Combat
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             var cbp = cb.AsParallelWriter();
-            Entities
+            var dependencies = Dependency;
+            dependencies = Entities
             .WithStoreEntityQueryInField(ref spawnWeaponQuery)
             .ForEach((int entityInQueryIndex, Entity e, in SpawnWeapon spawn, in LocalToWorld localToWorld, in EquippedBy equipedBy) =>
             {
@@ -112,15 +113,17 @@ namespace RPG.Combat
                     cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new ShootProjectile() { Prefab = spawn.Projectile, Socket = e });
                 }
                 cbp.AddComponent(entityInQueryIndex, equipedBy.Entity, new ChangeAttackAnimation() { Animation = spawn.Animation });
-            }).ScheduleParallel();
-
-            cb.DestroyEntitiesForEntityQuery(weaponInstanceWithoutParent);
+            }).ScheduleParallel(dependencies);
+            Dependency = dependencies;
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+            //    entityCommandBufferSystem.AddJobHandleForProducer(weaponInstanceWithoutParent.)
+            // cb.DestroyEntitiesForEntityQuery(weaponInstanceWithoutParent);
+
         }
 
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class EquipWeaponInSocketSystem : SystemBase
+    public partial class EquipWeaponInSocketSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
 
@@ -185,81 +188,81 @@ namespace RPG.Combat
 
     }
 
+    // [UpdateInGroup(typeof(CombatSystemGroup))]
+    // public partial class CollidWithPickableWeaponSystem : SystemBase
+    // {
+    //     EntityCommandBufferSystem entityCommandBufferSystem;
+
+    //     EntityQuery collidWithPickableweaponQuery;
+
+    //     protected override void OnCreate()
+    //     {
+    //         base.OnCreate();
+    //         entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+
+    //     }
+    //     protected override void OnUpdate()
+    //     {
+    //         var cb = entityCommandBufferSystem.CreateCommandBuffer();
+    //         var cbp = cb.AsParallelWriter();
+
+    //         Entities
+    //         .WithNone<Picked>()
+    //         .WithStoreEntityQueryInField(ref collidWithPickableweaponQuery)
+    //         .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer collidWithPlayer, in PickableWeapon picked) =>
+    //         {
+    //             cbp.AddComponent<Picked>(entityInQueryIndex, e);
+    //             cbp.AddComponent(entityInQueryIndex, e, new HideForSecond { Time = 5f });
+    //             // cbp.AddComponent(entityInQueryIndex, collidWithPlayer.Entity, new Equip { Equipable = picked.Entity, SocketType = picked.SocketType });
+    //             cbp.RemoveComponent<StatefulTriggerEvent>(entityInQueryIndex, e);
+
+    //         }).ScheduleParallel();
+
+    //         Entities
+    //         .WithAll<Picked>()
+    //         .WithNone<DisableRendering>()
+    //         .ForEach((int entityInQueryIndex, Entity e, in LocalToWorld localToWorld) =>
+    //         {
+    //             Debug.Log($"{e.Index} was picked");
+    //             cbp.AddComponent<DisableRendering>(entityInQueryIndex, e);
+    //             cbp.RemoveComponent<StatefulTriggerEvent>(entityInQueryIndex, e);
+
+    //         }).ScheduleParallel();
+
+    //         Entities
+    //         .WithAll<Picked, UnHide>()
+    //         .ForEach((int entityInQueryIndex, Entity e) =>
+    //         {
+    //             Debug.Log($"{e.Index} pick up respawn");
+    //             cbp.RemoveComponent<DisableRendering>(entityInQueryIndex, e);
+    //             cbp.AddBuffer<StatefulTriggerEvent>(entityInQueryIndex, e);
+    //             cbp.RemoveComponent<Picked>(entityInQueryIndex, e);
+    //         }).ScheduleParallel();
+
+    //         Entities
+    //         .WithAll<Picked, LocalToWorld>()
+    //         .ForEach((int entityInQueryIndex, Entity e, VisualEffect visualEffect) =>
+    //         {
+    //             visualEffect.Stop();
+    //         })
+    //         .WithoutBurst()
+    //         .Run();
+
+    //         Entities
+    //         .WithAll<Picked, UnHide>()
+    //         .ForEach((int entityInQueryIndex, Entity e, VisualEffect visualEffect) =>
+    //         {
+    //             visualEffect.Play();
+    //         })
+    //         .WithoutBurst()
+    //         .Run();
+
+    //         entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+    //     }
+
+    // }
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class CollidWithPickableWeaponSystem : SystemBase
-    {
-        EntityCommandBufferSystem entityCommandBufferSystem;
-
-        EntityQuery collidWithPickableweaponQuery;
-
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-
-        }
-        protected override void OnUpdate()
-        {
-            var cb = entityCommandBufferSystem.CreateCommandBuffer();
-            var cbp = cb.AsParallelWriter();
-
-            Entities
-            .WithNone<Picked>()
-            .WithStoreEntityQueryInField(ref collidWithPickableweaponQuery)
-            .ForEach((int entityInQueryIndex, Entity e, in CollidWithPlayer collidWithPlayer, in PickableWeapon picked) =>
-            {
-                cbp.AddComponent<Picked>(entityInQueryIndex, e);
-                cbp.AddComponent(entityInQueryIndex, e, new HideForSecond { Time = 5f });
-                // cbp.AddComponent(entityInQueryIndex, collidWithPlayer.Entity, new Equip { Equipable = picked.Entity, SocketType = picked.SocketType });
-                cbp.RemoveComponent<StatefulTriggerEvent>(entityInQueryIndex, e);
-
-            }).ScheduleParallel();
-
-            Entities
-            .WithAll<Picked>()
-            .WithNone<DisableRendering>()
-            .ForEach((int entityInQueryIndex, Entity e, in LocalToWorld localToWorld) =>
-            {
-                Debug.Log($"{e.Index} was picked");
-                cbp.AddComponent<DisableRendering>(entityInQueryIndex, e);
-                cbp.RemoveComponent<StatefulTriggerEvent>(entityInQueryIndex, e);
-
-            }).ScheduleParallel();
-
-            Entities
-            .WithAll<Picked, UnHide>()
-            .ForEach((int entityInQueryIndex, Entity e) =>
-            {
-                Debug.Log($"{e.Index} pick up respawn");
-                cbp.RemoveComponent<DisableRendering>(entityInQueryIndex, e);
-                cbp.AddBuffer<StatefulTriggerEvent>(entityInQueryIndex, e);
-                cbp.RemoveComponent<Picked>(entityInQueryIndex, e);
-            }).ScheduleParallel();
-
-            Entities
-            .WithAll<Picked, LocalToWorld>()
-            .ForEach((int entityInQueryIndex, Entity e, VisualEffect visualEffect) =>
-            {
-                visualEffect.Stop();
-            })
-            .WithoutBurst()
-            .Run();
-
-            Entities
-            .WithAll<Picked, UnHide>()
-            .ForEach((int entityInQueryIndex, Entity e, VisualEffect visualEffect) =>
-            {
-                visualEffect.Play();
-            })
-            .WithoutBurst()
-            .Run();
-
-            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
-        }
-
-    }
-    [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class EquipPickedWeaponSystem : SystemBase
+    public partial class EquipPickedWeaponSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
 

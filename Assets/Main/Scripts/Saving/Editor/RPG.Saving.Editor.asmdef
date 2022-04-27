@@ -2,8 +2,8 @@
     "name": "RPG.Saving.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:4836d2d95d187d5ffbc37f56dc6c1e4d",
-        "GUID:a5baed0c9693541a5bd947d336ec7659"
+        "GUID:a5baed0c9693541a5bd947d336ec7659",
+        "GUID:c3fce4a3b83254713a4bd4de0ffaf999"
     ],
     "includePlatforms": [
         "Editor"

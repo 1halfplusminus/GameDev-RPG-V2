@@ -7,11 +7,12 @@ using UnityEngine.AI;
 using Unity.Mathematics;
 using RPG.Core;
 using UnityEngine;
+using Unity.AI.Navigation;
 
 namespace RPG.Mouvement
 {
     [UpdateInGroup(typeof(MouvementSystemGroup))]
-    public class IsMovingSystem : SystemBase
+    public partial class IsMovingSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
 
@@ -26,7 +27,7 @@ namespace RPG.Mouvement
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             Entities
             .WithStoreEntityQueryInField(ref isMovingQuery)
-            .WithChangeFilter<MoveTo>()
+            // .WithChangeFilter<MoveTo>()
             .WithNone<IsDeadTag, IsMoving>()
             .ForEach((int entityInQueryIndex, Entity e, in MoveTo moveTo) =>
             {
@@ -41,8 +42,8 @@ namespace RPG.Mouvement
     }
     //FIXME: split in smaller system
     [UpdateInGroup(typeof(MouvementSystemGroup))]
-
-    public class MoveToSystem : SystemBase
+    [UpdateAfter(typeof(IsMovingSystem))]
+    public partial class MoveToSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
 
@@ -57,28 +58,28 @@ namespace RPG.Mouvement
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer().AsParallelWriter();
             // Calcule distance 
             Entities
-            .WithChangeFilter<MoveTo>()
-            .WithNone<IsDeadTag>()
-            .WithAny<IsMoving>()
-            .ForEach((int entityInQueryIndex, Entity e, ref MoveTo moveTo, in LocalToWorld localToWorld) =>
-            {
-                if (!moveTo.UseDirection)
-                {
-                    moveTo.Distance = math.distance(moveTo.Position, localToWorld.Position);
-                    if (moveTo.Distance <= moveTo.StoppingDistance)
-                    {
-                        moveTo.Stopped = true;
-                        moveTo.Position = localToWorld.Position;
-                    }
-                }
+           .WithChangeFilter<MoveTo>()
+           .WithNone<IsDeadTag>()
+           .WithAny<IsMoving>()
+           .ForEach((int entityInQueryIndex, Entity e, ref MoveTo moveTo, in Translation t) =>
+           {
+               if (!moveTo.UseDirection)
+               {
+                   moveTo.Distance = math.distance(moveTo.Position, t.Value);
+                   if (moveTo.Distance <= moveTo.StoppingDistance)
+                   {
+                       moveTo.Stopped = true;
+                       moveTo.Position = t.Value;
+                   }
+               }
 
-            }).ScheduleParallel();
+           }).ScheduleParallel();
 
             Entities
-           .WithChangeFilter<MoveTo>()
+           //    .WithChangeFilter<MoveTo>()
            .WithAny<IsMoving>()
            .WithNone<IsDeadTag>()
-           .ForEach((int entityInQueryIndex, Entity e, ref MoveTo moveTo, ref Mouvement mouvement) =>
+           .ForEach((int entityInQueryIndex, Entity e, ref Mouvement mouvement, in MoveTo moveTo) =>
            {
                if (moveTo.Stopped)
                {
@@ -111,7 +112,7 @@ namespace RPG.Mouvement
     }
     [UpdateInGroup(typeof(MouvementSystemGroup))]
     [UpdateAfter(typeof(MoveToSystem))]
-    public class MoveToNavMeshAgentSystem : SystemBase
+    public partial class MoveToNavMeshAgentSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery navMeshAgentQueries;
@@ -120,6 +121,7 @@ namespace RPG.Mouvement
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
+
         protected override void OnUpdate()
         {
 
@@ -132,73 +134,135 @@ namespace RPG.Mouvement
             .WithAny<Spawned, WarpTo>()
             .ForEach((Entity e, NavMeshAgent agent, ref MoveTo moveTo, in Translation position) =>
             {
-                if (agent.isOnNavMesh)
+                if (agent.Warp(position.Value))
                 {
-                    if (agent.Warp(position.Value))
-                    {
-                        moveTo.Position = position.Value;
-                        commandBuffer.AddComponent<Warped>(e);
-                    }
+                    moveTo.Position = position.Value;
+                    commandBuffer.AddComponent<Warped>(e);
                 }
-
             }).Run();
-
+            var dt = Time.DeltaTime;
             Entities
             .WithAny<IsMoving>()
             .WithNone<IsDeadTag, WarpTo>()
             .WithChangeFilter<MoveTo>()
             .WithReadOnly(lookAts)
             .WithStoreEntityQueryInField(ref navMeshAgentQueries)
-            .ForEach((Entity e, DeltaTime dt, NavMeshAgent agent, ref Translation position, ref Mouvement mouvement, ref MoveTo moveTo, ref Rotation rotation, in LocalToWorld localToWorld) =>
+            .ForEach((Entity e,
+            NavMeshAgent agent,
+            ref Translation position,
+            ref Mouvement mouvement,
+            ref MoveTo moveTo,
+            ref Rotation rotation,
+            in LocalToWorld localToWorld) =>
             {
-                if (agent.isOnNavMesh)
+                bool isDirection = moveTo.UseDirection;
+                NavMeshPath path = agent.path;
+                agent.path.ClearCorners();
+                if (isDirection)
                 {
-                    bool isDirection = moveTo.UseDirection;
-                    agent.speed = moveTo.CalculeSpeed(in mouvement);
-                    if (!isDirection)
+                    moveTo.Direction = math.normalizesafe(moveTo.Direction);
+                    var newPosition = moveTo.Direction + (agent.stoppingDistance * math.sign(moveTo.Direction));
+                    NavMesh.SamplePosition((float3)agent.transform.position + newPosition, out var hit, 10f, NavMesh.AllAreas);
+                    if (hit.hit)
                     {
-                        agent.SetDestination(moveTo.Position);
-                        if (!lookAts.HasComponent(e) || lookAts[e].Entity == Entity.Null)
-                        {
-                            rotation.Value = agent.transform.rotation;
-                        }
-                        mouvement.Velocity = new Velocity
-                        {
-                            Linear = agent.transform.InverseTransformDirection(agent.velocity),
-                            Angular = agent.angularSpeed
-
-                        };
+                        moveTo.Position = hit.position;
                     }
-                    else
+                    moveTo.Direction = float3.zero;
+                    moveTo.UseDirection = false;
+                }
+                if (NavMesh.CalculatePath(position.Value, moveTo.Position, NavMesh.AllAreas, path))
+                {
+                    if (path.corners.Length >= 2)
                     {
-                        moveTo.Direction = math.normalizesafe(moveTo.Direction);
-                        // agent.destination = (float3)agent.transform.position + moveTo.Direction;
-                        var newPosition = moveTo.Direction + (agent.stoppingDistance * math.sign(moveTo.Direction));
-                        NavMesh.SamplePosition((float3)agent.transform.position + newPosition, out var hit, 10f, NavMesh.AllAreas);
-                        var path = new NavMeshPath();
-                        agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
-                        agent.CalculatePath(hit.position, path);
-                        agent.path = path;
-                        agent.destination = agent.pathEndPosition;
-                        agent.Move((agent.transform.position - agent.nextPosition) * dt.Value);
-                        moveTo.Position = agent.transform.position;
-                        rotation.Value = agent.transform.rotation;
-                        moveTo.Direction = float3.zero;
-                        moveTo.UseDirection = false;
+                        var speed = moveTo.CalculeSpeed(in mouvement);
+                        var direction = path.corners[1] - agent.transform.position;
+                        var step = speed * dt; // calculate distance to move
+
+                        agent.transform.position = Vector3.MoveTowards(agent.transform.position, path.corners[1], step);
+                        agent.transform.rotation = Quaternion.LookRotation(direction, math.up());
                         mouvement.Velocity = new Velocity
                         {
                             Linear = new float3(0, 0, 1f) * mouvement.Speed,
                             Angular = agent.angularSpeed
                         };
+                        if (!lookAts.HasComponent(e) || lookAts[e].Entity == Entity.Null)
+                        {
+                            rotation.Value = agent.transform.rotation;
+                        }
+                        position.Value = agent.transform.position;
                     }
 
-                    position.Value = agent.transform.position;
+                }
+                if (agent.isOnNavMesh)
+                {
+                    // agent.speed = moveTo.CalculeSpeed(in mouvement);
+                    // if (!isDirection)
+                    // {
+                    //     var path = new NavMeshPath();
+                    //     NavMesh.CalculatePath(position.Value, moveTo.Position, NavMesh.AllAreas, path);
+                    //     agent.path = path;
+                    //     agent.destination = agent.pathEndPosition;
+                    //     // agent.Move((agent.transform.position - agent.nextPosition) * dt);
+                    //     // agent.transform.position = (float3)agent.transform.position + (((float3)agent.transform.position - (float3)agent.nextPosition) * agent.transform.forward * dt);
+                    //     if (!lookAts.HasComponent(e) || lookAts[e].Entity == Entity.Null)
+                    //     {
+                    //         rotation.Value = agent.transform.rotation;
+                    //     }
+                    //     mouvement.Velocity = new Velocity
+                    //     {
+                    //         Linear = agent.transform.InverseTransformDirection(agent.velocity),
+                    //         Angular = agent.angularSpeed
+
+                    //     };
+                    // }
+                    // else
+                    // {
+                    //     moveTo.Direction = math.normalizesafe(moveTo.Direction);
+                    //     // agent.destination = (float3)agent.transform.position + moveTo.Direction;
+                    //     var newPosition = moveTo.Direction + (agent.stoppingDistance * math.sign(moveTo.Direction));
+                    //     NavMesh.SamplePosition((float3)agent.transform.position + newPosition, out var hit, 10f, NavMesh.AllAreas);
+                    //     var path = new NavMeshPath();
+                    //     agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+                    //     agent.CalculatePath(hit.position, path);
+                    //     agent.path = path;
+                    //     agent.destination = agent.pathEndPosition;
+                    //     agent.Move((agent.transform.position - agent.nextPosition) * dt);
+                    //     moveTo.Position = agent.transform.position;
+                    //     rotation.Value = agent.transform.rotation;
+                    //     moveTo.Direction = float3.zero;
+                    //     moveTo.UseDirection = false;
+                    //     mouvement.Velocity = new Velocity
+                    //     {
+                    //         Linear = new float3(0, 0, 1f) * mouvement.Speed,
+                    //         Angular = agent.angularSpeed
+                    //     };
+                    // }
+
+                    // position.Value = agent.transform.position;
 
 
+                }
+                else
+                {
+
+                    // agent.gameObject.hideFlags = HideFlags.None;
+                    // agent.gameObject.SetActive(true);
+                    // agent.enabled = false;
+                    agent.Warp(position.Value);
+                    agent.transform.position = position.Value;
+                    // if (agent.isOnNavMesh)
+                    // {
+                    //     agent.isStopped = true;
+                    // }
+                    // agent.enabled = true;
+                    // agent.isStopped = false;
+                    Debug.LogWarning($"NavMeshSurface Not Found {e.Index} {agent.isOnNavMesh}");
+                    // agent.transform.parent = navMeshParent.transform;
                 }
 
             }).WithoutBurst().Run();
 
+            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }
 

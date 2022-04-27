@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "RPG.Gameplay.Dialog",
-        "Unity.Mathematics"
+        "Unity.Mathematics",
+        "UnityEngine.UIElementsModule"
     ],
     "includePlatforms": [
         "Editor"

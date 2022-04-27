@@ -1,6 +1,6 @@
 
 using Unity.Entities;
-using Unity.Animation;
+// using Unity.Animation;
 
 
 namespace RPG.Core
@@ -8,7 +8,7 @@ namespace RPG.Core
 
 
     [UpdateAfter(typeof(BeginSimulationEntityCommandBufferSystem))]
-    [UpdateBefore(typeof(DefaultAnimationSystemGroup))]
+    // [UpdateBefore(typeof(DefaultAnimationSystemGroup))]
 
     public class CoreSystemGroup : ComponentSystemGroup
     {

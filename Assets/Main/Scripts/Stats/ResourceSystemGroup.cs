@@ -1,10 +1,9 @@
 
-using RPG.Control;
 using Unity.Entities;
-
+using RPG.Core;
 namespace RPG.Stats
 {
-    [UpdateAfter(typeof(ControlSystemGroup))]
+    [UpdateAfter(typeof(CoreSystemGroup))]
     public class ResourceSystemGroup : ComponentSystemGroup
     {
 

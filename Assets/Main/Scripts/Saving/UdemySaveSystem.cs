@@ -56,7 +56,7 @@ namespace RPG.Saving
     }
     [UpdateBefore(typeof(TriggerSavingSystem))]
     [UpdateInGroup(typeof(SavingSystemGroup))]
-    public class UdemySaveSystem : SaveSystemBase
+    public partial class UdemySaveSystem : SaveSystemBase
     {
         List<ISerializer> serializers;
         EntityQuery queryIdentifier;

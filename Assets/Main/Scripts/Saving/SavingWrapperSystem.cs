@@ -17,7 +17,7 @@ namespace RPG.Saving
     {
     }
     [UpdateInGroup(typeof(SavingSystemGroup))]
-    public class TriggerSavingSystem : SystemBase
+    public partial class TriggerSavingSystem : SystemBase
     {
         SaveSystemBase saveSystem;
         SavingWrapperSystem savingWrapperSystem;
@@ -88,7 +88,7 @@ namespace RPG.Saving
     }
 
     [UpdateInGroup(typeof(SavingSystemGroup))]
-    public class SavingWrapperSystem : SystemBase
+    public partial class SavingWrapperSystem : SystemBase
     {
         BeginPresentationEntityCommandBufferSystem entityCommandBufferSystem;
         SaveSystemBase saveSystem;

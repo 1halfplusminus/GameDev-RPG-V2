@@ -11,9 +11,9 @@ namespace RPG.Combat
 
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    class WeaponReferenceSystemLoader : SystemBase
+partial     class WeaponReferenceSystemLoader : SystemBase
     {
-        NativeHashMap<FixedString64, WeaponAssetData> weapons;
+        NativeHashMap<FixedString64Bytes, WeaponAssetData> weapons;
         EntityQuery weaponReferenceQuery;
         EntityQuery weaponDataQuery;
 
@@ -21,7 +21,7 @@ namespace RPG.Combat
         protected override void OnCreate()
         {
             base.OnCreate();
-            weapons = new NativeHashMap<FixedString64, WeaponAssetData>(0, Allocator.Persistent);
+            weapons = new NativeHashMap<FixedString64Bytes, WeaponAssetData>(0, Allocator.Persistent);
             entityCommandBufferSystem = World.GetOrCreateSystem<EntityCommandBufferSystem>();
             // RequireForUpdate(weaponReferenceQuery);
         }
@@ -31,7 +31,7 @@ namespace RPG.Combat
             var cbp = cb.AsParallelWriter();
             weapons.Clear();
             weapons.Dispose();
-            weapons = new NativeHashMap<FixedString64, WeaponAssetData>(weaponDataQuery.CalculateEntityCount(), Allocator.Persistent);
+            weapons = new NativeHashMap<FixedString64Bytes, WeaponAssetData>(weaponDataQuery.CalculateEntityCount(), Allocator.Persistent);
             var weaponsWriter = weapons.AsParallelWriter();
             Entities
             .WithStoreEntityQueryInField(ref weaponDataQuery)
@@ -53,11 +53,11 @@ namespace RPG.Combat
 
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
-        public AsyncOperationHandle<GameObject> LoadAssetAsync(FixedString64 address)
+        public AsyncOperationHandle<GameObject> LoadAssetAsync(FixedString64Bytes address)
         {
             return Addressables.LoadAssetAsync<GameObject>(address.ToString());
         }
-        public Entity LoadWeapon(FixedString64 address)
+        public Entity LoadWeapon(FixedString64Bytes address)
         {
 
             var weaponAuthoringHandle = LoadAssetAsync(address);

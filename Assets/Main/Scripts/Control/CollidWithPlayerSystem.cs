@@ -11,7 +11,7 @@ namespace RPG.Control
     }
     [UpdateInGroup(typeof(ControlSystemGroup))]
 
-    public class CollidWithPlayerSystem : SystemBase
+    public partial class CollidWithPlayerSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery collidWithPlayerQuery;

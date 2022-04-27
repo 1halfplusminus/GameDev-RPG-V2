@@ -32,7 +32,7 @@ namespace RPG.Gameplay
     public struct Picking : IComponentData { }
     public struct Picked : IComponentData { }
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class HealthPickupSystem : SystemBase
+    public partial class HealthPickupSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery pickingEntityQuery;

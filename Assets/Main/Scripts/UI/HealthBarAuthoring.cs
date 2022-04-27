@@ -92,7 +92,7 @@ namespace RPG.UI
         }
     }
     [UpdateInGroup(typeof(UISystemGroup))]
-    public class HealthBarUISystem : SystemBase
+    public partial class HealthBarUISystem : SystemBase
     {
 
         EntityCommandBufferSystem entityCommandBufferSystem;

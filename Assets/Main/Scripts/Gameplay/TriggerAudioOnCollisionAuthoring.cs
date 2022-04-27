@@ -2,7 +2,7 @@
 using RPG.Core;
 using Unity.Entities;
 using UnityEngine;
-
+using RPG.Hybrid;
 namespace RPG.Gameplay
 {
     public struct PlayingAudio : IComponentData
@@ -15,7 +15,7 @@ namespace RPG.Gameplay
     {
     }
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class AudioSourceSystem : SystemBase
+    public partial class AudioSourceSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()
@@ -60,14 +60,13 @@ namespace RPG.Gameplay
 
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
-            conversionSystem.DeclareAssetDependency(gameObject, AudioSource.clip);
-            conversionSystem.AddHybridComponent(AudioSource);
+
             var audioSourceEntity = conversionSystem.GetPrimaryEntity(AudioSource.gameObject);
             dstManager.AddComponentData(entity, new TriggerAudioOnCollion { AudioSource = audioSourceEntity });
         }
     }
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class TriggerAudioSourceOnCollisionSystem : SystemBase
+    public partial class TriggerAudioSourceOnCollisionSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()

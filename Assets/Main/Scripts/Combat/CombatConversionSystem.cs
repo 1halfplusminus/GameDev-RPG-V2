@@ -13,23 +13,12 @@ namespace RPG.Combat
 
     public struct Equipable : IComponentData
     {
-        public FixedString64 GUID;
+        public FixedString64Bytes GUID;
     }
     [Serializable]
     public struct Addressable : ISharedComponentData
     {
         public Hash128 Value;
-    }
-    public struct WeaponBlobAsset
-    {
-        public Weapon Weapon;
-
-        public BlobArray<float> HitEvents;
-
-        public Hash128 GUID;
-        public Entity Entity;
-        public Entity Prefab;
-        public Entity ProjectileEntity;
     }
     public struct WeaponAssetData : IComponentData
     {
@@ -118,10 +107,10 @@ namespace RPG.Combat
                 // DstEntityManager.AddComponent<Asset>(weaponEntity);
             });
         }
-        private static FixedList32<float> CreateHitEvent(WeaponAsset weapon)
+        private static FixedList32Bytes<float> CreateHitEvent(WeaponAsset weapon)
         {
 
-            var hitEvents = new FixedList32<float>
+            var hitEvents = new FixedList32Bytes<float>
             {
                 Length = weapon.HitEvents.Count
             };
@@ -223,15 +212,15 @@ namespace RPG.Combat
                 {
                     DeclareReferencedAsset(fighter.Weapon);
                     DeclareAssetDependency(fighter.gameObject, fighter.Weapon);
-                    if (fighter.RightHandSocket.gameObject.GetComponent<LateAnimationGraphWriteTransformHandle>() == null)
-                    {
-                        fighter.RightHandSocket.gameObject.AddComponent<LateAnimationGraphWriteTransformHandle>();
-                    }
+                    // if (fighter.RightHandSocket.gameObject.GetComponent<LateAnimationGraphWriteTransformHandle>() == null)
+                    // {
+                    //     fighter.RightHandSocket.gameObject.AddComponent<LateAnimationGraphWriteTransformHandle>();
+                    // }
 
-                    if (fighter.LeftHandSocket.gameObject.GetComponent<LateAnimationGraphWriteTransformHandle>() == null)
-                    {
-                        fighter.LeftHandSocket.gameObject.AddComponent<LateAnimationGraphWriteTransformHandle>();
-                    }
+                    // if (fighter.LeftHandSocket.gameObject.GetComponent<LateAnimationGraphWriteTransformHandle>() == null)
+                    // {
+                    //     fighter.LeftHandSocket.gameObject.AddComponent<LateAnimationGraphWriteTransformHandle>();
+                    // }
 
                 }
 

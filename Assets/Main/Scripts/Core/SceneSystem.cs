@@ -2,7 +2,7 @@ using Unity.Entities;
 using UnityEngine;
 using Unity.Scenes;
 using Unity.Collections;
-using RPG.Gameplay;
+
 
 namespace RPG.Core
 {
@@ -39,15 +39,15 @@ namespace RPG.Core
 
     public struct AnySceneLoading : IComponentData
     {
-        public FixedList128<Entity> Triggers;
+        public FixedList128Bytes<Entity> Triggers;
     }
     public struct AnySceneFinishLoading : IComponentData
     {
-        public FixedList128<Entity> Triggers;
+        public FixedList128Bytes<Entity> Triggers;
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
     [UpdateAfter(typeof(SpawnSystem))]
-    public class SceneLoadingSystem : SystemBase
+    public partial class SceneLoadingSystem : SystemBase
     {
         SceneSystem sceneSystem;
 
@@ -103,12 +103,12 @@ namespace RPG.Core
                 var sceneEntity = _sceneSystem.GetSceneEntity(triggerSceneLoad.SceneGUID);
                 if (sceneEntity == Entity.Null || !_sceneSystem.IsSceneLoaded(sceneEntity))
                 {
+                    var loadParameters = new SceneSystem.LoadParameters { Flags = SceneLoadFlags.LoadAsGOScene };
+                    sceneSystem.LoadSceneAsync(sceneEntity, loadParameters);
                     var newSceneRef = em.GetComponentData<SceneReference>(sceneEntity);
                     Debug.Log($"Loading Scene {newSceneRef.SceneGUID}");
                     em.AddComponentData(e, new LoadSceneAsync() { SceneEntity = sceneEntity, SceneGUID = newSceneRef.SceneGUID });
                     em.RemoveComponent<TriggerSceneLoad>(e);
-                    var loadParameters = new SceneSystem.LoadParameters { Flags = SceneLoadFlags.LoadAdditive, AutoLoad = false };
-                    sceneSystem.LoadSceneAsync(sceneEntity, loadParameters);
                     var requestSceneLoaded = new RequestSceneLoaded { LoadFlags = loadParameters.Flags };
                     if (em.HasComponent<ResolvedSectionEntity>(sceneEntity))
                     {

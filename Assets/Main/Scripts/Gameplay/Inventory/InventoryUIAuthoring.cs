@@ -101,7 +101,7 @@ namespace RPG.UI
 
 
     [UpdateInGroup(typeof(UISystemGroup))]
-    public class InventoryUISystem : SystemBase
+    public partial class InventoryUISystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()

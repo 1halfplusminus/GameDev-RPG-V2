@@ -9,7 +9,7 @@ namespace RPG.Control
     public struct AutoAttack : IComponentData { }
 
     [UpdateInGroup(typeof(ControlSystemGroup))]
-    public class AutoAttackSystem : SystemBase
+    public partial class AutoAttackSystem : SystemBase
     {
         protected override void OnUpdate()
         {

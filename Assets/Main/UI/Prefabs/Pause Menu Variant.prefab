@@ -59,6 +59,14 @@ PrefabInstance:
       propertyPath: sourceAsset
       value: 
       objectReference: {fileID: 9197481963319205126, guid: 9c695f2d9dcf482cb8e68be20c48f2cc, type: 3}
+    - target: {fileID: 5728000059281443695, guid: 47721a801e01d5579b0a5cf6d3470ebc, type: 3}
+      propertyPath: m_SortingOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5728000059281443695, guid: 47721a801e01d5579b0a5cf6d3470ebc, type: 3}
+      propertyPath: m_PanelSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: 99dd1f23dda62f138b178e3e72ed91f3, type: 2}
     - target: {fileID: 7850764028150682656, guid: 47721a801e01d5579b0a5cf6d3470ebc, type: 3}
       propertyPath: m_Name
       value: Pause Menu Variant

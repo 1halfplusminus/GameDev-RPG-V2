@@ -13,7 +13,7 @@ public class MomentOneCinematicOne : IComponentData
 }
 
 [UpdateInGroup(typeof(GameplaySystemGroup))]
-public class MomentOneCinematic : SystemBase
+public partial class MomentOneCinematic : SystemBase
 {
     protected override void OnUpdate()
     {

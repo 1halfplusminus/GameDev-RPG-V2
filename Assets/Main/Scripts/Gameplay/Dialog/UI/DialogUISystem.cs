@@ -38,7 +38,7 @@ namespace RPG.UI
     {
     }
     [UpdateInGroup(typeof(UISystemGroup))]
-    public class DialogInteractionUISystem : SystemBase
+    public partial class DialogInteractionUISystem : SystemBase
     {
         EndSimulationEntityCommandBufferSystem commandBufferSystem;
         BuildPhysicsWorld buildPhysicsWorld;
@@ -51,9 +51,12 @@ namespace RPG.UI
             buildPhysicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
             stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
         }
+        protected override void OnStartRunning(){
+            base.OnStartRunning();
+            this.RegisterPhysicsRuntimeSystemReadOnly();
+        }
         protected override void OnUpdate()
         {
-            Dependency = JobHandle.CombineDependencies(buildPhysicsWorld.GetOutputDependency(), stepPhysicsWorld.GetOutputDependency(), Dependency);
             var physicWorld = buildPhysicsWorld.PhysicsWorld;
             var collisionWorld = buildPhysicsWorld.PhysicsWorld.CollisionWorld;
             var cb = commandBufferSystem.CreateCommandBuffer();
@@ -150,7 +153,7 @@ namespace RPG.UI
     }
 
     [UpdateInGroup(typeof(UISystemGroup))]
-    public class DialogUISystem : SystemBase
+    public partial class DialogUISystem : SystemBase
     {
         EntityQuery dialogUIPrefabQuery;
         EntityQuery dialogUIQuery;

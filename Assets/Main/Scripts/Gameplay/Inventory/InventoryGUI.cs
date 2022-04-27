@@ -299,7 +299,7 @@ namespace RPG.Gameplay.Inventory
             var _overlaps = Overlapses;
             var _world = world;
 
-            callbacks.Enqueue(SimulationCallbacks.Phase.PostSolveJacobians, (ref ISimulation iSimulation, ref PhysicsWorld world, JobHandle handle) =>
+            callbacks.Enqueue(SimulationCallbacks.Phase.PostCreateContactJacobians, (ref ISimulation iSimulation, ref PhysicsWorld world, JobHandle handle) =>
             {
                 handle.Complete();
                 foreach (var cEvent in simulation.CollisionEvents)

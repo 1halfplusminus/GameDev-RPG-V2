@@ -7,7 +7,7 @@ namespace RPG.Combat
     [UpdateInGroup(typeof(CombatSystemGroup))]
     //TODO: Create multiple system group for combat Begin and End of combat Update in end of combat
     [UpdateAfter(typeof(DamageSystem))]
-    public class HealthSystem : SystemBase
+    public partial class HealthSystem : SystemBase
     {
         EntityCommandBufferSystem commandBufferSystem;
         protected override void OnCreate()

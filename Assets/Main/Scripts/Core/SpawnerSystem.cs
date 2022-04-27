@@ -75,13 +75,13 @@ namespace RPG.Core
                     DstEntityManager.AddSharedComponentData(entity, new SceneTag() { SceneEntity = sceneGUIDAuthoring.SceneEntity });
                     DstEntityManager.AddComponentData(entity, new GameObjectSpawn() { SpawnerEntity = sceneGUIDAuthoring.Spawner });
                     DstEntityManager.AddComponentData(entity, new Spawned() { });
-                    AddHybridComponent(sceneGUIDAuthoring);
+                    // AddHybridComponent(sceneGUIDAuthoring);
                 }
             });
         }
     }
 
-    public class GameObjectInstanciateSystem : SystemBase
+    public partial class GameObjectInstanciateSystem : SystemBase
     {
 
 
@@ -148,7 +148,7 @@ namespace RPG.Core
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
 
-    public class SpawnSystem : SystemBase
+    public partial class SpawnSystem : SystemBase
     {
 
         struct SceneInfo

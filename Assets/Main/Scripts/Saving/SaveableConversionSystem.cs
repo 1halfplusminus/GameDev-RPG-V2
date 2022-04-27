@@ -2,8 +2,7 @@ using Unity.Entities;
 using UnityEngine;
 using Hash128 = Unity.Entities.Hash128;
 using UnityEngine.Playables;
-using RPG.Control;
-using RPG.Core;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -20,7 +19,7 @@ namespace RPG.Saving
         {
 
             Entities
-            .WithNone<ObjectSpawner>()
+            // .WithNone<ObjectSpawner>()
             .ForEach((SaveableAuthoring saveable) =>
             {
                 var hash = new UnityEngine.Hash128();
@@ -37,40 +36,44 @@ namespace RPG.Saving
                 AddHashComponent(director, hash);
             });
 
-            Entities
-            .ForEach((ObjectSpawner playerSpawner, SaveableAuthoring saveable) =>
-            {
-                var hash = new UnityEngine.Hash128();
-                hash.Append(saveable.UniqueIdentifier);
-                var entity = TryGetPrimaryEntity(playerSpawner);
-                if (entity != Entity.Null)
-                {
-                    var identifier = new SpawnIdentifier { Id = hash };
-                    DstEntityManager.AddComponentData(entity, identifier);
-                }
-            });
-            Entities
-            .WithNone<PlayableDirector, SaveableAuthoring>().ForEach((ObjectSpawner playerSpawner) =>
-             {
-                 var hash = new UnityEngine.Hash128();
-                 hash.Append(playerSpawner.gameObject.GetInstanceID());
-                 var entity = TryGetPrimaryEntity(playerSpawner);
-                 if (entity != Entity.Null)
-                 {
+            // Entities
+            // .ForEach((ObjectSpawner playerSpawner, SaveableAuthoring saveable) =>
+            // {
+            //     var hash = new UnityEngine.Hash128();
+            //     hash.Append(saveable.UniqueIdentifier);
+            //     var entity = TryGetPrimaryEntity(playerSpawner);
+            //     if (entity != Entity.Null)
+            //     {
+            //         var identifier = new SpawnIdentifier { Id = hash };
+            //         DstEntityManager.AddComponentData(entity, identifier);
+            //     }
+            // });
+            // Entities
+            // .WithNone<PlayableDirector, SaveableAuthoring>()
+            // .ForEach((ObjectSpawner playerSpawner) =>
+            //  {
+            //      var hash = new UnityEngine.Hash128();
+            //      hash.Append(playerSpawner.gameObject.GetInstanceID());
+            //      var entity = TryGetPrimaryEntity(playerSpawner);
+            //      if (entity != Entity.Null)
+            //      {
 
-                     var identifier = new SpawnIdentifier { Id = hash };
-                     DstEntityManager.AddComponentData(entity, identifier);
-                 }
-             });
+            //          var identifier = new SpawnIdentifier { Id = hash };
+            //          DstEntityManager.AddComponentData(entity, identifier);
+            //      }
+            //  });
 
-            Entities
-            .WithAny<PlayerControlledAuthoring, GuardLocationAuthoring>()
-            .WithNone<PlayableDirector, ObjectSpawner>().ForEach((Transform transform) =>
-            {
-                var hash = new UnityEngine.Hash128();
-                hash.Append(transform.gameObject.GetInstanceID());
-                AddHashComponent(transform, hash);
-            });
+            // FIXME:To Remove
+            // Entities
+            // .WithAny<PlayerControlledAuthoring, GuardLocationAuthoring>()
+            // .WithNone<PlayableDirector>()
+            // // .WithNone<ObjectSpawner>()
+            // .ForEach((Transform transform) =>
+            // {
+            //     var hash = new UnityEngine.Hash128();
+            //     hash.Append(transform.gameObject.GetInstanceID());
+            //     AddHashComponent(transform, hash);
+            // });
 
         }
 

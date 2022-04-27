@@ -1,14 +1,17 @@
 
-using RPG.Hybrid;
+
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
 
 namespace RPG.Core
 {
+    public struct IsFollowingTarget : IComponentData { }
 
+    public struct IsLookingAtTarget : IComponentData { }
+    
     [UpdateInGroup(typeof(CoreSystemGroup))]
-    public class CameraFollowSystem : SystemBase
+    public partial class CameraFollowSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()

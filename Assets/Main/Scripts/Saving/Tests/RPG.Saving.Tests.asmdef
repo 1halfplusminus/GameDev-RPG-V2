@@ -1,0 +1,36 @@
+{
+    "name": "RPG.Saving.Tests",
+    "rootNamespace": "",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Entities",
+        "Unity.Mathematics",
+        "Unity.Collections",
+        "Unity.Entities.Hybrid",
+        "Unity.Addressables",
+        "Unity.ResourceManager",
+        "Unity.Scenes",
+        "Unity.Addressables.Editor",
+        "RPG.Core",
+        "RPG.Core.Editor",
+        "RPG.Saving",
+        "Unity.Build.Classic",
+        "Unity.ScriptableBuildPipeline",
+        "Unity.ScriptableBuildPipeline.Editor"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

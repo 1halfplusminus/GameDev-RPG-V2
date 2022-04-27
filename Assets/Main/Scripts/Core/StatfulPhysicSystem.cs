@@ -165,7 +165,7 @@ namespace RPG.Core
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(StepPhysicsWorld))]
     [UpdateBefore(typeof(EndFramePhysicsSystem))]
-    public class CollisionEventConversionSystem : SystemBase
+    public partial class CollisionEventConversionSystem : SystemBase
     {
         public JobHandle OutDependency => Dependency;
 
@@ -198,8 +198,12 @@ namespace RPG.Core
         {
             m_PreviousFrameCollisionEvents.Dispose();
             m_CurrentFrameCollisionEvents.Dispose();
+           
         }
-
+        protected override void OnStartRunning(){
+            base.OnStartRunning();
+            this.RegisterPhysicsRuntimeSystemReadWrite();
+        }
         protected void SwapCollisionEventState()
         {
             var tmp = m_PreviousFrameCollisionEvents;
@@ -329,7 +333,7 @@ namespace RPG.Core
                 EntitiesWithBuffersMap = entitiesWithBuffersMap
             };
 
-            Dependency = collectCollisionEventsJob.Schedule(m_StepPhysicsWorld.Simulation, ref m_BuildPhysicsWorld.PhysicsWorld, Dependency);
+            Dependency = collectCollisionEventsJob.Schedule(m_StepPhysicsWorld.Simulation, Dependency);
 
             Job
                 .WithName("ConvertCollisionEventStreamToDynamicBufferJob")
@@ -343,7 +347,6 @@ namespace RPG.Core
                     AddCollisionEventsToDynamicBuffers(collisionEventsWithStates, ref collisionEventBufferFromEntity, entitiesWithBuffersMap);
                 }).Schedule();
 
-            m_EndFramePhysicsSystem.AddInputDependency(Dependency);
             entitiesWithBuffersMap.Dispose(Dependency);
         }
 
@@ -498,7 +501,7 @@ namespace RPG.Core
     [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
     [UpdateAfter(typeof(StepPhysicsWorld))]
     [UpdateBefore(typeof(EndFramePhysicsSystem))]
-    public class TriggerEventConversionSystem : SystemBase
+    public partial class TriggerEventConversionSystem : SystemBase
     {
         public JobHandle OutDependency => Dependency;
 
@@ -536,7 +539,10 @@ namespace RPG.Core
             m_PreviousFrameTriggerEvents.Dispose();
             m_CurrentFrameTriggerEvents.Dispose();
         }
-
+        protected override void OnStartRunning(){
+            base.OnStartRunning();
+            this.RegisterPhysicsRuntimeSystemReadWrite();
+        }
         protected void SwapTriggerEventStates()
         {
             var tmp = m_PreviousFrameTriggerEvents;
@@ -650,7 +656,7 @@ namespace RPG.Core
                 TriggerEvents = currentFrameTriggerEvents
             };
 
-            var collectJobHandle = collectTriggerEventsJob.Schedule(m_StepPhysicsWorld.Simulation, ref physicsWorld, Dependency);
+            var collectJobHandle = collectTriggerEventsJob.Schedule(m_StepPhysicsWorld.Simulation, Dependency);
 
             // Using HashMap since HashSet doesn't exist
             // Setting value type to byte to minimize memory waste
@@ -680,7 +686,7 @@ namespace RPG.Core
                     AddTriggerEventsToDynamicBuffers(triggerEventsWithStates, ref triggerEventBufferFromEntity, entitiesWithBuffersMap);
                 }).Schedule();
 
-            m_EndFramePhysicsSystem.AddInputDependency(Dependency);
+            // m_EndFramePhysicsSystem.AddInputDependency(Dependency);
             entitiesWithBuffersMap.Dispose(Dependency);
         }
 

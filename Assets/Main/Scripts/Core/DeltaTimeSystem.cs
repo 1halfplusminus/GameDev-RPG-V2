@@ -9,7 +9,7 @@ namespace RPG.Core
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
 
-    public class DeltaTimeSystem : SystemBase
+    public partial class DeltaTimeSystem : SystemBase
     {
         protected override void OnUpdate()
         {

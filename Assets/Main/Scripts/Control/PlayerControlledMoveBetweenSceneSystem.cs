@@ -1,6 +1,5 @@
 
 using RPG.Core;
-using RPG.Saving;
 using Unity.Entities;
 
 namespace RPG.Control
@@ -20,7 +19,7 @@ namespace RPG.Control
 
     }
     [UpdateInGroup(typeof(ControlSystemGroup))]
-    public class PlayerControlledMoveBetweenSceneSystem : SystemBase
+    public partial class PlayerControlledMoveBetweenSceneSystem : SystemBase
     {
         EntityCommandBufferSystem commandBufferSystem;
         protected override void OnCreate()

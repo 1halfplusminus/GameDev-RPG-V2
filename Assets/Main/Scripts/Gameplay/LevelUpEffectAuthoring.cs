@@ -43,7 +43,7 @@ namespace RPG.Gameplay
         }
     }
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class LevelUpEffectSystem : SystemBase
+    public partial class LevelUpEffectSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()

@@ -27,8 +27,10 @@ namespace RPG.Combat
             {
                 var settings = AddressableAssetSettingsDefaultObject.Settings;
                 var entry = serializedObject.targetObject.SetAddressableGroup(GROUP);
-                serializedObject.FindProperty(nameof(WeaponAsset.GUID)).stringValue = entry.address;
-                serializedObject.ApplyModifiedProperties();
+                if(entry != null){
+                    serializedObject.FindProperty(nameof(WeaponAsset.GUID)).stringValue = entry.address;
+                    serializedObject.ApplyModifiedProperties();
+                }
                 // Load from default reference
                 m_InspectorXML.CloneTree(myInspector);
                 var guid = myInspector.Q<PropertyField>("GUID");

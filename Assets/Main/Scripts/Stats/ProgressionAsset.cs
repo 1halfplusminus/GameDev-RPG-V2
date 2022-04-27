@@ -1,16 +1,14 @@
-
-
+using UnityEngine;
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using Unity.Entities;
+using Unity.Collections;
+using Unity.Burst;
+using static RPG.Stats.ProgressionAsset;
 namespace RPG.Stats
 {
-    using UnityEngine;
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using Unity.Entities;
-    using Unity.Collections;
-    using static RPG.Stats.ProgressionAsset;
-    using Unity.Burst;
-
+  
     [CreateAssetMenu(fileName = "ProgressionAsset", menuName = "RPG/Stats/New Progression", order = 0)]
     public class ProgressionAsset : ScriptableObject
     {
@@ -70,7 +68,7 @@ namespace RPG.Stats
 
     }
     [UpdateInGroup(typeof(InitializationSystemGroup))]
-    public class ProgressionBlobAssetSystem : SystemBase
+    public partial class ProgressionBlobAssetSystem : SystemBase
     {
         public BlobAssetStore BlobAssetStore;
         protected override void OnCreate()

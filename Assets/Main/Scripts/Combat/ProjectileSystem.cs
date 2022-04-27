@@ -6,7 +6,7 @@ using UnityEngine;
 using Unity.Collections;
 using RPG.Core;
 using UnityEngine.VFX;
-using RPG.Gameplay;
+// using RPG.Gameplay;
 using Unity.Rendering;
 using Unity.Physics;
 
@@ -17,7 +17,7 @@ namespace RPG.Combat
 
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class DestroyVisualEffect : SystemBase
+    public partial class DestroyVisualEffect : SystemBase
     {
 
         EntityCommandBufferSystem entityCommandBufferSystem;
@@ -67,7 +67,7 @@ namespace RPG.Combat
 
     [UpdateInGroup(typeof(CombatSystemGroup))]
     [UpdateBefore(typeof(HitSystem))]
-    public class ProjectileSystem : SystemBase
+    public partial class ProjectileSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery hitableQuery;
@@ -161,7 +161,7 @@ namespace RPG.Combat
     [UpdateBefore(typeof(HealthSystem))]
     [UpdateAfter(typeof(ProjectileSystem))]
     [UpdateAfter(typeof(DamageSystem))]
-    public class ShootProjectileSystem : SystemBase
+    public partial class ShootProjectileSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery hitQuery;

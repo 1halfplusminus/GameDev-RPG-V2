@@ -7,7 +7,7 @@ namespace RPG.Animation
 #if UNITY_EDITOR
     using Unity.Animation.Hybrid;
 #endif
-    static class AnimationConversionExtensions
+static class AnimationConversionExtensions
     {
 #if UNITY_EDITOR
         public static bool TryGetClipAssetRef(this GameObjectConversionSystem conversionSystem, GameObject obj, AnimationClip clip, out BlobAssetReference<Clip> blobAsset)

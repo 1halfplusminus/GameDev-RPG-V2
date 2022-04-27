@@ -72,7 +72,7 @@ namespace RPG.Gameplay.Inventory
                 byte[] bytes = (byte[])state;
                 fixed (byte* ptr = &bytes[0])
                 {
-                    var reader = new MemoryBinaryReader(ptr);
+                    var reader = new MemoryBinaryReader(ptr,bytes.Length);
                     SerializeUtility.DeserializeWorld(world.EntityManager.BeginExclusiveEntityTransaction(), reader, referencedObjects);
                     world.EntityManager.EndExclusiveEntityTransaction();
                     var inventoryQuery = world.EntityManager.CreateEntityQuery(typeof(InventoryItem));

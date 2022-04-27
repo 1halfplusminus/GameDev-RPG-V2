@@ -33,6 +33,26 @@ namespace RPG.Core
             }
             return null;
         }
+        public static AddressableAssetEntry SetAddressableGroup(string assetpath, string groupName)
+        {
+            var settings = AddressableAssetSettingsDefaultObject.Settings;
+
+            if (settings)
+            {
+                var group = settings.FindGroup(groupName);
+                if (!group)
+                    group = settings.CreateGroup(groupName, false, false, true, null, typeof(ContentUpdateGroupSchema), typeof(BundledAssetGroupSchema));
+                var guid = AssetDatabase.AssetPathToGUID(assetpath);
+
+                var e = settings.CreateOrMoveEntry(guid, group, false, false);
+                var entriesAdded = new List<AddressableAssetEntry> { e };
+
+                group.SetDirty(AddressableAssetSettings.ModificationEvent.EntryMoved, entriesAdded, false, true);
+                settings.SetDirty(AddressableAssetSettings.ModificationEvent.EntryMoved, entriesAdded, true, false);
+                return e;
+            }
+            return null;
+        }
         public static AddressableAssetEntry GetAddressableAssetEntry(this Object obj, string groupName)
         {
             var settings = AddressableAssetSettingsDefaultObject.Settings;

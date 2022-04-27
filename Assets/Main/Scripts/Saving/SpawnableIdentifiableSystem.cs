@@ -7,7 +7,7 @@ using Unity.Collections;
 namespace RPG.Saving
 {
     [UpdateInGroup(typeof(SavingSystemGroup))]
-    public class SpawnableIdentifiableSystem : SystemBase
+    public partial class SpawnableIdentifiableSystem : SystemBase
     {
 
         EntityQuery identifiableSpawnerQuery;

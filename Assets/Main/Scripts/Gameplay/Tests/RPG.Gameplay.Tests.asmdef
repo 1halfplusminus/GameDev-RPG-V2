@@ -12,7 +12,8 @@
         "Unity.Addressables",
         "Unity.ResourceManager",
         "RPG.Gameplay.Dialog",
-        "RPG"
+        "RPG.Core",
+        "UnityEngine.UIElementsModule"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

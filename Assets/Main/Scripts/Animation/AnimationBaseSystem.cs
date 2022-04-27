@@ -1,80 +1,82 @@
-using Unity.Entities;
-using Unity.Animation;
-using Unity.Collections;
-using Unity.DataFlowGraph;
+// using Unity.Entities;
+// using Unity.Animation;
+// using Unity.Collections;
+// using Unity.DataFlowGraph;
 
-namespace RPG.Animation
-{
-    public class AnimationSystemGroup : ComponentSystemGroup { }
-    public interface IAnimationSetup : IComponentData { }
-    public interface IAnimationData : ISystemStateComponentData { };
+// namespace RPG.Animation
+// {
 
-    [UpdateInGroup(typeof(AnimationSystemGroup))]
-    public abstract class AnimationSystemBase<TAnimationSetup, TAnimationData, TAnimationSystem>
-    : ComponentSystem
-    where TAnimationSetup : struct, IAnimationSetup
-    where TAnimationData : struct, IAnimationData
-    where TAnimationSystem : SystemBase, IAnimationGraphSystem
-    {
-        protected TAnimationSystem animationSystem;
+//     public interface IAnimationSetup : IComponentData { }
+//     public interface IAnimationData : ISystemStateComponentData { };
 
-        EntityQueryBuilder.F_EDD<Rig, TAnimationSetup> createLambda;
+//     [DisableAutoTypeRegistration]
+//     [DisableAutoCreation]
+//     [UpdateInGroup(typeof(AnimationSystemGroup))]
+//     public abstract partial class AnimationSystemBase<TAnimationSetup, TAnimationData, TAnimationSystem>
+//     : ComponentSystem
+//     where TAnimationSetup : struct, IAnimationSetup
+//     where TAnimationData : struct, IAnimationData
+//     where TAnimationSystem : SystemBase, IAnimationGraphSystem
+//     {
+//         protected TAnimationSystem animationSystem;
 
-        EntityQueryBuilder.F_ED<TAnimationData> destroyLambda;
+//         EntityQueryBuilder.F_EDD<Rig, TAnimationSetup> createLambda;
 
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            animationSystem = World.GetOrCreateSystem<TAnimationSystem>();
-            animationSystem.AddRef();
-            animationSystem.Set.RendererModel = NodeSet.RenderExecutionModel.Islands;
+//         EntityQueryBuilder.F_ED<TAnimationData> destroyLambda;
 
-            createLambda = (Entity e, ref Rig rig, ref TAnimationSetup setup) =>
-            {
-                var data = CreateGraph(e, ref rig, animationSystem, ref setup);
-                PostUpdateCommands.AddComponent(e, data);
-            };
+//         protected override void OnCreate()
+//         {
+//             base.OnCreate();
+//             animationSystem = World.GetOrCreateSystem<TAnimationSystem>();
+//             animationSystem.AddRef();
+//             animationSystem.Set.RendererModel = NodeSet.RenderExecutionModel.Islands;
 
-            destroyLambda = (Entity e, ref TAnimationData data) =>
-            {
-                DestroyGraph(e, animationSystem, ref data);
-                PostUpdateCommands.RemoveComponent<TAnimationData>(e);
-            };
-        }
+//             createLambda = (Entity e, ref Rig rig, ref TAnimationSetup setup) =>
+//             {
+//                 var data = CreateGraph(e, ref rig, animationSystem, ref setup);
+//                 PostUpdateCommands.AddComponent(e, data);
+//             };
 
-        protected override void OnDestroy()
-        {
-            if (animationSystem == null)
-            {
-                return;
-            }
-            var cmdBuffer = new EntityCommandBuffer(Allocator.Temp);
-            Entities.ForEach((Entity e, ref TAnimationData data) =>
-            {
-                DestroyGraph(e, animationSystem, ref data);
-                cmdBuffer.RemoveComponent<TAnimationData>(e);
-            });
+//             destroyLambda = (Entity e, ref TAnimationData data) =>
+//             {
+//                 DestroyGraph(e, animationSystem, ref data);
+//                 PostUpdateCommands.RemoveComponent<TAnimationData>(e);
+//             };
+//         }
 
-            cmdBuffer.Playback(EntityManager);
-            cmdBuffer.Dispose();
-            /*          
-                     animationSystem.RemoveRef(); */
+//         protected override void OnDestroy()
+//         {
+//             if (animationSystem == null)
+//             {
+//                 return;
+//             }
+//             var cmdBuffer = new EntityCommandBuffer(Allocator.Temp);
+//             Entities.ForEach((Entity e, ref TAnimationData data) =>
+//             {
+//                 DestroyGraph(e, animationSystem, ref data);
+//                 cmdBuffer.RemoveComponent<TAnimationData>(e);
+//             });
 
-            base.OnDestroy();
-        }
+//             cmdBuffer.Playback(EntityManager);
+//             cmdBuffer.Dispose();
+//             /*          
+//                      animationSystem.RemoveRef(); */
 
-        protected override void OnUpdate()
-        {
+//             base.OnDestroy();
+//         }
 
-            // Create graph
-            Entities.WithNone<TAnimationData>().ForEach(createLambda);
+//         protected override void OnUpdate()
+//         {
 
-            // DestroyGraph
-            Entities.WithNone<TAnimationSetup>().ForEach(destroyLambda);
+//             // Create graph
+//             Entities.WithNone<TAnimationData>().ForEach(createLambda);
 
-        }
-        protected abstract TAnimationData CreateGraph(Entity e, ref Rig rig, TAnimationSystem graphSystem, ref TAnimationSetup setup);
+//             // DestroyGraph
+//             Entities.WithNone<TAnimationSetup>().ForEach(destroyLambda);
 
-        protected abstract void DestroyGraph(Entity e, TAnimationSystem graphSystem, ref TAnimationData data);
-    }
-}
+//         }
+//         protected abstract TAnimationData CreateGraph(Entity e, ref Rig rig, TAnimationSystem graphSystem, ref TAnimationSetup setup);
+
+//         protected abstract void DestroyGraph(Entity e, TAnimationSystem graphSystem, ref TAnimationData data);
+//     }
+// }

@@ -3,6 +3,7 @@
 using Unity.Mathematics;
 using Unity.Physics;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 namespace RPG.UI
@@ -51,7 +52,7 @@ namespace RPG.UI
             {
                 InitCollider();
 #if !UNITY_ANDROID
-                if (e.clickCount == 0)
+                if (!Mouse.current.leftButton.isPressed)
                 {
                     return;
                 }

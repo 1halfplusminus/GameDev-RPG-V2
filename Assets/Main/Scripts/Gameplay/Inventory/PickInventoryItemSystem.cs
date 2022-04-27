@@ -6,7 +6,7 @@ using UnityEngine;
 namespace RPG.Gameplay.Inventory
 {
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class PickInventoryItemSystem : SystemBase
+    public partial class PickInventoryItemSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
 

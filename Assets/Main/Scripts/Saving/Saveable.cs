@@ -5,7 +5,7 @@ namespace RPG.Saving
 {
     public struct Saveable : IComponentData
     {
-        public FixedList128<ComponentType> types;
+        public FixedList128Bytes<ComponentType> types;
     }
 }
 

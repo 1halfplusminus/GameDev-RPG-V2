@@ -50,6 +50,7 @@ namespace RPG.Control
             {
                 var entity = GetPrimaryEntity(playerControlled);
                 DstEntityManager.AddComponent<PlayerControlled>(entity);
+                DstEntityManager.AddBuffer<HittedByRaycastEvent>(entity);
                 DstEntityManager.AddComponentData(entity, new Raycast
                 {
                     Radius = playerControlled.RaycastRadius,

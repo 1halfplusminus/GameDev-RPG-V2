@@ -18,7 +18,7 @@ namespace RPG.Core
         public float Time;
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
-    public class HideSystem : SystemBase
+    public partial class HideSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery unHideQuery;
@@ -68,9 +68,9 @@ namespace RPG.Core
                     cbp.AddComponent<UnHide>(entityInQueryIndex, e);
                 }
             }).ScheduleParallel();
-            cb.RemoveComponent<UnHide>(cleanupUnHideQuery);
-            cb.RemoveComponent<Hidden>(unHideQuery);
-            cb.RemoveComponent<HideForSecond>(unHideQuery);
+            cb.RemoveComponentForEntityQuery<UnHide>(cleanupUnHideQuery);
+            cb.RemoveComponentForEntityQuery<Hidden>(unHideQuery);
+            cb.RemoveComponentForEntityQuery<HideForSecond>(unHideQuery);
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
     }

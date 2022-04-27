@@ -19,70 +19,70 @@ namespace RPG.Saving
 
     }
     // FIXME: Is this system used ?
-    [DisableAutoCreation]
-    [UpdateInGroup(typeof(SavingSystemGroup))]
-    [UpdateBefore(typeof(SaveSystem))]
-    public class IdentifiableSystem : SystemBase
-    {
+    // [DisableAutoCreation]
+    // [UpdateInGroup(typeof(SavingSystemGroup))]
+    // [UpdateBefore(typeof(SaveSystem))]
+    // public partial class IdentifiableSystem : SystemBase
+    // {
 
 
-        EntityQuery identiableQuery;
+    //     EntityQuery identiableQuery;
 
-        EntityCommandBufferSystem entityCommandBufferSystem;
+    //     EntityCommandBufferSystem entityCommandBufferSystem;
 
-        private JobHandle outputDependency;
+    //     private JobHandle outputDependency;
 
-        public static NativeHashMap<Unity.Entities.Hash128, Entity> IndexQuery(EntityQuery query)
-        {
-            var ids = new NativeHashMap<Unity.Entities.Hash128, Entity>(query.CalculateEntityCount(), Allocator.TempJob);
-            var datas = query.ToComponentDataArray<Identifier>(Allocator.Temp);
-            var entities = query.ToEntityArray(Allocator.Temp);
-            for (int i = 0; i < datas.Length; i++)
-            {
-                if (ids.ContainsKey(datas[i].Id))
-                {
-                    Debug.LogWarning($"{entities[i]} and {ids[datas[i].Id]} as the same identifier : {datas[i].Id}");
-                    ids.Remove(datas[i].Id);
-                }
-                ids.TryAdd(datas[i].Id, entities[i]);
-            }
-            entities.Dispose();
-            datas.Dispose();
-            return ids;
-        }
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            entityCommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
-            RequireForUpdate(identiableQuery);
-        }
+    //     public static NativeHashMap<Unity.Entities.Hash128, Entity> IndexQuery(EntityQuery query)
+    //     {
+    //         var ids = new NativeHashMap<Unity.Entities.Hash128, Entity>(query.CalculateEntityCount(), Allocator.TempJob);
+    //         var datas = query.ToComponentDataArray<Identifier>(Allocator.Temp);
+    //         var entities = query.ToEntityArray(Allocator.Temp);
+    //         for (int i = 0; i < datas.Length; i++)
+    //         {
+    //             if (ids.ContainsKey(datas[i].Id))
+    //             {
+    //                 Debug.LogWarning($"{entities[i]} and {ids[datas[i].Id]} as the same identifier : {datas[i].Id}");
+    //                 ids.Remove(datas[i].Id);
+    //             }
+    //             ids.TryAdd(datas[i].Id, entities[i]);
+    //         }
+    //         entities.Dispose();
+    //         datas.Dispose();
+    //         return ids;
+    //     }
+    //     protected override void OnCreate()
+    //     {
+    //         base.OnCreate();
+    //         entityCommandBufferSystem = World.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
+    //         RequireForUpdate(identiableQuery);
+    //     }
 
-        protected override void OnUpdate()
-        {
-            var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
-            var commandBufferP = commandBuffer.AsParallelWriter();
-            Entities
-            .WithStoreEntityQueryInField(ref identiableQuery)
-            .WithNone<Identified>()
-            .ForEach((int entityInQueryIndex, Entity e, in Identifier identifier) =>
-            {
-                commandBufferP.AddComponent<Identified>(entityInQueryIndex, e);
-            })
-            .ScheduleParallel();
+    //     protected override void OnUpdate()
+    //     {
+    //         var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
+    //         var commandBufferP = commandBuffer.AsParallelWriter();
+    //         Entities
+    //         .WithStoreEntityQueryInField(ref identiableQuery)
+    //         .WithNone<Identified>()
+    //         .ForEach((int entityInQueryIndex, Entity e, in Identifier identifier) =>
+    //         {
+    //             commandBufferP.AddComponent<Identified>(entityInQueryIndex, e);
+    //         })
+    //         .ScheduleParallel();
 
-            entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
+    //         entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
 
-            outputDependency = Dependency;
-        }
+    //         outputDependency = Dependency;
+    //     }
 
-        public JobHandle GetOutputDependency()
-        {
-            return outputDependency;
-        }
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-        }
+    //     public JobHandle GetOutputDependency()
+    //     {
+    //         return outputDependency;
+    //     }
+    //     protected override void OnDestroy()
+    //     {
+    //         base.OnDestroy();
+    //     }
 
-    }
+    // }
 }

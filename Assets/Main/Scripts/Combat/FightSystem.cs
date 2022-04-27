@@ -11,7 +11,7 @@ namespace RPG.Combat
 
     // [UpdateAfter(typeof(PlayerControlledCombatTargettingSystem))]
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class MoveTowardTargetSystem : SystemBase
+    public partial class MoveTowardTargetSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()
@@ -61,7 +61,7 @@ namespace RPG.Combat
     //FIXME: More receive damage system
     [UpdateInGroup(typeof(CombatSystemGroup))]
     [UpdateAfter(typeof(ShootProjectileSystem))]
-    public class WasHittedSystem : SystemBase
+    public partial class WasHittedSystem : SystemBase
     {
         EntityCommandBufferSystem commandBufferSystem;
 
@@ -107,7 +107,7 @@ namespace RPG.Combat
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
     [UpdateAfter(typeof(FightSystem))]
-    public class HitSystem : SystemBase
+    public partial class HitSystem : SystemBase
     {
         EntityCommandBufferSystem commandBufferSystem;
         EntityQuery hittedEntity;
@@ -172,7 +172,7 @@ namespace RPG.Combat
     }
     [UpdateAfter(typeof(MoveTowardTargetSystem))]
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class FightSystem : SystemBase
+    public partial class FightSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
 
@@ -258,7 +258,7 @@ namespace RPG.Combat
 
     [UpdateAfter(typeof(FightSystem))]
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class FightAnimationSystem : SystemBase
+    public partial class FightAnimationSystem : SystemBase
     {
         protected override void OnUpdate()
         {

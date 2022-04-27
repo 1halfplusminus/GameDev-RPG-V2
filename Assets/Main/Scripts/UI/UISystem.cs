@@ -29,7 +29,7 @@ namespace RPG.UI
     {
     }
     [UpdateInGroup(typeof(UISystemGroup))]
-    public class GameOverUISystem : SystemBase
+    public partial class GameOverUISystem : SystemBase
     {
         public string GAME_OVER_UI_ADDRESS = "GameOverUI";
         private AsyncOperationHandle<GameObject> handle;
@@ -49,7 +49,11 @@ namespace RPG.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            Addressables.Release(handle);
+            if (handle.IsValid())
+            {
+                Addressables.Release(handle);
+            }
+
         }
         private void HandleCompleted(AsyncOperationHandle<GameObject> operation)
         {
@@ -65,12 +69,24 @@ namespace RPG.UI
             }
         }
 
-        private void LoadGameUIAddressable()
+        private async void LoadGameUIAddressable()
         {
             if (!handle.IsValid())
             {
-                handle = Addressables.LoadAssetAsync<GameObject>(GAME_OVER_UI_ADDRESS);
-                handle.Completed += HandleCompleted;
+                var op = Addressables.LoadResourceLocationsAsync(GAME_OVER_UI_ADDRESS);
+                op.Completed += (r) =>
+                {
+                    if (op.Status == AsyncOperationStatus.Succeeded)
+                    {
+                        if (r.Result.Count > 0)
+                        {
+                            handle = Addressables.LoadAssetAsync<GameObject>(GAME_OVER_UI_ADDRESS);
+                            handle.Completed += HandleCompleted;
+                        }
+                    }
+
+                };
+                await op.Task;
             }
         }
 
@@ -133,7 +149,7 @@ namespace RPG.UI
         public Entity Entity;
     }
     [UpdateInGroup(typeof(UISystemGroup))]
-    public class InGameUISystem : SystemBase
+    public partial class InGameUISystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
 
@@ -210,7 +226,7 @@ namespace RPG.UI
         }
     }
     [UpdateInGroup(typeof(UISystemGroup))]
-    public class InPauseUISystem : SystemBase
+    public partial class InPauseUISystem : SystemBase
     {
         InputSystem inputSystem;
         SavingWrapperSystem saveSystem;
@@ -311,7 +327,7 @@ namespace RPG.UI
         }
     }
     [UpdateInGroup(typeof(UISystemGroup))]
-    public class MainGameUISystem : SystemBase
+    public partial class MainGameUISystem : SystemBase
     {
         SavingWrapperSystem savingWrapperSystem;
 
@@ -437,7 +453,7 @@ namespace RPG.UI
         }
     }
     [UpdateInGroup(typeof(UISystemGroup))]
-    public class AutoInstantiateGameUISystem : SystemBase
+    public partial class AutoInstantiateGameUISystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()

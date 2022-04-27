@@ -1,5 +1,4 @@
 using Cinemachine;
-using RPG.Hybrid;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -9,7 +8,7 @@ namespace RPG.Core
 {
 
     [UpdateInGroup(typeof(CoreSystemGroup))]
-    public class LookAtSystem : SystemBase
+    public partial class LookAtSystem : SystemBase
     {
         protected override void OnUpdate()
         {
@@ -31,7 +30,7 @@ namespace RPG.Core
         }
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
-    public class CameraFacingSystem : SystemBase
+    public partial class CameraFacingSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()
@@ -75,32 +74,3 @@ namespace RPG.Core
     }
 }
 
-// FIXME: TO DELETE
-// var direction = math.normalize(localToWorld.Position - cameraPosition);
-// if (math.dot(localToWorld.Right, direction) > 0.98f)
-// {
-//     rotation.Value = quaternion.LookRotation(direction, math.up());
-// }
-// forward.z = 0;
-
-// scale.Value.x = -1;
-// var heading = -cameraForward;
-// heading.y = 0;
-// textMesh.transform.rotation = Quaternion.LookRotation(heading, textMesh.transform.up - camera.transform.up);
-
-// rotation.Value = textMesh.transform.rotation;
-
-// var heading = (cameraPosition + cameraForward);
-// var up = localToWorld.Up - cameraUp;
-// heading.y = 0;
-// var result = quaternion.LookRotationSafe(heading, cameraUp);
-// var angleBetweenForward = math.dot(localToWorld.Forward, cameraForward);
-// var dif = math.mul(rotation.Value, math.inverse(cameraRotation));
-// Debug.Log($"Forward my forward {localToWorld.Forward} heading:{heading} cameraForward: {cameraForward}");
-// Debug.Log($"Angle between {math.degrees(angleBetweenForward)}");
-// Debug.Log($"Look rotation: x:{math.degrees(result.value.x)} y:{math.degrees(result.value.y)} z:{math.degrees(result.value.z)}");
-// Debug.Log($"rotation difference x:{dif.value.x} y:{dif.value.y}  z:{dif.value.z} w:{dif.value.z} w: {dif.value.w}");
-// result.value.x = 0;
-// rotation.Value = result;
-// rotation.Value.value.w = rotation.Value.value.w;
-// rotation.Value.value.y = math.radians(90f);

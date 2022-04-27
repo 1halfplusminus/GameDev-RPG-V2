@@ -1,9 +1,8 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
-
-
 using RPG.Core;
+
 namespace RPG.Mouvement
 {
     public struct Warped : IComponentData

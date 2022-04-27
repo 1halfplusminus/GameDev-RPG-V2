@@ -1,7 +1,12 @@
 root = true
 # Treat all cs files in this folder as generated code
+[*.cs]
+generated_code = true
+# Treat all cs files in this folder as generated code
 [**/Packages/**.cs]
 generated_code = true
+dotnet_diagnostic.CS8019.severity = none
+dotnet_analyzer_diagnostic.severity = none
 [**/obj/**.cs]
 dotnet_diagnostic.CS8019.severity = none
 generated_code = true
@@ -9,4 +14,9 @@ dotnet_analyzer_diagnostic.severity = none
 # Prevent analyzers from running in these directories
 [Library/PackageCache/**]
 generated_code = true
+dotnet_diagnostic.CS8019.severity = none
+dotnet_analyzer_diagnostic.severity = none
+[**com.unity.**]
+generated_code = true
+dotnet_diagnostic.CS8019.severity = none
 dotnet_analyzer_diagnostic.severity = none

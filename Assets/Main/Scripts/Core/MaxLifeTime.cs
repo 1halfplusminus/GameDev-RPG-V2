@@ -8,7 +8,7 @@ namespace RPG.Core
         public float Value;
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
-    public class MaxLifeTimeSystem : SystemBase
+    public partial class MaxLifeTimeSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()

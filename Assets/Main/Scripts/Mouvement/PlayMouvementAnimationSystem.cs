@@ -1,12 +1,11 @@
 
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Animation;
 
 namespace RPG.Mouvement
 {
     [UpdateInGroup(typeof(MouvementSystemGroup))]
-    public class PlayMouvementAnimationSystem : SystemBase
+    public partial class PlayMouvementAnimationSystem : SystemBase
     {
         protected override void OnUpdate()
         {
@@ -37,7 +36,7 @@ namespace RPG.Mouvement
                     characterAnimation.Move = math.max(characterAnimation.Move - 0.1f, 0.0f);
                 }
 
-            }).WithoutBurst().ScheduleParallel();
+            }).ScheduleParallel();
             Entities
            .WithNone<IsMoving>()
            .ForEach((ref CharacterAnimation characterAnimation, in Mouvement mouvement) =>

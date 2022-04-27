@@ -13,10 +13,11 @@ public class SaveableAuthoring_Inspector : Editor
     {
         // Create a new VisualElement to be the root of our inspector UI
         VisualElement myInspector = new VisualElement();
-
-        // Load from default reference
-        m_InspectorXML.CloneTree(myInspector);
-
+        if (m_InspectorXML != null)
+        {
+            // Load from default reference
+            m_InspectorXML.CloneTree(myInspector);
+        }
         // Return the finished inspector UI
         return myInspector;
     }

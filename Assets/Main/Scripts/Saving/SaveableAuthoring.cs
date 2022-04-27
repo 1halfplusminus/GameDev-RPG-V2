@@ -38,7 +38,7 @@ namespace RPG.Saving
         public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
 #if UNITY_EDITOR
-            var saveablesTypes = new FixedList128<ComponentType>();
+            var saveablesTypes = new FixedList128Bytes<ComponentType>();
             foreach (var saveableType in SaveableTypes)
             {
                 var type = ComponentType.ReadOnly(Type.GetType(saveableType.Id));
@@ -65,10 +65,11 @@ namespace RPG.Saving
         private void Update()
         {
             if (Application.IsPlaying(gameObject)) { return; }
-            if (UnityEditor.SceneManagement.PrefabStageUtility.GetPrefabStage(gameObject) != null)
-            {
-                return;
-            }
+            //FIXME: find remplacement for 2020
+            // if (UnityEditor.SceneManagement.PrefabStageUtility.GetPrefabStage(gameObject) != null)
+            // {
+            //     return;
+            // }
             var serializedObject = new SerializedObject(this);
             var property = serializedObject.FindProperty(nameof(UniqueIdentifier));
             if (property.stringValue == "" || !IsUnique(property.stringValue))

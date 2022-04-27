@@ -105,7 +105,7 @@ namespace RPG.Gameplay.Inventory
     }
 
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class InventorySystem : SystemBase
+    public partial class InventorySystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
 

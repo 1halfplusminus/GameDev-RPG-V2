@@ -9,6 +9,7 @@ using Unity.Scenes;
 using RPG.Saving;
 using UnityEngine.AddressableAssets;
 
+//FIXME: Remove
 public class SaveEditorWindow : EditorWindow
 {
     public VisualTreeAsset visualTreeAsset;
@@ -44,41 +45,41 @@ public class SaveEditorWindow : EditorWindow
 
     private void OnEnable()
     {
-        Debug.Log("On Enable");
-        if (visualTreeAsset == null) { return; }
-        // Reference to the root of the window.
-        var root = visualTreeAsset.Instantiate();
+        // Debug.Log("On Enable");
+        // if (visualTreeAsset == null) { return; }
+        // // Reference to the root of the window.
+        // var root = visualTreeAsset.Instantiate();
 
-        // Creates our button and sets its Text property.
-        var saveButton = root.Q<Button>("Save");
-        saveButton.clicked += () =>
-        {
-            var saveSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SaveSystem>();
-            saveSystem.Save();
-        };
+        // // Creates our button and sets its Text property.
+        // var saveButton = root.Q<Button>("Save");
+        // saveButton.clicked += () =>
+        // {
+        //     var saveSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SaveSystem>();
+        //     saveSystem.Save();
+        // };
 
-        // Creates our button and sets its Text property.
-        var loadButton = root.Q<Button>("Load");
+        // // Creates our button and sets its Text property.
+        // var loadButton = root.Q<Button>("Load");
 
-        loadButton.clicked += () =>
-        {
-            var saveSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SaveSystem>();
-            saveSystem.Load();
-        };
+        // loadButton.clicked += () =>
+        // {
+        //     var saveSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<SaveSystem>();
+        //     saveSystem.Load();
+        // };
 
-        var scenes = root.Q<DropdownField>("Scene");
-        var userData = new List<Unity.Entities.Hash128>();
-        scenes.choices = new List<string>();
-        scenes.userData = userData;
-        var scenesQuery = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(SubScene), typeof(SceneSectionData));
-        using var sceneEntities = scenesQuery.ToEntityArray(Allocator.Temp);
-        for (int i = 0; i < scenesQuery.CalculateEntityCount(); i++)
-        {
-            var sceneEntity = sceneEntities[i];
-            var subScene = World.DefaultGameObjectInjectionWorld.EntityManager.GetComponentObject<SubScene>(sceneEntity);
-            userData.Add(subScene.SceneGUID);
-            scenes.choices.Add(subScene.SceneName);
-        }
+        // var scenes = root.Q<DropdownField>("Scene");
+        // var userData = new List<Unity.Entities.Hash128>();
+        // scenes.choices = new List<string>();
+        // scenes.userData = userData;
+        // var scenesQuery = World.DefaultGameObjectInjectionWorld.EntityManager.CreateEntityQuery(typeof(SubScene), typeof(SceneSectionData));
+        // using var sceneEntities = scenesQuery.ToEntityArray(Allocator.Temp);
+        // for (int i = 0; i < scenesQuery.CalculateEntityCount(); i++)
+        // {
+        //     var sceneEntity = sceneEntities[i];
+        //     var subScene = World.DefaultGameObjectInjectionWorld.EntityManager.GetComponentObject<SubScene>(sceneEntity);
+        //     userData.Add(subScene.SceneGUID);
+        //     scenes.choices.Add(subScene.SceneName);
+        // }
 
         /*    var saveSceneButton = root.Q<Button>("SaveScene");
 
@@ -109,7 +110,7 @@ public class SaveEditorWindow : EditorWindow
                saveSystem.LoadSerializedWorld();
                Debug.Log($"Loading Scene For {scenes.choices[scenes.index]} : {sceneEntity.Index}");
            }; */
-        rootVisualElement.Add(root);
+        // rootVisualElement.Add(root);
     }
 }
 #endif

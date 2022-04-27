@@ -15,7 +15,7 @@ namespace RPG.Control
 {
     [UpdateInGroup(typeof(ControlSystemGroup))]
     [UpdateAfter(typeof(SuspiciousSystem))]
-    public class PatrolBehaviourSystem : SystemBase
+    public partial class PatrolBehaviourSystem : SystemBase
     {
         protected override void OnUpdate()
         {
@@ -82,7 +82,7 @@ namespace RPG.Control
     }
     [UpdateInGroup(typeof(ControlSystemGroup))]
     [UpdateAfter(typeof(ChaseBehaviourSystem))]
-    public class SuspiciousSystem : SystemBase
+    public partial class SuspiciousSystem : SystemBase
     {
         EntityCommandBufferSystem ecs;
         protected override void OnCreate()
@@ -130,7 +130,7 @@ namespace RPG.Control
     }
     [UpdateInGroup(typeof(ControlSystemGroup))]
     [UpdateAfter(typeof(ChaseBehaviourSystem))]
-    public class GuardBehaviorSystem : SystemBase
+    public partial class GuardBehaviorSystem : SystemBase
     {
 
         protected override void OnCreate()
@@ -157,7 +157,7 @@ namespace RPG.Control
         }
     }
     [UpdateInGroup(typeof(ControlSystemGroup))]
-    public class ChaseBehaviourSystem : SystemBase
+    public partial class ChaseBehaviourSystem : SystemBase
     {
         EntityQuery playerControlledQuery;
         EntityQuery playerChaserQuery;
@@ -174,11 +174,13 @@ namespace RPG.Control
             stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
             RequireForUpdate(playerChaserQuery);
         }
-
+        protected override void OnStartRunning(){
+            base.OnStartRunning();
+            this.RegisterPhysicsRuntimeSystemReadOnly();
+        }
         protected override void OnUpdate()
         {
-            var physicDependency = JobHandle.CombineDependencies(buildPhysicsWorld.GetOutputDependency(), stepPhysicsWorld.GetOutputDependency());
-            Dependency = JobHandle.CombineDependencies(physicDependency, Dependency);
+
             var physicsWorld = buildPhysicsWorld.PhysicsWorld;
             var collisionWorld = physicsWorld.CollisionWorld;
             // var playerPositions = new NativeHashMap<Entity, LocalToWorld>(playerControlledQuery.CalculateEntityCount(), Allocator.TempJob);
@@ -339,7 +341,7 @@ namespace RPG.Control
     }
 
     [UpdateInGroup(typeof(ControlSystemGroup))]
-    public class AIAnimationSystem : SystemBase
+    public partial class AIAnimationSystem : SystemBase
     {
         protected override void OnUpdate()
         {

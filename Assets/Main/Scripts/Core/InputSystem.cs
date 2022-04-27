@@ -22,7 +22,7 @@ namespace RPG.Core
         public int Frame;
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
-    public class InputSystem : SystemBase
+    public partial class InputSystem : SystemBase
     {
 
         GameInput input;
@@ -49,7 +49,7 @@ namespace RPG.Core
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
 
-    public class MouseInputSystem : SystemBase
+    public partial class MouseInputSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         GameInput input;
@@ -98,7 +98,7 @@ namespace RPG.Core
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
     [UpdateBefore(typeof(MouseInputSystem))]
-    public class EndSimulationMouseClickSystem : SystemBase
+    public partial class EndSimulationMouseClickSystem : SystemBase
     {
         protected override void OnUpdate()
         {
@@ -119,7 +119,7 @@ namespace RPG.Core
         }
     }
     [DisableAutoCreation]
-    public class DebugPlayerMouseInputSystem : SystemBase
+    public partial class DebugPlayerMouseInputSystem : SystemBase
     {
         protected override void OnUpdate()
         {

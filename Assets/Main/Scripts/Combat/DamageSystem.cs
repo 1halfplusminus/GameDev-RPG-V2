@@ -6,7 +6,7 @@ namespace RPG.Combat
 {
     //FIXME: Add a require for update
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class DamageSystem : SystemBase
+    public partial class DamageSystem : SystemBase
     {
         protected override void OnUpdate()
         {

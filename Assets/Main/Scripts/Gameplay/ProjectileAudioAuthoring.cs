@@ -1,7 +1,7 @@
 using RPG.Combat;
 using Unity.Entities;
 using UnityEngine;
-
+using RPG.Hybrid;
 namespace RPG.Gameplay
 {
     public struct ProjectileHitAudio : IComponentData
@@ -33,14 +33,11 @@ namespace RPG.Gameplay
         }
         private Entity DeclareAudioSource(AudioSource audioSource, GameObjectConversionSystem conversionSystem)
         {
-            conversionSystem.DeclareAssetDependency(audioSource.gameObject, audioSource.clip);
-            conversionSystem.AddHybridComponent(audioSource);
-            return conversionSystem.GetPrimaryEntity(audioSource.gameObject);
-
+            return AudioConversionUtilities.DeclareAudioSource(audioSource,conversionSystem);
         }
     }
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class ProjectileAudioSystem : SystemBase
+    public partial class ProjectileAudioSystem : SystemBase
     {
         protected override void OnUpdate()
         {

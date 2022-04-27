@@ -35,10 +35,10 @@ namespace RPG.Core
         public void Update()
         {
             if (Application.IsPlaying(gameObject)) { return; }
-            if (UnityEditor.SceneManagement.PrefabStageUtility.GetPrefabStage(gameObject) != null)
-            {
-                return;
-            }
+            // if (UnityEditor.SceneManagement.PrefabStageUtility.GetPrefabStage(gameObject) != null)
+            // {
+            //     return;
+            // }
             var serializedObject = new SerializedObject(this);
             var property = serializedObject.FindProperty(nameof(Prefab));
             if (property.objectReferenceValue == null)

@@ -9,7 +9,7 @@ namespace RPG.Gameplay.Inventory
 {
 
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class CommonInventorySystem : SystemBase
+    public partial class CommonInventorySystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery usedItemsQuery;
@@ -25,7 +25,7 @@ namespace RPG.Gameplay.Inventory
         protected override void OnUpdate()
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
-            cb.RemoveComponent<UsedItem>(usedItemsQuery);
+            cb.RemoveComponentForEntityQuery<UsedItem>(usedItemsQuery);
             var inventoryGUIByEntity = new NativeMultiHashMap<Entity, int>(itemToRemoveQuery.CalculateEntityCount(), Allocator.TempJob);
             var entities = itemToRemoveQuery.ToEntityArray(Allocator.Temp);
             var inventories = itemToRemoveQuery.ToComponentDataArray<Inventory>(Allocator.Temp);
@@ -78,7 +78,7 @@ namespace RPG.Gameplay.Inventory
         }
     }
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class ItemInventorySystem : SystemBase
+    public partial class ItemInventorySystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()
@@ -128,7 +128,7 @@ namespace RPG.Gameplay.Inventory
         }
     }
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class WeaponInventorySystem : SystemBase
+    public partial class WeaponInventorySystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         EntityQuery weaponAssetQuery;

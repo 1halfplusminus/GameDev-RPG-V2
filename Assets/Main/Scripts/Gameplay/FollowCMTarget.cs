@@ -7,7 +7,7 @@ using UnityEngine;
 namespace RPG.Gameplay
 {
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class CMCameraSystem : SystemBase
+    public partial class CMCameraSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()

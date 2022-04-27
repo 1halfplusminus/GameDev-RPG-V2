@@ -14,26 +14,26 @@ public class SaveableType_PropertyDrawer : PropertyDrawer
         // Create a new VisualElement to be the root the property UI
         var container = new VisualElement();
 
-        //DropdownField
+        // //DropdownField
 
-        var choices = new List<string>();
-        var datas = new List<string>();
-        choices.Add(typeof(Translation).FullName);
-        var dropdownField = new DropdownField(choices, 0, (v) => { return v; })
-        {
-            bindingPath = property.FindPropertyRelative("Id").propertyPath,
-            userData = datas
-        };
+        // var choices = new List<string>();
+        // var datas = new List<string>();
+        // choices.Add(typeof(Translation).FullName);
+        // var dropdownField = new DropdownField(choices, 0, (v) => { return v; })
+        // {
+        //     bindingPath = property.FindPropertyRelative("Id").propertyPath,
+        //     userData = datas
+        // };
 
-        // Create drawer UI using C#
-        var popup = new UnityEngine.UIElements.PopupWindow
-        {
-            text = "Component"
-        };
-        popup.Add(dropdownField);
-        container.Add(popup);
+        // // Create drawer UI using C#
+        // var popup = new UnityEngine.UIElements.PopupWindow
+        // {
+        //     text = "Component"
+        // };
+        // popup.Add(dropdownField);
+        // container.Add(popup);
 
-        // Return the finished UI
+        // // Return the finished UI
         return container;
     }
 }

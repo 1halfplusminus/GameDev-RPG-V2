@@ -8,7 +8,7 @@ namespace RPG.Core
 {
     public struct Addressable : IComponentData
     {
-        public FixedString64 Address;
+        public FixedString64Bytes Address;
     }
     public class AddressableAuthoring : MonoBehaviour
     {

@@ -7,10 +7,11 @@ using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Transforms;
 using RPG.Control;
+using RPG.Saving;
 
 namespace RPG.Gameplay
 {
-    using RPG.Saving;
+
 #if UNITY_EDITOR
     using UnityEditor;
     public class PortalAuthoring : MonoBehaviour
@@ -64,7 +65,7 @@ namespace RPG.Gameplay
     }
 
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class PortalSystem : SystemBase
+    public partial class PortalSystem : SystemBase
     {
 
         EntityCommandBufferSystem entityCommandBufferSystem;

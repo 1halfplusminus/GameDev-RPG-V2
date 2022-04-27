@@ -6,7 +6,8 @@
         "Unity.Mathematics",
         "Unity.Collections",
         "Unity.Entities.Hybrid",
-        "RPG"
+        "RPG.Core",
+        "RPG.Gameplay"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

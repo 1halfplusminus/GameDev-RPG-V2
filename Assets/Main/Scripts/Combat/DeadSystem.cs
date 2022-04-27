@@ -12,7 +12,7 @@ namespace RPG.Combat
 
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class KillCharacterSystem : SystemBase
+    public partial class KillCharacterSystem : SystemBase
     {
         EntityCommandBufferSystem commandBufferSystem;
         EntityQuery diedQuery;
@@ -69,7 +69,7 @@ namespace RPG.Combat
         }
     }
     [UpdateInGroup(typeof(CombatSystemGroup))]
-    public class DeadAnimationSystem : SystemBase
+    public partial class DeadAnimationSystem : SystemBase
     {
         protected override void OnUpdate()
         {

@@ -4,14 +4,11 @@ using Unity.Jobs;
 using RPG.Core;
 using UnityEngine.Playables;
 using RPG.Control;
-using Cinemachine;
-using UnityEngine;
-using RPG.Hybrid;
 using System.Collections.Generic;
 
 namespace RPG.Gameplay
 {
-    public struct LinkCinemachineBrain : IComponentData { }
+
     public struct TriggeredBy : IComponentData
     {
         public Entity Entity;
@@ -52,109 +49,8 @@ namespace RPG.Gameplay
         }
     }
 
-    [UpdateAfter(typeof(CinemachineCameraConversionSystem))]
-    public class PlayableDirectorConversionSystem : GameObjectConversionSystem
-    {
-        HashSet<PlayableAsset> dones;
-        EntityQuery query;
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            dones = new HashSet<PlayableAsset>();
-            query = EntityManager.CreateEntityQuery(typeof(CinemachineBrain));
-        }
-        protected override void OnUpdate()
-        {
-            dones.Clear();
-            CinemachineBrain brain = null;
-            if (query.CalculateEntityCount() > 0)
-            {
-                Entity brainEntity = query.GetSingletonEntity();
-                brain = EntityManager.GetComponentObject<CinemachineBrain>(brainEntity);
-            }
-
-            Entities.ForEach((PlayableDirector playableDirector) =>
-            {
-                AddHybridComponent(playableDirector);
-                if (playableDirector.playableAsset == null) { return; }
-                var entity = GetPrimaryEntity(playableDirector);
-                LinkBrain(playableDirector, brain, entity);
-                ConvertOutputRecurse(playableDirector, playableDirector.playableAsset);
-            });
-
-            /* Entities.ForEach((CinemachineTrack track) =>
-            {
-                Debug.Log("Convert CinemachineTrack");
-            }); */
-        }
-        private void LinkBrain(PlayableDirector playableDirector, CinemachineBrain brain, Entity entity)
-        {
-            var outputs = playableDirector.playableAsset.outputs;
-            foreach (var output in outputs)
-            {
-                if (output.sourceObject is CinemachineTrack)
-                {
-                    if (brain != null)
-                    {
-                        Debug.Log($"Set Generic Binding");
-                        playableDirector.SetGenericBinding(output.sourceObject, brain);
-                    }
-                    else
-                    {
-                        DstEntityManager.AddComponent<LinkCinemachineBrain>(entity);
-                        break;
-                    }
-                }
-            }
-        }
-        private void ConvertOutputRecurse(PlayableDirector playableDirector, PlayableAsset asset)
-        {
-            if (dones.Contains(asset))
-            {
-                return;
-            }
-            dones.Add(asset);
-            var outputs = asset.outputs;
-            foreach (var output in outputs)
-            {
-                if (output.sourceObject is PlayableAsset playableAsset)
-                {
-                    if (HasPrimaryEntity(playableAsset))
-                    {
-                        var outputEntity = GetPrimaryEntity(playableAsset);
-                        DstEntityManager.AddComponentObject(outputEntity, playableAsset);
-                        ConvertOutputRecurse(playableDirector, playableAsset);
-                    }
-                }
-            }
-        }
-    }
-    [UpdateInGroup(typeof(InitializationSystemGroup))]
-    public class InitialiseHybridPayableDirectory : SystemBase
-    {
-        protected override void OnUpdate()
-        {
-            if (!HasSingleton<CinemachineBrainTag>()) { return; }
-            var cinemachineBrainEntity = GetSingletonEntity<CinemachineBrainTag>();
-            var cinemachineBrain = EntityManager.GetComponentObject<CinemachineBrain>(cinemachineBrainEntity);
-            Entities
-            .WithChangeFilter<LinkCinemachineBrain>()
-            .ForEach((PlayableDirector playableDirector) =>
-            {
-                var outputs = playableDirector.playableAsset.outputs;
-                foreach (var output in outputs)
-                {
-                    if (output.sourceObject is CinemachineTrack cinemachineTrack)
-                    {
-                        Debug.Log("Link cinemachineBrain");
-                        playableDirector.SetGenericBinding(output.sourceObject, cinemachineBrain);
-                    }
-                }
-            }).WithoutBurst().Run();
-        }
-    }
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class TriggerTimelineSystem : SystemBase
+    public partial class TriggerTimelineSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()

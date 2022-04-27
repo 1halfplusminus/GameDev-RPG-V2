@@ -6,7 +6,7 @@ using UnityEngine;
 namespace RPG.Gameplay
 {
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class GameplayInputSystem : SystemBase
+    public partial class GameplayInputSystem : SystemBase
     {
         InputSystem inputSystem;
 

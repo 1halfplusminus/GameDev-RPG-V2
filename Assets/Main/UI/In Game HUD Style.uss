@@ -1,17 +1,20 @@
 .Interactive {
-    cursor: url('project://database/Assets/Main/Assets%20Packs/Pixel%20Cursors/Cursors/basic_01.png?fileID=2800000&guid=2e71a8202d3b4a3448ec85ced5a40265&type=3#basic_01');
+    cursor: url('/Assets/Main/Editor/Assets Packs/Pixel Cursors/Cursors/basic_01.png');
 }
 
 .Interactive > * {
-    cursor: url('project://database/Assets/Main/Assets%20Packs/Pixel%20Cursors/Cursors/basic_01.png?fileID=2800000&guid=2e71a8202d3b4a3448ec85ced5a40265&type=3#basic_01');
+    cursor: url('/Assets/Main/Editor/Assets Packs/Pixel Cursors/Cursors/basic_01.png');
 }
 
 Label {
     color: rgb(255, 255, 255);
 }
-
+* {
+    -unity-font: url('/Assets/TextMesh Pro/Fonts/LiberationSans.ttf');
+}
 .Text {
     font-size: 13px;
+    -unity-font: url('/Assets/TextMesh Pro/Fonts/LiberationSans.ttf');
 }
 
 .Box {
@@ -68,7 +71,7 @@ Label {
     border-bottom-left-radius: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    background-image: url('project://database/Assets/Main/UI/Button-Primary-Default-Without%20Icon.png?fileID=2800000&guid=95fed834cad65eb4ca213ba667a48125&type=3#Button-Primary-Default-Without Icon');
+    background-image: url('/Assets/Main/UI/Button-Primary-Default-Without Icon.png');
     background-color: rgba(0, 0, 0, 0);
     -unity-background-image-tint-color: rgb(226, 157, 157);
     border-left-width: 0;
@@ -79,7 +82,7 @@ Label {
 }
 
 .my-button:hover {
-    background-image: url('project://database/Assets/Main/UI/Button-Primary-Hover-Without%20Icon.png?fileID=2800000&guid=b4093ce723a1b2e19af4dfcea73e62c7&type=3#Button-Primary-Hover-Without Icon');
+    background-image: url('/Assets/Main/UI/Button-Primary-Hover-Without Icon.png');
     background-color: rgba(0, 0, 0, 0);
 }
 
@@ -97,7 +100,18 @@ Button {
 }
 
 .Button:disabled {
-    cursor: url('project://database/Assets/Main/Assets%20Packs/Pixel%20Cursors/Cursors/basic_01%20RED.png?fileID=2800000&guid=2a2b4775272c890448e1bd6239fdfc84&type=3#basic_01 RED');
+    cursor: url('/Assets/Main/Editor/Assets Packs/Pixel Cursors/Cursors/basic_01 RED.png');
     opacity: 0.6;
     color: rgb(255, 255, 255);
 }
+
+.main {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-end;
+    flex-grow: 1;
+    flex-direction: column;
+    cursor: url('/Assets/Main/Editor/Assets Packs/Pixel Cursors/Cursors/basic_01.png');
+
+}
+

@@ -22,14 +22,12 @@ namespace RPG.Gameplay
         }
         private Entity DeclareAudioSource(AudioSource audioSource, GameObjectConversionSystem conversionSystem)
         {
-            conversionSystem.DeclareAssetDependency(audioSource.gameObject, audioSource.clip);
-            conversionSystem.AddHybridComponent(audioSource);
-            return conversionSystem.GetPrimaryEntity(audioSource.gameObject);
+             return AudioConversionUtilities.DeclareAudioSource(audioSource,conversionSystem);
         }
     }
 
     [UpdateInGroup(typeof(GameplaySystemGroup))]
-    public class WeaponAudioSystem : SystemBase
+    public partial class WeaponAudioSystem : SystemBase
     {
         protected override void OnUpdate()
         {

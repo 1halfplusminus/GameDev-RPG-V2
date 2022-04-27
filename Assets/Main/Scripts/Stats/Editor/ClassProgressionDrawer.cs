@@ -1,23 +1,21 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
+using RPG.Core;
+using static RPG.Stats.ProgressionAsset;
 #if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.UIElements;
 
 namespace RPG.Stats
 {
-    using System.Collections.Generic;
-    using UnityEditor;
-    using UnityEditor.UIElements;
-    using UnityEngine;
-    using UnityEngine.AddressableAssets;
-    using UnityEngine.UIElements;
-    using static RPG.Stats.ProgressionAsset;
-    using RPG.Core;
+    
     [CustomPropertyDrawer(typeof(ProgressionCurve))]
     public class ProgressionCurveDrawer : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            var mainTemplateHandle = Addressables.LoadAssetAsync<VisualTreeAsset>("ProgressionCurveDrawer");
-            mainTemplateHandle.WaitForCompletion();
-            var mainTemplateTreeAsset = mainTemplateHandle.Result;
+            var mainTemplateTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Scripts/Stats/Editor/ProgressionCurveDrawer.uxml");
             var root = mainTemplateTreeAsset.Instantiate();
 
             var maxLevelProperty = property.FindParentProperty().FindParentProperty().FindPropertyRelative(nameof(ClassProgression.MaxLevel));
@@ -123,9 +121,9 @@ namespace RPG.Stats
 
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
-            var mainTemplateHandle = Addressables.LoadAssetAsync<VisualTreeAsset>("ClassProgressionDrawer");
-            mainTemplateHandle.WaitForCompletion();
-            var mainTemplateTreeAsset = mainTemplateHandle.Result;
+            var mainTemplateTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Scripts/Stats/Editor/ClassProgressionDrawer.uxml");
+            // mainTemplateHandle.WaitForCompletion();
+            // var mainTemplateTreeAsset = mainTemplateHandle.Result;
             var root = mainTemplateTreeAsset.Instantiate();
             var maxLevelProperty = property.FindPropertyRelative(nameof(ClassProgression.MaxLevel));
             var maxLevelField = root.Q<SliderInt>(nameof(ClassProgression.MaxLevel));

@@ -3,9 +3,11 @@ using Unity.Animation;
 using System;
 using Unity.Entities;
 using Unity.Entities.Serialization;
-using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
+
+
+#if UNITY_EDITOR
 using Unity.Animation.Hybrid;
+#endif
 
 namespace RPG.Animation
 {
@@ -24,20 +26,30 @@ namespace RPG.Animation
             }
         }
 
-        public static BlobAssetReference<Clip> BuildClip(byte[] data)
+        public static BlobAssetReference<Clip> BuildClip(byte[] data, string name)
         {
-            using var world = new World("Clip", WorldFlags.Conversion);
-            var query = world.EntityManager.CreateEntityQuery(typeof(ChangeAttackAnimation));
+            // using var world = new World("Clip", WorldFlags.Conversion);
+            // var query = world.EntityManager.CreateEntityQuery(typeof(ChangeAttackAnimation));
             unsafe
             {
                 fixed (byte* ptr = &data[0])
                 {
-                    using var binaryReader = new MemoryBinaryReader(ptr);
-                    SerializeUtility.DeserializeWorld(world.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);
-                    world.EntityManager.EndExclusiveEntityTransaction();
-                    var changeAnimation = query.GetSingleton<ChangeAttackAnimation>();
-                    var clone = changeAnimation.Animation.Clone();
+                    using var binaryReader = new MemoryBinaryReader(ptr, data.Length);
+                    BlobAssetReference<Clip> clone = default;
+                    try
+                    {
+                        clone = binaryReader.Read<Clip>();
+                    }
+                    catch (Exception)
+                    {
+                        UnityEngine.Debug.Log($"Enable to read clip {name}");
+                    }
                     return clone;
+                    // SerializeUtility.DeserializeWorld(world.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);
+                    // world.EntityManager.EndExclusiveEntityTransaction();
+                    // var changeAnimation = query.GetSingleton<ChangeAttackAnimation>();
+                    // var clone = changeAnimation.Animation.Clone();
+
 
                 }
 
@@ -48,7 +60,7 @@ namespace RPG.Animation
         public BlobAssetReference<Clip> GetClip()
         {
 
-            var clipRef = BuildClip(Data);
+            var clipRef = BuildClip(Data, this.name);
             return clipRef;
         }
 #if UNITY_EDITOR
@@ -58,15 +70,19 @@ namespace RPG.Animation
         }
         public static byte[] GetClipData(AnimationClip animationClip)
         {
-            using var world = new World("Clip", WorldFlags.Conversion);
+            // using var world = new World("Clip", WorldFlags.Conversion);
             var clipAssetRef = animationClip.ToDenseClip();
-            world.EntityManager.DestroyAndResetAllEntities();
-            var clipEntity = world.EntityManager.CreateEntity();
-            world.EntityManager.AddComponentData(clipEntity, new ChangeAttackAnimation { Animation = clipAssetRef });
+            // var clipBuilder = new BlobBuilder(Unity.Collections.Allocator.Persistent);
+            // clipBuilder.Dispose();
+            // BlobAssetReference<Clip>.Write(clipBuilder, "path", "test");
+            // world.EntityManager.DestroyAndResetAllEntities();
+            // var clipEntity = world.EntityManager.CreateEntity();
+            // world.EntityManager.AddComponentData(clipEntity, new ChangeAttackAnimation { Animation = clipAssetRef });
             unsafe
             {
                 using var binaryWriter = new MemoryBinaryWriter();
-                SerializeUtility.SerializeWorld(world.EntityManager, binaryWriter);
+                binaryWriter.Write(clipAssetRef);
+                // SerializeUtility.SerializeWorld(world.EntityManager, binaryWriter);
                 var data = new byte[binaryWriter.Length];
                 for (int i = 0; i < binaryWriter.Length; i++)
                 {

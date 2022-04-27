@@ -81,7 +81,7 @@ namespace RPG.Control
 
     }
     [UpdateInGroup(typeof(ControlSystemGroup))]
-    public class MobMechanismSystem : SystemBase
+    public partial class MobMechanismSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         BuildPhysicsWorld buildPhysicsWorld;
@@ -94,9 +94,12 @@ namespace RPG.Control
             buildPhysicsWorld = World.GetOrCreateSystem<BuildPhysicsWorld>();
             stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
         }
+        protected override void OnStartRunning(){
+            base.OnStartRunning();
+            this.RegisterPhysicsRuntimeSystemReadOnly();
+        }
         protected override void OnUpdate()
         {
-            Dependency = JobHandle.CombineDependencies(Dependency, buildPhysicsWorld.GetOutputDependency(), stepPhysicsWorld.GetOutputDependency());
             var physicsWorld = buildPhysicsWorld.PhysicsWorld;
             var collisionWorld = physicsWorld.CollisionWorld;
             var cb = entityCommandBufferSystem.CreateCommandBuffer();

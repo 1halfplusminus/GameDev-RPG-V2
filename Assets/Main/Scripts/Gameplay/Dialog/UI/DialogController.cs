@@ -85,7 +85,8 @@ namespace RPG.UI
             Dialog = dialog;
             dialogTextLabel.text = dialog.Value.Nodes[nodeIndex].Text.ToString();
             listView.itemsSource = dialog.Value.Nodes[nodeIndex].ChoicesIndex.ToArray();
-            listView.RefreshItems();
+            // TODO: Fix me
+            // listView.RefreshItems();
             if (listView.itemsSource.Count == 0)
             {
                 listView.style.display = DisplayStyle.None;

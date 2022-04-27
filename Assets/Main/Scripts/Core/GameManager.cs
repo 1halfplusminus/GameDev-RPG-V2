@@ -44,7 +44,7 @@ namespace RPG.Core
     }
 
 
-    class GameManager : MonoBehaviour
+    public class GameManager : MonoBehaviour
     {
         public GameSettingsAsset Settings;
 

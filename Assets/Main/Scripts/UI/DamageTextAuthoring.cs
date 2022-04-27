@@ -42,7 +42,7 @@ namespace RPG.UI
         }
     }
     [UpdateInGroup(typeof(UISystemGroup))]
-    public class DamageTextSystem : SystemBase
+    public partial class DamageTextSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()

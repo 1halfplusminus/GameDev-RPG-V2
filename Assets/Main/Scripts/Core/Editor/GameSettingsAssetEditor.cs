@@ -1,7 +1,6 @@
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.UIElements;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 
@@ -14,6 +13,26 @@ namespace RPG.Core
         public override VisualElement CreateInspectorGUI()
         {
             if (VisualTreeAsset == null) { return null; }
+            var root = VisualTreeAsset.Instantiate();
+            if (target is GameSettingsEditorAsset gameSettingsAsset)
+            {
+                root.Q<PropertyField>("NewGameScene").RegisterValueChangeCallback((e) =>
+                {
+                    GameSettingsAsset asset = LoadSettingsAsset();
+                    asset.NewGameScene = GetSceneGUID(gameSettingsAsset.NewGameScene);
+                });
+                root.Q<PropertyField>("PlayerScene").RegisterValueChangeCallback((e) =>
+                {
+                    GameSettingsAsset asset = LoadSettingsAsset();
+                    asset.PlayerScene = GetSceneGUID(gameSettingsAsset.PlayerScene);
+                });
+            }
+
+            return root;
+        }
+
+        private GameSettingsAsset LoadSettingsAsset()
+        {
             var assetPath = AssetDatabase.GetAssetPath(target);
             var asset = AssetDatabase.LoadAssetAtPath<GameSettingsAsset>(assetPath);
             if (asset == null)
@@ -21,25 +40,11 @@ namespace RPG.Core
                 asset = CreateInstance<GameSettingsAsset>();
                 asset.name = "Test";
                 AssetDatabase.AddObjectToAsset(asset, assetPath);
-
-            }
-            var subAssetGUID = new GUID(AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(asset)));
-            var root = VisualTreeAsset.Instantiate();
-            if (target is GameSettingsEditorAsset gameSettingsAsset)
-            {
-                root.Q<PropertyField>("NewGameScene").RegisterValueChangeCallback((e) =>
-                {
-                    asset.NewGameScene = GetSceneGUID(gameSettingsAsset.NewGameScene);
-                });
-                root.Q<PropertyField>("PlayerScene").RegisterValueChangeCallback((e) =>
-               {
-                   asset.PlayerScene = GetSceneGUID(gameSettingsAsset.PlayerScene);
-               });
+                AssetDatabase.SaveAssetIfDirty(target);
             }
 
-            return root;
+            return asset;
         }
-
 
         private static string GetSceneGUID(SceneAsset scene)
         {

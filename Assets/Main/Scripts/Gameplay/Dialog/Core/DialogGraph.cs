@@ -62,14 +62,14 @@ namespace RPG.Gameplay
     public struct BlobDialogEdge
     {
 
-        public FixedString512 OutputPortName;
-        public FixedString512 InputPortName;
+        public FixedString512Bytes OutputPortName;
+        public FixedString512Bytes InputPortName;
         public Unity.Entities.Hash128 InputNode;
         public Unity.Entities.Hash128 OutputNode;
     }
     public struct BlobDialogNode
     {
-        public FixedString512 Text;
+        public FixedString512Bytes Text;
         public Unity.Entities.Hash128 GUID;
 
         public BlobArray<BlobPtr<BlobDialogChoice>> Choices;
@@ -78,7 +78,7 @@ namespace RPG.Gameplay
     }
     public struct BlobDialogChoice
     {
-        public FixedString512 Text;
+        public FixedString512Bytes Text;
         public BlobPtr<BlobDialogNode> Next;
         public int NextIndex;
     }

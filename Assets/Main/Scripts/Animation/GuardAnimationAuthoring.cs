@@ -14,15 +14,15 @@ namespace RPG.Animation
         {
             Entities.ForEach((GuardAnimationAuthoring guardAnimationAuthoring) =>
             {
-                var entity = GetPrimaryEntity(guardAnimationAuthoring);
-                var setup = new GuardAnimationSetup { };
-                if (this.TryGetClipAssetRef(guardAnimationAuthoring.gameObject, guardAnimationAuthoring.LookingAround, out var lookingAroundClip))
-                {
-                    setup.LookingAround = lookingAroundClip;
-                }
-                DstEntityManager.AddComponent<GuardAnimation>(entity);
-                DstEntityManager.AddComponentData(entity, setup);
-                DstEntityManager.AddComponent<DeltaTime>(entity);
+                // var entity = GetPrimaryEntity(guardAnimationAuthoring);
+                // var setup = new GuardAnimationSetup { };
+                // if (this.TryGetClipAssetRef(guardAnimationAuthoring.gameObject, guardAnimationAuthoring.LookingAround, out var lookingAroundClip))
+                // {
+                //     setup.LookingAround = lookingAroundClip;
+                // }
+                // DstEntityManager.AddComponent<GuardAnimation>(entity);
+                // DstEntityManager.AddComponentData(entity, setup);
+                // DstEntityManager.AddComponent<DeltaTime>(entity);
             });
         }
     }

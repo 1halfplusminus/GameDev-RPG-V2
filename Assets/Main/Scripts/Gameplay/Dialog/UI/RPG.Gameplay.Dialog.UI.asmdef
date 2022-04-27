@@ -5,11 +5,16 @@
         "Unity.Entities",
         "Unity.Collections",
         "RPG.Gameplay.Dialog",
-        "RPG",
+        "RPG.Core",
+        "RPG.Gameplay",
+        "RPG.Control",
+        "RPG.UI",
+        "Unity.Burst",
         "Unity.Entities.Hybrid",
         "Unity.Transforms",
         "Unity.Mathematics",
-        "Unity.Physics"
+        "Unity.Physics",
+        "UnityEngine.UIElementsModule"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

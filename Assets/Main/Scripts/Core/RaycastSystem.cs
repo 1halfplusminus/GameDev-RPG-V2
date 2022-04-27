@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -6,7 +7,8 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
 using UnityEngine.EventSystems;
-
+using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 namespace RPG.Core
 {
     public struct Raycast : IComponentData
@@ -39,7 +41,7 @@ namespace RPG.Core
 
     [UpdateAfter(typeof(MouseInputSystem))]
     [UpdateInGroup(typeof(CoreSystemGroup))]
-    public class RaycastSystem : SystemBase
+    public partial class RaycastSystem : SystemBase
     {
         BuildPhysicsWorld buildPhysicsWorld;
         StepPhysicsWorld stepPhysicsWorld;
@@ -54,15 +56,19 @@ namespace RPG.Core
             stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
             interactionWithUIEntityQuery = GetEntityQuery(typeof(InteractWithUI));
         }
+        protected override void OnStartRunning()
+        {
+            base.OnStartRunning();
+            this.RegisterPhysicsRuntimeSystemReadOnly();
+        }
         protected override void OnUpdate()
         {
-            if (EventSystem.current && !EventSystem.current.IsPointerOverGameObject())
+
+            if (interactionWithUIEntityQuery.CalculateEntityCount() == 0)
             {
-                EntityManager.RemoveComponent<InteractWithUI>(interactionWithUIEntityQuery);
                 var physicsWorld = buildPhysicsWorld.PhysicsWorld;
                 var collisionWorld = physicsWorld.CollisionWorld;
-                Dependency = JobHandle.CombineDependencies(Dependency, buildPhysicsWorld.GetOutputDependency(), stepPhysicsWorld.GetOutputDependency());
-                var raycastJob = Entities
+                Entities
                 .WithReadOnly(physicsWorld)
                 .WithReadOnly(collisionWorld)
                 .WithChangeFilter<Raycast>()
@@ -89,19 +95,14 @@ namespace RPG.Core
                         hits.Dispose();
                     }
 
-                }).ScheduleParallel(Dependency);
-                Dependency = raycastJob;
-            }
-            else
-            {
-                EntityManager.AddComponent<InteractWithUI>(rayCastQuery);
-            }
+                }).ScheduleParallel();
 
+            }
         }
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
     [UpdateBefore(typeof(RaycastSystem))]
-    public class EndSimulationRaycastHitSystem : SystemBase
+    public partial class EndSimulationRaycastHitSystem : SystemBase
     {
         protected override void OnCreate()
         {

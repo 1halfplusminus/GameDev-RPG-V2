@@ -131,16 +131,14 @@ namespace RPG.Gameplay.Inventory
         }
         private static void CopyEntities(World world, World shadowWorld, out NativeArray<Entity> createdEntities)
         {
-
-            var entityToCopy = shadowWorld.EntityManager.GetAllEntities();
             world.EntityManager.MoveEntitiesFrom(out createdEntities, shadowWorld.EntityManager);
-            // world.EntityManager.CopyEntitiesFrom(shadowWorld.EntityManager, entityToCopy, createdEntities);
         }
         public Entity CreateInstance()
         {
             if (uiController.CalculateEntityCount() > 0)
             {
-                var controllerInstance = uiController.GetSingleton<InventoryUIController>();
+                var controllerInstanceEntity = uiController.GetSingletonEntity();
+                var controllerInstance = EntityManager.GetComponentObject<InventoryUIController>(controllerInstanceEntity);
                 controllerInstance.ItemGrid.inventoryGUI.Dispose();
                 Object.DestroyImmediate(controllerInstance);
                 EntityManager.DestroyEntity(uiController);

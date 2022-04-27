@@ -2,7 +2,8 @@
     "name": "RPG.Animation.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:4836d2d95d187d5ffbc37f56dc6c1e4d"
+        "RPG.Animation",
+        "UnityEngine.UIElementsModule"
     ],
     "includePlatforms": [
         "Editor"

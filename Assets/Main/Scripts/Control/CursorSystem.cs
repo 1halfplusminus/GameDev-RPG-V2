@@ -35,7 +35,7 @@ namespace RPG.Control
     [UpdateInGroup(typeof(ControlSystemGroup))]
     [UpdateBefore(typeof(MovementClickInteractionSystem))]
     [UpdateBefore(typeof(CursorSystem))]
-    public class CursorExtensionsSystem : SystemBase
+    public partial class CursorExtensionsSystem : SystemBase
     {
 
         protected override void OnUpdate()
@@ -66,7 +66,7 @@ namespace RPG.Control
 
     }
     [UpdateInGroup(typeof(ControlSystemGroup))]
-    public class CursorSystem : SystemBase
+    public partial class CursorSystem : SystemBase
     {
         EntityQuery cursorsQuery;
         protected override void OnCreate()
@@ -103,7 +103,7 @@ namespace RPG.Control
 
     //TODO: Move to control
     [UpdateInGroup(typeof(ControlSystemGroup))]
-    public class PlayerControlledCombatTargettingSystem : SystemBase
+    public partial class PlayerControlledCombatTargettingSystem : SystemBase
     {
         protected override void OnUpdate()
         {

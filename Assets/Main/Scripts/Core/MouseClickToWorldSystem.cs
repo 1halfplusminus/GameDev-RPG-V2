@@ -1,9 +1,7 @@
-using Unity.Collections;
+
 using Unity.Entities;
 using Unity.Mathematics;
-using ExtensionMethods;
-using Unity.Physics;
-using RPG.Mouvement;
+
 
 namespace RPG.Core
 {
@@ -16,7 +14,7 @@ namespace RPG.Core
     }
     [UpdateInGroup(typeof(CoreSystemGroup))]
     [UpdateAfter(typeof(RaycastSystem))]
-    public class ClickOnTerrainSystem : SystemBase
+    public partial class ClickOnTerrainSystem : SystemBase
     {
 
         EntityCommandBufferSystem commandBufferSystem;
@@ -36,8 +34,10 @@ namespace RPG.Core
             {
                 foreach (var rayHit in rayHits)
                 {
+                    UnityEngine.Debug.Log($"Collid With entity {rayHit.Hitted}");
                     if (HasComponent<Navigable>(rayHit.Hitted))
                     {
+                        UnityEngine.Debug.Log($"Collid With Terrain {e.Index}");
                         cbp.AddComponent(entityInQueryIndex, e, new WorldClick() { WorldPosition = rayHit.Position, Frame = 0, Hitted = rayHit.Hitted });
                         return;
                     }

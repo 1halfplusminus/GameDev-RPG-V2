@@ -40,7 +40,7 @@ namespace RPG.Gameplay.Inventory
             public override VisualElement Create(IUxmlAttributes bag, CreationContext cc)
             {
                 var result = base.Create(bag, cc);
-                cc.slotInsertionPoints.TryAdd("Container", result);
+                // cc.slotInsertionPoints.TryAdd("Container", result);
                 return result;
             }
 

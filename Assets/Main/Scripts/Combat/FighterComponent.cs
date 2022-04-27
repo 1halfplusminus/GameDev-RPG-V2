@@ -7,7 +7,17 @@ using System.Collections;
 
 namespace RPG.Combat
 {
+    public struct WeaponBlobAsset
+    {
+        public Weapon Weapon;
 
+        public BlobArray<float> HitEvents;
+
+        public Hash128 GUID;
+        public Entity Entity;
+        public Entity Prefab;
+        public Entity ProjectileEntity;
+    }
     public struct ProjectileHitted : IComponentData { }
 
     public struct IsHomingProjectile : IComponentData
@@ -60,9 +70,9 @@ namespace RPG.Combat
                 _ => Entity.Null,
             };
         }
-        public FixedList32<Entity> ToList()
+        public FixedList32Bytes<Entity> ToList()
         {
-            var fixedlist = new FixedList32<Entity>
+            var fixedlist = new FixedList32Bytes<Entity>
             {
                 LeftHandSocket,
                 RightHandSocket
@@ -159,8 +169,8 @@ namespace RPG.Combat
         public float Cooldown;
         public float BonusDamagePercent;
         public float AttackDuration;
-        public FixedString64 GUID;
-        public FixedList32<float> HitEvents;
+        public FixedString64Bytes GUID;
+        public FixedList32Bytes<float> HitEvents;
 
         public SocketType SocketType;
     }

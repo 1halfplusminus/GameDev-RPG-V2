@@ -17,10 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 6625e1cbf0e4a9d3e9bedc63620d5128
   m_SerializeEntries:
-  - m_GUID: b076384d34b7cbe1cbe665832c3054db
-    m_Address: SaveEditorWindow
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 5f4dab76ee7cd920f870453053239395
     m_Address: ClassProgressionDrawer
     m_ReadOnly: 0

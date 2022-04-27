@@ -147,6 +147,10 @@ PrefabInstance:
       propertyPath: m_Material.m_CollidesWithCategories.m_Value.Category06
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4917639806165686630, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
+      propertyPath: UniqueIdentifier
+      value: ee67ebfa-5bdb-48f9-8bcc-23200bf4eb4e
+      objectReference: {fileID: 0}
     - target: {fileID: 4918083197768974198, guid: edeabc55efec61f40bb40224d70550ad, type: 3}
       propertyPath: m_RootOrder
       value: 0

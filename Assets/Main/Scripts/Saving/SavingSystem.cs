@@ -10,7 +10,7 @@ using RPG.Core;
 namespace RPG.Saving
 {
     [UpdateInGroup(typeof(SavingSystemGroup))]
-    public abstract class SaveSystemBase : SystemBase
+    public abstract partial class SaveSystemBase : SystemBase
     {
         public abstract void Save(string saveFile);
         public abstract void Load(string saveFile);
@@ -51,277 +51,282 @@ namespace RPG.Saving
 
     //FIXME: TO REMOVE
     [DisableAutoCreation]
-    [UpdateInGroup(typeof(SavingSystemGroup))]
-    public class SaveSystem : SaveSystemBase
+    // [UpdateInGroup(typeof(SavingSystemGroup))]
+    public partial class SaveSystem : SystemBase
     {
 
-        string SAVING_PATH;
+        //     string SAVING_PATH;
 
-        World conversionWorld;
+        //     World conversionWorld;
 
-        World serializedWorld;
+        //     World serializedWorld;
 
-        StreamBinaryWriter streamBinaryWriter;
+        //     StreamBinaryWriter streamBinaryWriter;
 
-        StreamBinaryReader streamBinaryReader;
+        //     StreamBinaryReader streamBinaryReader;
 
-        EntityQuery saveableQuery;
+        //     EntityQuery saveableQuery;
 
-        public World ConversionWorld { get { return conversionWorld; } }
-        public World SerializedWorld { get { return serializedWorld; } }
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            saveableQuery = GetEntityQuery(new EntityQueryDesc()
-            {
-                All = new ComponentType[] { ComponentType.ReadOnly(typeof(Identifier)), ComponentType.ReadOnly(typeof(SceneSection)) },
-            });
-            SAVING_PATH = GetPathFromSaveFile("save.bin");
-        }
+        //     public World ConversionWorld { get { return conversionWorld; } }
+        //     public World SerializedWorld { get { return serializedWorld; } }
+        //     protected override void OnCreate()
+        //     {
+        //         base.OnCreate();
+        //         saveableQuery = GetEntityQuery(new EntityQueryDesc()
+        //         {
+        //             All = new ComponentType[] { ComponentType.ReadOnly(typeof(Identifier)), ComponentType.ReadOnly(typeof(SceneSection)) },
+        //         });
+        //         SAVING_PATH = GetPathFromSaveFile("save.bin");
+        //     }
 
         public static string GetPathFromSaveFile(string saveFile)
         {
             return Path.Combine(Application.persistentDataPath, saveFile);
         }
+
         protected override void OnUpdate()
         {
-
-        }
-
-        private void CreateSavingStateEntity(EntityManager em, SavingStateType type, SavingStateDirection direction)
-        {
-            var entity = em.CreateEntity(typeof(SavingState));
-            em.AddComponentData(entity, new SavingState { Direction = direction, Type = type });
-        }
-
-        public World RecreateSerializeConversionWorld()
-        {
-            if (conversionWorld != null && conversionWorld.IsCreated)
-            {
-                conversionWorld.Dispose();
-            }
-
-            conversionWorld = CreateConversionWorld();
-            return conversionWorld;
-        }
-        public static World CreateConversionWorld()
-        {
-
-            var conversionWorld = new World("Saving Conversion", WorldFlags.Staging);
-            conversionWorld.CreateSystem<UpdateWorldTimeSystem>();
-            var initializationSystemGroup = conversionWorld.CreateSystem<InitializationSystemGroup>();
-            var beginInitializationECS = conversionWorld.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
-            initializationSystemGroup.AddSystemToUpdateList(beginInitializationECS);
-            return conversionWorld;
-        }
-        public void Load()
-        {
-            Load(SAVING_PATH);
-        }
-        public void Load(FixedString128 saveFile)
-        {
-            if (File.Exists(saveFile.ToString()))
-            {
-                Debug.Log("File Exists Loading File");
-                SceneLoadingSystem.UnloadAllCurrentlyLoadedScene(EntityManager);
-                LoadFileInSerializedWorld(saveFile);
-                LoadSerializedWorld(SavingStateType.FILE);
-
-            }
-        }
-
-        private void LoadFileInSerializedWorld(FixedString128 saveFile)
-        {
-
-            // Load world from file
-            using var tempFileConversionWorld = RecreateSerializeConversionWorld();
-            using var binaryReader = CreateFileReader(saveFile.ToString());
-            SerializeUtility.DeserializeWorld(tempFileConversionWorld.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);
-            conversionWorld.EntityManager.EndExclusiveEntityTransaction();
-
-            var serializedWorld = GetOrCreateSerializedWorld();
-            CreateSavingStateEntity(tempFileConversionWorld.EntityManager, SavingStateType.FILE, SavingStateDirection.SAVING);
-            AddConversionSystems(tempFileConversionWorld, serializedWorld.EntityManager);
-            UpdateConversionSystems(tempFileConversionWorld);
-
-        }
-
-        public void Load(World conversionWorld, SavingStateType type)
-        {
-            CreateSavingStateEntity(conversionWorld.EntityManager, type, SavingStateDirection.LOADING);
-            AddConversionSystems(conversionWorld, World.EntityManager);
-            UpdateConversionSystems(conversionWorld);
-        }
-
-        public void LoadSerializedWorld(SavingStateType type)
-        {
-            using var conversionWorld = RecreateSerializeConversionWorld();
-            var serializedWorld = GetOrCreateSerializedWorld();
-            var serializedWorldIdentified = serializedWorld
-            .EntityManager.CreateEntityQuery(ComponentType.ReadOnly<Identifier>());
-            AddQueryToWorld(serializedWorld.EntityManager, conversionWorld, serializedWorldIdentified);
-            Load(conversionWorld, type);
-        }
-
-        private static List<SystemBase> GetSavingSystem(EntityManager em)
-        {
-            return new List<SystemBase> { new MapIdentifierSystem(em), new SavePlayedSystem(em), new SaveHealthSystem(em), new SavePositionSystem(em), new SaveInSceneSystem(em) };
-        }
-
-        private StreamBinaryReader CreateFileReader(string savePath)
-        {
-            DisposeFileReader();
-            streamBinaryReader = new StreamBinaryReader(savePath);
-            return streamBinaryReader;
-        }
-        public void AddQueryToConversionWorld(EntityQuery query)
-        {
-            AddQueryToWorld(World.EntityManager, conversionWorld, query);
-        }
-        public static void AddQueryToWorld(EntityManager srcEntityManager, World dstWorld, EntityQuery query)
-        {
-            var count = query.CalculateEntityCount();
-            using var saveableEntitities = query.ToEntityArray(Allocator.Temp);
-            using var outputs = new NativeArray<Entity>(count, Allocator.Temp);
-            dstWorld.EntityManager.CopyEntitiesFrom(srcEntityManager, saveableEntitities, outputs);
-        }
-        public void Save()
-        {
-            Save(SAVING_PATH);
-        }
-        public void Save(FixedString128 saveFile)
-        {
-
-            var serializedSavingWorld = Save(saveableQuery, SavingStateType.FILE);
-            using var binaryWriter = CreateFileWriter(saveFile);
-            SerializeUtility.SerializeWorld(serializedSavingWorld.EntityManager, binaryWriter);
-        }
-        public World Save(EntityQuery query, SavingStateType type)
-        {
-
-
-            using var conversionWorld = RecreateSerializeConversionWorld();
-            CreateSavingStateEntity(conversionWorld.EntityManager, type, SavingStateDirection.SAVING);
-            AddQueryToWorld(World.EntityManager, conversionWorld, query);
-            Debug.Log($"Save query {conversionWorld.Name}");
-            var serializedSavingWorld = GetOrCreateSerializedWorld();
-
-            AddConversionSystems(conversionWorld, serializedSavingWorld.EntityManager);
-
-            UpdateConversionSystems(conversionWorld);
-            UpdateSerializedWorld(serializedSavingWorld);
-
-            return serializedSavingWorld;
-        }
-
-        private static void UpdateSerializedWorld(World world)
-        {
-            world.GetOrCreateSystem<InitializationSystemGroup>().Update();
-        }
-        private static void UpdateConversionSystems(World world)
-        {
-            world.GetOrCreateSystem<SavingConversionSystemGroup>().Update();
-        }
-        private static void AddConversionSystem(World conversionWorld, SystemBase system)
-        {
-            var savingSystemGroup = conversionWorld.GetOrCreateSystem<SavingConversionSystemGroup>();
-            conversionWorld.AddSystem(system);
-            savingSystemGroup.AddSystemToUpdateList(system);
-            savingSystemGroup.SortSystems();
-        }
-        private static void AddConversionSystems(World conversionWorld, EntityManager dstManager)
-        {
-            var systems = GetSavingSystem(dstManager);
-            Debug.Log($"Add Conversion Systems for dst world to {dstManager.World.Name} with flag: {dstManager.World.Flags}");
-            var savingSystemGroup = conversionWorld.GetOrCreateSystem<SavingConversionSystemGroup>();
-            if ((dstManager.World.Flags & WorldFlags.Conversion) != WorldFlags.None)
-            {
-                Debug.Log($"Add Create Identifier to {dstManager.World.Name} with flag: {dstManager.World.Flags}");
-                var createIdentifierSystem = new CreateIdentifierSystem(dstManager);
-                systems.Add(createIdentifierSystem);
-            }
-            foreach (var system in systems)
-            {
-                conversionWorld.AddSystem(system);
-                savingSystemGroup.AddSystemToUpdateList(system);
-            }
-            savingSystemGroup.SortSystems();
-        }
-        private World GetOrCreateSerializedWorld()
-        {
-            if (serializedWorld == null || !serializedWorld.IsCreated)
-            {
-                serializedWorld = CreateSerializedWorld();
-            }
-            return serializedWorld;
-        }
-
-        private static World CreateSerializedWorld()
-        {
-            var serializedWorld = new World("Serialized World", WorldFlags.Conversion);
-            var initializationSystemGroup = serializedWorld.GetOrCreateSystem<InitializationSystemGroup>();
-            var endInitializationCommandBuffer = serializedWorld.GetOrCreateSystem<EndInitializationEntityCommandBufferSystem>();
-            initializationSystemGroup.AddSystemToUpdateList(endInitializationCommandBuffer);
-            return serializedWorld;
-        }
-
-
-        private StreamBinaryWriter CreateFileWriter(FixedString128 saveFile)
-        {
-            DisposeFileWriter();
-            streamBinaryWriter = new StreamBinaryWriter(saveFile.ToString());
-            return streamBinaryWriter;
-        }
-
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-            DisposeFileWriter();
-            DisposeFileReader();
-            if (conversionWorld != null && conversionWorld.IsCreated)
-            {
-                conversionWorld.Dispose();
-            }
-            if (serializedWorld != null && serializedWorld.IsCreated)
-            {
-                serializedWorld.Dispose();
-            }
-        }
-
-        private void DisposeFileReader()
-        {
-            if (streamBinaryReader != null)
-            {
-                streamBinaryReader.Dispose();
-            }
-        }
-
-        private void DisposeFileWriter()
-        {
-            if (streamBinaryWriter != null)
-            {
-                streamBinaryWriter.Dispose();
-            }
-        }
-
-        public override void Save(string saveFile)
-        {
-            Save(new FixedString128(saveFile));
-        }
-
-        public override void Load(string saveFile)
-        {
-            Load(new FixedString128(saveFile));
-        }
-
-        public override bool LoadLastScene(string saveFile)
-        {
             throw new System.NotImplementedException();
         }
+        //     protected override void OnUpdate()
+        //     {
 
-        public override bool LoadLastScene(Entity trigger, string saveFile)
-        {
-            throw new System.NotImplementedException();
-        }
+        //     }
+
+        //     private void CreateSavingStateEntity(EntityManager em, SavingStateType type, SavingStateDirection direction)
+        //     {
+        //         var entity = em.CreateEntity(typeof(SavingState));
+        //         em.AddComponentData(entity, new SavingState { Direction = direction, Type = type });
+        //     }
+
+        //     public World RecreateSerializeConversionWorld()
+        //     {
+        //         if (conversionWorld != null && conversionWorld.IsCreated)
+        //         {
+        //             conversionWorld.Dispose();
+        //         }
+
+        //         conversionWorld = CreateConversionWorld();
+        //         return conversionWorld;
+        //     }
+        //     public static World CreateConversionWorld()
+        //     {
+
+        //         var conversionWorld = new World("Saving Conversion", WorldFlags.Staging);
+        //         conversionWorld.CreateSystem<UpdateWorldTimeSystem>();
+        //         var initializationSystemGroup = conversionWorld.CreateSystem<InitializationSystemGroup>();
+        //         var beginInitializationECS = conversionWorld.GetOrCreateSystem<BeginInitializationEntityCommandBufferSystem>();
+        //         initializationSystemGroup.AddSystemToUpdateList(beginInitializationECS);
+        //         return conversionWorld;
+        //     }
+        //     public void Load()
+        //     {
+        //         Load(SAVING_PATH);
+        //     }
+        //     public void Load(FixedString128Bytes saveFile)
+        //     {
+        //         if (File.Exists(saveFile.ToString()))
+        //         {
+        //             Debug.Log("File Exists Loading File");
+        //             SceneLoadingSystem.UnloadAllCurrentlyLoadedScene(EntityManager);
+        //             LoadFileInSerializedWorld(saveFile);
+        //             LoadSerializedWorld(SavingStateType.FILE);
+
+        //         }
+        //     }
+
+        //     private void LoadFileInSerializedWorld(FixedString128Bytes saveFile)
+        //     {
+
+        //         // Load world from file
+        //         using var tempFileConversionWorld = RecreateSerializeConversionWorld();
+        //         using var binaryReader = CreateFileReader(saveFile.ToString());
+        //         SerializeUtility.DeserializeWorld(tempFileConversionWorld.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);
+        //         conversionWorld.EntityManager.EndExclusiveEntityTransaction();
+
+        //         var serializedWorld = GetOrCreateSerializedWorld();
+        //         CreateSavingStateEntity(tempFileConversionWorld.EntityManager, SavingStateType.FILE, SavingStateDirection.SAVING);
+        //         AddConversionSystems(tempFileConversionWorld, serializedWorld.EntityManager);
+        //         UpdateConversionSystems(tempFileConversionWorld);
+
+        //     }
+
+        //     public void Load(World conversionWorld, SavingStateType type)
+        //     {
+        //         CreateSavingStateEntity(conversionWorld.EntityManager, type, SavingStateDirection.LOADING);
+        //         AddConversionSystems(conversionWorld, World.EntityManager);
+        //         UpdateConversionSystems(conversionWorld);
+        //     }
+
+        //     public void LoadSerializedWorld(SavingStateType type)
+        //     {
+        //         using var conversionWorld = RecreateSerializeConversionWorld();
+        //         var serializedWorld = GetOrCreateSerializedWorld();
+        //         var serializedWorldIdentified = serializedWorld
+        //         .EntityManager.CreateEntityQuery(ComponentType.ReadOnly<Identifier>());
+        //         AddQueryToWorld(serializedWorld.EntityManager, conversionWorld, serializedWorldIdentified);
+        //         Load(conversionWorld, type);
+        //     }
+
+        //     private static List<SystemBase> GetSavingSystem(EntityManager em)
+        //     {
+        //         return new List<SystemBase> { new MapIdentifierSystem(em), new SavePlayedSystem(em), new SaveHealthSystem(em), new SavePositionSystem(em), new SaveInSceneSystem(em) };
+        //     }
+
+        //     private StreamBinaryReader CreateFileReader(string savePath)
+        //     {
+        //         DisposeFileReader();
+        //         // streamBinaryReader = new StreamBinaryReader(savePath);
+        //         return streamBinaryReader;
+        //     }
+        //     public void AddQueryToConversionWorld(EntityQuery query)
+        //     {
+        //         AddQueryToWorld(World.EntityManager, conversionWorld, query);
+        //     }
+        //     public static void AddQueryToWorld(EntityManager srcEntityManager, World dstWorld, EntityQuery query)
+        //     {
+        //         var count = query.CalculateEntityCount();
+        //         using var saveableEntitities = query.ToEntityArray(Allocator.Temp);
+        //         using var outputs = new NativeArray<Entity>(count, Allocator.Temp);
+        //         dstWorld.EntityManager.CopyEntitiesFrom(srcEntityManager, saveableEntitities, outputs);
+        //     }
+        //     public void Save()
+        //     {
+        //         Save(SAVING_PATH);
+        //     }
+        //     public void Save(FixedString128Bytes saveFile)
+        //     {
+
+        //         var serializedSavingWorld = Save(saveableQuery, SavingStateType.FILE);
+        //         using var binaryWriter = CreateFileWriter(saveFile);
+        //         SerializeUtility.SerializeWorld(serializedSavingWorld.EntityManager, binaryWriter);
+        //     }
+        //     public World Save(EntityQuery query, SavingStateType type)
+        //     {
+
+
+        //         using var conversionWorld = RecreateSerializeConversionWorld();
+        //         CreateSavingStateEntity(conversionWorld.EntityManager, type, SavingStateDirection.SAVING);
+        //         AddQueryToWorld(World.EntityManager, conversionWorld, query);
+        //         Debug.Log($"Save query {conversionWorld.Name}");
+        //         var serializedSavingWorld = GetOrCreateSerializedWorld();
+
+        //         AddConversionSystems(conversionWorld, serializedSavingWorld.EntityManager);
+
+        //         UpdateConversionSystems(conversionWorld);
+        //         UpdateSerializedWorld(serializedSavingWorld);
+
+        //         return serializedSavingWorld;
+        //     }
+
+        //     private static void UpdateSerializedWorld(World world)
+        //     {
+        //         world.GetOrCreateSystem<InitializationSystemGroup>().Update();
+        //     }
+        //     private static void UpdateConversionSystems(World world)
+        //     {
+        //         world.GetOrCreateSystem<SavingConversionSystemGroup>().Update();
+        //     }
+        //     private static void AddConversionSystem(World conversionWorld, SystemBase system)
+        //     {
+        //         var savingSystemGroup = conversionWorld.GetOrCreateSystem<SavingConversionSystemGroup>();
+        //         conversionWorld.AddSystem(system);
+        //         savingSystemGroup.AddSystemToUpdateList(system);
+        //         savingSystemGroup.SortSystems();
+        //     }
+        //     private static void AddConversionSystems(World conversionWorld, EntityManager dstManager)
+        //     {
+        //         var systems = GetSavingSystem(dstManager);
+        //         Debug.Log($"Add Conversion Systems for dst world to {dstManager.World.Name} with flag: {dstManager.World.Flags}");
+        //         var savingSystemGroup = conversionWorld.GetOrCreateSystem<SavingConversionSystemGroup>();
+        //         if ((dstManager.World.Flags & WorldFlags.Conversion) != WorldFlags.None)
+        //         {
+        //             Debug.Log($"Add Create Identifier to {dstManager.World.Name} with flag: {dstManager.World.Flags}");
+        //             var createIdentifierSystem = new CreateIdentifierSystem(dstManager);
+        //             systems.Add(createIdentifierSystem);
+        //         }
+        //         foreach (var system in systems)
+        //         {
+        //             conversionWorld.AddSystem(system);
+        //             savingSystemGroup.AddSystemToUpdateList(system);
+        //         }
+        //         savingSystemGroup.SortSystems();
+        //     }
+        //     private World GetOrCreateSerializedWorld()
+        //     {
+        //         if (serializedWorld == null || !serializedWorld.IsCreated)
+        //         {
+        //             serializedWorld = CreateSerializedWorld();
+        //         }
+        //         return serializedWorld;
+        //     }
+
+        //     private static World CreateSerializedWorld()
+        //     {
+        //         var serializedWorld = new World("Serialized World", WorldFlags.Conversion);
+        //         var initializationSystemGroup = serializedWorld.GetOrCreateSystem<InitializationSystemGroup>();
+        //         var endInitializationCommandBuffer = serializedWorld.GetOrCreateSystem<EndInitializationEntityCommandBufferSystem>();
+        //         initializationSystemGroup.AddSystemToUpdateList(endInitializationCommandBuffer);
+        //         return serializedWorld;
+        //     }
+
+
+        //     private StreamBinaryWriter CreateFileWriter(FixedString128Bytes saveFile)
+        //     {
+        //         DisposeFileWriter();
+        //         // streamBinaryWriter = new StreamBinaryWriter(saveFile.ToString());
+        //         return streamBinaryWriter;
+        //     }
+
+        //     protected override void OnDestroy()
+        //     {
+        //         base.OnDestroy();
+        //         DisposeFileWriter();
+        //         DisposeFileReader();
+        //         if (conversionWorld != null && conversionWorld.IsCreated)
+        //         {
+        //             conversionWorld.Dispose();
+        //         }
+        //         if (serializedWorld != null && serializedWorld.IsCreated)
+        //         {
+        //             serializedWorld.Dispose();
+        //         }
+        //     }
+
+        //     private void DisposeFileReader()
+        //     {
+        //         if (streamBinaryReader != null)
+        //         {
+        //             streamBinaryReader.Dispose();
+        //         }
+        //     }
+
+        //     private void DisposeFileWriter()
+        //     {
+        //         if (streamBinaryWriter != null)
+        //         {
+        //             streamBinaryWriter.Dispose();
+        //         }
+        //     }
+
+        //     public override void Save(string saveFile)
+        //     {
+        //         Save(new FixedString128Bytes(saveFile));
+        //     }
+
+        //     public override void Load(string saveFile)
+        //     {
+        //         Load(new FixedString128Bytes(saveFile));
+        //     }
+
+        //     public override bool LoadLastScene(string saveFile)
+        //     {
+        //         throw new System.NotImplementedException();
+        //     }
+
+        //     public override bool LoadLastScene(Entity trigger, string saveFile)
+        //     {
+        //         throw new System.NotImplementedException();
+        //     }
     }
 }
