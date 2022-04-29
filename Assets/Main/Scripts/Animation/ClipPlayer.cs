@@ -32,12 +32,17 @@ namespace RPG.Animation
                     buffer = DstEntityManager.GetBuffer<AnimationClips>(entity, false); ;
                 }
                 DeclareAssetDependency(cp.gameObject, cp.Clip);
+                var denseClip = cp.Clip.GetClip();
+                if (!denseClip.IsCreated)
+                {
+                    UnityEngine.Debug.LogWarning($"Unable to load clip {cp.Clip.name}");
+                }
                 _ = buffer.Add(new AnimationClips
                 {
-                    Clip = cp.Clip.GetClip()
+                    Clip = denseClip
                 });
-                _ = DstEntityManager.AddComponentData(entity, new PlayClip() { Index = buffer.Length - 1 });
-                _ = DstEntityManager.AddComponent<DeltaTime>(entity);
+                DstEntityManager.AddComponentData(entity, new PlayClip() { Index = buffer.Length - 1 });
+                DstEntityManager.AddComponent<DeltaTime>(entity);
             });
         }
     }
@@ -54,6 +59,8 @@ namespace RPG.Animation
 
         public int PreviousClip;
         public float Weight;
+
+        public bool DontLoop;
     }
     [UpdateAfter(typeof(CharacterAnimationSystem))]
     [UpdateBefore(typeof(AnimationCoreSystem))]
@@ -61,7 +68,7 @@ namespace RPG.Animation
     {
         public float TotalTime = 0;
         protected override void OnUpdate()
-        {   
+        {
             TotalTime += UnityEngine.Time.deltaTime;
             var time = TotalTime;
             Entities.ForEach((
@@ -71,41 +78,43 @@ namespace RPG.Animation
             in Rig rigRef,
             in PlayClip playClip) =>
             {
+                if (streamComponent.Value.IsNull)
+                {
+                    return;
+                }
+                var rig = rigRef.Value;
                 if (animationClips[playClip.Index].ClipInstance.IsCreated)
                 {
                     BlobAssetReference<Clip> animationClip = animationClips[playClip.Index].Clip;
-                    var rig = rigRef.Value;
+                    float normalizedT = NormalizedTime(time, animationClip, !playClip.DontLoop);
+                    var buffer1 = new NativeArray<AnimatedData>(rig.Value.Bindings.StreamSize, Allocator.Temp);
                     ref AnimationStream stream = ref streamComponent.Value;
                     stream.ClearMasks();
-                    float normalizedT = NormalizedTime(time, animationClip);
-                    var buffer1 = new NativeArray<AnimatedData>(rig.Value.Bindings.StreamSize, Allocator.Temp);
                     var stream1 = AnimationStream.Create(rigRef.Value, buffer1);
                     Unity.Animation.Core.EvaluateClip(animationClips[playClip.Index].ClipInstance, normalizedT, ref stream1, 1);
+                    buffer1.Dispose();
                     var buffer2 = new NativeArray<AnimatedData>(rig.Value.Bindings.StreamSize, Allocator.Temp);
                     var stream2 = AnimationStream.Create(rigRef.Value, buffer2);
-                    normalizedT = NormalizedTime(time, animationClips[playClip.PreviousClip].Clip);
+                    normalizedT = NormalizedTime(time, animationClips[playClip.PreviousClip].Clip, !playClip.DontLoop);
                     Unity.Animation.Core.EvaluateClip(animationClips[playClip.PreviousClip].ClipInstance, normalizedT, ref stream2, 1);
                     Unity.Animation.Core.Blend(ref stream, ref stream2, ref stream1, playClip.Weight);
-                    buffer1.Dispose();
                     buffer2.Dispose();
                 }
-
             }).ScheduleParallel();
         }
 
-        public static float NormalizedTime(float time, BlobAssetReference<Clip> animationClip)
+        public static float NormalizedTime(float time, BlobAssetReference<Clip> animationClip, bool loop)
         {
-            // animationClip.Value.
-            // float invLength = animationClip.Value.Duration;
-            // float normalizedT = time * invLength;
-            // var normalizedT = math.clamp(time,0, animationClip.Value.Duration);
+            if (loop)
+            {
+                var normalizedTime = time / animationClip.Value.Duration;
+                var normalizedTimeInt = (int)normalizedTime;
 
-            var normalizedTime = time / animationClip.Value.Duration;
-            var normalizedTimeInt = (int)normalizedTime;
-
-            var cycle = math.select(normalizedTimeInt, normalizedTimeInt - 1, normalizedTime < 0);
-            normalizedTime = math.select(normalizedTime - normalizedTimeInt, normalizedTime - normalizedTimeInt + 1, normalizedTime < 0);
-            return normalizedTime * animationClip.Value.Duration;
+                var cycle = math.select(normalizedTimeInt, normalizedTimeInt - 1, normalizedTime < 0);
+                normalizedTime = math.select(normalizedTime - normalizedTimeInt, normalizedTime - normalizedTimeInt + 1, normalizedTime < 0);
+                return normalizedTime * animationClip.Value.Duration;
+            }
+            return time;
         }
     }
 

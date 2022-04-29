@@ -7,7 +7,7 @@ namespace RPG.Animation
 #if UNITY_EDITOR
     using Unity.Animation.Hybrid;
 #endif
-static class AnimationConversionExtensions
+    static class AnimationConversionExtensions
     {
 #if UNITY_EDITOR
         public static bool TryGetClipAssetRef(this GameObjectConversionSystem conversionSystem, GameObject obj, AnimationClip clip, out BlobAssetReference<Clip> blobAsset)
@@ -29,6 +29,10 @@ static class AnimationConversionExtensions
             {
                 conversionSystem.DeclareAssetDependency(obj, clip);
                 blobAsset = clip.GetClip();
+                if (!blobAsset.IsCreated)
+                {
+                    UnityEngine.Debug.LogWarning($"Unable to read clip asset {clip.name}");
+                }
                 conversionSystem.BlobAssetStore.AddUniqueBlobAsset(ref blobAsset);
                 return true;
             }

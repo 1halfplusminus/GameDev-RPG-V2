@@ -35,13 +35,17 @@ namespace RPG.Animation
                 DstEntityManager.AddBuffer<CurrentlyPlayingClip>(entity);
                 var clipsBuffer = DstEntityManager.AddBuffer<AnimationClips>(entity);
 #if UNITY_EDITOR
-                var nbClip = animator.runtimeAnimatorController.animationClips.Length;
-                for (int i = 0; i < nbClip; i++)
+                if (animator.runtimeAnimatorController != null)
                 {
-                    var clip = animator.runtimeAnimatorController.animationClips[i];
-                    var clipBlob = BlobAssetStore.GetClip(clip);
-                    clipsBuffer.Add(new AnimationClips { Clip = clipBlob });
+                    var nbClip = animator.runtimeAnimatorController.animationClips.Length;
+                    for (int i = 0; i < nbClip; i++)
+                    {
+                        var clip = animator.runtimeAnimatorController.animationClips[i];
+                        var clipBlob = BlobAssetStore.GetClip(clip);
+                        clipsBuffer.Add(new AnimationClips { Clip = clipBlob });
+                    }
                 }
+
 #endif
             });
         }

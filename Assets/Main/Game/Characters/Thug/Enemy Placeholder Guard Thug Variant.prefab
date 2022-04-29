@@ -339,6 +339,14 @@ PrefabInstance:
       propertyPath: m_Material.m_CollidesWithCategories.m_Value.Category31
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8133170301093577301, guid: b08820441c10e32508157dba7a7a7f9f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: f8e46407c2730a043ad302e6e132e8c3, type: 2}
+    - target: {fileID: 8133170301093577301, guid: b08820441c10e32508157dba7a7a7f9f, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: dcefeb2a9d3d8ea41a45c458d6484c5e, type: 2}
     m_RemovedComponents:
     - {fileID: 3601366119782891399, guid: b08820441c10e32508157dba7a7a7f9f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b08820441c10e32508157dba7a7a7f9f, type: 3}

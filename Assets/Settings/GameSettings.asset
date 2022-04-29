@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d60c6fa27512dfc58e060302527ad05, type: 3}
   m_Name: GameSettings
   m_EditorClassIdentifier: 
-  NewGameScene: {fileID: 102900000, guid: 0ea422639d4d2a8e29b025b24b33fa33, type: 3}
+  NewGameScene: {fileID: 102900000, guid: e5cef873f46709896accd350af6d5551, type: 3}
   PlayerScene: {fileID: 102900000, guid: 52511c4efbf1699ceb2637c33bd936cd, type: 3}
 --- !u!114 &1192830839328353902
 MonoBehaviour:
@@ -26,5 +26,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64e15dfe7e648e502a84c57aecd6db3e, type: 3}
   m_Name: Test
   m_EditorClassIdentifier: 
-  NewGameScene: 0ea422639d4d2a8e29b025b24b33fa33
+  NewGameScene: e5cef873f46709896accd350af6d5551
   PlayerScene: 52511c4efbf1699ceb2637c33bd936cd

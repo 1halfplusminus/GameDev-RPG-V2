@@ -68,6 +68,10 @@ PrefabInstance:
       value: ee2e3b5a-de77-4ee4-beb4-2e22e713ba48
       objectReference: {fileID: 0}
     - target: {fileID: 5572077653772277372, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
+      propertyPath: m_Capsule.Axis
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5572077653772277372, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
       propertyPath: m_SphereRadius
       value: 0.81901383
       objectReference: {fileID: 0}
@@ -422,4 +426,10 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 0}
     - {fileID: 0}
+    - {fileID: 5448954478466091253, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
+    - {fileID: 7163046015771028419, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
+    - {fileID: 5392957556602010781, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
+    - {fileID: 7339453854531281212, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
+    - {fileID: 838963241137547196, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
+    - {fileID: 8852628158614634425, guid: d725e343b3af015d98d26c739f1bf163, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d725e343b3af015d98d26c739f1bf163, type: 3}

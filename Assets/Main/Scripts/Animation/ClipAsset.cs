@@ -42,7 +42,7 @@ namespace RPG.Animation
                     }
                     catch (Exception)
                     {
-                        UnityEngine.Debug.Log($"Enable to read clip {name}");
+                        UnityEngine.Debug.Log($"Unable to read clip {name}");
                     }
                     return clone;
                     // SerializeUtility.DeserializeWorld(world.EntityManager.BeginExclusiveEntityTransaction(), binaryReader);

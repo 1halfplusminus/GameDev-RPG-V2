@@ -212,15 +212,6 @@ namespace RPG.Combat
                 {
                     DeclareReferencedAsset(fighter.Weapon);
                     DeclareAssetDependency(fighter.gameObject, fighter.Weapon);
-                    // if (fighter.RightHandSocket.gameObject.GetComponent<LateAnimationGraphWriteTransformHandle>() == null)
-                    // {
-                    //     fighter.RightHandSocket.gameObject.AddComponent<LateAnimationGraphWriteTransformHandle>();
-                    // }
-
-                    // if (fighter.LeftHandSocket.gameObject.GetComponent<LateAnimationGraphWriteTransformHandle>() == null)
-                    // {
-                    //     fighter.LeftHandSocket.gameObject.AddComponent<LateAnimationGraphWriteTransformHandle>();
-                    // }
 
                 }
 

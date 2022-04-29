@@ -9,32 +9,38 @@ namespace RPG.Core
     public struct IsFollowingTarget : IComponentData { }
 
     public struct IsLookingAtTarget : IComponentData { }
-    
+
     [UpdateInGroup(typeof(CoreSystemGroup))]
+    [UpdateAfter(typeof(SceneLoadingSystem))]
     public partial class CameraFollowSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
+
+        EntityQuery cameraQuery;
+
         protected override void OnCreate()
         {
             base.OnCreate();
-            RequireSingletonForUpdate<ThirdPersonCamera>();
-            RequireForUpdate(GetEntityQuery(new EntityQueryDesc()
+            cameraQuery = GetEntityQuery(new EntityQueryDesc()
             {
                 All = new ComponentType[]{
                     ComponentType.ReadOnly<ThirdPersonCamera>(),
-                },
-                None = new ComponentType[]{
-                    ComponentType.ReadOnly<IsFollowingTarget>()
-                }
-            }));
+
+                 }
+                // None = new ComponentType[]{
+                //     ComponentType.ReadOnly<IsFollowingTarget>()
+                // }
+            });
+            RequireSingletonForUpdate<ThirdPersonCamera>();
+            RequireForUpdate(cameraQuery);
             entityCommandBufferSystem = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
         }
         protected override void OnUpdate()
         {
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
-            var thirdPersonCamera = GetSingletonEntity<ThirdPersonCamera>();
+            var thirdPersonCamera = cameraQuery.GetSingletonEntity();
             Entities
-            .WithNone<Spawned>()
+
             .WithAll<FollowedByCamera>()
             .ForEach((Entity target) =>
             {

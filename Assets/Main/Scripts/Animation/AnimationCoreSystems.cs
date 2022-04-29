@@ -39,42 +39,63 @@ namespace RPG.Animation
     {
         public AnimationStream Value;
     }
-
+    [UpdateInGroup(typeof(AnimationSystemGroup))]
     public partial class AnimationStateSystem : SystemBase
     {
+        struct CreateAnimationClipInstance : IJobChunk
+        {
+            public BufferTypeHandle<AnimationClips> AnimationClipHandle;
+            public ComponentTypeHandle<Rig> RigHandle;
+            public uint LastSystemVersion;
+            public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+            {
+
+                if (
+                    !chunk.DidChange(AnimationClipHandle, LastSystemVersion)
+                )
+                {
+                    return;
+                }
+                var rigs = chunk.GetNativeArray(RigHandle);
+                var clipsBufferAccessor = chunk.GetBufferAccessor(AnimationClipHandle);
+                for (int i = 0; i < rigs.Length; i++)
+                {
+                    var clips = clipsBufferAccessor[i];
+                    for (int j = 0; j < clips.Length; j++)
+                    {
+                        var clip = clips[j];
+                        if (!clip.ClipInstance.IsCreated)
+                        {
+                            var clipInstance = ClipManager.Instance.GetClipFor(rigs[i].Value, clip.Clip);
+                            clip.ClipInstance = clipInstance;
+                            clips[j] = clip;
+                        }
+                    }
+                }
+                rigs.Dispose();
+            }
+        }
         EntityQuery query;
         protected override void OnCreate()
         {
             base.OnCreate();
             query = GetEntityQuery(typeof(Rig), typeof(AnimationClips));
-            query.SetChangedVersionFilter(ComponentType.ReadWrite<AnimationClips>());
+            // query.SetChangedVersionFilter(ComponentType.ReadWrite<AnimationClips>());
             RequireForUpdate(query);
         }
         protected override void OnUpdate()
         {
-
-            var entities = query.ToEntityArray(Allocator.Temp);
-            var rigs = query.ToComponentDataArray<Rig>(Allocator.Temp);
-            for (int i = 0; i < entities.Length; i++)
+            var chunkIterator = query.GetArchetypeChunkIterator();
+            var createAnimationClips = new CreateAnimationClipInstance
             {
-                var clips = EntityManager.GetBuffer<AnimationClips>(entities[i], false);
-                for (int j = 0; j < clips.Length; j++)
-                {
-                    var clip = clips[j];
-                    if (!clip.ClipInstance.IsCreated)
-                    {
-                        var clipInstance = ClipInstanceBuilder.Create(rigs[i].Value, clip.Clip);
-                        clip.ClipInstance = clipInstance;
-                        clips[j] = clip;
-                    }
+                AnimationClipHandle = GetBufferTypeHandle<AnimationClips>(),
+                RigHandle = GetComponentTypeHandle<Rig>(),
+                LastSystemVersion = this.LastSystemVersion
+            };
+            createAnimationClips.RunWithoutJobs(ref chunkIterator);
 
-                }
-            }
-            entities.Dispose();
-            rigs.Dispose();
         }
     }
-
 
     [BurstCompile]
     public partial struct AnimationCoreSystem : ISystem
@@ -112,35 +133,36 @@ namespace RPG.Animation
             .ForEach((ref RigRootEntity rigRootEntity) =>
             {
                 var localToWorld = localToWorlds[rigRootEntity.Value];
-                var rootTransform = mathex.AffineTransform(localToWorld.Value);
-                rigRootEntity.RemapToRootMatrix = rootTransform;
+                // var rootTransform = mathex.AffineTransform(localToWorld.Value);
+                // rigRootEntity.RemapToRootMatrix = rootTransform;
             }).ScheduleParallel();
 
-            state
-            .Entities
-            .ForEach((int entityInQueryIndex, ref DynamicBuffer<AnimatedEntity> animatedEntities, in AnimationStreamComponent streamComponent) =>
-            {
+            // state
+            // .Entities
+            // .ForEach((int entityInQueryIndex, ref DynamicBuffer<AnimatedEntity> animatedEntities, in AnimationStreamComponent streamComponent) =>
+            // {
 
-                var stream = streamComponent.Value;
-                for (int i = 0; i < animatedEntities.Length; i++)
-                {
-                    if (i < stream.RotationCount)
-                    {
-                        var rotation = stream.GetLocalToParentRotation(i);
-                        cbp.AddComponent(entityInQueryIndex, animatedEntities[i].Value, new Rotation { Value = rotation });
-                    }
-                    if (i < stream.TranslationCount)
-                    {
-                        var translation = stream.GetLocalToParentTranslation(i);
-                        cbp.AddComponent(entityInQueryIndex, animatedEntities[i].Value, new Translation { Value = translation });
-                    }
-                    if (i < stream.ScaleCount)
-                    {
-                        var scale = stream.GetLocalToParentScale(i);
-                        cbp.AddComponent(entityInQueryIndex, animatedEntities[i].Value, new CompositeScale { Value = float4x4.Scale(scale) });
-                    }
-                }
-            }).ScheduleParallel();
+            //     var stream = streamComponent.Value;
+            //     for (int i = 0; i < animatedEntities.Length; i++)
+            //     {
+            //         if (i < stream.RotationCount)
+            //         {
+            //             var rotation = stream.GetLocalToParentRotation(i);
+            //             cbp.AddComponent(entityInQueryIndex, animatedEntities[i].Value, new Rotation { Value = rotation.value });
+            //         }
+            //         if (i < stream.TranslationCount)
+            //         {
+            //             var translation = stream.GetLocalToParentTranslation(i);
+            //             cbp.AddComponent(entityInQueryIndex, animatedEntities[i].Value, new Translation { Value = translation });
+            //         }
+            //         if (i < stream.ScaleCount)
+            //         {
+            //             var scale = stream.GetLocalToParentScale(i);
+            //             cbp.AddComponent(entityInQueryIndex, animatedEntities[i].Value, new CompositeScale { Value = float4x4.Scale(scale) });
+            //         }
+            //     }
+            // }).ScheduleParallel();
+
             state
             .Entities
             .ForEach((ref DynamicBuffer<AnimatedLocalToRoot> animatedDatas, in AnimationStreamComponent streamComponent) =>
@@ -153,6 +175,7 @@ namespace RPG.Animation
                     animatedDatas[i] = new AnimatedLocalToRoot { Value = localToRoot };
                 }
             }).ScheduleParallel();
+
             var streams = state.GetComponentDataFromEntity<AnimationStreamComponent>();
             state.Entities.WithReadOnly(streams).ForEach((ref DynamicBuffer<BlendShapeWeight> shapeKeys, in RigEntity rigEntity) =>
             {

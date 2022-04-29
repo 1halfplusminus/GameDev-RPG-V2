@@ -41,7 +41,9 @@ namespace RPG.UI
             });
         }
     }
+
     [UpdateInGroup(typeof(UISystemGroup))]
+    [DisableAutoCreation]
     public partial class DamageTextSystem : SystemBase
     {
         EntityCommandBufferSystem entityCommandBufferSystem;
@@ -62,10 +64,12 @@ namespace RPG.UI
                 {
                     if (HasComponent<DamageText>(hit.Hitted))
                     {
+                        var localToWorld = GetComponent<LocalToWorld>(hit.Hitted);
                         var damageText = GetComponent<DamageText>(hit.Hitted);
                         var instance = cb.Instantiate(damageText.Prefab);
                         cb.AddComponent(instance, new DisplayDamage { Value = hit.Damage });
                         cb.AddComponent(instance, new Parent { Value = hit.Hitted });
+                        cb.AddComponent<LocalToWorld>(instance, localToWorld);
                         cb.AddComponent<LocalToParent>(instance);
                     }
                 }

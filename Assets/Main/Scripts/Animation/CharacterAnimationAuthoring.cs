@@ -105,14 +105,17 @@ namespace RPG.Animation
                 {
                     var previousClip = playClips[i];
                     PlayClip playClip;
-                    if (characterAnimations[i].Dead > 0){
-                       playClip = new PlayClip { Index = characterAnimationSetups[i].Dead };
+                    if (characterAnimations[i].Dead > 0)
+                    {
+                        playClip = new PlayClip { Index = characterAnimationSetups[i].Dead, DontLoop = true, Weight = characterAnimations[i].Dead };
                     }
-                    else if(characterAnimations[i].Attack > 0){
-                        playClip = new PlayClip { Index = characterAnimationSetups[i].Attack };
+                    else if (characterAnimations[i].Attack > 0)
+                    {
+                        playClip = new PlayClip { Index = characterAnimationSetups[i].Attack, Weight = characterAnimations[i].Attack };
                     }
-                    else if(characterAnimations[i].Run > 0) {
-                        playClip = new PlayClip { Index = characterAnimationSetups[i].Run, Weight = characterAnimations[i].Run  };
+                    else if (characterAnimations[i].Run > 0)
+                    {
+                        playClip = new PlayClip { Index = characterAnimationSetups[i].Run, Weight = characterAnimations[i].Run };
                     }
                     else if (characterAnimations[i].Move > 0)
                     {
@@ -122,10 +125,11 @@ namespace RPG.Animation
                     {
                         playClip = new PlayClip { Index = 0, Weight = 1 };
                     }
-                    if(playClip.Index != previousClip.Index){
+                    if (playClip.Index != previousClip.Index)
+                    {
                         playClip.PreviousClip = previousClip.Index;
                     }
-                    playClips[i] =playClip; 
+                    playClips[i] = playClip;
                 }
 
             }

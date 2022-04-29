@@ -27,7 +27,8 @@ namespace RPG.Combat
             {
                 var settings = AddressableAssetSettingsDefaultObject.Settings;
                 var entry = serializedObject.targetObject.SetAddressableGroup(GROUP);
-                if(entry != null){
+                if (entry != null)
+                {
                     serializedObject.FindProperty(nameof(WeaponAsset.GUID)).stringValue = entry.address;
                     serializedObject.ApplyModifiedProperties();
                 }
@@ -49,35 +50,51 @@ namespace RPG.Combat
         }
         private void ConvertClip()
         {
-            root.Q<Button>("ConvertEvent").SetEnabled(false);
-            var animationClip = GetAnimationClip();
-            var clipProperty = GetClipProperty();
+            RemoveOldClip();
+            UpdateAnimationData();
+            // root.Q<Button>("ConvertEvent").SetEnabled(false);
+            // var animationClip = GetAnimationClip();
+            // var clipProperty = GetClipProperty();
+            // var assetPath = AssetDatabase.GetAssetPath(animationClip);
+            // var clipAsset = AssetDatabase.LoadAssetAtPath<ClipAsset>(assetPath);
+            // // while (clipAsset != null)
+            // // {
+            // //     Debug.Log("Remove object from asset");
+            // //     AssetDatabase.RemoveObjectFromAsset(clipAsset);
+            // //     AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(clipAsset));
+            // //     clipAsset = AssetDatabase.LoadAssetAtPath<ClipAsset>(assetPath);
+            // // }
+            // if (clipAsset == null)
+            // {
+            //     Debug.Log("Create Clip Asset");
+            //     clipAsset = CreateInstance<ClipAsset>();
+            //     AssetDatabase.AddObjectToAsset(clipAsset, assetPath);
+            // }
+            // clipAsset.name = animationClip.name;
+            // clipAsset.SetClip(animationClip);
+            // clipProperty.objectReferenceValue = clipAsset;
+            // serializedObject.ApplyModifiedProperties();
+            // AssetDatabase.SaveAssetIfDirty(clipAsset);
+            // AssetDatabase.SaveAssetIfDirty(animationClip);
+            // AssetDatabase.SaveAssetIfDirty(target);
+            // // root.Q<Button>("ConvertEvent").SetEnabled(true);
+        }
+
+        private void RemoveOldClip()
+        {
             var assetPath = AssetDatabase.GetAssetPath(target);
             var clipAsset = AssetDatabase.LoadAssetAtPath<ClipAsset>(assetPath);
-            // while (clipAsset != null)
-            // {
-            //     Debug.Log("Remove object from asset");
-            //     AssetDatabase.RemoveObjectFromAsset(clipAsset);
-            //     AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(clipAsset));
-            //     clipAsset = AssetDatabase.LoadAssetAtPath<ClipAsset>(assetPath);
-            // }
-            if (clipAsset == null)
+            if (clipAsset != null)
             {
-                Debug.Log("Create Clip Asset");
-                clipAsset = CreateInstance<ClipAsset>();
-                AssetDatabase.AddObjectToAsset(clipAsset, assetPath);
+                Debug.Log("Remove old clip asset");
+                AssetDatabase.RemoveObjectFromAsset(clipAsset);
             }
-            clipAsset.name = animationClip.name;
-            clipAsset.SetClip(animationClip);
-            clipProperty.objectReferenceValue = clipAsset;
-            serializedObject.ApplyModifiedProperties();
-            AssetDatabase.SaveAssets();
-            // root.Q<Button>("ConvertEvent").SetEnabled(true);
+            AssetDatabase.SaveAssetIfDirty(target);
         }
 
         private void OnAnimationChange(SerializedPropertyChangeEvent evt)
         {
-
+            RemoveOldClip();
             UpdateAnimationData();
         }
 
@@ -96,6 +113,19 @@ namespace RPG.Combat
                     var animationEvent = clip.events[i];
                     hitEventsProperty.GetArrayElementAtIndex(i).floatValue = animationEvent.time;
                 }
+                var assetPath = AssetDatabase.GetAssetPath(clip);
+                var clipAsset = AssetDatabase.LoadAssetAtPath<ClipAsset>(assetPath);
+                var clipProperty = GetClipProperty();
+
+                if (clipAsset == null)
+                {
+                    Debug.LogWarning("Unable to load clip asset for animation clip");
+                    // animationProperty.objectReferenceValue = null;
+                    // animationProperty.serializedObject.ApplyModifiedProperties();
+                    return;
+                }
+                clipProperty.objectReferenceValue = clipAsset;
+                clipProperty.serializedObject.ApplyModifiedProperties();
                 // serializedObject.ApplyModifiedProperties();
             }
 
