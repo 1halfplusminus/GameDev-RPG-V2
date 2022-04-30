@@ -9,10 +9,20 @@ using RPG.Hybrid;
 using System.Reflection;
 using System;
 using System.Linq;
+using Unity.Collections;
 
 namespace RPG.Hybrid
 {
 
+    public struct TransformProxy : IComponentData
+    {
+        public Entity ProxyFor;
+    }
+    public struct VirtualCamera : IComponentData
+    {
+        public Entity FollowProxy;
+        public Entity LookAtProxy;
+    }
     public struct RebuildHierachy : IComponentData
     {
         public float4x4 LocalToWorld;
@@ -39,7 +49,7 @@ namespace RPG.Hybrid
             base.OnCreate();
             this.AddTypeToCompanionWhiteList(typeof(CinemachineVirtualCamera));
             this.AddTypeToCompanionWhiteList(typeof(CinemachinePipeline));
-            this.AddTypeToCompanionWhiteList(typeof(Transform));
+            this.AddTypeToCompanionWhiteList(typeof(TransformProxyAuthoring));
             foreach (Type type in
                 Assembly.GetAssembly(typeof(CinemachineComponentBase)).GetTypes()
                 .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(CinemachineComponentBase))))
@@ -60,6 +70,7 @@ namespace RPG.Hybrid
             Entities.ForEach((CinemachineVirtualCamera virtualCamera) =>
             {
                 var virtualCameraEntity = TryGetPrimaryEntity(virtualCamera);
+                var virtualCameraComponent = new VirtualCamera { };
                 DstEntityManager.AddComponent<CopyTransformFromGameObject>(virtualCameraEntity);
                 if (virtualCameraEntity != Entity.Null)
                 {
@@ -69,26 +80,39 @@ namespace RPG.Hybrid
                     LoadCinemachineComponents(virtualCamera);
                     if (virtualCamera.m_Follow != null)
                     {
-                        var followedEntity = TryGetPrimaryEntity(virtualCamera.m_Follow.gameObject);
+                        var followedProxyEntity = TryGetPrimaryEntity(virtualCamera.m_Follow.gameObject);
+                        var transformProxy = virtualCamera.m_Follow.GetComponent<TransformProxyAuthoring>();
+                        var followedEntity = transformProxy != null && transformProxy.Target != null ? TryGetPrimaryEntity(transformProxy.Target) : followedProxyEntity;
                         if (followedEntity != Entity.Null)
                         {
                             Debug.Log("Follow " + followedEntity.Index);
                             DstEntityManager.AddComponentData(virtualCameraEntity, new Follow() { Entity = followedEntity });
-                            DstEntityManager.AddComponentObject(followedEntity, virtualCamera.m_Follow);
                         }
+                        if (transformProxy != null)
+                        {
+                            DstEntityManager.AddComponentObject(followedProxyEntity, transformProxy);
+                            // DstEntityManager.AddComponentData(followedProxyEntity, new Parent { Value = followedEntity });
+                            // DstEntityManager.AddComponent<LocalToParent>(followedProxyEntity);
+                        }
+                        virtualCameraComponent.FollowProxy = followedProxyEntity;
                     }
                     if (virtualCamera.m_LookAt != null)
                     {
-                        var lookAtEntity = TryGetPrimaryEntity(virtualCamera.m_LookAt.gameObject);
-                        if (lookAtEntity != Entity.Null)
+                        var lookAtProxyEntity = TryGetPrimaryEntity(virtualCamera.m_LookAt.gameObject);
+                        var transformProxy = virtualCamera.m_LookAt.GetComponent<TransformProxyAuthoring>();
+                        var lookAtEntity = transformProxy != null && transformProxy.Target != null ? TryGetPrimaryEntity(transformProxy.Target) : lookAtProxyEntity;
+                        if (lookAtProxyEntity != Entity.Null)
                         {
-                            Debug.Log("Look At " + lookAtEntity.Index);
-                            DstEntityManager.AddComponentData(virtualCameraEntity, new LookAt() { Entity = lookAtEntity });
-                            DstEntityManager.AddComponentObject(lookAtEntity, virtualCamera.m_LookAt);
-
+                            Debug.Log("Look At " + lookAtProxyEntity.Index);
+                            DstEntityManager.AddComponentData(virtualCameraEntity, new LookAt() { Entity = lookAtProxyEntity });
                         }
-
+                        if (transformProxy != null)
+                        {
+                            DstEntityManager.AddComponentObject(lookAtProxyEntity, transformProxy);
+                        }
+                        virtualCameraComponent.LookAtProxy = lookAtProxyEntity;
                     }
+                    DstEntityManager.AddComponentData(virtualCameraEntity, virtualCameraComponent);
                 }
 
             });
@@ -169,15 +193,86 @@ namespace RPG.Hybrid
     [UpdateAfter(typeof(CoreSystemGroup))]
     public partial class CinemachineVirtualCameraHybridSystem : SystemBase
     {
+        public struct UpdateProxyJob : IJobChunk
+        {
+            [ReadOnly]
+            public ComponentTypeHandle<Follow> FollowComponentTypeHandle;
+            [ReadOnly]
+            public ComponentTypeHandle<LookAt> LookAtComponentTypeHandle;
+            public ComponentTypeHandle<VirtualCamera> VirtualCameraTypeHandle;
+            public uint LastSystemVersion;
+            public EntityCommandBuffer.ParallelWriter EntityCommandBuffer;
+
+            public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+            {
+
+                if (chunk.DidChange(LookAtComponentTypeHandle, LastSystemVersion))
+                {
+                    var virtualCameras = chunk.GetNativeArray(VirtualCameraTypeHandle);
+                    var lookAts = chunk.GetNativeArray(LookAtComponentTypeHandle);
+                    for (int i = 0; i < lookAts.Length; i++)
+                    {
+                        if (virtualCameras[i].LookAtProxy != Entity.Null)
+                        {
+                            EntityCommandBuffer.AddComponent(
+                                                        chunkIndex,
+                                                        virtualCameras[i].LookAtProxy,
+                                                        new Parent { Value = lookAts[i].Entity }
+                                                    );
+                            EntityCommandBuffer.AddComponent<LocalToParent>(
+                               chunkIndex,
+                               virtualCameras[i].LookAtProxy
+                           );
+                        }
+                    }
+                }
+                if (chunk.DidChange(FollowComponentTypeHandle, LastSystemVersion))
+                {
+                    var virtualCameras = chunk.GetNativeArray(VirtualCameraTypeHandle);
+                    var follows = chunk.GetNativeArray(LookAtComponentTypeHandle);
+                    for (int i = 0; i < follows.Length; i++)
+                    {
+                        if (virtualCameras[i].FollowProxy != Entity.Null)
+                        {
+                            EntityCommandBuffer.AddComponent(
+                                                        chunkIndex,
+                                                        virtualCameras[i].FollowProxy,
+                                                        new Parent { Value = follows[i].Entity }
+                                                    );
+                            EntityCommandBuffer.AddComponent<LocalToParent>(
+                               chunkIndex,
+                               virtualCameras[i].FollowProxy
+                           );
+                        }
+                    }
+                }
+            }
+        }
+        EntityQuery updateProxyQuery;
         EntityCommandBufferSystem entityCommandBufferSystem;
         protected override void OnCreate()
         {
             base.OnCreate();
             entityCommandBufferSystem = World.GetOrCreateSystem<BeginPresentationEntityCommandBufferSystem>();
+            updateProxyQuery = GetEntityQuery(
+                new ComponentType[] {
+                    ComponentType.ReadOnly<Follow>(),
+                    ComponentType.ReadOnly<LookAt>(),
+                    ComponentType.ReadOnly<VirtualCamera>()
+                }
+            );
         }
         protected override void OnUpdate()
         {
             var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
+            Dependency = new UpdateProxyJob
+            {
+                EntityCommandBuffer = commandBuffer.AsParallelWriter(),
+                LastSystemVersion = LastSystemVersion,
+                FollowComponentTypeHandle = GetComponentTypeHandle<Follow>(true),
+                LookAtComponentTypeHandle = GetComponentTypeHandle<LookAt>(true),
+                VirtualCameraTypeHandle = GetComponentTypeHandle<VirtualCamera>()
+            }.ScheduleParallel(updateProxyQuery, Dependency);
             Entities
             .WithoutBurst()
             .WithChangeFilter<Follow>()
@@ -197,9 +292,9 @@ namespace RPG.Hybrid
             Entities
            .WithoutBurst()
            .WithChangeFilter<LookAt>()
-           .ForEach((Entity e, CinemachineVirtualCamera camera, in LookAt target) =>
+           .ForEach((Entity e, CinemachineVirtualCamera camera, in LookAt target, in VirtualCamera cameraData) =>
            {
-               var transform = GetTransform(target.Entity, EntityManager);
+               var transform = GetTransform(cameraData.FollowProxy, EntityManager);
                if (transform != null)
                {
                    camera.m_LookAt = transform;

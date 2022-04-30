@@ -1,0 +1,38 @@
+{
+    "name": "RPG.Hybrid.Tests",
+    "rootNamespace": "",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "Unity.Entities",
+        "Unity.Mathematics",
+        "Unity.Collections",
+        "Unity.Entities.Hybrid",
+        "Unity.Addressables",
+        "Unity.ResourceManager",
+        "Unity.Scenes",
+        "Unity.Addressables.Editor",
+        "Unity.AI.Navigation",
+        "Unity.Burst",
+        "Unity.Serialization",
+        "RPG.Core",
+        "RPG.Mouvement",
+        "RPG.Core.Editor",
+        "RPG.Saving",
+        "RPG.Hybrid.Conversion"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

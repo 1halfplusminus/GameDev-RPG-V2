@@ -11,7 +11,7 @@ using Unity.Physics;
 using Unity.Collections;
 using Unity.Physics.Authoring;
 using Unity.Assertions;
-
+using UnityEngine.Experimental.AI;
 namespace RPG.Control
 {
     public struct ComponentClosestHitCollector<T, V> : ICollector<T> where T : struct, IQueryResult where V : struct, IComponentData
@@ -208,18 +208,22 @@ namespace RPG.Control
             {
                 moveTo.Stopped = true;
             }).ScheduleParallel();
-
+            // var navMeshWorld = NavMeshWorld.GetDefaultWorld();
             Entities
             .WithNone<InteractWithUI>()
             .WithChangeFilter<MouseClick>()
             .WithAll<PlayerControlled>()
-            .ForEach((Entity e, ref WorldClick worldClick, in Raycast raycast, in LocalToWorld localToWorld) =>
+            .ForEach((Entity e,
+            ManagedPath managedPath,
+            ref WorldClick worldClick,
+            in Raycast raycast,
+            in LocalToWorld localToWorld) =>
             {
                 var havePathToTarget = false;
                 NavMesh.SamplePosition(worldClick.WorldPosition, out var hit, raycast.MaxNavMeshProjectionDistance, NavMesh.AllAreas);
                 if (hit.hit)
                 {
-                    var nashMeshPath = new NavMeshPath();
+                    var nashMeshPath = managedPath.Path;
                     NavMesh.CalculatePath(localToWorld.Position, hit.position, NavMesh.AllAreas, nashMeshPath);
                     if (nashMeshPath.status == NavMeshPathStatus.PathComplete && CalculeDistance(nashMeshPath) <= raycast.MaxNavPathLength)
                     {

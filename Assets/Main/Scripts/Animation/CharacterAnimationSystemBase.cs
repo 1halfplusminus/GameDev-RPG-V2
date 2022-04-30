@@ -205,6 +205,7 @@ namespace RPG.Animation
     //         public BlobAssetReference<Clip> Animation;
     //     }
 
+
     [UpdateInGroup(typeof(AnimationSystemGroup))]
     public partial class ChangeAttackAnimationSystem : SystemBase
     {
@@ -221,36 +222,34 @@ namespace RPG.Animation
             var cb = entityCommandBufferSystem.CreateCommandBuffer();
             Entities
             .WithChangeFilter<ChangeAttackAnimation>()
-            .ForEach((Entity e, DynamicBuffer<AnimationClips> clips, ref CharacterAnimationSetup characterAnimation, in ChangeAttackAnimation attackAnimation) => ChangeAnimation(e, attackAnimation, clips, ref characterAnimation, cb))
+            .ForEach((Entity e, DynamicBuffer<AnimationClips> clips, ref CharacterAnimationSetup characterAnimation, in ChangeAttackAnimation attackAnimation) =>
+            {
+                if (attackAnimation.Animation.IsCreated)
+                {
+                    var index = -1;
+                    for (int i = 0; i < clips.Length; i++)
+                    {
+                        if (clips[i].Clip.Value.GetHashCode() == attackAnimation.Animation.Value.GetHashCode())
+                        {
+                            index = i;
+                            return;
+                        }
+                    }
+                    if (index == -1)
+                    {
+                        clips.Add(new AnimationClips
+                        {
+                            Clip = attackAnimation.Animation
+                        });
+                        index = clips.Length - 1;
+                    }
+                    characterAnimation.Attack = index;
+                }
+                cb.RemoveComponent<ChangeAttackAnimation>(e);
+            })
             .Schedule();
             entityCommandBufferSystem.AddJobHandleForProducer(Dependency);
         }
-        [BurstCompile]
-        static private void ChangeAnimation(Entity e, ChangeAttackAnimation attackAnimation, DynamicBuffer<AnimationClips> clips, ref CharacterAnimationSetup characterAnimation, EntityCommandBuffer cb)
-        {
-            Debug.Log("Change attack animation");
-            if (attackAnimation.Animation.IsCreated)
-            {
-                var index = -1;
-                for (int i = 0; i < clips.Length; i++)
-                {
-                    if (clips[i].Clip.Value.GetHashCode() == attackAnimation.Animation.Value.GetHashCode())
-                    {
-                        index = i;
-                        return;
-                    }
-                }
-                if (index == -1)
-                {
-                    clips.Add(new AnimationClips
-                    {
-                        Clip = attackAnimation.Animation
-                    });
-                    index = clips.Length - 1;
-                }
-                characterAnimation.Attack = index;
-            }
-            cb.RemoveComponent<ChangeAttackAnimation>(e);
-        }
+
     }
 }

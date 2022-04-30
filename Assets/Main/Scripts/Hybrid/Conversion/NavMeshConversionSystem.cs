@@ -4,15 +4,51 @@ using Unity.AI.Navigation;
 using Unity.Entities;
 using UnityEngine;
 using Unity.Collections.LowLevel.Unsafe;
+using System;
 
-public struct NavMeshAgentComponent
+public struct NavMeshAgentComponent : IComponentData
 {
-    public float StoppingDistance;
 
 }
+
 public struct InitializedSurface : ISystemStateComponentData
 {
     public NavMeshDataInstance NavMeshDataInstance;
+}
+[UpdateInGroup(typeof(InitializationSystemGroup))]
+public partial class NavMeshInitializationSystem : SystemBase
+{
+    EntityCommandBufferSystem entityCommandBufferSystem;
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+        entityCommandBufferSystem = World.GetOrCreateSystem<EndInitializationEntityCommandBufferSystem>();
+    }
+    protected override void OnUpdate()
+    {
+        var commandBuffer = entityCommandBufferSystem.CreateCommandBuffer();
+        Entities
+        .WithNone<ManagedPath>()
+        .WithAll<NavMeshAgentComponent>()
+        .ForEach((Entity e) =>
+        {
+
+            var path = new NavMeshPath();
+            var managedPath = new ManagedPath();
+            managedPath.Path = path;
+            commandBuffer.AddComponent(e, managedPath);
+        }).WithoutBurst().Run();
+
+        // Entities.ForEach((ref PathComponent pathComponent) =>
+        // {
+        //     unsafe
+        //     {
+        //         var handle = GCHandle.FromIntPtr(pathComponent.Ptr);
+        //         var path = (NavMeshPath)handle.Target;
+        //         NavMesh.CalculatePath(Vector3.up, Vector3.down, -1, path);
+        //     }
+        // }).WithoutBurst().Schedule();
+    }
 }
 public class NavMeshAgentConversionSystem : GameObjectConversionSystem
 {
@@ -42,8 +78,7 @@ public class NavMeshAgentConversionSystem : GameObjectConversionSystem
         Entities.ForEach((NavMeshAgent agent) =>
         {
             var entity = GetPrimaryEntity(agent);
-            // DstEntityManager.AddComponentObject(entity, agent);
-            // DstEntityManager.AddComponentData(entity, new NavMeshAgentComponent { StoppingDistance = agent. });
+            DstEntityManager.AddComponent<NavMeshAgentComponent>(entity);
             DstEntityManager.AddComponentData(entity, new Mouvement { Speed = agent.speed });
             DstEntityManager.AddComponentData(entity, new MoveTo(agent.transform.position) { StoppingDistance = agent.stoppingDistance });
         });
@@ -66,8 +101,11 @@ public partial class InitialiseNavMeshSystem : SystemBase
         .ForEach((Entity e, NavMeshData data) =>
         {
             Debug.Log("Init Nav Mesh Surface");
-            var dataInstance = NavMesh.AddNavMeshData(data);
-            cb.AddComponent<InitializedSurface>(e, new InitializedSurface { NavMeshDataInstance = dataInstance });
+            if (data != null)
+            {
+                var dataInstance = NavMesh.AddNavMeshData(data);
+                cb.AddComponent<InitializedSurface>(e, new InitializedSurface { NavMeshDataInstance = dataInstance });
+            }
         })
         .WithoutBurst()
         .Run();
